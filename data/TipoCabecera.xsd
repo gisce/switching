@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns="http://localhost/elegibilidad" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+
+	<xs:annotation>
+	<xs:documentation>
+		Version 2.0, Junio 2004
+
+      Definición de la cabecera que forma parte de los mensajes que se intercambian entre agentes
+	Corresponde a la especificacion de formatos CNE V4 de 22 de Octubre de 2002
+	Ante la posibilidad de la utilización de este tipo Cabecera para la comunicación de mensajes 
+	como el de intercambio de facturas, cobros, etc, se ha decidido cambiar la etiqueta identificada
+	en el documento de especificacion de formatos CNE V4 de 22 de Octubre de 2002 como CUPS por el 
+	nombre más genérico de Codigo para no limitar con el nombre de la etiqueta el 
+	contenido de la misma ya que por ejemplo en el caso de enviar facturas podría enviar el número
+	de la factura en lugar del CUPS. En cualquier caso, debe quedar claro que para los mensajes
+	definidos en la versión indicada este campo se refiere al CUPS
+	</xs:documentation>
+	</xs:annotation>
+
+
+	<xs:complexType name="Cabecera">
+		<xs:sequence>
+
+			<xs:element name="CodigoREEEmpresaEmisora"  type="Agente"/>
+			<xs:element name="CodigoREEEmpresaDestino"  type="Agente"/>
+			<xs:element name="CodigoDelProceso"         type="CodigoDelProceso"/>
+			<xs:element name="CodigoDePaso"             type="CodigoDePaso"/>
+			<xs:element name="CodigoDeSolicitud"        type="CodigoDeSolicitud"/>
+			<xs:element name="SecuencialDeSolicitud"    type="SecuencialDeSolicitud"/>
+			<xs:element name="Codigo"			  type="Codigo"/>
+			<xs:element name="FechaSolicitud"           type="xs:dateTime"/>
+			<xs:element name="Version"		        type="Version"/>
+
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

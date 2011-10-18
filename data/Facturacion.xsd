@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by erre (erre) -->
+<xs:schema xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TipoCabecera.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:annotation>
+		<xs:documentation>
+		Version 2.0, Junio 2004
+		Modificación Enero 2009. Se añade campo opcional PenalizacionNoICP dentro del bloque Potencia de DatosGeneralesFacturaATR.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:element name="MensajeFacturacion">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Cabecera" type="Cabecera"/>
+				<xs:element name="Facturas" type="Facturas"/>
+				<xs:element name="OtrosDatosFactura" type="OtrosDatosFactura" minOccurs="0"/>
+				<xs:any processContents="skip" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
+			<xs:attribute name="Firmar" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="TipoDatosGeneralesFactura">
+		<xs:sequence>
+			<xs:element name="NumeroFactura">
+				<xs:annotation>
+					<xs:documentation>Número de la factura (albarán, en su caso)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="26"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TipoFactura" type="TipoFactura">
+				<xs:annotation>
+					<xs:documentation>Tabla 101 (Normal, fraude...)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndicativoFacturaRectificadora" type="TipoFacturaRectificadora">
+				<xs:annotation>
+					<xs:documentation>Tabla 102 (N-Normal, R-Rectificadora , A-Anuladora, B-Anuladora con sustituyente)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumeroFacturaRectificada" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número de factura a la que rectifica.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="26"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FechaFactura" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Fecha oficial de la factura (albarán, en su caso)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CIFEmisora">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CodigoFiscalFactura" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número de IVA</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="17"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Observaciones" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Comentarios a la factura, como p.e. nro. Expte anormalidad </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ImporteTotalFactura">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SaldoFactura">
+				<xs:annotation>
+					<xs:documentation>Para los casos de rectificaciones</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SaldoCobro">
+				<xs:annotation>
+					<xs:documentation> Saldo cobro </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TipoMoneda" type="TipoMoneda">
+				<xs:annotation>
+					<xs:documentation>Tabla 104 (01-Pesetas, 02-Euros)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>Version 1.0, Mensaje de negocio, intercambiado entre agentes</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="Facturas">
+		<xs:sequence>
+			<xs:element name="FacturaATR" minOccurs="0" maxOccurs="1000">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DatosGeneralesFacturaATR">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="DireccionSuministro" type="TipoDireccionSuministro"/>
+									<xs:element name="Cliente" type="IdCliente"/>
+									<xs:element name="Contrato" type="CodigoContrato"/>
+									<xs:element name="DatosGeneralesFactura" type="TipoDatosGeneralesFactura"/>
+									<xs:element name="DatosFacturaATR">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="TipoFacturacion" type="TipoFacturacionATR">
+													<xs:annotation>
+														<xs:documentation>Tabla 105 (1-Regular (Periodo completo); 2-Irregular (Periodo incompleto))</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="FechaBOE" type="xs:date"/>
+												<xs:element name="CodigoTarifa" type="TarifaATR">
+													<xs:annotation>
+														<xs:documentation>Tabla 107</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="IndAltamedidoenBaja" type="Indicativo"/>
+												<xs:element name="Periodo">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="FechaDesdeFactura" type="xs:date"/>
+															<xs:element name="FechaHastaFactura" type="xs:date"/>
+															<xs:element name="NumeroMeses">
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:minInclusive value="0"/>
+																		<xs:totalDigits value="5"/>
+																		<xs:fractionDigits value="2"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Potencia">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="TerminoPotencia" maxOccurs="8">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FechaDesde" type="xs:date"/>
+												<xs:element name="FechaHasta" type="xs:date"/>
+												<xs:element name="Periodo" maxOccurs="10">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="PotenciaContratada">
+																<xs:annotation>
+																	<xs:documentation>En watios</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:minInclusive value="0"/>
+																		<xs:totalDigits value="11"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="PotenciaMaxDemandada">
+																<xs:annotation>
+																	<xs:documentation> En watios</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:totalDigits value="11"/>
+																		<xs:minInclusive value="0"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="PotenciaAFacturar">
+																<xs:annotation>
+																	<xs:documentation>Potencia a facturar calculada en función de la potencia contratada. En Watios</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:totalDigits value="11"/>
+																		<xs:minInclusive value="0"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="PrecioPotencia">
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:minInclusive value="0"/>
+																		<xs:totalDigits value="13"/>
+																		<xs:fractionDigits value="8"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="PenalizacionNoICP" type="Indicativo" minOccurs="0"/>
+									<xs:element name="ImporteTotalTerminoPotencia">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:minInclusive value="0"/>
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="ExcesoPotencia" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Periodo" maxOccurs="10">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="ValorExcesoPotencia">
+													<xs:annotation>
+														<xs:documentation>En Watios</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:integer">
+															<xs:totalDigits value="9"/>
+															<xs:minInclusive value="0"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="ImporteTotalExcesos">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="EnergiaActiva" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="TerminoEnergiaActiva" maxOccurs="8">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FechaDesde" type="xs:date"/>
+												<xs:element name="FechaHasta" type="xs:date"/>
+												<xs:element name="Periodo" maxOccurs="10">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="ValorEnergiaActiva">
+																<xs:annotation>
+																	<xs:documentation>En Kwh</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:totalDigits value="13"/>
+																		<xs:fractionDigits value="2"/>
+																		<xs:minInclusive value="0"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="PrecioEnergia">
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:totalDigits value="13"/>
+																		<xs:minInclusive value="0"/>
+																		<xs:fractionDigits value="8"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="ImporteTotalEnergiaActiva">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:minInclusive value="0"/>
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="EnergiaReactiva" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="TerminoEnergiaReactiva" maxOccurs="8">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FechaDesde" type="xs:date"/>
+												<xs:element name="FechaHasta" type="xs:date"/>
+												<xs:element name="Periodo" maxOccurs="10">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="ValorEnergiaReactiva">
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:totalDigits value="13"/>
+																		<xs:fractionDigits value="2"/>
+																		<xs:minInclusive value="0"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="PrecioEnergiaReactiva">
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:totalDigits value="13"/>
+																		<xs:fractionDigits value="8"/>
+																		<xs:minInclusive value="0"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="ImporteTotalEnergiaReactiva">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="ImpuestoElectrico">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="BaseImponible">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="Coeficiente">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="8"/>
+												<xs:fractionDigits value="6"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="Porcentaje">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="13"/>
+												<xs:fractionDigits value="8"/>
+												<xs:minInclusive value="0"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="Importe">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Alquileres" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ImporteFacturacionAlquileres">
+										<xs:annotation>
+											<xs:documentation>Suma de alquileres de equipos asociados al CUPS.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="ImporteIntereses" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>En los casos que se incluyan intereses de demora</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="14"/>
+									<xs:fractionDigits value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="ConceptoIEIVA" minOccurs="0" maxOccurs="3">
+							<xs:annotation>
+								<xs:documentation>Para facturar conceptos excepcionales que lleven aplicado impuesto eléctrico e IVA.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="14"/>
+									<xs:fractionDigits value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="ConceptoIVA" minOccurs="0" maxOccurs="3">
+							<xs:annotation>
+								<xs:documentation>Para facturar conceptos excepcionales que solo lleven aplicado IVA.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="14"/>
+									<xs:fractionDigits value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="IVA" type="TipoIVAIGIC"/>
+						<xs:element name="IVAIGICReducido" type="TipoIVAIGIC" minOccurs="0"/>
+						<xs:element name="Medidas" minOccurs="0" maxOccurs="10">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="CodUnificadoPuntoSuministro">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:length value="22"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="Aparato" maxOccurs="10">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Tipo" type="TipoAparato">
+													<xs:annotation>
+														<xs:documentation>Tabla 24</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="Marca" type="MarcaAparato">
+													<xs:annotation>
+														<xs:documentation>Tabla 25</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="NumeroSerie">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="10"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="CodigoDH" type="TipoDH">
+													<xs:annotation>
+														<xs:documentation>Tabla 35</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="Integrador" maxOccurs="100">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="Magnitud" type="MagnitudMedida">
+																<xs:annotation>
+																	<xs:documentation>Tabla 43</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="CodigoPeriodo" type="TipoCodigoPeriodoDH">
+																<xs:annotation>
+																	<xs:documentation>Tabla 42</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="ConstanteMultiplicadora">
+																<xs:annotation>
+																	<xs:documentation>Coeficiente de multiplicación del equipo</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:totalDigits value="9"/>
+																		<xs:fractionDigits value="3"/>
+																		<xs:minInclusive value="0"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="NumeroRuedasEnteras">
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:minInclusive value="0"/>
+																		<xs:totalDigits value="2"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="NumeroRuedasDecimales">
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:minInclusive value="0"/>
+																		<xs:totalDigits value="2"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="ConsumoCalculado">
+																<xs:annotation>
+																	<xs:documentation>Consumo</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:totalDigits value="12"/>
+																		<xs:fractionDigits value="2"/>
+																		<xs:minInclusive value="0"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="LecturaDesde" type="TipoLimiteIntervaloLectura">
+																<xs:annotation>
+																	<xs:documentation>Lectura anterior ventana de facturación</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="LecturaHasta" type="TipoLimiteIntervaloLectura">
+																<xs:annotation>
+																	<xs:documentation>Valor actual de la ventana de facturación</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="Ajuste" minOccurs="0">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="CodigoMotivoAjuste" type="TipoMotivoAjuste">
+																			<xs:annotation>
+																				<xs:documentation>Tabla 106</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																		<xs:element name="AjustePorIntegrador">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:decimal">
+																					<xs:totalDigits value="11"/>
+																					<xs:fractionDigits value="2"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+															<xs:element name="Anomalia" minOccurs="0">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="TipoAnomalia" type="AnomaliaMedida">
+																			<xs:annotation>
+																				<xs:documentation>Tabla 45</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																		<xs:element name="TextoAnomalia" minOccurs="0">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:string">
+																					<xs:minLength value="1"/>
+																					<xs:maxLength value="240"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+															<xs:element name="FechaHoraMaximetro" type="xs:dateTime" minOccurs="0"/>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="OtrasFacturas" minOccurs="0" maxOccurs="1000">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DatosGeneralesOtrasFacturas">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="DireccionSuministro" type="TipoDireccionSuministro"/>
+									<xs:element name="Cliente" type="IdCliente"/>
+									<xs:element name="Contrato" type="CodigoContrato"/>
+									<xs:element name="DatosGeneralesFactura" type="TipoDatosGeneralesFactura"/>
+									<xs:element name="LineaNegocio">
+										<xs:annotation>
+											<xs:documentation>Tabla 5</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:length value="1"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="FechaBOE" type="xs:date" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Concepto" maxOccurs="12">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="TipoConcepto" type="TipoConcepto">
+										<xs:annotation>
+											<xs:documentation>Tabla 103</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="UnidadesConcepto" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>P.e., en contratación kW a contratar</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ImporteUnidadConcepto" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>P.e., precio en tarifa del kW contratado</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ImporteTotalConcepto">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="IVA" type="TipoIVAIGIC"/>
+						<xs:element name="IVAIGICReducido" type="TipoIVAIGIC" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="RegistroFin">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ImporteTotal">
+							<xs:annotation>
+								<xs:documentation>Importe total de todas las facturas del XML</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="15"/>
+									<xs:fractionDigits value="2"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="SaldoTotalFacturacion">
+							<xs:annotation>
+								<xs:documentation>Saldo total de todas las facturas del xml</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="15"/>
+									<xs:fractionDigits value="2"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="SaldoTotalCobro">
+							<xs:annotation>
+								<xs:documentation>Saldo total cobro del XML</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="15"/>
+									<xs:fractionDigits value="2"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="TotalRecibos">
+							<xs:annotation>
+								<xs:documentation>Numero recibos del XML</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="5"/>
+									<xs:minInclusive value="0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="TipoMoneda" type="TipoMoneda">
+							<xs:annotation>
+								<xs:documentation>Tabla 104 (01-Pesetas, 02-Euros)</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="FechaValor" type="xs:date"/>
+						<xs:element name="FechaLimitePago" type="xs:date">
+							<xs:annotation>
+								<xs:documentation>Fecha teorica de pago </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+						<xs:element name="IdRemesa">
+							<xs:annotation>
+								<xs:documentation>identificacion remesa o agrupación</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="26"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TipoDireccionSuministro">
+		<xs:sequence>
+			<xs:element name="CUPS" type="CUPS"/>
+			<xs:element name="Municipio" type="Decimal7"/>
+			<xs:element name="DirSuministro">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="60"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TipoIVAIGIC">
+		<xs:sequence>
+			<xs:element name="BaseImponible">
+				<xs:annotation>
+					<xs:documentation>En Canarias se informará IGIC; en el resto, IVA.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Porcentaje">
+				<xs:annotation>
+					<xs:documentation>En Canarias se informará IGIC; en el resto, IVA.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="6"/>
+						<xs:fractionDigits value="2"/>
+						<xs:minInclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Importe">
+				<xs:annotation>
+					<xs:documentation>En Canarias se informará IGIC; en el resto, IVA.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:fractionDigits value="4"/>
+						<xs:totalDigits value="14"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TipoLimiteIntervaloLectura">
+		<xs:sequence>
+			<xs:element name="FechaHora" type="xs:dateTime"/>
+			<xs:element name="Procedencia" type="Procedencia">
+				<xs:annotation>
+					<xs:documentation>Tabla 44</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Lectura">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+						<xs:minInclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OtrosDatosFactura">
+		<xs:sequence>
+			<xs:element name="SociedadMercantilEmisora">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SociedadMercantilDestino">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DireccionEmisora">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="60"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DireccionDestino">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="60"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
