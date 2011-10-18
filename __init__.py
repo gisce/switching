@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Setup per la llibreria de Switching"""
 import os
-import sys
 
 from switching import __version__
 
@@ -21,6 +20,7 @@ class Clean(_clean):
 setup(name='switching',
       description='Llibreria de switching',
       author='GISCE Enginyeria',
+      author_email='devel@gisce.net',
       url='http://www.gisce.net',
       version=__version__,
       license='General Public Licence 2'
