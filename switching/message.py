@@ -16,4 +16,10 @@ class Message(object)
         obj = objectify.fromstring(f_xml)
         self.tipus = obj.Cabecera.CodigoDelProceso
         return self.tipus
+
+    def parse_xml(self, f_xml):
+        """Retornar l'objectify amb el contingut de l'xml
+        """
+        obj = objectify.fromstring(f_xml)
+        return obj
     

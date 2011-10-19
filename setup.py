@@ -16,7 +16,6 @@ class Clean(_clean):
             print "Cleaning %s dir" % self.build_base
             shutil.rmtree(self.build_base)
 
-"""__FILE__ per obtenir el path dels fitxers data(xsd)"""
 setup(name='switching',
       description='Llibreria de switching',
       author='GISCE Enginyeria',
@@ -29,6 +28,7 @@ setup(name='switching',
       install_requires=[],      
       packages=PACKAGES,  
       package_data=PACKAGES_DATA,
+      scripts=[],
       cmdclass={'clean': Clean})
       
 
