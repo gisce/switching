@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Setup per la llibreria de Switching"""
 import os
+from distutils.command.clean import clean as _clean
+from distutils.core import setup
 
 from switching import __version__
 
@@ -22,7 +24,7 @@ setup(name='switching',
       author_email='devel@gisce.net',
       url='http://www.gisce.net',
       version=__version__,
-      license='General Public Licence 2'
+      license='General Public Licence 2',
       long_description='''Long description''',
       provides=['switching'],
       install_requires=[],      
