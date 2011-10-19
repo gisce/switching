@@ -6,7 +6,7 @@ from distutils.core import setup
 
 from switching import __version__
 
-PACKAGES = ['switching']
+PACKAGES = ['switching', 'switching.messages']
 PACKAGES_DATA = {}
 
 class Clean(_clean):
@@ -27,7 +27,7 @@ setup(name='switching',
       license='General Public Licence 2',
       long_description='''Long description''',
       provides=['switching'],
-      install_requires=[],      
+      install_requires=['lxml'],      
       packages=PACKAGES,  
       package_data=PACKAGES_DATA,
       scripts=[],

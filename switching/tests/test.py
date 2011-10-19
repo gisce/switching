@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from switching import F1
+from switching.messages import F1
 
 def from_xml(f_xml, f_xsd):
     f1_xml = F1(f_xml, f_xsd)

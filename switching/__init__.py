@@ -6,8 +6,7 @@ Aquesta llibreria proveeix de les classes i mètodes necessaris pel switching
 
 """
 import os
-from message import Message
-from F1 import F1
+import messages
 
 __version__ = '0.0.1'
 
