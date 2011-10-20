@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Setup per la llibreria de Switching"""
 import os
+import unittest
 from distutils.command.clean import clean as _clean
-from distutils.core import setup
+from distutils.core import Command
+from setuptools import setup
 
 from switching import __version__
 
@@ -18,6 +20,25 @@ class Clean(_clean):
             print "Cleaning %s dir" % self.build_base
             shutil.rmtree(self.build_base)
 
+class Test(Command):
+    """Passarem els tests unitaris que tinguem definits."""
+    
+    user_options  = []
+    
+    def initialize_options(self):
+        """Inicialitzem."""
+        pass
+    
+    def run(self):
+        """Executem els tests."""
+        import tests
+        suite = unittest.TestLoader().loadTestsFromModule(tests.test_switching)
+        unittest.TextTestRunner(verbosity=2).run(suite)
+    
+    def finalize_options(self):
+        """Finalitzem."""
+        pass
+
 setup(name='switching',
       description='Llibreria de switching',
       author='GISCE Enginyeria',
@@ -31,6 +52,6 @@ setup(name='switching',
       packages=PACKAGES,  
       package_data=PACKAGES_DATA,
       scripts=[],
-      cmdclass={'clean': Clean})
+      cmdclass={'clean': Clean, 'test': Test})
       
 

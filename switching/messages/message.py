@@ -13,6 +13,7 @@ class Message(object):
         """Construeix un missatge base.
         """
         if isinstance(xml, file):
+            self.check_fpos(xml)
             self.str_xml = xml.read()
         else:
             self.str_xml = xml
@@ -24,11 +25,11 @@ class Message(object):
         xsd = switching.get_data(XSD_DATA[self.tipus])
         self.f_xsd = open(xsd,'r')
 
-    def check_fpos(self):
+    def check_fpos(self, f_obj):
         """Setejar la posició actual dels fixers
         """
-        if (isinstance(self.f_xsd, file) and self.f_xsd.tell() != 0):
-            self.f_xsd.seek(0)
+        if (isinstance(f_obj, file) and f_obj.tell() != 0):
+            f_obj.seek(0)
     
     def get_tipus_xml(self):
         """Obtenir el tipus de missatge
@@ -41,7 +42,7 @@ class Message(object):
         """Retornar l'objectify amb el contingut de l'xml
         """
         self.set_xsd()
-        self.check_fpos()
+        self.check_fpos(self.f_xsd)
         schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)
         obj = objectify.fromstring(self.str_xml, parser)

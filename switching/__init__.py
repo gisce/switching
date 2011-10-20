@@ -6,9 +6,7 @@ Aquesta llibreria proveeix de les classes i mètodes necessaris pel switching
 
 """
 import os
-import messages
-
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 def get_data(path):
