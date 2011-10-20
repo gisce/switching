@@ -3,17 +3,26 @@
 
 from lxml import objectify, etree
 
+import switching
+
+XSD_DATA = {'F1': 'Facturacion.xsd'}
+
 class Message(object):
     """Classe base"""
-    def __init__(self, xml, f_xsd):
+    def __init__(self, xml):
         """Construeix un missatge base.
         """
-        self.f_xsd = f_xsd
         if isinstance(xml, file):
             self.str_xml = xml.read()
         else:
             self.str_xml = xml
+        self.f_xsd = ''
         self.tipus = ''
+
+    def set_xsd(self):
+        """Setejar el fitxer xsd"""
+        xsd = switching.get_data(XSD_DATA[self.tipus])
+        self.f_xsd = open(xsd,'r')
 
     def check_fpos(self):
         """Setejar la posició actual dels fixers
@@ -31,6 +40,7 @@ class Message(object):
     def parse_xml(self):
         """Retornar l'objectify amb el contingut de l'xml
         """
+        self.set_xsd()
         self.check_fpos()
         schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)

@@ -7,7 +7,7 @@ from distutils.core import setup
 from switching import __version__
 
 PACKAGES = ['switching', 'switching.messages']
-PACKAGES_DATA = {}
+PACKAGES_DATA = {'switching': ['data/*.xsd']}
 
 class Clean(_clean):
     """Eliminem el directory build i els bindings creats."""
