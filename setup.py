@@ -3,8 +3,7 @@
 import os
 import unittest
 from distutils.command.clean import clean as _clean
-from distutils.core import Command
-from setuptools import setup
+from distutils.core import setup, Command
 
 from switching import __version__
 
