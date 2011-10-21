@@ -10,26 +10,33 @@ XSD_DATA = {'F1': 'Facturacion.xsd'}
 
 class Message(object):
     """Classe base"""
-    def __init__(self, xml):
+    def __init__(self, xml, force_tipus=None):
         """Construeix un missatge base."""
         if isinstance(xml, file):
             self.check_fpos(xml)
             self.str_xml = xml.read()
         else:
             self.str_xml = xml
-        try:
-            self.set_tipus()
-        except:
-            print 'err: No s\'ha pogut identificar el tipus'
-            self.tipus = ''
-            self.f_xsd = ''
-        else:
+        
+        self.tipus = ''
+        self.f_xsd = ''
+        if not force_tipus:
             try:
-                self.tipus = 'a'
-                self.set_xsd()
+                self.set_tipus()
             except:
-               print 'err: Tipus \'%s\' no suportat' % self.tipus
-               self.f_xsd = ''
+                print 'err: No s\'ha pogut identificar el tipus'
+        else:
+            self.tipus = force_tipus
+
+        if self.tipus:
+            if self.tipus not in XSD_DATA:
+                print 'err: Tipus \'%s\'  no suportat' % self.tipus
+            else:
+                try:
+                    self.set_xsd()
+                except:
+                    print ('err: Fitxer \'%s\' corrupte' % 
+                                swtiching.get_dataXSD_DATA[self.tipus])
 
     def set_tipus(self):
         """Setejar el tipus de missatge"""

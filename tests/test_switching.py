@@ -14,6 +14,7 @@ class test_F1(unittest.TestCase):
     
     def setUp(self):
         self.xml = open(get_data("F1_exemple.xml"), "r")
+        self.xml_err = open(get_data("F1_exemple_err.xml"), "r")
 
     def test_F1(self):
         f1 = F1(self.xml)
@@ -22,6 +23,11 @@ class test_F1(unittest.TestCase):
         self.assertEqual(tipus, 'F1')
         self.assertEqual(obj.Facturas.FacturaATR.Potencia.\
                          ImporteTotalTerminoPotencia, 21.3458)
+    
+    def test_err(self):
+        f1 = F1(self.xml_err, 'F2')
+        obj = f1.parse_xml()
+        self.assertEqual(obj, -1)
 
 if __name__ == '__main__':
     unittest.main()
