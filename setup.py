@@ -10,6 +10,7 @@ from switching import __version__
 PACKAGES = ['switching', 'switching.messages', 'switching.types']
 PACKAGES_DATA = {'switching': ['data/*.xsd']}
 
+
 class Clean(_clean):
     """Eliminem el directory build i els bindings creats."""
     def run(self):
@@ -19,11 +20,11 @@ class Clean(_clean):
             print "Cleaning %s dir" % self.build_base
             shutil.rmtree(self.build_base)
 
+
 class Test(Command):
     """Passarem els tests unitaris que tinguem definits."""
-    
-    user_options  = []
-    
+    user_options = []
+
     def initialize_options(self):
         """Inicialitzem."""
         pass
@@ -47,10 +48,8 @@ setup(name='switching',
       license='General Public Licence 2',
       long_description='''Long description''',
       provides=['switching'],
-      install_requires=['lxml'],      
+      install_requires=['lxml'],
       packages=PACKAGES,  
       package_data=PACKAGES_DATA,
       scripts=[],
       cmdclass={'clean': Clean, 'test': Test})
-      
-

@@ -9,9 +9,10 @@ from switching.types import DecimalElement, check_decimal_element
 XSD_DATA = {'F1': 'Facturacion.xsd'}
 
 # register the decimal type with objectify
-decimal_type = objectify.PyType('decimal', check_decimal_element, 
+decimal_type = objectify.PyType('decimal', check_decimal_element,
                                 DecimalElement)
 decimal_type.register(before='float')
+
 
 class Message(object):
     """Classe base"""
@@ -22,7 +23,6 @@ class Message(object):
             self.str_xml = xml.read()
         else:
             self.str_xml = xml
-        
         self.tipus = force_tipus
         self.f_xsd = ''
         if not force_tipus:
