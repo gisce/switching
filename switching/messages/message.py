@@ -4,13 +4,18 @@
 from lxml import objectify, etree
 
 import switching
+from switching.types import DecimalElement, check_decimal_element
 
 XSD_DATA = {'F1': 'Facturacion.xsd'}
 
+# register the decimal type with objectify
+decimal_type = objectify.PyType('decimal', check_decimal_element, 
+                                DecimalElement)
+decimal_type.register(before='float')
 
 class Message(object):
     """Classe base"""
-    def __init__(self, xml, force_tipus=None):
+    def __init__(self, xml, force_tipus=''):
         """Construeix un missatge base."""
         if isinstance(xml, file):
             self.check_fpos(xml)
@@ -18,35 +23,33 @@ class Message(object):
         else:
             self.str_xml = xml
         
-        self.tipus = ''
+        self.tipus = force_tipus
         self.f_xsd = ''
         if not force_tipus:
-            try:
-                self.set_tipus()
-            except:
-                print 'err: No s\'ha pogut identificar el tipus'
-        else:
-            self.tipus = force_tipus
-
-        if self.tipus:
-            if self.tipus not in XSD_DATA:
-                print 'err: Tipus \'%s\'  no suportat' % self.tipus
-            else:
-                try:
-                    self.set_xsd()
-                except:
-                    print ('err: Fitxer \'%s\' corrupte' % 
-                                swtiching.get_dataXSD_DATA[self.tipus])
-
+            self.set_tipus()
+        self.set_xsd()
+    
     def set_tipus(self):
         """Setejar el tipus de missatge"""
-        obj = objectify.fromstring(self.str_xml)
-        self.tipus = obj.Cabecera.CodigoDelProceso
+        try:
+            obj = objectify.fromstring(self.str_xml)
+            self.tipus = obj.Cabecera.CodigoDelProceso
+        except: 
+            print 'err: No s\'ha pogut identificar el tipus'
+            raise 
 
     def set_xsd(self):
         """Setejar el fitxer xsd"""
-        xsd = switching.get_data(XSD_DATA[self.tipus])
-        self.f_xsd = open(xsd, 'r')
+        if self.tipus not in XSD_DATA:
+            print 'err: Tipus \'%s\'  no suportat' % self.tipus
+            raise
+        try:
+            xsd = switching.get_data(XSD_DATA[self.tipus])
+            self.f_xsd = open(xsd, 'r') 
+        except:
+            print ('err: Fitxer \'%s\' corrupte' % 
+                        swtiching.get_dataXSD_DATA[self.tipus])
+            raise
 
     def check_fpos(self, f_obj):
         """Setejar la posició actual dels fixers"""
@@ -59,8 +62,6 @@ class Message(object):
 
     def parse_xml(self):
         """Retornar l'objectify amb el contingut de l'xml"""
-        if not self.f_xsd:
-            return -1
         self.check_fpos(self.f_xsd)
         schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)

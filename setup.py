@@ -7,7 +7,7 @@ from distutils.core import setup, Command
 
 from switching import __version__
 
-PACKAGES = ['switching', 'switching.messages']
+PACKAGES = ['switching', 'switching.messages', 'switching.types']
 PACKAGES_DATA = {'switching': ['data/*.xsd']}
 
 class Clean(_clean):

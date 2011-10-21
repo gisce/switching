@@ -4,6 +4,9 @@
 from switching.messages import F1
 import unittest
 import os
+import decimal
+
+from switching.types import DecimalElement
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 def get_data(path):
@@ -20,14 +23,10 @@ class test_F1(unittest.TestCase):
         f1 = F1(self.xml)
         tipus = f1.get_tipus_xml()
         obj = f1.parse_xml()
+        dec_str = str(decimal.Decimal('21.3458'))
+        obj_str = str(obj.Facturas.FacturaATR.Potencia.ImporteTotalTerminoPotencia)
         self.assertEqual(tipus, 'F1')
-        self.assertEqual(obj.Facturas.FacturaATR.Potencia.\
-                         ImporteTotalTerminoPotencia, 21.3458)
-    
-    def test_err(self):
-        f1 = F1(self.xml_err, 'F2')
-        obj = f1.parse_xml()
-        self.assertEqual(obj, -1)
+        self.assertEqual(obj_str, dec_str)
 
 if __name__ == '__main__':
     unittest.main()
