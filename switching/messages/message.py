@@ -61,9 +61,9 @@ class Message(object):
         return self.tipus
 
     def parse_xml(self):
-        """Retornar l'objectify amb el contingut de l'xml"""
+        """Importar el contingut de l'xml"""
         self.check_fpos(self.f_xsd)
         schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)
-        obj = objectify.fromstring(self.str_xml, parser)
-        return obj
+        self.obj = objectify.fromstring(self.str_xml, parser)
+

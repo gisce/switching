@@ -4,5 +4,126 @@ from message import Message
 
 class F1(Message):
     """Classe que implementa F1."""
-    pass
 
+    @property
+    def cups(self):
+        """Retornar el CUPS"""
+        return self.obj.Cabecera.Codigo
+    
+    @property
+    def numero_factura(self):
+        """Retornar el número de factura"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.NumeroFactura
+
+    @property
+    def tipus_factura(self):
+        """Retornar el tipus de factura"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.TipoFactura
+    
+    @property
+    def tipus_rectificadora(self):
+        """Retornar el tipus de rectificadora"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.IndicativoFacturaRectificadora
+
+    @property
+    def data_factura(self):
+        """Retornar el tipus de factura"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.FechaFactura
+    
+    @property
+    def CIF_emisora(self):
+        """Retornar el CIF"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.CIFEmisora
+
+    @property
+    def codi_fiscal_factura(self):
+        """Retornar el codi fiscal de la factura"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.CodigoFiscalFactura
+
+    @property
+    def observacions(self):
+        """Retornar les observacions"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.Observaciones
+
+    @property
+    def import_total_factura(self):
+        """Retornar l'import total"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.ImporteTotalFactura
+
+    @property
+    def saldo_factura(self):
+        """Retornar el saldo"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.SaldoFactura
+    
+    @property
+    def saldo_cobrament(self):
+        """Retornar el cobrament"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.SaldoCobro
+    
+    @property
+    def tipus_facturacio(self):
+        """Retornar el tipus de facturacio"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.TipoFacturacion
+
+    @property
+    def data_BOE(self):
+        """Retornar la data del BOE
+           També serveix per saber quines tarifes de preus aplicar
+        """
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.FechaBOE
+
+    @property
+    def codi_tarifa(self):
+        """Retornar el codi ocsum de la tarifa"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.CodigoTarifa
+    
+    @property
+    def ind_mesura_baixa(self):
+        """Retornar l'indicador de mesura en baixa"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.IndAltamedidoenBaja
+
+    @property
+    def data_inici(self):
+        """Retornar la data d'inici"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.Periodo.FechaDesdeFactura
+
+    @property
+    def data_final(self):
+        """Retornar la data final"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.Periodo.FechaHastaFactura
+
+    @property
+    def nombre_mesos(self):
+        """Retornar el nombre de mesos"""
+        return obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.Periodo.NumeroMeses
+
+    # Línies de factura
+    
+    @property
+    def pot_data_inici(self):
+        return obj.Facturas.FacturaATR.Potencia.TerminoPotencia.FechaDesde
+
+    @property
+    def pot_data_fi(self):
+        return obj.Facturas.FacturaATR.Potencia.TerminoPotencia.FechaHasta
+
+
+
+    
