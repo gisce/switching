@@ -9,7 +9,8 @@ class F1(Message):
     @property
     def cups(self):
         """Retornar el CUPS"""
-        return self.obj.Cabecera.Codigo
+        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+               DireccionSuministro.CUPS
 
     @property
     def numero_factura(self):
@@ -40,12 +41,6 @@ class F1(Message):
         """Retornar el CIF"""
         return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.CIFEmisora
-
-    @property
-    def codi_fiscal_factura(self):
-        """Retornar el codi fiscal de la factura"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.CodigoFiscalFactura
 
     @property
     def observacions(self):
@@ -116,7 +111,6 @@ class F1(Message):
                DatosFacturaATR.Periodo.NumeroMeses
 
     # Línies de factura
-
     @property
     def pot_data_inici(self):
         return self.obj.Facturas.FacturaATR.Potencia.TerminoPotencia.\
@@ -126,3 +120,8 @@ class F1(Message):
     def pot_data_fi(self):
         return self.obj.Facturas.FacturaATR.Potencia.TerminoPotencia.\
                FechaHasta
+
+    @property
+    def comptador_nom(self):
+        """Retorna el número de comptador"""
+        return self.obj.Facturas.FacturaATR.Medidas.Aparato.NumeroSerie
