@@ -125,3 +125,7 @@ class F1(Message):
     def comptador_nom(self):
         """Retorna el número de comptador"""
         return self.obj.Facturas.FacturaATR.Medidas.Aparato.NumeroSerie
+
+    @property
+    def data_limit_pagament(self):
+        return self.obj.Facturas.RegistroFin.FechaLimitePago
