@@ -122,9 +122,14 @@ class F1(Message):
                FechaHasta
 
     @property
-    def comptador_nom(self):
+    def nom_comptador(self):
         """Retorna el número de comptador"""
         return self.obj.Facturas.FacturaATR.Medidas.Aparato.NumeroSerie
+
+    @property
+    def gir_comptador(self):
+        return (10 ** f1_xml.obj.Facturas.FacturaATR.Medidas.Aparato.Integrador.
+               NumeroRuedasEnteras)
 
     @property
     def data_limit_pagament(self):
