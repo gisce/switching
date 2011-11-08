@@ -6,130 +6,110 @@ from message import Message
 class F1(Message):
     """Classe que implementa F1."""
 
-    @property
-    def cups(self):
+    def cups(self, elem):
         """Retornar el CUPS"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DireccionSuministro.CUPS
 
-    @property
-    def numero_factura(self):
+    def numero_factura(self, elem):
         """Retornar el número de factura"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.NumeroFactura
 
-    @property
-    def tipus_factura(self):
+    def tipus_factura(self, elem):
         """Retornar el tipus de factura"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.TipoFactura
 
-    @property
-    def tipus_rectificadora(self):
+    def tipus_rectificadora(self, elem):
         """Retornar el tipus de rectificadora"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.IndicativoFacturaRectificadora
 
-    @property
-    def data_factura(self):
+    def data_factura(self, elem):
         """Retornar el tipus de factura"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.FechaFactura
 
-    @property
-    def CIF_emisora(self):
+    def CIF_emisora(self, elem):
         """Retornar el CIF"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.CIFEmisora
 
-    @property
-    def observacions(self):
+    def observacions(self, elem):
         """Retornar les observacions"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.Observaciones
 
-    @property
-    def import_total_factura(self):
+    def import_total_factura(self, elem):
         """Retornar l'import total"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.ImporteTotalFactura
 
-    @property
-    def saldo_factura(self):
+    def saldo_factura(self, elem):
         """Retornar el saldo"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.SaldoFactura
 
-    @property
-    def saldo_cobrament(self):
+    def saldo_cobrament(self, elem):
         """Retornar el cobrament"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosGeneralesFactura.SaldoCobro
 
-    @property
-    def tipus_facturacio(self):
+    def tipus_facturacio(self, elem):
         """Retornar el tipus de facturacio"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosFacturaATR.TipoFacturacion
 
-    @property
-    def data_BOE(self):
+    def data_BOE(self, elem):
         """Retornar la data del BOE
            També serveix per saber quines tarifes de preus aplicar
         """
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosFacturaATR.FechaBOE
 
-    @property
-    def codi_tarifa(self):
+    def codi_tarifa(self, elem):
         """Retornar el codi ocsum de la tarifa"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosFacturaATR.CodigoTarifa
 
-    @property
-    def ind_mesura_baixa(self):
+    def ind_mesura_baixa(self, elem):
         """Retornar l'indicador de mesura en baixa"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosFacturaATR.IndAltamedidoenBaja
 
-    @property
-    def data_inici(self):
+    def data_inici(self, elem):
         """Retornar la data d'inici"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosFacturaATR.Periodo.FechaDesdeFactura
 
-    @property
-    def data_final(self):
+    def data_final(self, elem):
         """Retornar la data final"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosFacturaATR.Periodo.FechaHastaFactura
 
-    @property
-    def nombre_mesos(self):
+    def nombre_mesos(self, elem):
         """Retornar el nombre de mesos"""
-        return self.obj.Facturas.FacturaATR.DatosGeneralesFacturaATR.\
+        return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
                DatosFacturaATR.Periodo.NumeroMeses
 
     # Línies de factura
-    @property
-    def pot_data_inici(self):
-        return self.obj.Facturas.FacturaATR.Potencia.TerminoPotencia.\
+    def pot_data_inici(self, elem):
+        return self.obj.Facturas.FacturaATR[elem].Potencia.TerminoPotencia.\
                FechaDesde
 
-    @property
-    def pot_data_fi(self):
-        return self.obj.Facturas.FacturaATR.Potencia.TerminoPotencia.\
+    def pot_data_fi(self, elem):
+        return self.obj.Facturas.FacturaATR[elem].Potencia.TerminoPotencia.\
                FechaHasta
 
-    @property
-    def nom_comptador(self):
+    def nom_comptador(self, elem):
         """Retorna el número de comptador"""
-        return self.obj.Facturas.FacturaATR.Medidas.Aparato.NumeroSerie
+        return self.obj.Facturas.FacturaATR[elem].Medidas.Aparato.\
+               NumeroSerie.text
 
-    @property
-    def gir_comptador(self):
-        return (10 ** f1_xml.obj.Facturas.FacturaATR.Medidas.Aparato.Integrador.
-               NumeroRuedasEnteras)
+    def gir_comptador(self, elem):
+        return (10 ** self.obj.Facturas.FacturaATR[elem].Medidas.Aparato.\
+               Integrador.NumeroRuedasEnteras)
 
     @property
     def data_limit_pagament(self):

@@ -48,7 +48,7 @@ class Message(object):
             self.f_xsd = open(xsd, 'r') 
         except:
             print ('err: Fitxer \'%s\' corrupte' % 
-                        swtiching.get_dataXSD_DATA[self.tipus])
+                        switching.get_data(XSD_DATA[self.tipus]))
             raise
 
     def check_fpos(self, f_obj):
