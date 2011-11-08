@@ -6,6 +6,15 @@ from message import Message
 class F1(Message):
     """Classe que implementa F1."""
 
+    @property
+    def get_num_factures(self):
+        ch = self.obj.Facturas.getchildren()
+        nelem = 0
+        for i in range(len(ch)):
+            if 'FacturaATR' in ch[i].tag: 
+                nelem += 1
+        return nelem
+
     def cups(self, elem):
         """Retornar el CUPS"""
         return self.obj.Facturas.FacturaATR[elem].DatosGeneralesFacturaATR.\
