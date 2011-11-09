@@ -7,7 +7,7 @@ class F1(Message):
     """Classe que implementa F1."""
 
     @property
-    def get_num_factures(self):
+    def num_factures(self):
         ch = self.obj.Facturas.getchildren()
         nelem = 0
         for i in range(len(ch)):
@@ -15,9 +15,17 @@ class F1(Message):
                 nelem += 1
         return nelem
 
-    def get_factura(self, fact):
+    def __get_factura(self, fact):
         return Factura(self.obj.Facturas.FacturaATR[fact])
 
+    def get_factures(self):
+        fact = []
+        ch = self.obj.Facturas.getchildren()
+        for i in range(len(ch)):
+            if 'FacturaATR' in ch[i].tag:
+                fact.append(self.__get_factura(i))    
+        return fact
+    
     @property
     def data_limit_pagament(self):
         return self.obj.Facturas.RegistroFin.FechaLimitePago
