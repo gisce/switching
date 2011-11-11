@@ -176,7 +176,10 @@ class Lectura(object):
 
     @property
     def tipus(self):
-        return self.lectura.Magnitud
+        tipus = {'AE': 'A',
+                 'R1': 'R',
+                 'PM': 'M' }
+        return tipus.get(self.lectura.Magnitud)
 
     @property
     def codi_periode(self):
@@ -187,29 +190,29 @@ class Lectura(object):
         return self.lectura.ConstanteMultiplicadora
 
     @property
-    def data_primera_lectura(self):
+    def data_lectura_inicial(self):
         data = str(self.lectura.LecturaDesde.FechaHora)
         return data[0:data.find('T')]
 
     @property
-    def data_darrera_lectura(self):
+    def data_lectura_final(self):
         data = str(self.lectura.LecturaHasta.FechaHora)
         return data[0:data.find('T')]
 
     @property
-    def valor_primera_lectura(self):
+    def valor_lectura_inicial(self):
         return self.lectura.LecturaHasta.Lectura
         
     @property
-    def valor_darrera_lectura(self):
+    def valor_lectura_final(self):
         return self.lectura.LecturaDesde.Lectura
 
     @property
-    def origen_primer_lectura(self):
+    def origen_lectura_inicial(self):
         return self.lectura.LecturaDesde.Procedencia
     
     @property
-    def origen_primer_lectura(self):
+    def origen_lectura_final(self):
         return self.lectura.LecturaHasta.Procedencia
 
     
