@@ -8,10 +8,9 @@ class F1(Message):
 
     @property
     def num_factures(self):
-        ch = self.obj.Facturas.getchildren()
         nelem = 0
-        for i in range(len(ch)):
-            if 'FacturaATR' in ch[i].tag: 
+        for ch in  self.obj.Facturas.getchildren():
+            if 'FacturaATR' in ch.tag: 
                 nelem += 1
         return nelem
 
@@ -20,10 +19,9 @@ class F1(Message):
 
     def get_factures(self):
         fact = []
-        ch = self.obj.Facturas.getchildren()
-        for i in range(len(ch)):
-            if 'FacturaATR' in ch[i].tag:
-                fact.append(self.__get_factura(i))    
+        for ch in self.obj.Facturas.getchildren():
+            if 'FacturaATR' in ch.tag:
+                fact.append(Factura(ch))    
         return fact
     
     @property
@@ -36,6 +34,7 @@ class Factura(object):
     def __init__(self, fact):
         self.factura = fact
 
+    # Dades generals
     @property
     def cups(self):
         """Retornar el CUPS"""
@@ -140,7 +139,7 @@ class Factura(object):
         return self.factura.DatosGeneralesFacturaATR.\
                DatosFacturaATR.Periodo.NumeroMeses
 
-    # Línies de factura
+    # Línies de potència
     @property
     def pot_data_inici(self):
         return self.factura.Potencia.TerminoPotencia.\
@@ -151,6 +150,14 @@ class Factura(object):
         return self.factura.Potencia.TerminoPotencia.\
                FechaHasta
 
+    # Lectures
+    def get_lectures(self):
+        lectures = []
+        for lect in self.factura.Medidas.Aparato.getchildren():
+            if 'Integrador' in lect.tag:
+                lectures.append(Lectura(lect))    
+        return lectures
+
     @property
     def nom_comptador(self):
         """Retorna el número de comptador"""
@@ -160,3 +167,54 @@ class Factura(object):
     def gir_comptador(self):
         return (10 ** self.factura.Medidas.Aparato.\
                Integrador.NumeroRuedasEnteras)
+
+
+class Lectura(object):
+    
+    def __init__(self, lect):
+        self.lectura = lect
+
+    @property
+    def tipus(self):
+        return self.lectura.Magnitud
+
+    @property
+    def codi_periode(self):
+        return self.lectura.CodigoPeriodo
+    
+    @property
+    def constant_multiplicadora(self):
+        return self.lectura.ConstanteMultiplicadora
+
+    @property
+    def data_primera_lectura(self):
+        data = str(self.lectura.LecturaDesde.FechaHora)
+        return data[0:data.find('T')]
+
+    @property
+    def data_darrera_lectura(self):
+        data = str(self.lectura.LecturaHasta.FechaHora)
+        return data[0:data.find('T')]
+
+    @property
+    def valor_primera_lectura(self):
+        return self.lectura.LecturaHasta.Lectura
+        
+    @property
+    def valor_darrera_lectura(self):
+        return self.lectura.LecturaDesde.Lectura
+
+    @property
+    def origen_primer_lectura(self):
+        return self.lectura.LecturaDesde.Procedencia
+    
+    @property
+    def origen_primer_lectura(self):
+        return self.lectura.LecturaHasta.Procedencia
+
+    
+
+
+
+
+
