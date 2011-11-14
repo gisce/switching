@@ -112,8 +112,8 @@ class Factura(object):
     @property
     def codi_tarifa(self):
         """Retornar el codi ocsum de la tarifa"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.CodigoTarifa
+        return str(self.factura.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.CodigoTarifa).zfill(3)
 
     @property
     def ind_mesura_baixa(self):
@@ -155,7 +155,15 @@ class Factura(object):
         lectures = []
         for lect in self.factura.Medidas.Aparato.getchildren():
             if 'Integrador' in lect.tag:
-                lectures.append(Lectura(lect))    
+                lectures.append(Lectura(lect)) 
+        tipus = ''
+        cnt = 0
+        for lect in lectures:
+            if tipus != lect.tipus:
+                cnt = 0
+            cnt += 1
+            lect.cnt = cnt
+                
         return lectures
 
     @property
@@ -173,6 +181,15 @@ class Lectura(object):
     
     def __init__(self, lect):
         self.lectura = lect
+        self._cnt = 0
+
+    @property
+    def cnt(self):
+        return self._cnt
+
+    @cnt.setter
+    def cnt(self, value):
+        self._cnt = value
 
     @property
     def tipus(self):
@@ -214,10 +231,5 @@ class Lectura(object):
     @property
     def origen_lectura_final(self):
         return self.lectura.LecturaHasta.Procedencia
-
-    
-
-
-
 
 
