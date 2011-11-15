@@ -155,15 +155,16 @@ class Factura(object):
         lectures = []
         for lect in self.factura.Medidas.Aparato.getchildren():
             if 'Integrador' in lect.tag:
-                lectures.append(Lectura(lect)) 
+                lectures.append(Lectura(lect, self.codi_tarifa)) 
+        
         tipus = ''
-        cnt = 0
         for lect in lectures:
             if tipus != lect.tipus:
                 cnt = 0
-            cnt += 1
+                tipus = lect.tipus
+            else:
+                cnt += 1
             lect.cnt = cnt
-                
         return lectures
 
     @property
@@ -179,14 +180,14 @@ class Factura(object):
 
 class Lectura(object):
     
-    def __init__(self, lect):
+    def __init__(self, lect, tarifa):
         self.lectura = lect
-        self._cnt = 0
+        self.tarifa = tarifa
 
     @property
     def cnt(self):
         return self._cnt
-
+    
     @cnt.setter
     def cnt(self, value):
         self._cnt = value
@@ -199,8 +200,29 @@ class Lectura(object):
         return tipus.get(self.lectura.Magnitud)
 
     @property
-    def codi_periode(self):
-        return self.lectura.CodigoPeriodo
+    def periode(self):
+        # taula 42
+        relacio = { '004' : {'01' : 'P1', '03' : 'P2'},
+                    '006' : {'01' : 'P1', '03' : 'P2'},
+                    '001' : {'10' : 'P1'},
+                    '005' : {'10' : 'P1'},
+                    '003' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
+                             '64' : 'P4', '65' : 'P5'},
+                    '011' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
+                             '64' : 'P4', '65' : 'P5'},
+                    '012' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
+                             '64' : 'P4', '65' : 'P5'},
+                    '013' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
+                             '64' : 'P4', '65' : 'P5'},
+                    '014' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
+                             '64' : 'P4', '65' : 'P5'},
+                    '015' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
+                             '64' : 'P4', '65' : 'P5'},
+                    '016' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
+                             '64' : 'P4', '65' : 'P5'}}
+        
+        periode = str(self.lectura.CodigoPeriodo)
+        return relacio[self.tarifa][periode]
     
     @property
     def constant_multiplicadora(self):
