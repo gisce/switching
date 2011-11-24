@@ -84,6 +84,17 @@ class Factura(object):
                DatosGeneralesFactura.ImporteTotalFactura
 
     @property
+    def import_iva(self):
+        """Retorna l'IVA"""
+        return self.factura.IVA.Importe
+
+    @property
+    def import_net(self):
+        """Retorna el total sense iva"""
+        return (float(str(self.import_total_factura)) - 
+                        float(str(self.import_iva)))
+
+    @property
     def saldo_factura(self):
         """Retornar el saldo"""
         return self.factura.DatosGeneralesFacturaATR.\
@@ -124,8 +135,8 @@ class Factura(object):
     @property
     def data_inici(self):
         """Retornar la data d'inici"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.Periodo.FechaDesdeFactura
+        return str(self.factura.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.Periodo.FechaDesdeFactura)
 
     @property
     def data_final(self):
@@ -139,7 +150,52 @@ class Factura(object):
         return self.factura.DatosGeneralesFacturaATR.\
                DatosFacturaATR.Periodo.NumeroMeses
 
+    def get_periodes(self):
+        """Retorna una llista de llistes de línies de factura"""
+        noms_funcio = {'Potencia': [self.get_periodes_potencia, 'potencia'],
+                       'EnergiaActiva': [self.get_periodes_activa, 'energia'],
+                       'EnergiaReactiva': [self.get_periodes_reactiva, 
+                                                                    'reactiva'],
+                       'Alquileres': [self.get_lloguers, 'lloguer']}
+        contingut = []
+        tipus = self.factura.getchildren()
+        for i in tipus:
+            key = i.tag[i.tag.find('}')+1:]
+            if key in noms_funcio.keys():
+                pobj = PeriodeFactura(noms_funcio[key][0](), noms_funcio[key][1])
+                contingut.append(pobj)
+        return contingut
+
+    # Línies d'energia
+    def get_periodes_activa(self):
+        periode = []
+        ch = self.factura.EnergiaActiva.TerminoEnergiaActiva.getchildren()
+        for i in ch:
+            if 'Periodo' in i.tag:
+                periode.append(PeriodeActiva(i))    
+        return periode
+
+    def get_periodes_reactiva(self):
+        periode = []
+        ch = self.factura.EnergiaReactiva.TerminoEnergiaReactiva.getchildren()
+        for i in ch:
+            if 'Periodo' in i.tag:
+                periode.append(PeriodeReactiva(i))    
+        return periode
+
     # Línies de potència
+    def get_periodes_potencia(self):
+        periode = []
+        ch = self.factura.Potencia.TerminoPotencia.getchildren()
+        for i in ch:
+            if 'Periodo' in i.tag:
+                periode.append(PeriodePotencia(i))    
+        return periode
+
+    # Línies de lloguers
+    def get_lloguers(self):
+        pass
+
     @property
     def pot_data_inici(self):
         return self.factura.Potencia.TerminoPotencia.\
@@ -177,12 +233,57 @@ class Factura(object):
         return (10 ** self.factura.Medidas.Aparato.\
                Integrador.NumeroRuedasEnteras)
 
+class PeriodeFactura(object):
+    def __init__(self, llista, tipus):
+        self.llista_periodes = llista
+        self._tipus = tipus
+
+    @property
+    def tipus(self):
+        return self._tipus
+    
+    def get_llista_periodes(self):
+        return self.llista_periodes
+
+
+class PeriodeActiva(object):
+   
+    def __init__(self, periode):
+        self.periode = periode
+    
+    @property
+    def quantitat(self):
+        "Retorna kwh"
+        return float(str(self.periode.ValorEnergiaActiva))
+
+
+class PeriodeReactiva(object):
+
+   def __init__(self, periode):
+        self.periode = periode
+
+   @property
+   def quantitat(self):
+        return float(str(self.periode.ValorEnergiaReactiva))
+
+
+class PeriodePotencia(object):
+
+   def __init__(self, periode):
+        self.periode = periode
+
+   @property
+   def quantitat(self):
+        "Retorna kw"
+        return int(str(self.periode.PotenciaAFacturar))/1000
+
 
 class Lectura(object):
     
     def __init__(self, lect, tarifa):
         self.lectura = lect
         self.tarifa = tarifa
+        self._cnt = 0
 
     @property
     def cnt(self):
@@ -240,11 +341,11 @@ class Lectura(object):
 
     @property
     def valor_lectura_inicial(self):
-        return self.lectura.LecturaHasta.Lectura
+        return self.lectura.LecturaDesde.Lectura
         
     @property
     def valor_lectura_final(self):
-        return self.lectura.LecturaDesde.Lectura
+        return self.lectura.LecturaHasta.Lectura
 
     @property
     def origen_lectura_inicial(self):
