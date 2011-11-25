@@ -10,7 +10,7 @@ class F1(Message):
     def num_factures(self):
         nelem = 0
         for ch in  self.obj.Facturas.getchildren():
-            if 'FacturaATR' in ch.tag: 
+            if 'FacturaATR' in ch.tag:
                 nelem += 1
         return nelem
 
@@ -21,9 +21,9 @@ class F1(Message):
         fact = []
         for ch in self.obj.Facturas.getchildren():
             if 'FacturaATR' in ch.tag:
-                fact.append(Factura(ch))    
+                fact.append(Factura(ch))
         return fact
-    
+
     @property
     def data_limit_pagament(self):
         return self.obj.Facturas.RegistroFin.FechaLimitePago
@@ -91,8 +91,7 @@ class Factura(object):
     @property
     def import_net(self):
         """Retorna el total sense iva"""
-        return (float(str(self.import_total_factura)) - 
-                        float(str(self.import_iva)))
+        return self.factura.IVA.BaseImponible
 
     @property
     def saldo_factura(self):
@@ -150,50 +149,44 @@ class Factura(object):
         return self.factura.DatosGeneralesFacturaATR.\
                DatosFacturaATR.Periodo.NumeroMeses
 
-    def get_periodes(self):
+    def get_linies_factura(self):
         """Retorna una llista de llistes de línies de factura"""
-        noms_funcio = {'Potencia': [self.get_periodes_potencia, 'potencia'],
-                       'EnergiaActiva': [self.get_periodes_activa, 'energia'],
-                       'EnergiaReactiva': [self.get_periodes_reactiva, 
-                                                                    'reactiva'],
-                       'Alquileres': [self.get_lloguers, 'lloguer']}
+        noms_funcio = {'Potencia': [self.get_info_potencia, 'potencia'],
+                       'EnergiaActiva': [self.get_info_activa, 'energia'],
+                       'EnergiaReactiva': [self.get_info_reactiva,
+                                                                  'reactiva'],
+                       'Alquileres': [self.get_info_lloguers, 'lloguer']}
         contingut = []
         tipus = self.factura.getchildren()
         for i in tipus:
-            key = i.tag[i.tag.find('}')+1:]
+            key = i.tag[i.tag.find('}') + 1:]
             if key in noms_funcio.keys():
-                pobj = PeriodeFactura(noms_funcio[key][0](), noms_funcio[key][1])
+                pobj = LiniesFactura(noms_funcio[key][0](), noms_funcio[key][1])
                 contingut.append(pobj)
         return contingut
 
-    # Línies d'energia
-    def get_periodes_activa(self):
+    # Periodes d'energia
+    def get_info_activa(self):
         periode = []
         ch = self.factura.EnergiaActiva.TerminoEnergiaActiva.getchildren()
-        for i in ch:
-            if 'Periodo' in i.tag:
-                periode.append(PeriodeActiva(i))    
+        periode = [PeriodeActiva(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
-    def get_periodes_reactiva(self):
+    def get_info_reactiva(self):
         periode = []
         ch = self.factura.EnergiaReactiva.TerminoEnergiaReactiva.getchildren()
-        for i in ch:
-            if 'Periodo' in i.tag:
-                periode.append(PeriodeReactiva(i))    
+        periode = [PeriodeReactiva(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
-    # Línies de potència
-    def get_periodes_potencia(self):
+    # Periodes de potència
+    def get_info_potencia(self):
         periode = []
         ch = self.factura.Potencia.TerminoPotencia.getchildren()
-        for i in ch:
-            if 'Periodo' in i.tag:
-                periode.append(PeriodePotencia(i))    
+        periode = [PeriodePotencia(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
     # Línies de lloguers
-    def get_lloguers(self):
+    def get_info_lloguers(self):
         pass
 
     @property
@@ -212,7 +205,7 @@ class Factura(object):
         for lect in self.factura.Medidas.Aparato.getchildren():
             if 'Integrador' in lect.tag:
                 lectures.append(Lectura(lect, self.codi_tarifa)) 
-        
+
         tipus = ''
         for lect in lectures:
             if tipus != lect.tipus:
@@ -233,24 +226,25 @@ class Factura(object):
         return (10 ** self.factura.Medidas.Aparato.\
                Integrador.NumeroRuedasEnteras)
 
-class PeriodeFactura(object):
-    def __init__(self, llista, tipus):
-        self.llista_periodes = llista
+
+class LiniesFactura(object):
+    def __init__(self, data, tipus):
+        self.data = data
         self._tipus = tipus
 
     @property
     def tipus(self):
         return self._tipus
-    
-    def get_llista_periodes(self):
-        return self.llista_periodes
+
+    def get_data(self):
+        return self.data
 
 
 class PeriodeActiva(object):
-   
+
     def __init__(self, periode):
         self.periode = periode
-    
+
     @property
     def quantitat(self):
         "Retorna kwh"
@@ -259,27 +253,27 @@ class PeriodeActiva(object):
 
 class PeriodeReactiva(object):
 
-   def __init__(self, periode):
+    def __init__(self, periode):
         self.periode = periode
 
-   @property
-   def quantitat(self):
+    @property
+    def quantitat(self):
         return float(str(self.periode.ValorEnergiaReactiva))
 
 
 class PeriodePotencia(object):
 
-   def __init__(self, periode):
+    def __init__(self, periode):
         self.periode = periode
 
-   @property
-   def quantitat(self):
+    @property
+    def quantitat(self):
         "Retorna kw"
-        return int(str(self.periode.PotenciaAFacturar))/1000
+        return float(str(self.periode.PotenciaAFacturar)) / 1000
 
 
 class Lectura(object):
-    
+
     def __init__(self, lect, tarifa):
         self.lectura = lect
         self.tarifa = tarifa
@@ -288,7 +282,7 @@ class Lectura(object):
     @property
     def cnt(self):
         return self._cnt
-    
+
     @cnt.setter
     def cnt(self, value):
         self._cnt = value
@@ -297,34 +291,34 @@ class Lectura(object):
     def tipus(self):
         tipus = {'AE': 'A',
                  'R1': 'R',
-                 'PM': 'M' }
+                 'PM': 'M'}
         return tipus.get(self.lectura.Magnitud)
 
     @property
     def periode(self):
         # taula 42
-        relacio = { '004' : {'01' : 'P1', '03' : 'P2'},
-                    '006' : {'01' : 'P1', '03' : 'P2'},
-                    '001' : {'10' : 'P1'},
-                    '005' : {'10' : 'P1'},
-                    '003' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
-                             '64' : 'P4', '65' : 'P5', '66' : 'P6'},
-                    '011' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
-                             '64' : 'P4', '65' : 'P5', '66' : 'P6'},
-                    '012' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
-                             '64' : 'P4', '65' : 'P5', '66' : 'P6'},
-                    '013' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
-                             '64' : 'P4', '65' : 'P5', '66' : 'P6'},
-                    '014' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
-                             '64' : 'P4', '65' : 'P5', '66' : 'P6'},
-                    '015' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
-                             '64' : 'P4', '65' : 'P5', '66' : 'P6'},
-                    '016' : {'61' : 'P1', '62' : 'P2', '63' : 'P3', 
-                             '64' : 'P4', '65' : 'P5', '66' : 'P6'}}
-        
+        relacio = {'004': {'01': 'P1', '03': 'P2'},
+                   '006': {'01': 'P1', '03': 'P2'},
+                   '001': {'10': 'P1'},
+                   '005': {'10': 'P1'},
+                   '003': {'61': 'P1', '62': 'P2', '63': 'P3', 
+                           '64': 'P4', '65': 'P5', '66': 'P6'},
+                   '011': {'61': 'P1', '62': 'P2', '63': 'P3', 
+                           '64': 'P4', '65': 'P5', '66': 'P6'},
+                   '012': {'61': 'P1', '62': 'P2', '63': 'P3', 
+                           '64': 'P4', '65': 'P5', '66': 'P6'},
+                   '013': {'61': 'P1', '62': 'P2', '63': 'P3', 
+                           '64': 'P4', '65': 'P5', '66': 'P6'},
+                   '014': {'61': 'P1', '62': 'P2', '63': 'P3', 
+                           '64': 'P4', '65': 'P5', '66': 'P6'},
+                   '015': {'61': 'P1', '62': 'P2', '63': 'P3', 
+                           '64': 'P4', '65': 'P5', '66': 'P6'},
+                   '016': {'61': 'P1', '62': 'P2', '63': 'P3', 
+                           '64': 'P4', '65': 'P5', '66': 'P6'}}
+
         periode = str(self.lectura.CodigoPeriodo)
         return relacio[self.tarifa][periode]
-    
+
     @property
     def constant_multiplicadora(self):
         return self.lectura.ConstanteMultiplicadora
@@ -342,7 +336,7 @@ class Lectura(object):
     @property
     def valor_lectura_inicial(self):
         return self.lectura.LecturaDesde.Lectura
-        
+
     @property
     def valor_lectura_final(self):
         return self.lectura.LecturaHasta.Lectura
@@ -350,9 +344,7 @@ class Lectura(object):
     @property
     def origen_lectura_inicial(self):
         return self.lectura.LecturaDesde.Procedencia
-    
+
     @property
     def origen_lectura_final(self):
         return self.lectura.LecturaHasta.Procedencia
-
-
