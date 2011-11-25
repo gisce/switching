@@ -155,7 +155,9 @@ class Factura(object):
                        'EnergiaActiva': [self.get_info_activa, 'energia'],
                        'EnergiaReactiva': [self.get_info_reactiva,
                                                                   'reactiva'],
-                       'Alquileres': [self.get_info_lloguers, 'lloguer']}
+                       'Alquileres': [self.get_info_lloguers, 'lloguer'],
+                       'ExcesoPotencia': [self.get_info_exces,
+                                                             'exces_potencia']}
         contingut = []
         tipus = self.factura.getchildren()
         for i in tipus:
@@ -165,30 +167,38 @@ class Factura(object):
                 contingut.append(pobj)
         return contingut
 
-    # Periodes d'energia
     def get_info_activa(self):
+        """Periodes d'energia"""
         periode = []
         ch = self.factura.EnergiaActiva.TerminoEnergiaActiva.getchildren()
         periode = [PeriodeActiva(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
     def get_info_reactiva(self):
+        """Periodes de reactiva"""
         periode = []
         ch = self.factura.EnergiaReactiva.TerminoEnergiaReactiva.getchildren()
         periode = [PeriodeReactiva(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
-    # Periodes de potència
     def get_info_potencia(self):
+        """Periodes de potencia"""
         periode = []
         ch = self.factura.Potencia.TerminoPotencia.getchildren()
         periode = [PeriodePotencia(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
-    # Línies de lloguers
-    def get_info_lloguers(self):
+    def get_info_exces(self):
+        """Peiodes d'excessos de potència"""
+        periode = []
+        ch = self.factura.Potencia.ExcesoPotencia.getchildren()
+        periode = [PeriodeExces(i) for i in ch if 'Periodo' in i.tag]
         pass
 
+    def get_info_lloguers(self):
+        """Línies de lloguers"""
+        pass
+    
     @property
     def pot_data_inici(self):
         return self.factura.Potencia.TerminoPotencia.\
@@ -199,22 +209,24 @@ class Factura(object):
         return self.factura.Potencia.TerminoPotencia.\
                FechaHasta
 
-    # Lectures
     def get_lectures(self):
+        """Retorna totes les lectures"""
         lectures = []
         for lect in self.factura.Medidas.Aparato.getchildren():
             if 'Integrador' in lect.tag:
                 lectures.append(Lectura(lect, self.codi_tarifa)) 
 
         tipus = ''
+        cnt_tipus = 0
         for lect in lectures:
             if tipus != lect.tipus:
                 cnt = 0
                 tipus = lect.tipus
+                cnt_tipus += 1
             else:
                 cnt += 1
             lect.cnt = cnt
-        return lectures
+        return cnt_tipus, lectures
 
     @property
     def nom_comptador(self):
@@ -271,6 +283,14 @@ class PeriodePotencia(object):
         "Retorna kw"
         return float(str(self.periode.PotenciaAFacturar)) / 1000
 
+class PeriodeExces(object):
+    def __init__(self, periode):
+        self.periode = periode
+
+    @property
+    def quantitat(self):
+        "Retorna kw"
+        return float(str(self.periode.ValorExcesoPotencia)) / 1000
 
 class Lectura(object):
 
@@ -291,7 +311,8 @@ class Lectura(object):
     def tipus(self):
         tipus = {'AE': 'A',
                  'R1': 'R',
-                 'PM': 'M'}
+                 'PM': 'M',
+                 'EP': 'EP'}
         return tipus.get(self.lectura.Magnitud)
 
     @property
