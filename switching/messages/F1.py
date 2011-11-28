@@ -193,11 +193,12 @@ class Factura(object):
         periode = []
         ch = self.factura.Potencia.ExcesoPotencia.getchildren()
         periode = [PeriodeExces(i) for i in ch if 'Periodo' in i.tag]
-        pass
+        return periode
 
     def get_info_lloguers(self):
         """Línies de lloguers"""
-        pass
+        obj = Lloguer(self.factura.Alquileres.ImporteFacturacionAlquileres)
+        return obj
     
     @property
     def pot_data_inici(self):
@@ -292,6 +293,14 @@ class PeriodeExces(object):
         "Retorna kw"
         return float(str(self.periode.ValorExcesoPotencia)) / 1000
 
+class Lloguer(object):
+    def __init__(self, cost):
+        self.cost = cost
+    
+    @property
+    def quantitat(self):
+        return float(str(self.cost))
+    
 class Lectura(object):
 
     def __init__(self, lect, tarifa):
