@@ -20,9 +20,12 @@ class Message(object):
         """Construeix un missatge base."""
         if isinstance(xml, file):
             self.check_fpos(xml)
-            self.str_xml = xml.read()
-        else:
-            self.str_xml = xml
+            xml = xml.read()
+        # Fem desaparèixer el header amb l'encoding de l'xml
+        # <?xml version="1.0" encoding="ISO-8859-1"?>
+        root = etree.fromstring(xml)
+        uxml = etree.tostring(root).decode('iso-8859-1')
+        self.str_xml = uxml
         self.tipus = force_tipus
         self.f_xsd = ''
         if not force_tipus:
