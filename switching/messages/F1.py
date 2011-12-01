@@ -284,6 +284,11 @@ class PeriodePotencia(object):
         "Retorna kw"
         return float(str(self.periode.PotenciaAFacturar)) / 1000
 
+    @property
+    def maximetre(self):
+        "Retorna la potència màxima demanada"
+        return fload(str(self.periode.PotenciaMaxDemandada)) / 1000
+
 class PeriodeExces(object):
     def __init__(self, periode):
         self.periode = periode
@@ -323,6 +328,14 @@ class Lectura(object):
                  'PM': 'M',
                  'EP': 'EP'}
         return tipus.get(self.lectura.Magnitud)
+
+    @property 
+    def magnitud(self):
+        return self.lectura.Magnitud
+
+    @property
+    def consum(self):
+        return self.lectura.ConsumoCalculado 
 
     @property
     def periode(self):
