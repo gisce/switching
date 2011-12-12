@@ -168,30 +168,30 @@ class Factura(object):
         return contingut
 
     def get_info_activa(self):
-        """Periodes d'energia"""
+        """Retornat els periodes d'energia"""
         periode = []
         ch = self.factura.EnergiaActiva.TerminoEnergiaActiva.getchildren()
         periode = [PeriodeActiva(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
     def get_info_reactiva(self):
-        """Periodes de reactiva"""
+        """Retorna els periodes de reactiva"""
         periode = []
         ch = self.factura.EnergiaReactiva.TerminoEnergiaReactiva.getchildren()
         periode = [PeriodeReactiva(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
     def get_info_potencia(self):
-        """Periodes de potencia"""
+        """Retorna els periodes de potència"""
         periode = []
         ch = self.factura.Potencia.TerminoPotencia.getchildren()
         periode = [PeriodePotencia(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
     def get_info_exces(self):
-        """Peiodes d'excessos de potència"""
+        """Retorna els periodes d'excessos de potència"""
         periode = []
-        ch = self.factura.Potencia.ExcesoPotencia.getchildren()
+        ch = self.factura.ExcesoPotencia.getchildren()
         periode = [PeriodeExces(i) for i in ch if 'Periodo' in i.tag]
         return periode
 
@@ -263,6 +263,10 @@ class PeriodeActiva(object):
         "Retorna kwh"
         return float(str(self.periode.ValorEnergiaActiva))
 
+    @property
+    def preu_unitat(self):
+        "Retorna el preu de l'energia activa"
+        return float(str(self.periode.PrecioEnergia))
 
 class PeriodeReactiva(object):
 
@@ -273,6 +277,10 @@ class PeriodeReactiva(object):
     def quantitat(self):
         return float(str(self.periode.ValorEnergiaReactiva))
 
+    @property
+    def preu_unitat(self):
+        "Retorna el preu de l'energia reactiva"
+        return float(str(self.periode.PrecioEnergiaReactiva))
 
 class PeriodePotencia(object):
 
@@ -288,6 +296,11 @@ class PeriodePotencia(object):
     def maximetre(self):
         "Retorna la potència màxima demanada"
         return fload(str(self.periode.PotenciaMaxDemandada)) / 1000
+
+    @property
+    def preu_unitat(self):
+        "Retorna el preu del kw"
+        return float(str(self.periode.PrecioPotencia)) * 1000
 
 class PeriodeExces(object):
     def __init__(self, periode):

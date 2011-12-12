@@ -68,5 +68,8 @@ class Message(object):
         self.check_fpos(self.f_xsd)
         schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)
-        self.obj = objectify.fromstring(self.str_xml, parser)
-
+        try:
+            self.obj = objectify.fromstring(self.str_xml, parser)
+        except:
+            print 'err: Document invàlid'
+            raise
