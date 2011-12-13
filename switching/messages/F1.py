@@ -80,8 +80,8 @@ class Factura(object):
     @property
     def import_total_factura(self):
         """Retornar l'import total"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.ImporteTotalFactura
+        return float(str(self.factura.DatosGeneralesFacturaATR.\
+                    DatosGeneralesFactura.ImporteTotalFactura))
 
     @property
     def import_iva(self):
@@ -163,37 +163,60 @@ class Factura(object):
         for i in tipus:
             key = i.tag[i.tag.find('}') + 1:]
             if key in noms_funcio.keys():
-                pobj = LiniesFactura(noms_funcio[key][0](), noms_funcio[key][1])
+                if key == 'Alquileres':
+                    data = noms_funcio[key][0]()
+                    pobj = LiniesFactura(data, noms_funcio[key][1])
+                else:
+                    data, total = noms_funcio[key][0]()
+                    pobj = LiniesFactura(data, noms_funcio[key][1], total)
                 contingut.append(pobj)
         return contingut
 
     def get_info_activa(self):
         """Retornat els periodes d'energia"""
         periode = []
+        total = 0
         ch = self.factura.EnergiaActiva.TerminoEnergiaActiva.getchildren()
-        periode = [PeriodeActiva(i) for i in ch if 'Periodo' in i.tag]
-        return periode
+        for i in ch:
+            if 'Periodo' in i.tag:
+                periode.append(PeriodeActiva(i))
+        total = float(str(self.factura.EnergiaActiva.ImporteTotalEnergiaActiva))
+        return periode, total
 
     def get_info_reactiva(self):
         """Retorna els periodes de reactiva"""
         periode = []
+        total = 0
         ch = self.factura.EnergiaReactiva.TerminoEnergiaReactiva.getchildren()
-        periode = [PeriodeReactiva(i) for i in ch if 'Periodo' in i.tag]
-        return periode
+        for i in ch:
+            if 'Periodo' in i.tag:
+                periode.append(PeriodeReactiva(i))
+        total = float(str(self.factura.EnergiaReactiva.\
+                                            ImporteTotalEnergiaReactiva))
+        return periode, total
 
     def get_info_potencia(self):
         """Retorna els periodes de potència"""
         periode = []
+        total = 0
         ch = self.factura.Potencia.TerminoPotencia.getchildren()
-        periode = [PeriodePotencia(i) for i in ch if 'Periodo' in i.tag]
-        return periode
+        for i in ch:
+            if 'Periodo' in i.tag:
+                periode.append(PeriodePotencia(i))
+        total = float(str(self.factura.Potencia.ImporteTotalTerminoPotencia))
+        return periode, total
 
     def get_info_exces(self):
         """Retorna els periodes d'excessos de potència"""
         periode = []
+        total = 0
         ch = self.factura.ExcesoPotencia.getchildren()
-        periode = [PeriodeExces(i) for i in ch if 'Periodo' in i.tag]
-        return periode
+        for i in ch:
+            if 'Periodo' in i.tag:
+                periode.append(PeriodeExces(i))
+            elif 'ImporteTotal' in i.tag:
+                total = float(str(i))
+        return periode, total
 
     def get_info_lloguers(self):
         """Línies de lloguers"""
@@ -241,8 +264,9 @@ class Factura(object):
 
 
 class LiniesFactura(object):
-    def __init__(self, data, tipus):
+    def __init__(self, data, tipus, total=None):
         self.data = data
+        self._total = total
         self._tipus = tipus
 
     @property
@@ -251,6 +275,10 @@ class LiniesFactura(object):
 
     def get_data(self):
         return self.data
+    
+    @property
+    def total(self):
+        return self._total
 
 
 class PeriodeActiva(object):
