@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from lxml import objectify, etree
+from tools.translate import _ 
 
 import switching
 from switching.types import DecimalElement, check_decimal_element
@@ -38,21 +39,21 @@ class Message(object):
             obj = objectify.fromstring(self.str_xml)
             self.tipus = obj.Cabecera.CodigoDelProceso
         except: 
-            print 'err: No s\'ha pogut identificar el tipus'
-            raise 
+            msg = 'No s\'ha pogut identificar el tipus'
+            raise except_f1('Error', _(msg))
 
     def set_xsd(self):
         """Setejar el fitxer xsd"""
         if self.tipus not in XSD_DATA:
-            print 'err: Tipus \'%s\'  no suportat' % self.tipus
-            raise
+            msg = ('Tipus \'%s\'  no suportat' % self.tipus)
+            raise except_f1('Error', _(msg))
         try:
             xsd = switching.get_data(XSD_DATA[self.tipus])
             self.f_xsd = open(xsd, 'r') 
         except:
-            print ('err: Fitxer \'%s\' corrupte' % 
+            msg = ('Fitxer \'%s\' corrupte' % 
                         switching.get_data(XSD_DATA[self.tipus]))
-            raise
+            raise except_f1('Error', _(msg))
 
     def check_fpos(self, f_obj):
         """Setejar la posició actual dels fixers"""
@@ -71,5 +72,9 @@ class Message(object):
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)
         except:
-            print 'err: Document invàlid'
-            raise
+            raise except_f1('Error', _('Document invàlid'))
+
+class except_f1(Exception):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
