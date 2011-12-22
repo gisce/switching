@@ -23,6 +23,11 @@ class F1(Message):
             if 'FacturaATR' in ch.tag:
                 fact.append(Factura(ch))
         return fact
+    
+    @property
+    def get_codi_emisor(self):
+        ref = self.obj.Cabecera.CodigoREEEmpresaEmisora
+        return '%04d' % ref
 
     @property
     def data_limit_pagament(self):
