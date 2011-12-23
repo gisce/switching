@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from message import Message
+from message import Message, except_f1
 
 
 class F1(Message):
@@ -27,6 +27,8 @@ class F1(Message):
     @property
     def get_codi_emisor(self):
         ref = self.obj.Cabecera.CodigoREEEmpresaEmisora
+        if not ref:
+            raise except_f1('Error', _('Document sense emisor'))
         return '%04d' % ref
 
     @property
