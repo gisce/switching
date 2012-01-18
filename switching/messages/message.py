@@ -40,7 +40,7 @@ class Message(object):
         """Setejar el tipus de missatge"""
         try:
             obj = objectify.fromstring(self.str_xml)
-            self.tipus = obj.Cabecera.CodigoDelProceso
+            self.tipus = obj.Cabecera.CodigoDelProceso.text
         except: 
             msg = 'No s\'ha pogut identificar el tipus'
             raise except_f1('Error', _(msg))
