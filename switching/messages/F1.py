@@ -26,7 +26,7 @@ class F1(Message):
     
     @property
     def get_codi_emisor(self):
-        ref = self.obj.Cabecera.CodigoREEEmpresaEmisora.text
+        ref = int(self.obj.Cabecera.CodigoREEEmpresaEmisora.text)
         if not ref:
             raise except_f1('Error', _('Document sense emisor'))
         return '%04d' % ref
