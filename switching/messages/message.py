@@ -1,13 +1,15 @@
 
 # -*- coding: utf-8 -*-
 
+import gettext
 from lxml import objectify, etree
-from tools.translate import _ 
 
 import switching
 from switching.types import DecimalElement, check_decimal_element
 
 XSD_DATA = {'F1': 'Facturacion.xsd'}
+
+_ = gettext.gettext
 
 # register the decimal type with objectify
 decimal_type = objectify.PyType('decimal', check_decimal_element,
