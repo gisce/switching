@@ -26,14 +26,14 @@ class F1(Message):
     
     @property
     def get_codi_emisor(self):
-        ref = self.obj.Cabecera.CodigoREEEmpresaEmisora
+        ref = self.obj.Cabecera.CodigoREEEmpresaEmisora.text
         if not ref:
             raise except_f1('Error', _('Document sense emisor'))
         return '%04d' % ref
 
     @property
     def data_limit_pagament(self):
-        return self.obj.Facturas.RegistroFin.FechaLimitePago
+        return self.obj.Facturas.RegistroFin.FechaLimitePago.text
 
 
 class Factura(object):
@@ -46,77 +46,77 @@ class Factura(object):
     def cups(self):
         """Retornar el CUPS"""
         return self.factura.DatosGeneralesFacturaATR.\
-               DireccionSuministro.CUPS
+               DireccionSuministro.CUPS.text
 
     @property
     def numero_factura(self):
         """Retornar el número de factura"""
         return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.NumeroFactura
+               DatosGeneralesFactura.NumeroFactura.text
 
     @property
     def tipus_factura(self):
         """Retornar el tipus de factura"""
         return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.TipoFactura
+               DatosGeneralesFactura.TipoFactura.text
 
     @property
     def tipus_rectificadora(self):
         """Retornar el tipus de rectificadora"""
         return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.IndicativoFacturaRectificadora
+               DatosGeneralesFactura.IndicativoFacturaRectificadora.text
 
     @property
     def data_factura(self):
         """Retornar el tipus de factura"""
         return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.FechaFactura
+               DatosGeneralesFactura.FechaFactura.text
 
     @property
     def CIF_emisora(self):
         """Retornar el CIF"""
         return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.CIFEmisora
+               DatosGeneralesFactura.CIFEmisora.text
 
     @property
     def observacions(self):
         """Retornar les observacions"""
         return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.Observaciones
+               DatosGeneralesFactura.Observaciones.text
 
     @property
     def import_total_factura(self):
         """Retornar l'import total"""
-        return float(str(self.factura.DatosGeneralesFacturaATR.\
-                    DatosGeneralesFactura.ImporteTotalFactura))
+        return float(self.factura.DatosGeneralesFacturaATR.\
+                     DatosGeneralesFactura.ImporteTotalFactura.text)
 
     @property
     def import_iva(self):
         """Retorna l'IVA"""
-        return self.factura.IVA.Importe
+        return float(self.factura.IVA.Importe.text)
 
     @property
     def import_net(self):
         """Retorna el total sense iva"""
-        return self.factura.IVA.BaseImponible
+        return float(self.factura.IVA.BaseImponible.text)
 
     @property
     def saldo_factura(self):
         """Retornar el saldo"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.SaldoFactura
+        return float(self.factura.DatosGeneralesFacturaATR.\
+                     DatosGeneralesFactura.SaldoFactura.text)
 
     @property
     def saldo_cobrament(self):
         """Retornar el cobrament"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.SaldoCobro
+        return float(self.factura.DatosGeneralesFacturaATR.\
+                       DatosGeneralesFactura.SaldoCobro.text)
 
     @property
     def tipus_facturacio(self):
         """Retornar el tipus de facturacio"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.TipoFacturacion
+        return int(self.factura.DatosGeneralesFacturaATR.\
+                   DatosFacturaATR.TipoFacturacion.text)
 
     @property
     def data_BOE(self):
@@ -124,37 +124,37 @@ class Factura(object):
            També serveix per saber quines tarifes de preus aplicar
         """
         return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.FechaBOE
+               DatosFacturaATR.FechaBOE.text
 
     @property
     def codi_tarifa(self):
         """Retornar el codi ocsum de la tarifa"""
-        return str(self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.CodigoTarifa).zfill(3)
+        return self.factura.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.CodigoTarifa.text.zfill(3)
 
     @property
     def ind_mesura_baixa(self):
         """Retornar l'indicador de mesura en baixa"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.IndAltamedidoenBaja
+        return factura.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.IndAltamedidoenBaja.text
 
     @property
     def data_inici(self):
         """Retornar la data d'inici"""
-        return str(self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.Periodo.FechaDesdeFactura)
+        return self.factura.DatosGeneralesFacturaATR.\
+               DatosFacturaATR.Periodo.FechaDesdeFactura.text
 
     @property
     def data_final(self):
         """Retornar la data final"""
         return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.Periodo.FechaHastaFactura
+               DatosFacturaATR.Periodo.FechaHastaFactura.text
 
     @property
     def nombre_mesos(self):
         """Retornar el nombre de mesos"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.Periodo.NumeroMeses
+        return int(self.factura.DatosGeneralesFacturaATR.\
+                    DatosFacturaATR.Periodo.NumeroMeses.text)
 
     def get_linies_factura(self):
         """Retorna una llista de llistes de línies de factura"""
@@ -187,7 +187,7 @@ class Factura(object):
         for i in ch:
             if 'Periodo' in i.tag:
                 periode.append(PeriodeActiva(i))
-        total = float(str(self.factura.EnergiaActiva.ImporteTotalEnergiaActiva))
+        total = float(self.factura.EnergiaActiva.ImporteTotalEnergiaActiva.text)
         return periode, total
 
     def get_info_reactiva(self):
@@ -198,8 +198,8 @@ class Factura(object):
         for i in ch:
             if 'Periodo' in i.tag:
                 periode.append(PeriodeReactiva(i))
-        total = float(str(self.factura.EnergiaReactiva.\
-                                            ImporteTotalEnergiaReactiva))
+        total = float(self.factura.EnergiaReactiva.\
+                         ImporteTotalEnergiaReactiva.text)
         return periode, total
 
     def get_info_potencia(self):
@@ -210,7 +210,7 @@ class Factura(object):
         for i in ch:
             if 'Periodo' in i.tag:
                 periode.append(PeriodePotencia(i))
-        total = float(str(self.factura.Potencia.ImporteTotalTerminoPotencia))
+        total = float(self.factura.Potencia.ImporteTotalTerminoPotencia.text)
         return periode, total
 
     def get_info_exces(self):
@@ -227,18 +227,18 @@ class Factura(object):
 
     def get_info_lloguers(self):
         """Línies de lloguers"""
-        obj = Lloguer(self.factura.Alquileres.ImporteFacturacionAlquileres)
+        obj = Lloguer(self.factura.Alquileres.ImporteFacturacionAlquileres.text)
         return obj
     
     @property
     def pot_data_inici(self):
         return self.factura.Potencia.TerminoPotencia.\
-               FechaDesde
+               FechaDesde.text
 
     @property
     def pot_data_fi(self):
         return self.factura.Potencia.TerminoPotencia.\
-               FechaHasta
+               FechaHasta.text
 
     def get_lectures(self):
         """Retorna totes les lectures"""
@@ -266,8 +266,8 @@ class Factura(object):
 
     @property
     def gir_comptador(self):
-        return (10 ** self.factura.Medidas.Aparato.\
-               Integrador.NumeroRuedasEnteras)
+        return (10 ** int(self.factura.Medidas.Aparato.\
+               Integrador.NumeroRuedasEnteras.text))
 
 
 class LiniesFactura(object):
@@ -296,12 +296,12 @@ class PeriodeActiva(object):
     @property
     def quantitat(self):
         "Retorna kwh"
-        return float(str(self.periode.ValorEnergiaActiva))
+        return float(self.periode.ValorEnergiaActiva.text)
 
     @property
     def preu_unitat(self):
         "Retorna el preu de l'energia activa"
-        return float(str(self.periode.PrecioEnergia))
+        return float(self.periode.PrecioEnergia.text)
 
 class PeriodeReactiva(object):
 
@@ -310,12 +310,12 @@ class PeriodeReactiva(object):
 
     @property
     def quantitat(self):
-        return float(str(self.periode.ValorEnergiaReactiva))
+        return float(self.periode.ValorEnergiaReactiva.text)
 
     @property
     def preu_unitat(self):
         "Retorna el preu de l'energia reactiva"
-        return float(str(self.periode.PrecioEnergiaReactiva))
+        return float(self.periode.PrecioEnergiaReactiva.text)
 
 class PeriodePotencia(object):
 
@@ -325,17 +325,17 @@ class PeriodePotencia(object):
     @property
     def quantitat(self):
         "Retorna kw"
-        return float(str(self.periode.PotenciaAFacturar)) / 1000
+        return float(self.periode.PotenciaAFacturar.text) / 1000
 
     @property
     def maximetre(self):
         "Retorna la potència màxima demanada"
-        return fload(str(self.periode.PotenciaMaxDemandada)) / 1000
+        return float(self.periode.PotenciaMaxDemandada.text) / 1000
 
     @property
     def preu_unitat(self):
         "Retorna el preu del kw"
-        return float(str(self.periode.PrecioPotencia)) * 1000
+        return float(self.periode.PrecioPotencia.text) * 1000
 
 class PeriodeExces(object):
     def __init__(self, periode):
@@ -344,7 +344,7 @@ class PeriodeExces(object):
     @property
     def quantitat(self):
         "Retorna kw"
-        return float(str(self.periode.ValorExcesoPotencia)) / 1000
+        return float(self.periode.ValorExcesoPotencia.text) / 1000
 
 class Lloguer(object):
     def __init__(self, cost):
@@ -352,7 +352,7 @@ class Lloguer(object):
     
     @property
     def quantitat(self):
-        return float(str(self.cost))
+        return float(self.cost)
     
 class Lectura(object):
 
@@ -375,15 +375,15 @@ class Lectura(object):
                  'R1': 'R',
                  'PM': 'M',
                  'EP': 'EP'}
-        return tipus.get(self.lectura.Magnitud)
+        return tipus.get(self.lectura.Magnitud.text)
 
     @property 
     def magnitud(self):
-        return self.lectura.Magnitud
+        return self.lectura.Magnitud.text
 
     @property
     def consum(self):
-        return self.lectura.ConsumoCalculado 
+        return int(self.lectura.ConsumoCalculado.text)
 
     @property
     def periode(self):
@@ -398,34 +398,34 @@ class Lectura(object):
                    '65': 'P5',
                    '66': 'P6'}
 
-        return relacio[str(self.lectura.CodigoPeriodo)]
+        return relacio[self.lectura.CodigoPeriodo.text]
 
     @property
     def constant_multiplicadora(self):
-        return self.lectura.ConstanteMultiplicadora
+        return float(self.lectura.ConstanteMultiplicadora.text)
 
     @property
     def data_lectura_inicial(self):
-        data = str(self.lectura.LecturaDesde.FechaHora)
+        data = self.lectura.LecturaDesde.FechaHora.text
         return data[0:data.find('T')]
 
     @property
     def data_lectura_final(self):
-        data = str(self.lectura.LecturaHasta.FechaHora)
+        data = self.lectura.LecturaHasta.FechaHora.text
         return data[0:data.find('T')]
 
     @property
     def valor_lectura_inicial(self):
-        return self.lectura.LecturaDesde.Lectura
+        return int(self.lectura.LecturaDesde.Lectura.text)
 
     @property
     def valor_lectura_final(self):
-        return self.lectura.LecturaHasta.Lectura
+        return int(self.lectura.LecturaHasta.Lectura.text)
 
     @property
     def origen_lectura_inicial(self):
-        return self.lectura.LecturaDesde.Procedencia
+        return self.lectura.LecturaDesde.Procedencia.text
 
     @property
     def origen_lectura_final(self):
-        return self.lectura.LecturaHasta.Procedencia
+        return self.lectura.LecturaHasta.Procedencia.text
