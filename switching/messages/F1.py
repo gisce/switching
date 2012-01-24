@@ -227,7 +227,10 @@ class Factura(object):
 
     def get_info_lloguers(self):
         """Línies de lloguers"""
-        obj = Lloguer(self.factura.Alquileres.ImporteFacturacionAlquileres.text)
+        try:
+            obj = Lloguer(self.factura.Alquileres.ImporteFacturacionAlquileres.text)
+        except AttributeError:
+            obj = ''
         return obj
     
     @property
