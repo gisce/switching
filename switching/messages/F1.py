@@ -386,7 +386,7 @@ class Lectura(object):
 
     @property
     def consum(self):
-        return int(self.lectura.ConsumoCalculado.text)
+        return float(self.lectura.ConsumoCalculado.text)
 
     @property
     def periode(self):
@@ -419,11 +419,11 @@ class Lectura(object):
 
     @property
     def valor_lectura_inicial(self):
-        return int(self.lectura.LecturaDesde.Lectura.text)
+        return float(self.lectura.LecturaDesde.Lectura.text)
 
     @property
     def valor_lectura_final(self):
-        return int(self.lectura.LecturaHasta.Lectura.text)
+        return float(self.lectura.LecturaHasta.Lectura.text)
 
     @property
     def origen_lectura_inicial(self):
