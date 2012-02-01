@@ -158,7 +158,7 @@ class Factura(object):
     @property
     def nombre_mesos(self):
         """Retornar el nombre de mesos"""
-        return int(self.factura.DatosGeneralesFacturaATR.\
+        return float(self.factura.DatosGeneralesFacturaATR.\
                     DatosFacturaATR.Periodo.NumeroMeses.text)
 
     def get_linies_factura(self):
@@ -199,35 +199,38 @@ class Factura(object):
 
     def get_info_reactiva(self):
         """Retorna els periodes de reactiva"""
-        periode = []
         lectures = self.get_lectures()[1]
-        lect_activa = self.select_from_lectures(lectures, 'A')
-        lect_reactiva = self.select_from_lectures(lectures, 'R')
+        agrupat = INFO_TARIFA[self.codi_tarifa]['agrupat']
+        lect_activa = self.select_consum_from_lectures(lectures, 'A')
+        lect_reactiva = self.select_consum_from_lectures(lectures, 'R')
+        if agrupat:
+            lect_activa = tarifes.aggr_consums(lect_activa)
+            lect_reactiva = tarifes.aggr_consums(lect_reactiva)
         calc = {}
         marge = INFO_TARIFA[self.codi_tarifa]['marge']
-        agrupat = INFO_TARIFA[self.codi_tarifa]['agrupat']
-        for i in range(len(lect_activa)):
-            if lect_activa[i]:
-                p = lect_activa[i].periode
-                activa = lect_activa[i].consum
-                reactiva = lect_reactiva[i].consum
-                calc.update({p: tarifes.exces_reactiva(activa, reactiva, 
-                                                                    marge)})
-        if agrupat:
-               calc = tarifes.aggr_consums(calc) 
+        for i in lect_activa:
+            activa = lect_activa[i]
+            reactiva = lect_reactiva[i]
+            val = float("%.2f" % 
+                            tarifes.exces_reactiva(activa, reactiva, marge))
+            calc.update({i: str(round(val, 2))})
 
         total = 0
+        periode = []
         ch = self.factura.EnergiaReactiva.TerminoEnergiaReactiva.getchildren()
         for i in ch:
             if not 'Periodo' in i.tag:
                 continue
             pr = PeriodeReactiva(i)
-            if not pr.quantitat in calc.values():
+            quant = str(round(pr.quantitat,2)) 
+            if not quant > 0:
+                continue
+            if not quant in calc.values():
                 raise except_f1('Error', _('Periode de linies de reactiva'
-                                           'no trobat'))
+                                           ' no trobat'))
                 continue
             for key in calc.keys():
-                if calc[key] == pr.quantitat:
+                if calc[key] == quant:
                     break
             pr.update_name(key)
             periode.append(pr)
@@ -301,10 +304,18 @@ class Factura(object):
 
     def select_from_lectures(self, lectures, tipus):
         """Retorna les lectures d'energia del tipus indicat"""
-        select = [None]*6
+        select = {}
         for lect in lectures:
             if lect.tipus in tipus:
-                select.insert(int(lect.periode[1:]), lect)
+                select.update({lect.periode: lect}) 
+        return select
+
+    def select_consum_from_lectures(self, lectures, tipus):
+        """Retorna els consums de lectures d'energia del tipus indicat"""
+        select = {}
+        for lect in lectures:
+            if lect.tipus in tipus:
+                select.update({lect.periode: lect.consum}) 
         return select   
 
     @property
