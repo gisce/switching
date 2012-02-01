@@ -8,6 +8,7 @@ from libfacturacioatr import tarifes
 
 _ = gettext.gettext
 
+
 class F1(Message):
     """Classe que implementa F1."""
 
@@ -28,7 +29,7 @@ class F1(Message):
             if 'FacturaATR' in ch.tag:
                 fact.append(Factura(ch))
         return fact
-    
+
     @property
     def get_codi_emisor(self):
         ref = int(self.obj.Cabecera.CodigoREEEmpresaEmisora.text)
@@ -174,7 +175,7 @@ class Factura(object):
         tipus = self.factura.getchildren()
         for i in tipus:
             key = i.tag[i.tag.find('}') + 1:]
-            if key in noms_funcio.keys():
+            if key in noms_funcio:
                 if key == 'Alquileres':
                     data = noms_funcio[key][0]()
                     pobj = LiniesFactura(data, noms_funcio[key][1])
@@ -211,7 +212,7 @@ class Factura(object):
         for i in lect_activa:
             activa = lect_activa[i]
             reactiva = lect_reactiva[i]
-            val = float("%.2f" % 
+            val = float("%.2f" %
                             tarifes.exces_reactiva(activa, reactiva, marge))
             calc.update({i: str(round(val, 2))})
 
@@ -222,14 +223,14 @@ class Factura(object):
             if not 'Periodo' in i.tag:
                 continue
             pr = PeriodeReactiva(i)
-            quant = str(round(pr.quantitat,2)) 
+            quant = str(round(pr.quantitat, 2))
             if not quant > 0:
                 continue
             if not quant in calc.values():
                 raise except_f1('Error', _('Periode de linies de reactiva'
                                            ' no trobat'))
                 continue
-            for key in calc.keys():
+            for key in calc:
                 if calc[key] == quant:
                     break
             pr.update_name(key)
@@ -272,7 +273,7 @@ class Factura(object):
         except AttributeError:
             obj = ''
         return obj
-    
+
     @property
     def pot_data_inici(self):
         return self.factura.Potencia.TerminoPotencia.\
@@ -288,7 +289,7 @@ class Factura(object):
         lectures = []
         for lect in self.factura.Medidas.Aparato.getchildren():
             if 'Integrador' in lect.tag:
-                lectures.append(Lectura(lect, self.codi_tarifa)) 
+                lectures.append(Lectura(lect, self.codi_tarifa))
 
         tipus = ''
         cnt_tipus = 0
@@ -307,7 +308,7 @@ class Factura(object):
         select = {}
         for lect in lectures:
             if lect.tipus in tipus:
-                select.update({lect.periode: lect}) 
+                select.update({lect.periode: lect})
         return select
 
     def select_consum_from_lectures(self, lectures, tipus):
@@ -315,8 +316,8 @@ class Factura(object):
         select = {}
         for lect in lectures:
             if lect.tipus in tipus:
-                select.update({lect.periode: lect.consum}) 
-        return select   
+                select.update({lect.periode: lect.consum})
+        return select
 
     @property
     def nom_comptador(self):
@@ -341,7 +342,7 @@ class LiniesFactura(object):
 
     def get_data(self):
         return self.data
-    
+
     @property
     def total(self):
         return self._total
@@ -383,7 +384,7 @@ class PeriodeReactiva(object):
     def preu_unitat(self):
         "Retorna el preu de l'energia reactiva"
         return float(self.periode.PrecioEnergiaReactiva.text)
-    
+
     @property
     def name(self):
         "Retorna el nom del periode"
@@ -392,7 +393,7 @@ class PeriodeReactiva(object):
     def update_name(self, name):
         "Actualitza el name"
         self._name = name
-        
+
 
 class PeriodePotencia(object):
 
@@ -420,6 +421,7 @@ class PeriodePotencia(object):
         "Retorna el nom del periode"
         return self._name
 
+
 class PeriodeExces(object):
     def __init__(self, periode, name):
         self.periode = periode
@@ -435,6 +437,7 @@ class PeriodeExces(object):
         "Retorna el nom del periode"
         return self._name
 
+
 class Lloguer(object):
     def __init__(self, cost):
         self.cost = cost
@@ -442,6 +445,7 @@ class Lloguer(object):
     @property
     def quantitat(self):
         return float(self.cost)
+
     
 class Lectura(object):
 
@@ -466,7 +470,7 @@ class Lectura(object):
                  'EP': 'EP'}
         return tipus.get(self.lectura.Magnitud.text)
 
-    @property 
+    @property
     def magnitud(self):
         return self.lectura.Magnitud.text
 
