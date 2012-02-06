@@ -201,7 +201,7 @@ class Factura(object):
         ch = self.factura.EnergiaActiva.TerminoEnergiaActiva.getchildren()
         p = 0
         for i in ch:
-            if 'Periodo' in i.tag:
+            if 'Periodo' in i.tag and float(i.PrecioEnergia.text):
                 p += 1
                 periode.append(PeriodeActiva(i, 'P%d' % p))
         total = float(self.factura.EnergiaActiva.ImporteTotalEnergiaActiva.text)
@@ -255,7 +255,7 @@ class Factura(object):
         ch = self.factura.Potencia.TerminoPotencia.getchildren()
         p = 0
         for i in ch:
-            if 'Periodo' in i.tag:
+            if 'Periodo' in i.tag and float(i.PrecioPotencia.text):
                 p += 1
                 periode.append(PeriodePotencia(i, 'P%d' % p))
         total = float(self.factura.Potencia.ImporteTotalTerminoPotencia.text)
