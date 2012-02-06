@@ -17,9 +17,11 @@ class F1(Message):
     @property
     def num_factures(self):
         nelem = 0
-        for ch in  self.obj.Facturas.getchildren():
-            if 'FacturaATR' in ch.tag:
+        try:
+            for ch in  self.obj.Facturas.FacturaATR:
                 nelem += 1
+        except AttributeError:
+            pass
         return nelem
 
     def __get_factura(self, fact):
@@ -27,9 +29,11 @@ class F1(Message):
 
     def get_factures(self):
         fact = []
-        for ch in self.obj.Facturas.getchildren():
-            if 'FacturaATR' in ch.tag:
+        try:
+            for ch in self.obj.Facturas.FacturaATR:
                 fact.append(Factura(ch))
+        except AttributeError:
+            pass
         return fact
 
     @property
@@ -150,7 +154,7 @@ class Factura(object):
     @property
     def ind_mesura_baixa(self):
         """Retornar l'indicador de mesura en baixa"""
-        return factura.DatosGeneralesFacturaATR.\
+        return self.factura.DatosGeneralesFacturaATR.\
                DatosFacturaATR.IndAltamedidoenBaja.text
 
     @property
@@ -172,7 +176,7 @@ class Factura(object):
                     DatosFacturaATR.Periodo.NumeroMeses.text)
 
     def get_linies_factura(self):
-        """Retorna una llista de llistes de línies de factura"""
+        """Retorna una llista de llistes de LiniesFactura"""
         noms_funcio = {'Potencia': [self.get_info_potencia, 'potencia'],
                        'EnergiaActiva': [self.get_info_activa, 'energia'],
                        'EnergiaReactiva': [self.get_info_reactiva,
@@ -181,10 +185,9 @@ class Factura(object):
                        'ExcesoPotencia': [self.get_info_exces,
                                                              'exces_potencia']}
         contingut = []
-        tipus = self.factura.getchildren()
-        for i in tipus:
-            key = i.tag[i.tag.find('}') + 1:]
-            if key in noms_funcio:
+        for key in noms_funcio:
+            try:
+                test = list(eval("self.factura.%s" % key))
                 if key == 'Alquileres':
                     data = noms_funcio[key][0]()
                     pobj = LiniesFactura(data, noms_funcio[key][1])
@@ -192,23 +195,32 @@ class Factura(object):
                     data, total = noms_funcio[key][0]()
                     pobj = LiniesFactura(data, noms_funcio[key][1], total)
                 contingut.append(pobj)
+            except AttributeError:
+                pass
         return contingut
 
     def get_info_activa(self):
         """Retornat els periodes d'energia"""
         periode = []
         total = 0
-        ch = self.factura.EnergiaActiva.TerminoEnergiaActiva.getchildren()
-        p = 0
-        for i in ch:
-            if 'Periodo' in i.tag and float(i.PrecioEnergia.text):
-                p += 1
-                periode.append(PeriodeActiva(i, 'P%d' % p))
-        total = float(self.factura.EnergiaActiva.ImporteTotalEnergiaActiva.text)
+        try:
+            for ea in self.factura.EnergiaActiva.TerminoEnergiaActiva:
+                p = 0
+                for i in ea.Periodo:
+                    if float(i.PrecioEnergia.text):
+                        p += 1
+                        periode.append(PeriodeActiva(i, 'P%d' % p))
+            total = float(self.factura.EnergiaActiva.
+                                            ImporteTotalEnergiaActiva.text)
+        except AttributeError:
+            pass
         return periode, total
 
     def get_info_reactiva(self):
-        """Retorna els periodes de reactiva"""
+        """Retorna els periodes de reactiva
+           Assigna el periode que correspon comprovant la quantitat
+           en les lectures.
+        """
         lectures = self.get_lectures()[1]
         agrupat = INFO_TARIFA[self.codi_tarifa]['agrupat']
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
@@ -227,58 +239,63 @@ class Factura(object):
 
         total = 0
         periode = []
-        ch = self.factura.EnergiaReactiva.TerminoEnergiaReactiva.getchildren()
-        for i in ch:
-            if not 'Periodo' in i.tag:
-                continue
-            pr = PeriodeReactiva(i)
-            quant = str(round(pr.quantitat, 2))
-            if not quant > 0:
-                continue
-            if not quant in calc.values():
-                raise except_f1('Error', _('Periode de linies de reactiva'
-                                           ' no trobat'))
-                continue
-            for key in calc:
-                if calc[key] == quant:
-                    break
-            pr.update_name(key)
-            periode.append(pr)
-        total = float(self.factura.EnergiaReactiva.\
-                         ImporteTotalEnergiaReactiva.text)
+        try:
+            for i in self.factura.EnergiaReactiva.TerminoEnergiaReactiva.\
+                                                                    Periodo:
+                pr = PeriodeReactiva(i)
+                quant = str(round(pr.quantitat, 2))
+                if not quant > 0:
+                    continue
+                if not quant in calc.values():
+                    raise except_f1('Error', _('Periode de linies de reactiva'
+                                               ' no trobat'))
+                    continue
+                for key in calc:
+                    if calc[key] == quant:
+                        break
+                pr.update_name(key)
+                periode.append(pr)
+            total = float(self.factura.EnergiaReactiva.\
+                             ImporteTotalEnergiaReactiva.text)
+        except AttributeError:
+            pass
         return periode, total
 
     def get_info_potencia(self):
         """Retorna els periodes de potència"""
         periode = []
         total = 0
-        ch = self.factura.Potencia.TerminoPotencia.getchildren()
         p = 0
-        for i in ch:
-            if 'Periodo' in i.tag and float(i.PrecioPotencia.text):
-                p += 1
-                periode.append(PeriodePotencia(i, 'P%d' % p))
-        total = float(self.factura.Potencia.ImporteTotalTerminoPotencia.text)
+        try:
+            for i in self.factura.Potencia.TerminoPotencia.Periodo:
+                if float(i.PrecioPotencia.text):
+                    p += 1
+                    periode.append(PeriodePotencia(i, 'P%d' % p))
+            total = float(self.factura.Potencia.
+                                        ImporteTotalTerminoPotencia.text)
+        except AttributeError:
+            pass
         return periode, total
 
     def get_info_exces(self):
         """Retorna els periodes d'excessos de potència"""
         periode = []
         total = 0
-        ch = self.factura.ExcesoPotencia.getchildren()
         p = 0
-        for i in ch:
-            if 'Periodo' in i.tag:
+        try:
+            for i in self.factura.ExcesoPotencia.Periodo:
                 p += 1
                 periode.append(PeriodeExces(i, 'P%d' % p))
-            elif 'ImporteTotal' in i.tag:
-                total = float(str(i))
+            total = float(self.factura.ExcesoPotencia.ImporteTotalExcesos.text)
+        except AttributeError:
+            pass
         return periode, total
 
     def get_info_lloguers(self):
         """Línies de lloguers"""
         try:
-            obj = Lloguer(self.factura.Alquileres.ImporteFacturacionAlquileres.text)
+            obj = Lloguer(self.factura.Alquileres.
+                                            ImporteFacturacionAlquileres.text)
         except AttributeError:
             obj = ''
         return obj
@@ -294,12 +311,13 @@ class Factura(object):
                FechaHasta.text
 
     def get_lectures(self):
-        """Retorna totes les lectures"""
+        """Retorna totes les lectures en una llista de Lectura"""
         lectures = []
-        for lect in self.factura.Medidas.Aparato.getchildren():
-            if 'Integrador' in lect.tag:
+        try:
+            for lect in self.factura.Medidas.Aparato.Integrador:
                 lectures.append(Lectura(lect, self.codi_tarifa))
-
+        except AttributeError:
+            pass
         tipus = ''
         cnt_tipus = 0
         for lect in lectures:
