@@ -482,6 +482,7 @@ class Lectura(object):
     def periode(self):
         # taula 42
         relacio = {'01': 'P1',
+                   '21': 'P1',
                    '03': 'P2',
                    '10': 'P1',
                    '61': 'P1',
