@@ -489,16 +489,16 @@ class Lectura(object):
     @property
     def periode(self):
         # taula 42
-        relacio = {'01': 'P1',
-                   '21': 'P1',
-                   '03': 'P2',
-                   '10': 'P1',
-                   '61': 'P1',
-                   '62': 'P2',
-                   '63': 'P3',
-                   '64': 'P4',
-                   '65': 'P5',
-                   '66': 'P6'}
+        relacio = {'01': 'P1',  # Punta + Llano
+                   '21': 'P1',  # Punta
+                   '03': 'P2',  # Valle
+                   '10': 'P1',  # Totalizador
+                   '61': 'P1',  # Periodo 1
+                   '62': 'P2',  # Periodo 2
+                   '63': 'P3',  # Periodo 3
+                   '64': 'P4',  # Periodo 4
+                   '65': 'P5',  # Periodo 5
+                   '66': 'P6'}  # Periodo 6
 
         return relacio[self.lectura.CodigoPeriodo.text]
 
