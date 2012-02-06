@@ -8,6 +8,8 @@ from libfacturacioatr import tarifes
 
 _ = gettext.gettext
 
+UOMS = {'W': 1000, 'kW': 1}
+
 
 class F1(Message):
     """Classe que implementa F1."""
@@ -397,24 +399,27 @@ class PeriodeReactiva(object):
 
 class PeriodePotencia(object):
 
-    def __init__(self, periode, name):
+    def __init__(self, periode, name, uom='W'):
         self.periode = periode
         self._name = name
+        if uom not in UOMS:
+            raise Exception('UOM %s not supported' % uom)
+        self.uom = uom
 
     @property
     def quantitat(self):
         "Retorna kw"
-        return float(self.periode.PotenciaAFacturar.text) / 1000
+        return float(self.periode.PotenciaAFacturar.text) / UOMS[self.uom]
 
     @property
     def maximetre(self):
         "Retorna la potència màxima demanada"
-        return float(self.periode.PotenciaMaxDemandada.text) / 1000
+        return float(self.periode.PotenciaMaxDemandada.text) / UOMS[self.uom]
 
     @property
     def preu_unitat(self):
         "Retorna el preu del kw"
-        return float(self.periode.PrecioPotencia.text) * 1000
+        return float(self.periode.PrecioPotencia.text) * UOMS[self.uom]
 
     @property
     def name(self):
@@ -423,14 +428,17 @@ class PeriodePotencia(object):
 
 
 class PeriodeExces(object):
-    def __init__(self, periode, name):
+    def __init__(self, periode, name, uom='W'):
         self.periode = periode
         self._name = name
+        if uom not in UOMS:
+            raise Exception('UOM %s not supported' % uom)
+        self.uom = uom
 
     @property
     def quantitat(self):
         "Retorna kw"
-        return float(self.periode.ValorExcesoPotencia.text) / 1000
+        return float(self.periode.ValorExcesoPotencia.text) / UOMS[self.uom]
 
     @property
     def name(self):
