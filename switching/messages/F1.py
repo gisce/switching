@@ -40,6 +40,13 @@ class F1(Message):
         return '%04d' % ref
 
     @property
+    def get_codi(self):
+        ref = self.obj.Cabecera.Codigo.text
+        if not ref:
+            raise except_f1('Error', _('Document sense codi'))
+        return ref
+
+    @property
     def data_limit_pagament(self):
         return self.obj.Facturas.RegistroFin.FechaLimitePago.text
 
