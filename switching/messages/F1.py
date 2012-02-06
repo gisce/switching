@@ -190,13 +190,12 @@ class Factura(object):
     def get_info_activa(self):
         """Retornat els periodes d'energia"""
         periode = []
-        total = 0
-        ch = self.factura.EnergiaActiva.TerminoEnergiaActiva.getchildren()
-        p = 0
-        for i in ch:
-            if 'Periodo' in i.tag:
-                p += 1
-                periode.append(PeriodeActiva(i, 'P%d' % p))
+        for ea in self.factura.EnergiaActiva.getchildren():
+            p = 0
+            for i in ea.getchildren():
+                if 'Periodo' in i.tag:
+                    p += 1
+                    periode.append(PeriodeActiva(i, 'P%d' % p))
         total = float(self.factura.EnergiaActiva.ImporteTotalEnergiaActiva.text)
         return periode, total
 
