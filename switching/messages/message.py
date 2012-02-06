@@ -28,8 +28,8 @@ class Message(object):
         # <?xml version="1.0" encoding="ISO-8859-1"?>
         try:
             root = etree.fromstring(xml)
-        except etree.XMLSyntaxError, e:
-           raise except_f1('Error', 'Fitxer XML erroni')
+        except etree.XMLSyntaxError:
+            raise except_f1('Error', 'Fitxer XML erroni')
         uxml = etree.tostring(root).decode('iso-8859-1')
         self.str_xml = uxml
         self.tipus = force_tipus
