@@ -16,8 +16,7 @@ class F1(Message):
     def num_factures(self):
         nelem = 0
         try:
-            for ch in  self.obj.Facturas.FacturaATR:
-                nelem += 1
+            nelem = len(list(self.obj.Facturas.FacturaATR))
         except AttributeError:
             pass
         return nelem
