@@ -8,8 +8,6 @@ from libfacturacioatr import tarifes
 
 _ = gettext.gettext
 
-UOMS = {'W': 1000, 'kW': 1}
-
 
 class F1(Message):
     """Classe que implementa F1."""
@@ -41,6 +39,13 @@ class F1(Message):
         if not ref:
             raise except_f1('Error', _('Document sense emisor'))
         return '%04d' % ref
+
+    @property
+    def get_codi(self):
+        ref = self.obj.Cabecera.Codigo.text
+        if not ref:
+            raise except_f1('Error', _('Document sense codi'))
+        return ref
 
     @property
     def data_limit_pagament(self):
@@ -126,8 +131,8 @@ class Factura(object):
     @property
     def tipus_facturacio(self):
         """Retornar el tipus de facturacio"""
-        return int(self.factura.DatosGeneralesFacturaATR.\
-                   DatosFacturaATR.TipoFacturacion.text)
+        return self.factura.DatosGeneralesFacturaATR.\
+            DatosFacturaATR.TipoFacturacion.text
 
     @property
     def data_BOE(self):
@@ -199,8 +204,9 @@ class Factura(object):
             for ea in self.factura.EnergiaActiva.TerminoEnergiaActiva:
                 p = 0
                 for i in ea.Periodo:
-                    p += 1
-                    periode.append(PeriodeActiva(i, 'P%d' % p))
+                    if float(i.PrecioEnergia.text):
+                        p += 1
+                        periode.append(PeriodeActiva(i, 'P%d' % p))
             total = float(self.factura.EnergiaActiva.
                                             ImporteTotalEnergiaActiva.text)
         except AttributeError:
@@ -259,8 +265,9 @@ class Factura(object):
         p = 0
         try:
             for i in self.factura.Potencia.TerminoPotencia.Periodo:
-                p += 1
-                periode.append(PeriodePotencia(i, 'P%d' % p))
+                if float(i.PrecioPotencia.text):
+                    p += 1
+                    periode.append(PeriodePotencia(i, 'P%d' % p))
             total = float(self.factura.Potencia.
                                         ImporteTotalTerminoPotencia.text)
         except AttributeError:
@@ -414,28 +421,24 @@ class PeriodeReactiva(object):
 
 class PeriodePotencia(object):
 
-    def __init__(self, periode, name, uom='W'):
+    def __init__(self, periode, name):
         self.periode = periode
         self._name = name
-        if uom not in UOMS:
-            raise Exception('UOM %s not supported' % uom)
-        self.uom = uom
 
     @property
     def quantitat(self):
         "Retorna kw"
-        return float(self.periode.PotenciaAFacturar.text) / UOMS[self.uom]
+        return float(self.periode.PotenciaAFacturar.text)
 
     @property
     def maximetre(self):
         "Retorna la potència màxima demanada"
-        return float(self.periode.PotenciaMaxDemandada.text) / UOMS[self.uom]
+        return float(self.periode.PotenciaMaxDemandada.text)
 
     @property
     def preu_unitat(self):
         "Retorna el preu del kw"
-        return float(self.periode.PrecioPotencia.text) * UOMS[self.uom]
-
+        return float(self.periode.PrecioPotencia.text)
     @property
     def name(self):
         "Retorna el nom del periode"
@@ -443,17 +446,14 @@ class PeriodePotencia(object):
 
 
 class PeriodeExces(object):
-    def __init__(self, periode, name, uom='W'):
+    def __init__(self, periode, name):
         self.periode = periode
         self._name = name
-        if uom not in UOMS:
-            raise Exception('UOM %s not supported' % uom)
-        self.uom = uom
 
     @property
     def quantitat(self):
         "Retorna kw"
-        return float(self.periode.ValorExcesoPotencia.text) / UOMS[self.uom]
+        return float(self.periode.ValorExcesoPotencia.text)
 
     @property
     def name(self):
@@ -504,16 +504,16 @@ class Lectura(object):
     @property
     def periode(self):
         # taula 42
-        relacio = {'01': 'P1',
-                   '21': 'P1',
-                   '03': 'P2',
-                   '10': 'P1',
-                   '61': 'P1',
-                   '62': 'P2',
-                   '63': 'P3',
-                   '64': 'P4',
-                   '65': 'P5',
-                   '66': 'P6'}
+        relacio = {'01': 'P1',  # Punta + Llano
+                   '21': 'P1',  # Punta
+                   '03': 'P2',  # Valle
+                   '10': 'P1',  # Totalizador
+                   '61': 'P1',  # Periodo 1
+                   '62': 'P2',  # Periodo 2
+                   '63': 'P3',  # Periodo 3
+                   '64': 'P4',  # Periodo 4
+                   '65': 'P5',  # Periodo 5
+                   '66': 'P6'}  # Periodo 6
 
         return relacio[self.lectura.CodigoPeriodo.text]
 
