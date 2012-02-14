@@ -131,8 +131,8 @@ class Factura(object):
     @property
     def tipus_facturacio(self):
         """Retornar el tipus de facturacio"""
-        return int(self.factura.DatosGeneralesFacturaATR.\
-                   DatosFacturaATR.TipoFacturacion.text)
+        return self.factura.DatosGeneralesFacturaATR.\
+            DatosFacturaATR.TipoFacturacion.text
 
     @property
     def data_BOE(self):
