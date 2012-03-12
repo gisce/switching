@@ -7,7 +7,8 @@ from lxml import objectify, etree
 import switching
 from switching.types import DecimalElement, check_decimal_element
 
-XSD_DATA = {'F1': 'Facturacion.xsd'}
+XSD_DATA = {'F1': 'Facturacion.xsd',
+            'Q1': 'SaldoLecturasFacturacion.xsd'}
 
 _ = gettext.gettext
 
@@ -78,6 +79,22 @@ class Message(object):
             self.obj = objectify.fromstring(self.str_xml, parser)
         except:
             raise except_f1('Error', _('Document invàlid'))
+
+    # Funcions relacionades amb la capçalera del XML
+    @property
+    def get_codi_emisor(self):
+        ref = int(self.obj.Cabecera.CodigoREEEmpresaEmisora.text)
+        if not ref:
+            raise except_f1('Error', _('Document sense emisor'))
+        return '%04d' % ref
+
+    @property
+    def get_codi(self):
+        ref = self.obj.Cabecera.Codigo.text
+        if not ref:
+            raise except_f1('Error', _('Document sense codi'))
+        return ref
+
 
 class except_f1(Exception):
     def __init__(self, name, value):

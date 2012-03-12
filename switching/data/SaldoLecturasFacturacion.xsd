@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TipoCabecera.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:annotation>
+		<xs:documentation>
+		Version 2.0, Junio 2004
+		Mensaje de Saldos de Facturación, intercambiado entre agentes
+		</xs:documentation>
+	</xs:annotation>
+	<xs:element name="MensajeSaldoLecturasFacturacion">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Cabecera" type="Cabecera"/>
+				<xs:element name="Medidas" minOccurs="1" maxOccurs="10">
+					<xs:complexType>
+						<xs:sequence>
+						<xs:element name="CodUnificadoPuntoSuministro">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+								<xs:length value="22"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Aparato" minOccurs="1" maxOccurs="10">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Tipo" type="TipoAparato">
+									<xs:annotation>
+										<xs:documentation>Tabla 24</xs:documentation>
+									</xs:annotation>
+									</xs:element>
+									<xs:element name="Marca" type="MarcaAparato">
+										<xs:annotation>
+										<xs:documentation>Tabla 25</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="NumeroSerie">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+											<xs:minLength value="1"/>
+											<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="CodigoDH" type="TipoDH">
+										<xs:annotation>
+										<xs:documentation>Tabla 35</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="Integrador" minOccurs="1" maxOccurs="100">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Magnitud" type="MagnitudMedida">
+													<xs:annotation>
+													<xs:documentation>Tabla 43</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="CodigoPeriodo" type="TipoCodigoPeriodoDH">
+													<xs:annotation>
+													<xs:documentation>Tabla 42</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="ConstanteMultiplicadora">
+													<xs:annotation>
+													<xs:documentation>Coeficiente de multiplicación del equipo</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+														<xs:totalDigits value="9"/>
+														<xs:fractionDigits value="3"/>
+														<xs:minInclusive value="0"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="NumeroRuedasEnteras">
+													<xs:simpleType>
+														<xs:restriction base="xs:integer">
+														<xs:minInclusive value="0"/>
+														<xs:totalDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="NumeroRuedasDecimales">
+													<xs:simpleType>
+														<xs:restriction base="xs:integer">
+														<xs:minInclusive value="0"/>
+														<xs:totalDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="ConsumoCalculado">
+													<xs:annotation>
+													<xs:documentation>Consumo</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+													<xs:restriction base="xs:decimal">
+														<xs:totalDigits value="12"/>
+														<xs:fractionDigits value="2"/>
+														<xs:minInclusive value="0"/>
+													</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="LecturaDesde" type="TipoLimiteIntervaloLectura">
+													<xs:annotation>
+													<xs:documentation>Lectura anterior ventana de facturación</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="LecturaHasta" type="TipoLimiteIntervaloLectura">
+													<xs:annotation>
+													<xs:documentation>Valor actual de la ventana de facturación</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="Ajuste" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="CodigoMotivoAjuste" type="TipoMotivoAjuste">
+																<xs:annotation>
+																<xs:documentation>Tabla 106</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="AjustePorIntegrador">
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:totalDigits value="11"/>
+																		<xs:fractionDigits value="2"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="Anomalia" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="TipoAnomalia" type="AnomaliaMedida">
+																<xs:annotation>
+																<xs:documentation>Tabla 45</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TextoAnomalia" minOccurs="0">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																	<xs:minLength value="1"/>
+																	<xs:maxLength value="240"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="FechaHoraMaximetro" type="xs:dateTime" minOccurs="0"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="TipoLimiteIntervaloLectura">
+		<xs:sequence>
+			<xs:element name="FechaHora" type="xs:dateTime"/>
+			<xs:element name="Procedencia" type="Procedencia">
+				<xs:annotation>
+					<xs:documentation>Tabla 44</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Lectura">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+						<xs:minInclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>
