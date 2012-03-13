@@ -95,6 +95,22 @@ class Message(object):
             raise except_f1('Error', _('Document sense codi'))
         return ref
 
+    @property
+    def codi_sollicitud(self):
+        ref = self.obj.Cabecera.CodigoDeSolicitud.text
+        if not ref:
+            raise except_f1('Error', _('Document sense codi de'\
+                                       ' sol·licitud'))
+        return ref
+
+    @property
+    def seq_sollicitud(self):
+        ref = self.obj.Cabecera.SecuencialDeSolicitud.text
+        if not ref:
+            raise except_f1('Error', _('Document sense codi de'\
+                                       ' seqüencial de sol·licitud'))
+        return ref
+
 
 class except_f1(Exception):
     def __init__(self, name, value):
