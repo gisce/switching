@@ -33,10 +33,12 @@ class Message(object):
             raise except_f1('Error', 'Fitxer XML erroni')
         uxml = etree.tostring(root).decode('iso-8859-1')
         self.str_xml = uxml
-        self.tipus = force_tipus
+        self.tipus = ''
         self.f_xsd = ''
-        if not force_tipus:
-            self.set_tipus()
+        self.set_tipus()
+        if self.tipus != force_tipus:
+            msg = 'L\'XML no es correspon al tipus %s' % force_tipus
+            raise except_f1('Error', _(msg))
         self.set_xsd()
     
     def set_tipus(self):
