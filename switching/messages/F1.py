@@ -34,20 +34,6 @@ class F1(Message):
         return fact
 
     @property
-    def get_codi_emisor(self):
-        ref = int(self.obj.Cabecera.CodigoREEEmpresaEmisora.text)
-        if not ref:
-            raise except_f1('Error', _('Document sense emisor'))
-        return '%04d' % ref
-
-    @property
-    def get_codi(self):
-        ref = self.obj.Cabecera.Codigo.text
-        if not ref:
-            raise except_f1('Error', _('Document sense codi'))
-        return ref
-
-    @property
     def data_limit_pagament(self):
         return self.obj.Facturas.RegistroFin.FechaLimitePago.text
 
@@ -292,7 +278,7 @@ class Factura(object):
         """Línies de lloguers"""
         try:
             obj = Lloguer(self.factura.Alquileres.
-                                            ImporteFacturacionAlquileres.text)
+                          ImporteFacturacionAlquileres.text)
         except AttributeError:
             obj = ''
         return obj
@@ -472,7 +458,7 @@ class Lloguer(object):
     
 class Lectura(object):
 
-    def __init__(self, lect, tarifa):
+    def __init__(self, lect, tarifa=None):
         self.lectura = lect
         self.tarifa = tarifa
         self._cnt = 0

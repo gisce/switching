@@ -7,7 +7,8 @@ from lxml import objectify, etree
 import switching
 from switching.types import DecimalElement, check_decimal_element
 
-XSD_DATA = {'F1': 'Facturacion.xsd'}
+XSD_DATA = {'F1': 'Facturacion.xsd',
+            'Q1': 'SaldoLecturasFacturacion.xsd'}
 
 _ = gettext.gettext
 
@@ -32,10 +33,12 @@ class Message(object):
             raise except_f1('Error', 'Fitxer XML erroni')
         uxml = etree.tostring(root).decode('iso-8859-1')
         self.str_xml = uxml
-        self.tipus = force_tipus
+        self.tipus = ''
         self.f_xsd = ''
-        if not force_tipus:
-            self.set_tipus()
+        self.set_tipus()
+        if self.tipus != force_tipus:
+            msg = 'L\'XML no es correspon al tipus %s' % force_tipus
+            raise except_f1('Error', _(msg))
         self.set_xsd()
     
     def set_tipus(self):
@@ -78,6 +81,38 @@ class Message(object):
             self.obj = objectify.fromstring(self.str_xml, parser)
         except:
             raise except_f1('Error', _('Document invàlid'))
+
+    # Funcions relacionades amb la capçalera del XML
+    @property
+    def get_codi_emisor(self):
+        ref = int(self.obj.Cabecera.CodigoREEEmpresaEmisora.text)
+        if not ref:
+            raise except_f1('Error', _('Document sense emisor'))
+        return '%04d' % ref
+
+    @property
+    def get_codi(self):
+        ref = self.obj.Cabecera.Codigo.text
+        if not ref:
+            raise except_f1('Error', _('Document sense codi'))
+        return ref
+
+    @property
+    def codi_sollicitud(self):
+        ref = self.obj.Cabecera.CodigoDeSolicitud.text
+        if not ref:
+            raise except_f1('Error', _('Document sense codi de'\
+                                       ' sol·licitud'))
+        return ref
+
+    @property
+    def seq_sollicitud(self):
+        ref = self.obj.Cabecera.SecuencialDeSolicitud.text
+        if not ref:
+            raise except_f1('Error', _('Document sense codi de'\
+                                       ' seqüencial de sol·licitud'))
+        return ref
+
 
 class except_f1(Exception):
     def __init__(self, name, value):
