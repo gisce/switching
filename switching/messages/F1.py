@@ -532,3 +532,7 @@ class Lectura(object):
     @property
     def origen_lectura_final(self):
         return self.lectura.LecturaHasta.Procedencia.text
+
+    @property
+    def gir_comptador(self):
+        return (10 ** int(self.lectura.NumeroRuedasEnteras.text))
