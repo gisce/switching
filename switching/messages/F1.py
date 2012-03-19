@@ -293,6 +293,15 @@ class Factura(object):
         return self.factura.Potencia.TerminoPotencia.\
                FechaHasta.text
 
+    def get_comptadors(self):
+        """Retorna totes les lectures en una llista de comptadors"""
+        comptadors = []
+        for mesura in self.factura.Medidas:
+            if mesura.CodUnificadoPuntoSuministro.text == self.cups:
+                for aparell in mesura.Aparato:
+                    comptadors.append(Comptador(aparell))
+        return comptadors
+
     def get_lectures(self):
         """Retorna totes les lectures en una llista de Lectura"""
         lectures = []
@@ -536,3 +545,30 @@ class Lectura(object):
     @property
     def gir_comptador(self):
         return (10 ** int(self.lectura.NumeroRuedasEnteras.text))
+
+
+class Comptador(object):
+    """Classe que implementa el Comptador"""
+    
+    def __init__(self, data):
+        self.obj = data
+
+    def get_lectures(self):
+        """Retorna totes les lectures en una llista de Lectura"""
+        lectures = []
+        try:
+            for lect in self.obj.Integrador:
+                lectures.append(Lectura(lect))
+        except AttributeError:
+            pass
+        return lectures
+
+    @property
+    def nom_comptador(self):
+        """Retorna el número de comptador"""
+        return self.obj.NumeroSerie.text
+
+    @property
+    def gir_comptador(self):
+        return (10 ** int(self.obj.Integrador.NumeroRuedasEnteras.text))
+
