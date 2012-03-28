@@ -8,12 +8,32 @@ class C1(Message):
     """Classe que implementa C1."""
      
     @property
+    def sollicitud(self):
+        """Retorna l'objecte Contracte"""
+        return Sollicitud(self.obj.CambiodeComercializadoraSinCambios.\
+                          DatosSolicitud)
+
+    @property
+    def client(self):
+        """Retorna l'objecte Contracte"""
+        return Contracte(self.obj.CambiodeComercializadoraSinCambios.Contrato)
+
+    @property
+    def client(self):
+        """Retorna l'objecte Client"""
+        return Client(self.obj.CambiodeComercializadoraSinCambios.Cliente)
+
+class Sollicitud(object):
+
+    def __init__(self, data):
+        self.sollicitud = data
+
+    @property
     def linia_negoci(self):
         """Retorna '01' (elèctric) o '02' (gas)"""
         linia = ''
         try:
-            linia = self.obj.CambiodeComercializadoraSinCambios.\
-                    DatosSolicitud.LiniaNegocioElectrica.text
+            linia = self.sollicitud.LiniaNegocioElectrica.text
         except AttributeError:
             pass
         return linia
@@ -23,8 +43,7 @@ class C1(Message):
         """Indicatiu d'activació amb el cicle de lectura"""
         cicle = ''
         try:
-            cicle = self.obj.CambiodeComercializadoraSinCambios.\
-                    DatosSolicitud.IndActivacionLectura.text
+            cicle = self.sollicitud.IndActivacionLectura.text
         except AttributeError:
             pass
         return cicle
@@ -34,19 +53,24 @@ class C1(Message):
         """Retorna la data prevista del canvi o alta"""
         data = ''
         try:
-            data = self.obj.CambiodeComercializadoraSinCambios.\
-                   DatosSolicitud.FechaPrevistaAccion.text
+            data = self.sollicitud.FechaPrevistaAccion.text
         except AttributeError:
             pass
         return data
+
+
+class Contracte(object):
+    """Classe Contracte"""
+
+    def __init__(self, data):
+        self.contracte = data
 
     @property
     def codi_contracte(self):
         """Retorna el codi de contracte de la comercialitzadora"""
         codi = ''
         try:
-            codi = self.obj.CambiodeComercializadoraSinCambios.\
-                   Contrato.IdContrato.CodContrato.text
+            codi = self.contracte.IdContrato.CodContrato.text
         except AttributeError:
             pass
         return codi
@@ -57,8 +81,7 @@ class C1(Message):
            durada del contracte sigui superior a 12 mesos"""
         mesos = ''
         try:
-            mesos = int(self.obj.CambiodeComercializadoraSinCambios.\
-                    Contrato.Duracion.text)
+            mesos = int(self.contracte.Duracion.text)
         except AttributeError:
             pass
         return mesos
@@ -69,8 +92,7 @@ class C1(Message):
            contracte sigui inferior a 12 mesos"""
         data = ''
         try:
-            data = self.obj.CambiodeComercializadoraSinCambios.\
-                   Contrato.Fechafinalizacion.text
+            data = self.contracte.Fechafinalizacion.text
         except AttributeError:
             pass
         return data
@@ -80,8 +102,7 @@ class C1(Message):
         """Retorna el tipus de contracte"""
         tipus = ''
         try:
-            tipus = self.obj.CambiodeComercializadoraSinCambios.\
-                    Contrato.TipoContratoATR.text
+            tipus = self.contracte.TipoContratoATR.text
         except AttributeError:
             pass
         return tipus
@@ -91,16 +112,11 @@ class C1(Message):
         """Retorna F/S/O"""
         adreca = ''
         try:
-            adreca = self.obj.CambiodeComercializadoraSinCambios.\
-                     Contrato.DireccionCorrespondencia.Indicador
+            adreca = self.contracte.DireccionCorrespondencia.Indicador.text
         except AttributeError:
             pass
         return adreca
-    
-    @property
-    def client(self):
-        """Retorna l'objecte Client"""
-        return Client(self.obj.CambiodeComercializadoraSinCambios.Cliente)
+
 
 class Client(object):
     """Classe Client"""
@@ -119,7 +135,15 @@ class Client(object):
     @property
     def fax(self):
         try:
-            return '+%s%s' % (str(self.client.Fax.PrefijoPais), 
+            return '+%s%s' % (str(self.client.Fax.PrefijoPais),
                               str(self.client.Fax.Numero)
+        except AttributeError:
+            pass
+
+    @property
+    def telf(self):
+        try:
+            return '+%s%s' % (str(self.client.Telefono.PrefijoPais),
+                              str(self.client.Telefono.Numero)
         except AttributeError:
             pass
