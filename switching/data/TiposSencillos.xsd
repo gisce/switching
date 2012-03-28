@@ -1,36 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:documentation>
-	Version 2.0, Junio 2004
-	Definicion de Tipos Sencillos para todos los esquemas de mensajes de negocio del gestor de relaciones
-	También será utilizado par los servicios administrativos de las distintas aplicaciones que tengan
-	relación con el gestor de mensajes
-	Corresponde a la especificacion de formatos CNE V4 de 22 de Octubre de 2002
-	
-	Cambios realizados:		
-	
-	Julio 2007 Modificación realizada acuerdo Unesa 27/6/07 para ser vigentes en Mayo 2008: Nuevo valor posible para el tipo MotivoBaja (04) y modificación de las descripciones del resto de motivos de baja.
-	
-	Agosto 2007 Modificación realizada acuerdo Unesa 27/6/07 para ser vigentes en Mayo 2008: dos nuevos tipos para representar el nuevo indicador de tipo de cambio de titular (IndicativoTipoCambioTitular) y el nuevo valor A del campo existente SolAdmContractual (IndicativoNSA)
+			Version 0.0 OCSUM 2011.01.31
+			Version 0.1 OCSUM 2011.07.05 
+-Incluidos nuevos códigos de tarifa supervalle (007-> 2.0 DHS / 008-> 2.1 DHS)	
+-Incluidos nuevos códigos Periodo Discriminación Horaria (80,81,82,83)
+			Version 1.0 OCSUM 2012.02.01
+-Incluida la nueva tabla de motivos de rechazo
 
-	Octubre 2007 Modificación realizada acuerdo Unesa 27/10/07 para ser vigentes en Mayo 2008: Eliminar el valor para el tipo MotivoBaja (03).
-	
-	Octubre 2008 Añadido TipoSencillo X6.
-						Añadido TipoSencillo IndicativoLFC
-						Añadido Motivo Baja 03
-	
-	Enero 2009 Añadidas tarifa 901 y 902
-	
-	Febrero 2009 Añadidos TipoSencillo X255, X400, TipoReclamante, TipoReclamacion, RdoReclamacion, CodDatos, IndicativoARO
-	
-	Mayo 2009 Añadidos TipoSencillo TiposSuministro y TiposDocumentacion
-					 Añadido MotivoBaja 05
-					 Añadidos Tipocontrato 09 y 10
-					 Añadidas TarifaAtr 901 y 902
-					 Añadido Tipo X4, X15, X13 y X1000
-					 Añadido EnergiaFact, ReactivaFact e Importe
-	
 		</xs:documentation>
 	</xs:annotation>
 	<xs:simpleType name="Decimal1">
@@ -246,6 +224,18 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
 			<xs:maxLength value="45"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="X50">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="X80">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="80"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="X120">
@@ -505,193 +495,35 @@
 	<xs:simpleType name="Tarifa">
 		<xs:annotation>
 			<xs:documentation>tipo Tarifa  
-			001	2.0.A	
-			002	2.0.N.A 	
-			003	3.0A	
-			004	2.0DHA					
-			011	3.1A	
-			012	6.1	
+			001	2.0.A
+			003	3.0A
+			004	2.0DHA
+			005	2.1.A
+			006	2.1.DHA
+			007     2.0 DHS
+			008	2.1 DHS
+			011	3.1A
+			012	6.1
 			013	6.2	
 			014	6.3	
 			015	6.4	
 			016	6.5
-			027	1.2.P	1.2.P	GRAL. C.U. 36 A 72,5 KV PEAJES
-			028	3.0.P	3.0.P	B.T. PEAJES GRAL.UT. NORMAL
-			029	4.0.P	4.0.P	B.T. PEAJES GRAL.LARGA UT.
-			030	B.0.P	B.0.P	ALUMBRADO PUBLICO PEAJES
-			031	B6.4	B6.4	PEAJE AT IMPORTACION  145 KV
-			032	D.1.P	D.1.P	A.T. DISTRIB.PEAJ.36KV
-			033	D.2.P	D.2.P	A.T. DISTRIB.PEAJ.36-72,5KV
-			034	D.3.P	D.3.P	A.T. DISTRIB.PEAJ.72,5-145KV
-			035	D.4.P	D.4.P	A.T. DISTRIB.PEAJ.145KV
-			036	GAT1P	GAT1P	GRAL. AT 1 KV A . 14 KV PEAJES
-			037	GAT2P	GAT2P	GRAL. AT 14 KV A . 36 KV PEAJE
-			038	GAT3P	GAT3P	GRAL. AT 36 A. 72,5 KV PEAJES
-			039	GAT4P	GAT4P	GRAL. AT 72,5 A . 145 KV PEAJE
-			040	GAT5P	GAT5P	GRAL. AT .145 KV. PEAJES
-			041	R.0.P	R.0.P	B.T. PEAJES RIEGOS AGRICOLAS
-			042	T.1.P	T.1.P	A.T.TRACC.PEAJ . 36 KV
-			043	T.2.P	T.2.P	A.T.TRACC.PEAJ. 36,72,5 KV  
-			044	T.3.P	T.3.P	A.T.TRACC.PEAJ. 72,5 KV
-			045	TAGA1	TAGA1	GRAL AT  PEAJE TRAMO 1 TENSION
-			046	TAGA2	TAGA2	GRAL AT  PEAJE TRAMO 2 TENSION
-			047	TAGA3	TAGA3	GRAL AT  PEAJE TRAMO 3 TENSION
-			048	TAGA4	TAGA4	GRAL AT  PEAJE TRAMO 4 TENSION
-			049	TAGA5	TAGA5	GRAL AT  PEAJE TRAMO 5 TENSION
-			050	TAGA6	TAGA6	TARIFA CONEXION INTERNACIONAL
-			101	T.1	
-			102	T.2	
-			103	T.3	
-			110	1.0	
-			111	R.1	
-			112	R.2	
-			113	R.3	
-			120	2.0	
-			122	G4, 36 kV  T  72,5 kV	
-			123	G4, 72,5 kV , T , 145 kV	
-			124	G4, T . 145 kV	
-			130	2.0N	
-			131	D.1	
-			132	D.2	
-			133	D.3	
-			134	D.4	
-			141	T.H.P.  T.36kV	
-			142	T.H.P.  36 kV . T . 72,5 kV	
-			143	T.H.P.  72,5 kV  T .145 kV	
-			144	T.H.P.  T . 145 kV	
-			299	PEAJE TAJO.SEGURA	
-			300	TRASVASE TAJO SEGURA	
-			310	3.0	
-			410	4.0	
-			500	EMPLEADOS	
-			501	CONSUMOS PROPIOS	
-			502	CONSUMOS OTRAS ACTIVIDADES	
-			503	CONSUMOS GRATUITOS	
-			504	CONCESIONES ADMINISTRATIVAS	
-			505	CONCESIONES ADMVAS. TAJO.SEGURA	
-			510	B.0	
-			520	R.0	
-			610	1.1	
-			620	1.1 INT	
-			640	2.1	
-			650	2.1 INT	
-			660	3.1	
-			670	3.1 INT	
-			710	1.2		
-			720	1.2 INT	
-			730	2.2	
-			740	2.2 INT	
-			750	3.2	
-			760	3.2 INT	
-			810	1.3	
-			820	1.3 INT	
-			840	2.3	
-			850	2.3 INT	
-			860	3.3	
-			870	3.3 INT	
-			901   Tf. Peaje BT 2.0  Modo 2
-			902   Tf. Peaje BT 2.0N Modo 2
-			910	1.4	
-			920	1.4 INT	
-			940	2.4	
-			950	2.4 INT	
-			960	3.4	
-			970	3.4 INT	
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="001"/>
-			<xs:enumeration value="002"/>
 			<xs:enumeration value="003"/>
 			<xs:enumeration value="004"/>
+			<xs:enumeration value="005"/>
+			<xs:enumeration value="006"/>
+			<xs:enumeration value="007"/>
+			<xs:enumeration value="008"/>
 			<xs:enumeration value="011"/>
 			<xs:enumeration value="012"/>
 			<xs:enumeration value="013"/>
 			<xs:enumeration value="014"/>
 			<xs:enumeration value="015"/>
 			<xs:enumeration value="016"/>
-			<xs:enumeration value="027"/>
-			<xs:enumeration value="028"/>
-			<xs:enumeration value="029"/>
-			<xs:enumeration value="030"/>
-			<xs:enumeration value="031"/>
-			<xs:enumeration value="032"/>
-			<xs:enumeration value="033"/>
-			<xs:enumeration value="034"/>
-			<xs:enumeration value="035"/>
-			<xs:enumeration value="036"/>
-			<xs:enumeration value="037"/>
-			<xs:enumeration value="038"/>
-			<xs:enumeration value="039"/>
-			<xs:enumeration value="040"/>
-			<xs:enumeration value="041"/>
-			<xs:enumeration value="042"/>
-			<xs:enumeration value="043"/>
-			<xs:enumeration value="044"/>
-			<xs:enumeration value="045"/>
-			<xs:enumeration value="046"/>
-			<xs:enumeration value="047"/>
-			<xs:enumeration value="048"/>
-			<xs:enumeration value="049"/>
-			<xs:enumeration value="050"/>
-			<xs:enumeration value="101"/>
-			<xs:enumeration value="102"/>
-			<xs:enumeration value="103"/>
-			<xs:enumeration value="110"/>
-			<xs:enumeration value="111"/>
-			<xs:enumeration value="112"/>
-			<xs:enumeration value="113"/>
-			<xs:enumeration value="120"/>
-			<xs:enumeration value="122"/>
-			<xs:enumeration value="123"/>
-			<xs:enumeration value="124"/>
-			<xs:enumeration value="130"/>
-			<xs:enumeration value="131"/>
-			<xs:enumeration value="132"/>
-			<xs:enumeration value="133"/>
-			<xs:enumeration value="134"/>
-			<xs:enumeration value="141"/>
-			<xs:enumeration value="142"/>
-			<xs:enumeration value="143"/>
-			<xs:enumeration value="144"/>
-			<xs:enumeration value="299"/>
-			<xs:enumeration value="300"/>
-			<xs:enumeration value="310"/>
-			<xs:enumeration value="410"/>
-			<xs:enumeration value="500"/>
-			<xs:enumeration value="501"/>
-			<xs:enumeration value="502"/>
-			<xs:enumeration value="503"/>
-			<xs:enumeration value="504"/>
-			<xs:enumeration value="505"/>
-			<xs:enumeration value="510"/>
-			<xs:enumeration value="520"/>
-			<xs:enumeration value="610"/>
-			<xs:enumeration value="620"/>
-			<xs:enumeration value="640"/>
-			<xs:enumeration value="650"/>
-			<xs:enumeration value="660"/>
-			<xs:enumeration value="670"/>
-			<xs:enumeration value="710"/>
-			<xs:enumeration value="720"/>
-			<xs:enumeration value="730"/>
-			<xs:enumeration value="740"/>
-			<xs:enumeration value="750"/>
-			<xs:enumeration value="760"/>
-			<xs:enumeration value="810"/>
-			<xs:enumeration value="820"/>
-			<xs:enumeration value="840"/>
-			<xs:enumeration value="850"/>
-			<xs:enumeration value="860"/>
-			<xs:enumeration value="870"/>
-			<xs:enumeration value="901"/>
-			<xs:enumeration value="902"/>
-			<xs:enumeration value="910"/>
-			<xs:enumeration value="920"/>
-			<xs:enumeration value="940"/>
-			<xs:enumeration value="950"/>
-			<xs:enumeration value="960"/>
-			<xs:enumeration value="970"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoContrato">
@@ -1319,36 +1151,68 @@
 			<xs:enumeration value="01"/>
 			<xs:enumeration value="02"/>
 			<xs:enumeration value="03"/>
-			<xs:enumeration value="04"/>
-			<xs:enumeration value="05"/>
+						
+			
 			<xs:enumeration value="06"/>
 			<xs:enumeration value="07"/>
 			<xs:enumeration value="08"/>
 			<xs:enumeration value="09"/>
-			<xs:enumeration value="10"/>
+	
 			<xs:enumeration value="11"/>
 			<xs:enumeration value="12"/>
 			<xs:enumeration value="13"/>
 			<xs:enumeration value="14"/>
 			<xs:enumeration value="15"/>
-			<xs:enumeration value="16"/>
+	
 			<xs:enumeration value="17"/>
 			<xs:enumeration value="18"/>
-			<xs:enumeration value="19"/>
+	
 			<xs:enumeration value="20"/>
 			<xs:enumeration value="21"/>
 			<xs:enumeration value="22"/>
 			<xs:enumeration value="23"/>
-			<xs:enumeration value="24"/>
+	
 			<xs:enumeration value="25"/>
 			<xs:enumeration value="26"/>
 			<xs:enumeration value="27"/>
 			<xs:enumeration value="28"/>
 			<xs:enumeration value="29"/>
-			<xs:enumeration value="30"/>
+	
 			<xs:enumeration value="31"/>
 			<xs:enumeration value="32"/>
-			<xs:enumeration value="33"/>
+	
+			<xs:enumeration value="34"/>
+			<xs:enumeration value="35"/>
+			<xs:enumeration value="36"/>
+			<xs:enumeration value="37"/>
+			<xs:enumeration value="38"/>
+			<xs:enumeration value="39"/>
+			<xs:enumeration value="40"/>
+			<xs:enumeration value="41"/>
+			<xs:enumeration value="42"/>
+			<xs:enumeration value="43"/>
+			<xs:enumeration value="44"/>
+			<xs:enumeration value="45"/>
+			<xs:enumeration value="46"/>
+			<xs:enumeration value="47"/>
+			<xs:enumeration value="48"/>
+			<xs:enumeration value="49"/>
+			<xs:enumeration value="50"/>
+			<xs:enumeration value="51"/>
+			<xs:enumeration value="52"/>
+			<xs:enumeration value="53"/>
+			<xs:enumeration value="54"/>
+			<xs:enumeration value="55"/>
+			<xs:enumeration value="56"/>
+			<xs:enumeration value="57"/>
+			<xs:enumeration value="58"/>
+			<xs:enumeration value="59"/>
+			<xs:enumeration value="60"/>
+			<xs:enumeration value="61"/>
+			<xs:enumeration value="62"/>
+			<xs:enumeration value="63"/>
+			<xs:enumeration value="64"/>
+			<xs:enumeration value="65"/>
 			<xs:enumeration value="99"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -1565,6 +1429,8 @@
 			17	Abono por calidad de suministro
 			18	Abono por calidad individual
 			19	Coste de reposición
+			32	Coste de corte a petición de comercializador
+			33	Coste de reconexión a petición de comercializador
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1587,6 +1453,8 @@
 			<xs:enumeration value="17"/>
 			<xs:enumeration value="18"/>
 			<xs:enumeration value="19"/>
+			<xs:enumeration value="32"/>
+			<xs:enumeration value="33"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoCodigoPeriodoDH">
@@ -1628,6 +1496,11 @@
 			75	Período 5
 			76	Período 6
 			77	Período 7
+			80	Totalizador
+			81	Punta + Llano				
+			82	Valle
+			83	Supervalle
+
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1667,6 +1540,10 @@
 			<xs:enumeration value="75"/>
 			<xs:enumeration value="76"/>
 			<xs:enumeration value="77"/>
+			<xs:enumeration value="80"/>
+			<xs:enumeration value="81"/>
+			<xs:enumeration value="82"/>
+			<xs:enumeration value="83"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoFacturacionATR">
@@ -1687,15 +1564,21 @@
 			001	2.0.A	
 			002	2.0.N.A 	
 			003	3.0A	
-			004	2.0DHA					
+			004	2.0DHA
+			005	2.1.A
+			006	2.1.DHA
+			007     2.0 DHS
+			008	2.1 DHS							
 			011	3.1A	
 			012	6.1	
 			013	6.2	
 			014	6.3	
 			015	6.4	
 			016	6.5
-			901   Tf. Peaje BT 2.0  Modo 2
-			902   Tf. Peaje BT 2.0N Modo 2		
+			901 Tf.Peaje BT 2.0 Modo 2
+			902 Tf.Peaje BT 2.0N Modo 2
+			903 2.1.A Modo 2
+			904 2.1DHA Modo 2
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1703,6 +1586,8 @@
 			<xs:enumeration value="002"/>
 			<xs:enumeration value="003"/>
 			<xs:enumeration value="004"/>
+			<xs:enumeration value="005"/>
+			<xs:enumeration value="006"/>
 			<xs:enumeration value="011"/>
 			<xs:enumeration value="012"/>
 			<xs:enumeration value="013"/>
@@ -1711,6 +1596,8 @@
 			<xs:enumeration value="016"/>
 			<xs:enumeration value="901"/>
 			<xs:enumeration value="902"/>
+			<xs:enumeration value="903"/>
+			<xs:enumeration value="904"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="IndSustitutoMandatario">
@@ -2280,6 +2167,108 @@
 		<xs:restriction base="xs:long">
 			<xs:totalDigits value="11"/>
 			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TensionSuministroCIEyAPM">
+		<xs:annotation>
+			<xs:documentation>Tensión de Suministro
+			01	1X220
+			02	1X230
+			03	3X380
+			04	3X380/220
+			05	3X400
+			06	3X400/230
+			07	1X127
+			08	1X133
+			09	2X220
+			10	2X230
+			11	3X220
+			12	3X220/127
+			13	3X230
+			14	3X230/133
+			15	5000
+			16	6000
+			17	7200
+			18	8000
+			19	10000
+			20	11000
+			21	12000
+			22	13000
+			23	13200
+			24	15000
+			25	16500
+			26	17000
+			27	20000
+			28	22000
+			29	25000
+			30	26500
+			31	30000
+			32	36000
+			33	44000
+			34	45000
+			35	66000
+			36	110000
+			37	132000
+			38	220000
+			39	400000	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
+			<xs:enumeration value="07"/>
+			<xs:enumeration value="08"/>
+			<xs:enumeration value="09"/>
+			<xs:enumeration value="10"/>
+			<xs:enumeration value="11"/>
+			<xs:enumeration value="12"/>
+			<xs:enumeration value="13"/>
+			<xs:enumeration value="14"/>
+			<xs:enumeration value="15"/>
+			<xs:enumeration value="16"/>
+			<xs:enumeration value="17"/>
+			<xs:enumeration value="18"/>
+			<xs:enumeration value="19"/>
+			<xs:enumeration value="20"/>
+			<xs:enumeration value="21"/>
+			<xs:enumeration value="22"/>
+			<xs:enumeration value="23"/>
+			<xs:enumeration value="24"/>
+			<xs:enumeration value="25"/>
+			<xs:enumeration value="26"/>
+			<xs:enumeration value="27"/>
+			<xs:enumeration value="28"/>
+			<xs:enumeration value="29"/>
+			<xs:enumeration value="30"/>
+			<xs:enumeration value="31"/>
+			<xs:enumeration value="32"/>
+			<xs:enumeration value="33"/>
+			<xs:enumeration value="34"/>
+			<xs:enumeration value="35"/>
+			<xs:enumeration value="36"/>
+			<xs:enumeration value="37"/>
+			<xs:enumeration value="38"/>
+			<xs:enumeration value="39"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AmbitoValidezCIE">
+		<xs:annotation>
+			<xs:documentation>Ámbito de validez del CIE
+			ES	ESTATAL
+			AU	AUTONOMICO
+			PR	PROVINCIAL
+			LO	LOCAL	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ES"/>
+			<xs:enumeration value="AU"/>
+			<xs:enumeration value="PR"/>
+			<xs:enumeration value="LO"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
