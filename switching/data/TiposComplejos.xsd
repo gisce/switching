@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<xs:annotation>
 		<xs:documentation>
-		Version 2.0, Junio 2004
-		Tipos Complejos 
-		Marzo 2008 Modificación realizada acuerdo Unesa para ser vigentes en Mayo 2008: nuevo tipo complejo ClienteSinTelefono 
-		Octubre 2008 Añadido TipoComplejo MedidaC2
-							Modificado MedidaResto (EquipoAportadoCliente y EquipoInstaladoCliente pasan a opcionales)
-							Añadido TipoComplejo CondicionesContractualesC
-							Modificado Tipo Complejo PuntoDeMedida (Añadido el campo DireccionPuntoMedida)
-		Enero 2009   Añadido bloque Contacto en ContratoPasoMRAMLTarifa2ConCambios, ContratoConModificacion
-		Febrero 2009 Añadidos TiposComplejos Reclamante, DatosReclamante, IdReclamante, ContactoConDireccion, DatosReclamacion, DatosAutolecturas, ModeloAparatoAutolecturas
-		Abril 2009 Modificación realizada acuerdo Unesa para ser vigentes en Mayo 2009: nuevos tipos complejo
-		DatosCIE, DatosAPM, RegistroDoc y RegistrosDocs
-		Mayo 2009 Añadido PasswordPM en tipoComplejo PuntoDeMedida
-						 Añadido DireccionSinCodPostal
-						 Añadidos Anomalias, Anomalia, Importes, ImportesOtrosConceptos, ImportesTerminoEnergia, ImportesTerminoPotencia, OtrosConceptos, ExcesosPotAFacturar, ReactivasAFacturar, EnergiasAFacturar, PotenciasAFacturar, RegistrosValAnomalias, RegistroValAnomalias
+			Version 0.0 OCSUM 2011.01.31
 		</xs:documentation>
 	</xs:annotation>
 	<xs:complexType name="IdContrato">
@@ -61,23 +48,13 @@
 			<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="LocalizacionPS">
-		<xs:sequence>
-			<xs:element name="Pais" type="X25"/>
-			<xs:element name="Provincia" type="Decimal2"/>
-			<xs:element name="Municipio" type="Decimal7"/>
-			<xs:element name="Poblacion" type="Decimal7"/>
-			<xs:element name="TipoVia" type="TipoVia" minOccurs="0"/>
-			<xs:element name="CodPostal" type="Decimal5" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="Direccion">
 		<xs:sequence>
 			<xs:element name="Pais" type="X25"/>
 			<xs:element name="Provincia" type="Decimal2"/>
 			<xs:element name="Municipio" type="Decimal7"/>
 			<xs:element name="Poblacion" type="Decimal7"/>
-			<xs:element name="TipoVia" type="TipoVia"/>
+			<xs:element name="TipoVia" type="TipoVia" minOccurs="0"/>
 			<xs:element name="CodPostal" type="Decimal5"/>
 			<xs:element name="Calle" type="X30"/>
 			<xs:element name="NumeroFinca" type="X5"/>
@@ -299,6 +276,7 @@
 				<xs:element name="Duracion" type="Decimal2"/>
 			</xs:choice>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
+			<xs:element name="ValidezCIE" type="AmbitoValidezCIE" minOccurs="0"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractuales"/>
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
@@ -314,6 +292,7 @@
 				<xs:element name="Duracion" type="Decimal2"/>
 			</xs:choice>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
+			<xs:element name="ValidezCIE" type="AmbitoValidezCIE" minOccurs="0"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractuales"/>
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
@@ -457,6 +436,16 @@
 			<xs:element name="FechaUltimaLectura" type="xs:date"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="DatosTitular">
+		<xs:sequence>
+			<xs:element name="TipoTitular" type="X2" minOccurs="0"/>
+			<xs:element name="Titular" type="X50" minOccurs="0"/>
+			<xs:element name="Calle" type="X80" minOccurs="0"/>
+			<xs:element name="Poblacion" type="X45" minOccurs="0"/>
+			<xs:element name="CodPostal" type="Decimal5" minOccurs="0"/>
+			<xs:element name="Provincia" type="X45" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="Reclamante">
 		<xs:sequence>
 			<xs:element name="TipoReclamante" type="TipoReclamante"/>
@@ -565,8 +554,8 @@
 			<xs:element name="FechaCaducidadCie" type="xs:date" minOccurs="0"/>
 			<xs:element name="NifInstalador" type="X9" minOccurs="0"/>
 			<xs:element name="NombreInstalador" type="X45" minOccurs="0"/>
-			<xs:element name="TensionSuministro" type="X5" minOccurs="0"/>
-			<xs:element name="InstensidadDif" type="X2" minOccurs="0"/>
+			<xs:element name="TensionSuministroCIE" type="TensionSuministroCIEyAPM" minOccurs="0"/>
+			<xs:element name="IntensidadDif" type="X2" minOccurs="0"/>
 			<xs:element name="SensibilidadDif" type="X2" minOccurs="0"/>
 			<xs:element name="SeccionCable" type="X2" minOccurs="0"/>
 			<xs:element name="TipoSuministro" type="TiposSuministro" minOccurs="0"/>
@@ -579,6 +568,7 @@
 			<xs:element name="PotenciaInstAT" type="Potencia" minOccurs="0"/>
 			<xs:element name="FechaEmisionApm" type="xs:date" minOccurs="0"/>
 			<xs:element name="FechaCaducidadApm" type="xs:date" minOccurs="0"/>
+			<xs:element name="TensionSuministroAPM" type="TensionSuministroCIEyAPM" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RegistroDoc">

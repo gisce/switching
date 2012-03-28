@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by erre (erre) -->
-<xs:schema xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="TipoCabecera.xsd"/>
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<xs:include schemaLocation="TiposComplejos.xsd"/>
 	<xs:annotation>
 		<xs:documentation>
-		Version 2.0, Junio 2004
-		Modificación Enero 2009. Se añade campo opcional PenalizacionNoICP dentro del bloque Potencia de DatosGeneralesFacturaATR.
+			Version 0.0 OCSUM 2011.01.31
+			01/11/2011 Version 0.2 -> Incluida la posibilidad de facturar valores negativos
 		</xs:documentation>
 	</xs:annotation>
 	<xs:element name="MensajeFacturacion">
@@ -16,7 +16,7 @@
 				<xs:element name="Cabecera" type="Cabecera"/>
 				<xs:element name="Facturas" type="Facturas"/>
 				<xs:element name="OtrosDatosFactura" type="OtrosDatosFactura" minOccurs="0"/>
-				<xs:any processContents="skip" minOccurs="0"/>
+				<xs:any namespace="##other" processContents="skip" minOccurs="0"/>
 			</xs:sequence>
 			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
 			<xs:attribute name="Firmar" type="xs:string" use="optional"/>
@@ -301,7 +301,6 @@
 																	<xs:restriction base="xs:decimal">
 																		<xs:totalDigits value="13"/>
 																		<xs:fractionDigits value="2"/>
-																		<xs:minInclusive value="0"/>
 																	</xs:restriction>
 																</xs:simpleType>
 															</xs:element>
@@ -323,7 +322,6 @@
 									<xs:element name="ImporteTotalEnergiaActiva">
 										<xs:simpleType>
 											<xs:restriction base="xs:decimal">
-												<xs:minInclusive value="0"/>
 												<xs:totalDigits value="14"/>
 												<xs:fractionDigits value="4"/>
 											</xs:restriction>
