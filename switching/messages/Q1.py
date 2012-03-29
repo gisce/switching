@@ -10,7 +10,8 @@ class Q1(Message):
         """Retorna totes les lectures en una llista de comptadors"""
         comptadors = []
         for mesura in self.obj.Medidas:
-            if mesura.CodUnificadoPuntoSuministro.text == self.get_codi:
+            if mesura.CodUnificadoPuntoSuministro.text[:20] == \
+                                                    self.get_codi[:20]:
                 for aparell in mesura.Aparato:
                     comptadors.append(Comptador(aparell))
         return comptadors
