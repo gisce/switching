@@ -299,7 +299,8 @@ class Factura(object):
         """Retorna totes les lectures en una llista de comptadors"""
         comptadors = []
         for mesura in self.factura.Medidas:
-            if mesura.CodUnificadoPuntoSuministro.text == self.cups:
+            if mesura.CodUnificadoPuntoSuministro.text[:20] \
+                                                 == self.cups[:20]:
                 for aparell in mesura.Aparato:
                     comptadors.append(Comptador(aparell))
         return comptadors
