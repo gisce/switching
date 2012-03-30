@@ -6,7 +6,7 @@ from message import Message, except_f1
 
 class C1(Message):
     """Classe que implementa C1."""
-     
+
     @property
     def sollicitud(self):
         """Retorna l'objecte Contracte"""
@@ -23,7 +23,9 @@ class C1(Message):
         """Retorna l'objecte Client"""
         return Client(self.obj.CambiodeComercializadoraSinCambios.Cliente)
 
+
 class Sollicitud(object):
+    """Classe que implementa la sol·licitud"""
 
     def __init__(self, data):
         self.sollicitud = data
@@ -136,7 +138,7 @@ class Client(object):
     def fax(self):
         try:
             return '+%s%s' % (str(self.client.Fax.PrefijoPais),
-                              str(self.client.Fax.Numero)
+                              str(self.client.Fax.Numero))
         except AttributeError:
             pass
 
@@ -144,6 +146,6 @@ class Client(object):
     def telf(self):
         try:
             return '+%s%s' % (str(self.client.Telefono.PrefijoPais),
-                              str(self.client.Telefono.Numero)
+                              str(self.client.Telefono.Numero))
         except AttributeError:
             pass
