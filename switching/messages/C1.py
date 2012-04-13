@@ -14,7 +14,7 @@ class C1(Message):
                           DatosSolicitud)
 
     @property
-    def client(self):
+    def contracte(self):
         """Retorna l'objecte Contracte"""
         return Contracte(self.obj.CambiodeComercializadoraSinCambios.Contrato)
 
@@ -41,7 +41,7 @@ class Sollicitud(object):
         return linia
 
     @property
-    def activacio_cicle_lectura(self):
+    def cicle_activacio(self):
         """Indicatiu d'activació amb el cicle de lectura"""
         cicle = ''
         try:
@@ -59,6 +59,16 @@ class Sollicitud(object):
         except AttributeError:
             pass
         return data
+
+    @property
+    def representant(self):
+        """Indicatiu del representat"""
+        rep = ''
+        try:
+            rep = self.sollicitud.IndSustitutoMandatario.text
+        except AttributeError:
+            pass
+        return rep
 
 
 class Contracte(object):
@@ -133,6 +143,33 @@ class Client(object):
     @property
     def codi_identificacio(self):
         return self.client.IdCliente.Identificador.text
+    
+    @property
+    def nom(self):
+        nom = ''
+        try:
+            nom = self.client.Nombre.NombreDePila.text
+        except AttributeError:
+            pass
+        return nom
+
+    @property
+    def cognom_1(self):
+        nom = ''
+        try:
+            nom = self.client.Nombre.PrimerApellido.text
+        except AttributeError:
+            pass
+        return nom
+
+    @property
+    def cognom_2(self):
+        nom = ''
+        try:
+            nom = self.client.Nombre.SegundoApellido.text
+        except AttributeError:
+            pass
+        return nom
 
     @property
     def fax(self):
@@ -143,9 +180,19 @@ class Client(object):
             pass
 
     @property
-    def telf(self):
+    def telf_num(self):
+        num = ''
         try:
-            return '+%s%s' % (str(self.client.Telefono.PrefijoPais),
-                              str(self.client.Telefono.Numero))
+            num = self.client.Telefono.Numero.text
         except AttributeError:
             pass
+        return num
+
+    @property
+    def telf_prefix(self):
+        prefix = ''
+        try:
+            prefix = self.client.Telefono.PrefijoPais.text
+        except AttributeError:
+            pass
+        return prefix
