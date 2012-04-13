@@ -104,7 +104,7 @@ class Contracte(object):
            contracte sigui inferior a 12 mesos"""
         data = ''
         try:
-            data = self.contracte.Fechafinalizacion.text
+            data = self.contracte.FechaFinalizacion.text
         except AttributeError:
             pass
         return data
