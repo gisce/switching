@@ -103,21 +103,21 @@ class Message(object):
     # Funcions relacionades amb la capçalera del XML
     @property
     def get_codi_emisor(self):
-        ref = int(self.obj.Cabecera.CodigoREEEmpresaEmisora.text)
+        ref = self.obj.Cabecera.CodigoREEEmpresaEmisora.text
         if not ref:
             raise except_f1('Error', _('Document sense emisor'))
-        return '%04d' % ref
+        return ref
 
     @property
     def get_codi_destinatari(self):
-        ref = int(self.obj.Cabecera.CodigoREEEmpresaDestino.text)
+        ref = self.obj.Cabecera.CodigoREEEmpresaDestino.text
         if not ref:
             raise except_f1('Error', _('Document sense destinatari'))
-        return '%04d' % ref
+        return ref
 
     @property
     def get_codi(self):
-        ref = self.obj.Cabecera.Codigo.text
+        ref = self.obj.Cabecera.Codigo.text.strip()
         if not ref:
             raise except_f1('Error', _('Document sense codi'))
         return ref
