@@ -43,11 +43,11 @@ class MessageBase(object):
     
     def set_tipus(self):
         """Set type of message. To implement in child classes"""
-        pass
+        raise NotImplementedError('This method is not implemented!')
 
     def set_xsd(self):
         """Set xsd. To implement in child classes"""
-        pass
+        raise NotImplementedError('This method is not implemented!')
 
     def check_fpos(self, f_obj):
         """Setejar la posició actual dels fixers"""
@@ -60,7 +60,7 @@ class MessageBase(object):
 
     def parse_xml(self):
         """Import xml content. To implement in child classes"""
-        pass
+        raise NotImplementedError('This method is not implemented!')
 
 
 class Message(MessageBase):
@@ -168,6 +168,13 @@ class MessageTG(MessageBase):
             raise except_f1('Error', _('Document sense codi de'\
                                        ' petició'))
         return ref
+
+    @property
+    def supported(self):
+        if self.tipus in ('S02', 'S04', 'S05'):
+            return True
+        else:
+            return False
 
 
 class except_f1(Exception):
