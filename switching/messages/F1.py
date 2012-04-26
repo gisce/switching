@@ -227,7 +227,7 @@ class Factura(object):
             lect_reactiva = tarifes.aggr_consums(lect_reactiva)
         calc = {}
         marge = INFO_TARIFA[self.codi_tarifa]['marge']
-        for i in lect_activa:
+        for i in lect_reactiva:
             activa = lect_activa[i]
             reactiva = lect_reactiva[i]
             val = float("%.2f" %
@@ -241,7 +241,7 @@ class Factura(object):
                                                                     Periodo:
                 pr = PeriodeReactiva(i)
                 quant = str(round(pr.quantitat, 2))
-                if not quant > 0:
+                if not float(quant) > 0:
                     continue
                 if not quant in calc.values():
                     raise except_f1('Error', _('Periode de linies de reactiva'
