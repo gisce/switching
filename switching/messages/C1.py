@@ -150,7 +150,10 @@ class Client(object):
         try:
             nom = self.client.Nombre.NombreDePila.text
         except AttributeError:
-            pass
+            try: 
+                nom = self.client.Nombre.RazonSocial.text
+            except AttributeError:
+                pass
         return nom
 
     @property
