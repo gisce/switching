@@ -190,23 +190,37 @@ class Factura(object):
         total = 0
         try:
             for ea in self.factura.EnergiaActiva.TerminoEnergiaActiva:
+                d_ini = ea.FechaDesde.text
+                d_fi = ea.FechaHasta.text
                 p = 0
                 for i in ea.Periodo:
                     if float(i.PrecioEnergia.text):
                         p += 1
-                        periode.append(PeriodeActiva(i, 'P%d' % p))
+                        periode.append(PeriodeActiva(i, 'P%d' % p,
+                                                            d_ini, d_fi))
             total = float(self.factura.EnergiaActiva.
                                             ImporteTotalEnergiaActiva.text)
         except AttributeError:
             pass
         return periode, total
 
-    def get_info_reactiva(self):
+    def agrupar_lectures_per_data(self, lectures):
+        """Retorna un diccionari de llistes en què les
+           claus són les dates inicial i final de les lectures
+        """
+        lect = {}
+        for i in lectures:
+            key = '%s-%s' % (i.data_lectura_inicial, i.data_lectura_final)
+            if not key in lect:
+                lect[key] = []
+            lect[key].append(i)
+        return lect
+
+    def get_periodes_reactiva(self, lectures, interval):
         """Retorna els periodes de reactiva
            Assigna el periode que correspon comprovant la quantitat
            en les lectures.
         """
-        lectures = self.get_lectures()[1]
         agrupat = INFO_TARIFA[self.codi_tarifa]['agrupat']
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
         lect_reactiva = self.select_consum_from_lectures(lectures, 'R')
@@ -225,37 +239,57 @@ class Factura(object):
         total = 0
         periode = []
         try:
-            for i in self.factura.EnergiaReactiva.TerminoEnergiaReactiva.\
-                                                                    Periodo:
-                pr = PeriodeReactiva(i)
-                quant = str(round(pr.quantitat, 2))
-                if not quant > 0:
+            for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
+                d_ini = er.FechaDesde.text
+                d_fi = er.FechaHasta.text
+                interval_r = '%s-%s' % (d_ini, d_fi)
+                if interval_r != interval:
                     continue
-                if not quant in calc.values():
-                    raise except_f1('Error', _('Periode de linies de reactiva'
-                                               ' no trobat'))
-                    continue
-                for key in calc:
-                    if calc[key] == quant:
-                        break
-                pr.update_name(key)
-                periode.append(pr)
-            total = float(self.factura.EnergiaReactiva.\
-                             ImporteTotalEnergiaReactiva.text)
+                for i in er.Periodo:
+                    pr = PeriodeReactiva(i, d_ini, d_fi)
+                    quant = str(round(pr.quantitat, 2))
+                    if not quant > 0:
+                        continue
+                    if not quant in calc.values():
+                        raise except_f1('Error', _('Periode de linies de reactiva'
+                                                   ' no trobat'))
+                        continue
+                    for key in calc:
+                        if calc[key] == quant:
+                            break
+                    pr.update_name(key)
+                    periode.append(pr)
         except AttributeError:
             pass
+        return periode
+
+    def get_info_reactiva(self):
+        """Agrupa els periodes de lectura per intervals de temps 
+           i en calcula els periodes de reactiva.
+        """
+        lectures = self.get_lectures()[1]
+        lect = self.agrupar_lectures_per_data(lectures)
+        periode = []
+        for interval, lectures in lect.items():
+            periode += get_periodes_reactiva(lectures, interval)
+        total = float(self.factura.EnergiaReactiva.\
+                             ImporteTotalEnergiaReactiva.text)
         return periode, total
 
     def get_info_potencia(self):
         """Retorna els periodes de potència"""
         periode = []
         total = 0
-        p = 0
         try:
-            for i in self.factura.Potencia.TerminoPotencia.Periodo:
-                if float(i.PrecioPotencia.text):
-                    p += 1
-                    periode.append(PeriodePotencia(i, 'P%d' % p))
+            for pot in self.factura.Potencia.TerminoPotencia:
+                d_ini = pot.FechaDesde.text
+                d_fi = pot.FechaHasta.text
+                p = 0
+                for i in pot.Periodo:
+                    if float(i.PrecioPotencia.text):
+                        p += 1
+                        periode.append(PeriodePotencia(i, 'P%d' % p,
+                                                            d_ini, d_fi))
             total = float(self.factura.Potencia.
                                         ImporteTotalTerminoPotencia.text)
         except AttributeError:
@@ -270,7 +304,9 @@ class Factura(object):
         try:
             for i in self.factura.ExcesoPotencia.Periodo:
                 p += 1
-                periode.append(PeriodeExces(i, 'P%d' % p))
+                periode.append(PeriodeExces(i, 'P%d' % p,
+                                                self.factura.data_inici,
+                                                self.factura.data_final))
             total = float(self.factura.ExcesoPotencia.ImporteTotalExcesos.text)
         except AttributeError:
             pass
@@ -280,7 +316,8 @@ class Factura(object):
         """Línies de lloguers"""
         try:
             obj = Lloguer(self.factura.Alquileres.
-                          ImporteFacturacionAlquileres.text)
+                          ImporteFacturacionAlquileres.text,
+                          self.factura.data_inici, self.factura.data_final)
         except AttributeError:
             obj = ''
         return obj
@@ -372,9 +409,11 @@ class LiniesFactura(object):
 
 class PeriodeActiva(object):
 
-    def __init__(self, periode, name):
+    def __init__(self, periode, name, data_inici, data_final):
         self.periode = periode
         self._name = name
+        self._data_inici = data_inici
+        self._data_final = data_final
 
     @property
     def quantitat(self):
@@ -391,12 +430,22 @@ class PeriodeActiva(object):
         "Retorna el nom del periode"
         return self._name
 
+    @property
+    def data_inici(self):
+        return self._data_inici
+
+    @property
+    def data_final(self):
+        return self._data_final
+
 
 class PeriodeReactiva(object):
 
-    def __init__(self, periode):
+    def __init__(self, periode, data_inici, data_final):
         self.periode = periode
         self._name = ''
+        self._data_inici = data_inici
+        self._data_final = data_final
 
     @property
     def quantitat(self):
@@ -416,12 +465,22 @@ class PeriodeReactiva(object):
         "Actualitza el name"
         self._name = name
 
+    @property
+    def data_inici(self):
+        return self._data_inici
+
+    @property
+    def data_final(self):
+        return self._data_final
+
 
 class PeriodePotencia(object):
 
-    def __init__(self, periode, name):
+    def __init__(self, periode, name, data_inici, data_final):
         self.periode = periode
         self._name = name
+        self._data_inici = data_inici
+        self._data_final = data_final
 
     @property
     def quantitat(self):
@@ -442,11 +501,21 @@ class PeriodePotencia(object):
         "Retorna el nom del periode"
         return self._name
 
+    @property
+    def data_inici(self):
+        return self._data_inici
+
+    @property
+    def data_final(self):
+        return self._data_final
+
 
 class PeriodeExces(object):
-    def __init__(self, periode, name):
+    def __init__(self, periode, name, data_inici, data_final):
         self.periode = periode
         self._name = name
+        self._data_inici = data_inici
+        self._data_final = data_final
 
     @property
     def quantitat(self):
@@ -458,13 +527,29 @@ class PeriodeExces(object):
         "Retorna el nom del periode"
         return self._name
 
+    @property
+    def data_inici(self):
+        return self._data_inici
+
+    @property
+    def data_final(self):
+        return self._data_final
+
 
 class Lloguer(object):
-    def __init__(self, cost):
+    def __init__(self, cost, data_inici, data_final):
         self.cost = cost
-    
+        self._data_inici = data_inici
+        self._data_final = data_final
+
     @property
     def quantitat(self):
         return float(self.cost)
 
-    
+    @property
+    def data_inici(self):
+        return self._data_inici
+
+    @property
+    def data_final(self):
+        return self._data_final
