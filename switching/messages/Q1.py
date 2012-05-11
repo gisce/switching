@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import date, datetime
 
 from message import Message, except_f1
 
@@ -15,6 +16,38 @@ class Q1(Message):
                 for aparell in mesura.Aparato:
                     comptadors.append(Comptador(aparell))
         return comptadors
+
+    @staticmethod
+    def agrupar_lectures_per_data(lectures):
+        """Retorna un diccionari de llistes en què les
+           claus són les dates inicial i final de les lectures
+        """
+        lect = {}
+        for i in lectures:
+            key = '%s-%s' % (i.data_lectura_inicial, i.data_lectura_final)
+            if not key in lect:
+                lect[key] = []
+            lect[key].append(i)
+        return lect
+
+    @staticmethod
+    def obtenir_data_inici_i_final(dic):
+        """Retorna la data inicial i final del diccionari retornat 
+           per la funció agrupar_lectures_per_data()
+        """
+        ret_ini = None
+        ret_fi = None
+        for i in dic.keys():
+            d_ini = date(int(i.split('-')[0]), int(i.split('-')[1]),
+                                                        int(i.split('-')[2]))
+            if not ret_ini or ret_ini > d_ini:
+                ret_ini = d_ini
+            d_fi = date(int(i.split('-')[3]), int(i.split('-')[4]),
+                                                        int(i.split('-')[5]))
+            if not ret_fi or ret_fi < d_fi:
+                ret_fi = d_fi
+        return datetime.strftime(ret_ini, '%Y-%m-%d'), datetime.strftime(
+                                                            ret_fi, '%Y-%m-%d')
 
 
 class Lectura(object):

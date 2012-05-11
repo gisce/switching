@@ -6,7 +6,7 @@ from defs import *
 from message import Message, except_f1
 from libfacturacioatr import tarifes
 
-from Q1 import Lectura, Comptador
+from Q1 import Q1, Lectura, Comptador
 
 _ = gettext.gettext
 
@@ -204,18 +204,6 @@ class Factura(object):
             pass
         return periode, total
 
-    def agrupar_lectures_per_data(self, lectures):
-        """Retorna un diccionari de llistes en què les
-           claus són les dates inicial i final de les lectures
-        """
-        lect = {}
-        for i in lectures:
-            key = '%s-%s' % (i.data_lectura_inicial, i.data_lectura_final)
-            if not key in lect:
-                lect[key] = []
-            lect[key].append(i)
-        return lect
-
     def get_periodes_reactiva(self, lectures, interval):
         """Retorna els periodes de reactiva
            Assigna el periode que correspon comprovant la quantitat
@@ -268,7 +256,7 @@ class Factura(object):
            i en calcula els periodes de reactiva.
         """
         lectures = self.get_lectures()[1]
-        lect = self.agrupar_lectures_per_data(lectures)
+        lect = Q1.agrupar_lectures_per_data(lectures)
         periode = []
         for interval, lectures in lect.items():
             periode += get_periodes_reactiva(lectures, interval)
