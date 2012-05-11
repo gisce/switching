@@ -293,8 +293,8 @@ class Factura(object):
             for i in self.factura.ExcesoPotencia.Periodo:
                 p += 1
                 periode.append(PeriodeExces(i, 'P%d' % p,
-                                                self.factura.data_inici,
-                                                self.factura.data_final))
+                                                self.data_inici,
+                                                self.data_final))
             total = float(self.factura.ExcesoPotencia.ImporteTotalExcesos.text)
         except AttributeError:
             pass
@@ -305,7 +305,7 @@ class Factura(object):
         try:
             obj = Lloguer(self.factura.Alquileres.
                           ImporteFacturacionAlquileres.text,
-                          self.factura.data_inici, self.factura.data_final)
+                          self.data_inici, self.data_final)
         except AttributeError:
             obj = ''
         return obj
