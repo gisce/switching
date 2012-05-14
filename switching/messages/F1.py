@@ -204,7 +204,7 @@ class Factura(object):
             pass
         return periode, total
 
-    def get_periodes_reactiva(self, lectures, interval):
+    def get_periodes_reactiva(self, lectures):
         """Retorna els periodes de reactiva
            Assigna el periode que correspon comprovant la quantitat
            en les lectures.
@@ -230,9 +230,9 @@ class Factura(object):
             for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
                 d_ini = er.FechaDesde.text
                 d_fi = er.FechaHasta.text
-                interval_r = '%s-%s' % (d_ini, d_fi)
-                if interval_r != interval:
-                    continue
+                #interval_r = '%s-%s' % (d_ini, d_fi)
+                #if interval_r != interval:
+                #    continue
                 for i in er.Periodo:
                     pr = PeriodeReactiva(i, d_ini, d_fi)
                     quant = str(round(pr.quantitat, 2))
@@ -240,7 +240,8 @@ class Factura(object):
                         continue
                     if not quant in calc.values():
                         raise except_f1('Error', _('Periode de linies de reactiva'
-                                                   ' no trobat'))
+                                                   ' amb valor %s desconegut') %
+                                                    pr.quantitat)
                         continue
                     for key in calc:
                         if calc[key] == quant:
@@ -252,14 +253,12 @@ class Factura(object):
         return periode
 
     def get_info_reactiva(self):
-        """Agrupa els periodes de lectura per intervals de temps 
+        """Agrupa les lectures per tipus i periode i  
            i en calcula els periodes de reactiva.
         """
         lectures = self.get_lectures()[1]
-        lect = Q1.agrupar_lectures_per_data(lectures)
-        periode = []
-        for interval, lectures in lect.items():
-            periode += get_periodes_reactiva(lectures, interval)
+        lect = Q1.agrupar_lectures_per_periode(lectures)
+        periode = self.get_periodes_reactiva(lectures)
         total = float(self.factura.EnergiaReactiva.\
                              ImporteTotalEnergiaReactiva.text)
         return periode, total

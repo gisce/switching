@@ -16,6 +16,20 @@ class Q1(Message):
                 for aparell in mesura.Aparato:
                     comptadors.append(Comptador(aparell))
         return comptadors
+    
+    @staticmethod
+    def agrupar_lectures_per_periode(lectures):
+        """Comprova si hi ha lectures per igual tipus i periode
+           amb dates diferents i les agrupa.
+        """
+        lect = {}
+        for i in lectures:
+            if not i.tipus in lect:
+                lect[i.tipus] = {}
+            if not i.periode in lect[i.tipus]:
+                lect[i.tipus][i.periode] = []
+            lect[i.tipus][i.periode].append(lect)
+        return lect
 
     @staticmethod
     def agrupar_lectures_per_data(lectures):
