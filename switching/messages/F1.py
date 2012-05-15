@@ -53,6 +53,10 @@ class Factura(object):
                DireccionSuministro.CUPS.text
 
     @property
+    def get_codi(self):
+        return self.cups
+
+    @property
     def numero_factura(self):
         """Retornar el número de factura"""
         return self.factura.DatosGeneralesFacturaATR.\
@@ -205,7 +209,7 @@ class Factura(object):
         return periode, total
 
     def get_periodes_reactiva(self, lectures):
-        """Retorna una llista de periodes que tenen exces de potencia
+        """Retorna una llista de noms de periode que tenen excés de reactiva
         """
         agrupat = INFO_TARIFA[self.codi_tarifa]['agrupat']
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
@@ -237,21 +241,26 @@ class Factura(object):
             raise except_f1('Error', msg)
 
     def get_info_reactiva(self):
-        """Agrupa les lectures per tipus i periode i  
-           i en calcula els periodes de reactiva.
-        """
-        lectures = self.get_lectures()[1]
-        nom_periodes = self.get_periodes_reactiva(lectures)
+        """Retorna els periodes de reactiva"""
+        comptadors = self.get_comptadors()
         total = 0
         periode = []
+        nom_periodes_uniq = []
+        for i in comptadors:
+            lectures = i.get_lectures()
+            nom_periodes = self.get_periodes_reactiva(lectures)
+            if nom_periodes_uniq:
+                nom_periodes_uniq = list(set(nom_periodes_uniq + nom_periodes))
+            else:
+                nom_periodes_uniq = list(nom_periodes)
+        nom_periodes_uniq.sort()
         try:
             for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
                 d_ini = er.FechaDesde.text
                 d_fi = er.FechaHasta.text
                 for pos, i in enumerate(er.Periodo):
-                    pr = PeriodeReactiva(i, d_ini, d_fi)
-                    quant = str(round(pr.quantitat, 2))
-                    pr.update_name(nom_periodes[pos])
+                    pr = PeriodeReactiva(i, nom_periodes_uniq[pos],
+                                                                d_ini, d_fi)
                     periode.append(pr)
             total = float(self.factura.EnergiaReactiva.\
                              ImporteTotalEnergiaReactiva.text)
@@ -317,33 +326,7 @@ class Factura(object):
 
     def get_comptadors(self):
         """Retorna totes les lectures en una llista de comptadors"""
-        comptadors = []
-        for mesura in self.factura.Medidas:
-            if mesura.CodUnificadoPuntoSuministro.text[:20] \
-                                                 == self.cups[:20]:
-                for aparell in mesura.Aparato:
-                    comptadors.append(Comptador(aparell))
-        return comptadors
-
-    def get_lectures(self):
-        """Retorna totes les lectures en una llista de Lectura"""
-        lectures = []
-        try:
-            for lect in self.factura.Medidas.Aparato.Integrador:
-                lectures.append(Lectura(lect, self.codi_tarifa))
-        except AttributeError:
-            pass
-        tipus = ''
-        cnt_tipus = 0
-        for lect in lectures:
-            if tipus != lect.tipus:
-                cnt = 0
-                tipus = lect.tipus
-                cnt_tipus += 1
-            else:
-                cnt += 1
-            lect.cnt = cnt
-        return cnt_tipus, lectures
+        return Q1.get_comptadors(self, self.factura)
 
     def select_from_lectures(self, lectures, tipus):
         """Retorna les lectures d'energia del tipus indicat"""
@@ -429,9 +412,9 @@ class PeriodeActiva(object):
 
 class PeriodeReactiva(object):
 
-    def __init__(self, periode, data_inici, data_final):
+    def __init__(self, periode, name, data_inici, data_final):
         self.periode = periode
-        self._name = ''
+        self._name = name
         self._data_inici = data_inici
         self._data_final = data_final
 

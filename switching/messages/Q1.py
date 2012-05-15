@@ -6,11 +6,14 @@ from message import Message, except_f1
 
 class Q1(Message):
     """Classe que implementa Q1."""
-    
-    def get_comptadors(self):
+
+    @staticmethod
+    def get_comptadors(self, obj=None):
         """Retorna totes les lectures en una llista de comptadors"""
+        if obj is None:
+            obj = self.obj
         comptadors = []
-        for mesura in self.obj.Medidas:
+        for mesura in obj.Medidas:
             if mesura.CodUnificadoPuntoSuministro.text[:20] == \
                                                     self.get_codi[:20]:
                 for aparell in mesura.Aparato:
