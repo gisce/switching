@@ -205,62 +205,58 @@ class Factura(object):
         return periode, total
 
     def get_periodes_reactiva(self, lectures):
-        """Retorna els periodes de reactiva
-           Assigna el periode que correspon comprovant la quantitat
-           en les lectures.
+        """Retorna una llista de periodes que tenen exces de potencia
         """
         agrupat = INFO_TARIFA[self.codi_tarifa]['agrupat']
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
         lect_reactiva = self.select_consum_from_lectures(lectures, 'R')
+        if len(lect_activa) < len(lect_reactiva):
+            msg = _('Menor nombre de periodes en les lectures d\'activa '\
+                    'que en reactiva. No és possible calcular els excessos '\
+                    'de reactiva.')
+            raise except_f1('Error', msg)
         if agrupat:
             lect_activa = tarifes.aggr_consums(lect_activa)
             lect_reactiva = tarifes.aggr_consums(lect_reactiva)
-        calc = {}
+        periodes = lect_reactiva.keys()
+        periodes.sort()
+        calc = []
         marge = INFO_TARIFA[self.codi_tarifa]['marge']
-        for i in lect_reactiva:
-            activa = lect_activa[i]
-            reactiva = lect_reactiva[i]
-            val = float("%.2f" %
-                            tarifes.exces_reactiva(activa, reactiva, marge))
-            calc.update({i: str(round(val, 2))})
-
-        total = 0
-        periode = []
         try:
-            for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
-                d_ini = er.FechaDesde.text
-                d_fi = er.FechaHasta.text
-                #interval_r = '%s-%s' % (d_ini, d_fi)
-                #if interval_r != interval:
-                #    continue
-                for i in er.Periodo:
-                    pr = PeriodeReactiva(i, d_ini, d_fi)
-                    quant = str(round(pr.quantitat, 2))
-                    if not float(quant) > 0:
-                        continue
-                    if not quant in calc.values():
-                        raise except_f1('Error', _('Periode de linies de reactiva'
-                                                   ' amb valor %s desconegut') %
-                                                    pr.quantitat)
-                        continue
-                    for key in calc:
-                        if calc[key] == quant:
-                            break
-                    pr.update_name(key)
-                    periode.append(pr)
-        except AttributeError:
-            pass
-        return periode
+            for i in periodes:
+                activa = lect_activa[i]
+                reactiva = lect_reactiva[i]
+                val = float("%.2f" %
+                                tarifes.exces_reactiva(activa, reactiva, marge))
+                if val > 0:
+                    calc.append(i)
+            return calc
+        except KeyError, e:
+            msg = _('No s\'ha trobat el periode \'%s\' en les lectures '\
+                    ' d\'activa') % e[0]
+            raise except_f1('Error', msg)
 
     def get_info_reactiva(self):
         """Agrupa les lectures per tipus i periode i  
            i en calcula els periodes de reactiva.
         """
         lectures = self.get_lectures()[1]
-        lect = Q1.agrupar_lectures_per_periode(lectures)
-        periode = self.get_periodes_reactiva(lectures)
-        total = float(self.factura.EnergiaReactiva.\
+        nom_periodes = self.get_periodes_reactiva(lectures)
+        total = 0
+        periode = []
+        try:
+            for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
+                d_ini = er.FechaDesde.text
+                d_fi = er.FechaHasta.text
+                for pos, i in enumerate(er.Periodo):
+                    pr = PeriodeReactiva(i, d_ini, d_fi)
+                    quant = str(round(pr.quantitat, 2))
+                    pr.update_name(nom_periodes[pos])
+                    periode.append(pr)
+            total = float(self.factura.EnergiaReactiva.\
                              ImporteTotalEnergiaReactiva.text)
+        except AttributeError:
+            pass
         return periode, total
 
     def get_info_potencia(self):
@@ -358,11 +354,16 @@ class Factura(object):
         return select
 
     def select_consum_from_lectures(self, lectures, tipus):
-        """Retorna els consums de lectures d'energia del tipus indicat"""
+        """Retorna els consums de lectures d'energia del tipus indicat
+           En el cas d'haver-hi múltiples lectures del mateix tipus i 
+           periode, n'acomula els consums"""
         select = {}
         for lect in lectures:
             if lect.tipus in tipus:
-                select.update({lect.periode: lect.consum})
+                if lect.periode in select:
+                    select[lect.periode] += lect.consum
+                else:
+                    select.update({lect.periode: lect.consum})
         return select
 
     @property

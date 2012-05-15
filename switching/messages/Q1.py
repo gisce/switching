@@ -28,7 +28,7 @@ class Q1(Message):
                 lect[i.tipus] = {}
             if not i.periode in lect[i.tipus]:
                 lect[i.tipus][i.periode] = []
-            lect[i.tipus][i.periode].append(lect)
+            lect[i.tipus][i.periode].append(i)
         return lect
 
     @staticmethod
