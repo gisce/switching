@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!--
+		Version 2.0, Junio 2004
+		
+		Mensaje de negocio, solicitud de paso de MR a ML asin cambios. Formato A. Proceso c1.            
+
+		Estructura general.
+			Datos solicitud
+			Datos del cliente 
+				DNI, CIF	
+				Nombre 
+			Datos contrato:
+				CodContrato	
+				Fecha final o duración	
+				Dirección de correspondencia				 
+			Medida:
+				Indicadores
+				Aparatos
+			Comentarios
+	Abril 2009 Añadido el grupo RegistrosDocs
+	-->
+	<xs:complexType name="CambiodeComercializadoraSinCambiosAC1">
+		<xs:sequence>
+			<xs:element name="DatosSolicitud" type="DatosCambiodeComercializadoraSinCambiosAC1"/>
+			<xs:element name="Contrato" type="ContratoCambiodeComercializadoraSinCambiosAC1"/>
+			<xs:element name="Cliente" type="Cliente"/>
+			<xs:element name="ModelosAparato" type="ModelosAparato"/>
+			<xs:element name="Comentarios" type="Comentarios"/>
+			<xs:element name="RegistrosDocumento" type="RegistrosDocs" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Tipos secundarios de la transacción actual -->
+	<xs:complexType name="DatosCambiodeComercializadoraSinCambiosAC1">
+		<xs:sequence>
+			<xs:element name="LineaNegocioElectrica" type="LineaNegocio"/>
+			<xs:element name="SolicitudAdmContractual" type="IndicativoSi"/>
+			<xs:element name="IndActivacionLectura" type="Indicativo"/>
+			<xs:element name="FechaPrevistaAccion" type="xs:date" minOccurs="0"/>
+			<xs:element name="IndSustitutoMandatario" type="IndSustitutoMandatario"/>
+		</xs:sequence>
+		<!-- 
+		Datos propios de la solicitud, no pertenecen a ninguna entidad 
+		-->
+	</xs:complexType>
+	<xs:complexType name="ContratoCambiodeComercializadoraSinCambiosAC1">
+		<xs:sequence>
+			<xs:element name="IdContrato" type="IdContrato"/>
+			<xs:choice>
+				<xs:element name="FechaFinalizacion" type="xs:date"/>
+				<xs:element name="Duracion" type="Decimal2"/>
+			</xs:choice>
+			<xs:element name="TipoContratoATR" type="TipoContrato"/>
+			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
+			<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
