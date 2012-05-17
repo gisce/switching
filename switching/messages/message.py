@@ -10,8 +10,8 @@ from switching.types import DecimalElement, check_decimal_element
 XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
             'Q1': {'01': 'SaldoLecturasFacturacion.xsd'},
             'C1': {'01': 'CambiodeComercializadoraSinCambios.xsd',
-                   '02': 'AceptacionCambiodeComercializadoraSinCambios.xsd',
-                   '02': 'RechazoATRDistribuidoras.xsd',
+                   '02': ('AceptacionCambiodeComercializadoraSinCambios.xsd',
+                          'RechazoATRDistribuidoras.xsd'),
                    '05': 'ActivacionCambiodeComercializadoraSinCambios.xsd',
                    '06': 'NotificacionComercializadoraSaliente.xsd',
                    '08': 'AnulacionSolicitud.xsd',
@@ -42,6 +42,7 @@ class Message(object):
         uxml = etree.tostring(root).decode('iso-8859-1')
         self.str_xml = uxml
         self.tipus = ''
+        self.header = ''
         self.pas = ''
         self.f_xsd = ''
         self.set_tipus_i_pas()
@@ -70,7 +71,21 @@ class Message(object):
             msg = _('Codi de pas \'%s\'  no suportat') % self.pas
             raise except_f1('Error', msg)
         try:
-            xsd = switching.get_data(XSD_DATA[self.tipus][self.pas])
+            if isinstance(XSD_DATA[self.tipus][self.pas], tuple):
+                trobat = False
+                root = objectify.fromstring(self.str_xml)
+                for fitxer in XSD_DATA[self.tipus][self.pas]:
+                    if fitxer.split(".xsd")[0] in root.tag:
+                        trobat = True
+                        break
+                if not trobat: 
+                    msg = (_('Tipus de fitxer \'%s\' no suportat') % 
+                                                              root.tag)
+                    raise except_f1('Error', msg)
+            else:
+                fitxer = XSD_DATA[self.tipus][self.pas]
+            self.header(fitxer.split(".xsd")[0])
+            xsd = switching.get_data(fitxer)
             self.f_xsd = open(xsd, 'r') 
         except:
             msg = (_('Fitxer \'%s\' corrupte') % 

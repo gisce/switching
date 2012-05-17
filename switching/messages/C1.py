@@ -9,19 +9,32 @@ class C1(Message):
 
     @property
     def sollicitud(self):
-        """Retorna l'objecte Contracte"""
+        """Retorna l'objecte Sollicitud"""
         return Sollicitud(self.obj.CambiodeComercializadoraSinCambios.\
                           DatosSolicitud)
 
     @property
     def contracte(self):
         """Retorna l'objecte Contracte"""
-        return Contracte(self.obj.CambiodeComercializadoraSinCambios.Contrato)
+        return getattr(self.obj, '%s.Contrato' % self.header)
+#        return Contracte(self.obj.CambiodeComercializadoraSinCambios.Contrato)
 
     @property
     def client(self):
         """Retorna l'objecte Client"""
         return Client(self.obj.CambiodeComercializadoraSinCambios.Cliente)
+
+    @property
+    def acceptacio(self):
+        """Retorna l'objecte Acceptacio"""
+        return Acceptacio(self.obj.\
+                          AceptacionCambiodeComercializadoraSinCambios.\
+                          DatosAceptacion)
+
+    @property
+    def rebuig(self):
+        """Retorna l'objecte Rebuig"""
+        return Rebuig(self.obj.RechazoATRDistribuidoras.Rechazo)
 
 
 class Sollicitud(object):
@@ -35,7 +48,7 @@ class Sollicitud(object):
         """Retorna '01' (elèctric) o '02' (gas)"""
         linia = ''
         try:
-            linia = self.sollicitud.LiniaNegocioElectrica.text
+            linia = self.sollicitud.LineaNegocioElectrica.text
         except AttributeError:
             pass
         return linia
@@ -129,7 +142,42 @@ class Contracte(object):
             pass
         return adreca
 
+    @property
+    def condicions(self):
+        """Retorna l'objecte Condicions"""
+        return Condicions(self.contracte.CondicionesContractuales)
 
+    @property
+    def consum_anual(self):
+        """Retorna el consum anual estimat"""
+        consum = ''
+        try:
+            consum = int(self.contracte.ConsumoAnualEstimado.text)
+        except AttributeError:
+            pass
+        return consum
+   
+    @property
+    def tipus_activacio(self):
+        """Retorna el tipus d'activacio"""
+        tipus = ''
+        try:
+            tipus = self.contracte.TipoActivacionPrevista.text
+        except AttributeError:
+            pass
+        return tipus
+
+    @property
+    def data_activacio(self):
+        """Retorna la data d'activació prevista"""
+        data = ''
+        try:
+            data = self.contracte.FachaActivacionPrevista.text
+        except AttributeError:
+            pass
+        return data
+       
+ 
 class Client(object):
     """Classe Client"""
     
@@ -199,3 +247,129 @@ class Client(object):
         except AttributeError:
             pass
         return prefix
+
+class Acceptacio(object):
+    """Classe Acceptacio"""
+    
+    def __init__(self, data):
+        self.acc = data
+    
+    @property
+    def data_acceptacio(self):
+        data = ''
+        try:
+            data = self.acc.FechaAceptacion.text
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def potencia(self):
+        pot = ''
+        try:
+            pot = int(self.acc.PotenciaActual.text)
+        except AttributeError:
+            pass
+        return pot
+
+    @property
+    def actuacio_camp(self):
+        act = ''
+        try:
+            act = self.acc.ActuacionCampo.text
+        except AttributeError:
+            pass
+        return act
+
+    @property
+    def data_ult_lect(self):
+        data = ''
+        try:
+            data = self.acc.FechaUltimaLectura.text
+        except AttributeError:
+            pass
+        return data
+
+
+class Condicions(object):
+    """Classe Condicions"""
+    
+    def __init__(self, data):
+        self.cond = data
+    
+    @property
+    def tarifa(self):
+        tarifa = ''
+        try:
+            tarifa = self.acc.TarifaATR.text
+        except AttributeError:
+            pass
+        return tarifa
+        
+    @property
+    def potencies(self):
+        pot = []
+        for i in self.cond.PotenciasContratadas.Potencia:
+            pot.append(int(i.text))
+        return pot
+
+class Rebuig(self):
+    """Classe Rebuig"""
+    
+    def __init__(self, data)
+        self.rebuig = data
+
+    @property
+    def sequencial(self):
+        seq = ''
+        try: 
+            seq = int(self.rebuig.Secuencial.text)
+        except AttributeError:
+            pass
+        return seq
+
+    @property
+    def motiu(self):
+        motiu = ''
+        try: 
+            motiu = int(self.rebuig.CodigoMotivo.text)
+        except AttributeError:
+            pass
+        return motiu
+
+    @property
+    def descripcio(self):
+        motiu = ''
+        try: 
+            motiu = self.rebuig.Texto.text
+        except AttributeError:
+            pass
+        return motiu
+
+    @property
+    def data(self):
+        data = ''
+        try: 
+            data = self.rebuig.Fecha.text
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def hora(self):
+        hora = ''
+        try: 
+            hora = self.rebuig.Hora.text
+        except AttributeError:
+            pass
+        return hora
+    
+    @property
+    def contracte(self):
+        contracte = ''
+        try: 
+            contracte = self.rebuig.IdContrato.CodContrato.text
+        except AttributeError:
+            pass
+        return contracte
+    
