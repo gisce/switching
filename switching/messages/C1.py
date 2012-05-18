@@ -36,6 +36,10 @@ class C1(Message):
         """Retorna l'objecte Rebuig"""
         return Rebuig(self.obj.RechazoATRDistribuidoras.Rechazo)
 
+    @property
+    def header(self):
+        return self.header
+
 
 class Sollicitud(object):
     """Classe que implementa la sol·licitud"""
