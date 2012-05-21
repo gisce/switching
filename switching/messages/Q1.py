@@ -7,8 +7,12 @@ from message import Message, except_f1
 class Q1(Message):
     """Classe que implementa Q1."""
 
+    def get_comptadors(self):
+        """Retorna totes les lectures en una llista de comptadors"""
+        return Q1._get_comptadors(self)
+
     @staticmethod
-    def get_comptadors(self, obj=None):
+    def _get_comptadors(self, obj=None):
         """Retorna totes les lectures en una llista de comptadors"""
         if obj is None:
             obj = self.obj
@@ -19,7 +23,7 @@ class Q1(Message):
                 for aparell in mesura.Aparato:
                     comptadors.append(Comptador(aparell))
         return comptadors
-    
+
     @staticmethod
     def agrupar_lectures_per_periode(lectures):
         """Comprova si hi ha lectures per igual tipus i periode

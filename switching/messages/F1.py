@@ -326,7 +326,7 @@ class Factura(object):
 
     def get_comptadors(self):
         """Retorna totes les lectures en una llista de comptadors"""
-        return Q1.get_comptadors(self, self.factura)
+        return Q1._get_comptadors(self, self.factura)
 
     def select_from_lectures(self, lectures, tipus):
         """Retorna les lectures d'energia del tipus indicat"""
