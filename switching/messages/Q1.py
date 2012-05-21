@@ -1,20 +1,70 @@
 # -*- coding: utf-8 -*-
+from datetime import date, datetime
 
 from message import Message, except_f1
 
 
 class Q1(Message):
     """Classe que implementa Q1."""
-    
-    def get_comptadors(self):
+
+    @staticmethod
+    def get_comptadors(self, obj=None):
         """Retorna totes les lectures en una llista de comptadors"""
+        if obj is None:
+            obj = self.obj
         comptadors = []
-        for mesura in self.obj.Medidas:
+        for mesura in obj.Medidas:
             if mesura.CodUnificadoPuntoSuministro.text[:20] == \
                                                     self.get_codi[:20]:
                 for aparell in mesura.Aparato:
                     comptadors.append(Comptador(aparell))
         return comptadors
+    
+    @staticmethod
+    def agrupar_lectures_per_periode(lectures):
+        """Comprova si hi ha lectures per igual tipus i periode
+           amb dates diferents i les agrupa.
+        """
+        lect = {}
+        for i in lectures:
+            if not i.tipus in lect:
+                lect[i.tipus] = {}
+            if not i.periode in lect[i.tipus]:
+                lect[i.tipus][i.periode] = []
+            lect[i.tipus][i.periode].append(i)
+        return lect
+
+    @staticmethod
+    def agrupar_lectures_per_data(lectures):
+        """Retorna un diccionari de llistes en què les
+           claus són les dates inicial i final de les lectures
+        """
+        lect = {}
+        for i in lectures:
+            key = '%s-%s' % (i.data_lectura_inicial, i.data_lectura_final)
+            if not key in lect:
+                lect[key] = []
+            lect[key].append(i)
+        return lect
+
+    @staticmethod
+    def obtenir_data_inici_i_final(dic):
+        """Retorna la data inicial i final del diccionari retornat 
+           per la funció agrupar_lectures_per_data()
+        """
+        ret_ini = None
+        ret_fi = None
+        for i in dic.keys():
+            d_ini = date(int(i.split('-')[0]), int(i.split('-')[1]),
+                                                        int(i.split('-')[2]))
+            if not ret_ini or ret_ini > d_ini:
+                ret_ini = d_ini
+            d_fi = date(int(i.split('-')[3]), int(i.split('-')[4]),
+                                                        int(i.split('-')[5]))
+            if not ret_fi or ret_fi < d_fi:
+                ret_fi = d_fi
+        return datetime.strftime(ret_ini, '%Y-%m-%d'), datetime.strftime(
+                                                            ret_fi, '%Y-%m-%d')
 
 
 class Lectura(object):
