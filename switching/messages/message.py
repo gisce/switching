@@ -42,7 +42,7 @@ class Message(object):
         uxml = etree.tostring(root).decode('iso-8859-1')
         self.str_xml = uxml
         self.tipus = ''
-        self.header = ''
+        self._header = ''
         self.pas = ''
         self.f_xsd = ''
         self.set_tipus_i_pas()
@@ -84,7 +84,7 @@ class Message(object):
                     raise except_f1('Error', msg)
             else:
                 fitxer = XSD_DATA[self.tipus][self.pas]
-            self.header(fitxer.split(".xsd")[0])
+            self._header = fitxer.split(".xsd")[0]
             xsd = switching.get_data(fitxer)
             self.f_xsd = open(xsd, 'r') 
         except:

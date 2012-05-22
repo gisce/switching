@@ -16,8 +16,8 @@ class C1(Message):
     @property
     def contracte(self):
         """Retorna l'objecte Contracte"""
-        return getattr(self.obj, '%s.Contrato' % self.header)
-#        return Contracte(self.obj.CambiodeComercializadoraSinCambios.Contrato)
+        obj = getattr(self.obj, self._header)
+        return Contracte(obj.Contrato)
 
     @property
     def client(self):
@@ -38,7 +38,7 @@ class C1(Message):
 
     @property
     def header(self):
-        return self.header
+        return self._header
 
 
 class Sollicitud(object):
@@ -96,7 +96,7 @@ class Contracte(object):
 
     @property
     def codi_contracte(self):
-        """Retorna el codi de contracte de la comercialitzadora"""
+        """Retorna el codi de contracte"""
         codi = ''
         try:
             codi = self.contracte.IdContrato.CodContrato.text
@@ -317,10 +317,10 @@ class Condicions(object):
             pot.append(int(i.text))
         return pot
 
-class Rebuig(self):
+class Rebuig(object):
     """Classe Rebuig"""
     
-    def __init__(self, data)
+    def __init__(self, data):
         self.rebuig = data
 
     @property
@@ -336,7 +336,7 @@ class Rebuig(self):
     def motiu(self):
         motiu = ''
         try: 
-            motiu = int(self.rebuig.CodigoMotivo.text)
+            motiu = str(int(self.rebuig.CodigoMotivo.text))
         except AttributeError:
             pass
         return motiu
