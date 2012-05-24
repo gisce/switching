@@ -56,10 +56,8 @@ class Values(object):
         return getattr(self, 'get_%s' % self.report_type)()
 
     def get_timestamp(self, element, value):
-        return datetime.strftime(datetime.\
-                          strptime(element.get(value)[:-1],
-                          '%Y%m%d%H%M%S'),
-                          '%Y-%m-%d %H:%M:%S')
+        return datetime.strptime(element.get(value)[:-1],
+                          '%Y%m%d%H%M%S')
 
     def get_S02(self):
         '''get function for S02 type values'''
