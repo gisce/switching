@@ -15,15 +15,16 @@ class Concentrator(object):
     def get_meters(self):
         '''Return all Meters in the concentrator'''
         if len(self.concentrator.getchildren()):
-            return [Meter(x) for x in self.concentrator.Cnt]
+            return [Meter(x, self.name) for x in self.concentrator.Cnt]
         return []
 
 
 class Meter(object):
     '''Implements meter'''
 
-    def __init__(self, meter):
+    def __init__(self, meter, cnc_name):
         self.meter = meter
+        self.cnc_name = cnc_name
         self.errors = {}
         self.get_errors()
 
@@ -95,7 +96,8 @@ class Values(object):
                         'date_begin': timestamp,
                         'date_end': timestamp,
                         'contract': int(S05_header.get('Ctr')),
-                        'period': int(S05_header.get('Pt'))
+                        'period': int(S05_header.get('Pt')),
+                        'cnc_name': self.meter.cnc_name,
                         }
             for S05_values in S05_header.Value:
                 tmp_vals.update({'ai': int(S05_values.get('AI%s' % value)),
@@ -124,7 +126,8 @@ class Values(object):
                         'contract': int(S04_header.get('Ctr')),
                         'period': int(S04_header.get('Pt')),
                         'max': int(S04_header.get('Mx')),
-                        'date_max': date_max
+                        'date_max': date_max,
+                        'cnc_name': self.meter.cnc_name,
                         }
             for S04_values in S04_header.Value:
                 if S04_values.get('AIa'):
