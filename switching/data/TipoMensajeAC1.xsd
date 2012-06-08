@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<xs:schema xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="TiposComplejos.xsd"/>
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<!--
-		Version 2.0, Junio 2004
-		
-		Mensaje de negocio, solicitud de paso de MR a ML asin cambios. Formato A. Proceso c1.            
-
-		Estructura general.
-			Datos solicitud
-			Datos del cliente 
-				DNI, CIF	
-				Nombre 
-			Datos contrato:
-				CodContrato	
-				Fecha final o duración	
-				Dirección de correspondencia				 
-			Medida:
-				Indicadores
-				Aparatos
-			Comentarios
-	Abril 2009 Añadido el grupo RegistrosDocs
+		Version 0.0 OCSUM 2011.01.31
 	-->
 	<xs:complexType name="CambiodeComercializadoraSinCambiosAC1">
 		<xs:sequence>

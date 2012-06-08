@@ -11,7 +11,7 @@
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<xs:annotation>
 		<xs:documentation>
-		Version 2.0, Junio 2004
+			Version 0.0 OCSUM 2011.01.31
 		</xs:documentation>
 	</xs:annotation>
 

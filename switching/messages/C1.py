@@ -40,6 +40,168 @@ class C1(Message):
     def header(self):
         return self._header
 
+    @property
+    def punts_mesura(self):
+        """Retorna una llista de punts de mesura"""
+        data = []
+        obj = getattr(self.obj, self._header)
+        for i in obj.PuntosDeMedida.PuntoDeMedida:
+            data.append(PuntMesura(i))
+        return data
+
+
+class PuntMesura(object):
+    """Classe que implementa el punt de mesura
+    """
+    # Es deixa per més endevant la implementació de la funció
+    # obtenir_aparells() que retornaria una llista d'objectes Aparell
+    # per a representar la informació del tag opcional <Aparatos>
+
+    def __init__(self, data):
+        self.pm = data
+    
+    @property
+    def codi(self):
+        codi = ''
+        try:
+            codi = self.pm.CodPM.text
+        except AttributeError:
+            pass
+        return codi
+
+    @property
+    def tipus_moviment(self):
+        mov = ''
+        try:
+            mov = self.pm.TipoMovimiento.text
+        except AttributeError:
+            pass
+        return mov
+
+    @property
+    def cups(self):
+        val = ''
+        try:
+            val = self.pm.CUPS.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def codi_principal(self):
+        """Código del punto de medida principal al que está asociado este 
+           punto de medida"""
+        val = ''
+        try:
+            val = self.pm.CodPMPrincipal.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def mode_lectura(self):
+        """Indicando si es por Telemedida o TPL."""
+        val = ''
+        try:
+            val = self.pm.ModoLectura.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def estat(self):
+        """Indicando si es por Telemedida o TPL."""
+        val = ''
+        try:
+            val = self.pm.EstadoPM.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def funcio(self):
+        val = ''
+        try:
+            val = self.pm.Funcion.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def direccio(self):
+        val = ''
+        try:
+            val = self.pm.DireccionPuntoMedida.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def tensio(self):
+        """Tensión del punto de medida"""
+        val = ''
+        try:
+            val = self.pm.TensionPM.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def data_vigor(self):
+        """Fecha de entrada en vigor de la versión del punto de medida"""
+        val = ''
+        try:
+            val = self.pm.FechaVigor.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def alta(self):
+        """Fecha de alta del Punto de Medida"""
+        val = ''
+        try:
+            val = self.pm.FechaAlta.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def baixa(self):
+        """Fecha de baja del Punto de Medida"""
+        val = ''
+        try:
+            val = self.pm.FechaBaja.text
+        except AttributeError:
+            pass
+        return val
+
+
+
+class Activacio(object):
+    """Classe que implementa l'activació"""
+    
+    def __init__(self, data):
+        self.activacio = data
+    
+    @property
+    def data(self):
+        data = ''
+        try:
+            data = self.activacio.Fecha.text
+        except AttributeError:
+            pass
+        return data
+    
+    @property
+    def hora(self):
+        hora = ''
+        try:
+            hora = self.activacio.Hora.text
+        except AttributeError:
+            pass
+        return hora
+
 
 class Sollicitud(object):
     """Classe que implementa la sol·licitud"""
@@ -305,7 +467,7 @@ class Condicions(object):
     def tarifa(self):
         tarifa = ''
         try:
-            tarifa = self.acc.TarifaATR.text
+            tarifa = self.cond.TarifaATR.text
         except AttributeError:
             pass
         return tarifa
