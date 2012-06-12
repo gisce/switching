@@ -48,6 +48,12 @@ class C1(Message):
         for i in obj.PuntosDeMedida.PuntoDeMedida:
             data.append(PuntMesura(i))
         return data
+    
+    @property
+    def activacio(self):
+        """Retorna l'objecte Activacio"""
+        return Activacio(self.obj.\
+                            ActivacionCambiodeComercializadoraSinCambios)
 
 
 class PuntMesura(object):
@@ -68,6 +74,15 @@ class PuntMesura(object):
         except AttributeError:
             pass
         return codi
+
+    @property
+    def tipus(self):
+        val = ''
+        try:
+            val = self.pm.TipoPM.text
+        except AttributeError:
+            pass
+        return val
 
     @property
     def tipus_moviment(self):
@@ -188,7 +203,7 @@ class Activacio(object):
     def data(self):
         data = ''
         try:
-            data = self.activacio.Fecha.text
+            data = self.activacio.DatosActivacion.Fecha.text
         except AttributeError:
             pass
         return data
@@ -197,11 +212,19 @@ class Activacio(object):
     def hora(self):
         hora = ''
         try:
-            hora = self.activacio.Hora.text
+            hora = self.activacio.DatosActivacion.Hora.text
         except AttributeError:
             pass
         return hora
 
+    @property
+    def contracte(self):
+        contracte = ''
+        try:
+            contracte = Contracte(self.activacio.Contrato)
+        except AttributeError:
+            pass
+        return contracte
 
 class Sollicitud(object):
     """Classe que implementa la sol·licitud"""
@@ -338,7 +361,7 @@ class Contracte(object):
         """Retorna la data d'activació prevista"""
         data = ''
         try:
-            data = self.contracte.FachaActivacionPrevista.text
+            data = self.contracte.FechaActivacionPrevista.text
         except AttributeError:
             pass
         return data
