@@ -55,6 +55,11 @@ class C1(Message):
         return Activacio(self.obj.\
                             ActivacionCambiodeComercializadoraSinCambios)
 
+    @property
+    def notificacio(self):
+        """Retorna l'objecte Activacio"""
+        return Notificacio(self.obj.NotificacionComercializadoraSaliente)
+
 
 class PuntMesura(object):
     """Classe que implementa el punt de mesura
@@ -192,6 +197,21 @@ class PuntMesura(object):
         return val
 
 
+class Notificacio(object):
+    """Classe que implementa la notificació"""
+    
+    def __init__(self, data):
+        self.notificacio = data
+
+    @property
+    def data(self):
+        data = ''
+        try:
+            data = self.notificacio.DatosActivacion.Fecha.text
+        except AttributeError:
+            pass
+        return data
+
 
 class Activacio(object):
     """Classe que implementa l'activació"""
@@ -225,6 +245,7 @@ class Activacio(object):
         except AttributeError:
             pass
         return contracte
+
 
 class Sollicitud(object):
     """Classe que implementa la sol·licitud"""
