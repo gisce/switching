@@ -75,7 +75,7 @@ class PuntMesura(object):
     def codi(self):
         codi = ''
         try:
-            codi = self.pm.CodPM.text
+            codi = self.pm.CodPM.text.strip()
         except AttributeError:
             pass
         return codi
@@ -207,7 +207,7 @@ class Notificacio(object):
     def data(self):
         data = ''
         try:
-            data = self.notificacio.DatosActivacion.Fecha.text
+            data = self.notificacio.DatosNotificacion.FechaActivacion.text
         except AttributeError:
             pass
         return data
