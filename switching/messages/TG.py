@@ -140,6 +140,7 @@ class Values(object):
                                  'r2': int(S04_values.get('R2%s' % value)),
                                  'r3': int(S04_values.get('R3%s' % value)),
                                  'r4': int(S04_values.get('R4%s' % value)),
+                                 'value': value,
                                  })
                 ret_values.append(tmp_vals)
 
