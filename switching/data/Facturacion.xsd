@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by erre (erre) -->
-<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="TipoCabecera.xsd"/>
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<xs:include schemaLocation="TiposComplejos.xsd"/>
 	<xs:annotation>
 		<xs:documentation>
 			Version 0.0 OCSUM 2011.01.31
-			01/11/2011 Version 0.2 -> Incluida la posibilidad de facturar valores negativos
+			Version 0.2 01/11/2011
+-Incluida la posibilidad de facturar valores negativos
+			Version 2.0 OCSUM 2012.06.18 ModoControlPotencia
+-Se incluye la etiqueta opcional "ModoControlPotencia" en "DatosFacturaATR"
+			Version 2.1 OCSUM 2012.08.01 Refacturacion Peajes
+-Se modifica la etiqueta "ConceptoIVA" pasando a ser una estructura con 0-6 repeticiones
+-Se modifica la etiqueta "ConceptoIEIVA" pasando a ser una estructura con 0-6 repeticiones
+-Se incluye la etiqueta "Refacturacion" como una estructura de 0-6 repeticiones 
+-Se modifica el Tipo de dato de Refacturaciones.Refacturacion.Tipo de "X2" a "TipoConcepto"
+-Se modifica el Tipo de datos de Refacturaciones.Refacturacion.RFechaDesde/RFechaHasta de "dateTime" a "date"
+-Se modifica el Tipo de dato de Refacturaciones.Refacturacion.ImporteTotal de "S9(13)V(2)" a "S9(10)V(4)"
+
 		</xs:documentation>
 	</xs:annotation>
 	<xs:element name="MensajeFacturacion">
@@ -153,6 +163,11 @@
 												<xs:element name="CodigoTarifa" type="TarifaATR">
 													<xs:annotation>
 														<xs:documentation>Tabla 107</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="ModoControlPotencia" type="ModoControlPotencia"  minOccurs="0">
+													<xs:annotation>
+														<xs:documentation> (2=maximetrro o 1 =ICP)</xs:documentation>
 													</xs:annotation>
 												</xs:element>
 												<xs:element name="IndAltamedidoenBaja" type="Indicativo"/>
@@ -376,6 +391,22 @@
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="ConceptoIEIVA" minOccurs="0" maxOccurs="6">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Concepto" type="TipoConcepto" minOccurs="0"/>
+									<xs:element name="ImporteConceptoIEIVA" minOccurs="0">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="Observaciones" type="X100" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
 						<xs:element name="ImpuestoElectrico">
 							<xs:complexType>
 								<xs:sequence>
@@ -443,31 +474,56 @@
 								</xs:restriction>
 							</xs:simpleType>
 						</xs:element>
-						<xs:element name="ConceptoIEIVA" minOccurs="0" maxOccurs="3">
-							<xs:annotation>
-								<xs:documentation>Para facturar conceptos excepcionales que lleven aplicado impuesto eléctrico e IVA.</xs:documentation>
-							</xs:annotation>
-							<xs:simpleType>
-								<xs:restriction base="xs:decimal">
-									<xs:totalDigits value="14"/>
-									<xs:fractionDigits value="4"/>
-								</xs:restriction>
-							</xs:simpleType>
-						</xs:element>
-						<xs:element name="ConceptoIVA" minOccurs="0" maxOccurs="3">
-							<xs:annotation>
-								<xs:documentation>Para facturar conceptos excepcionales que solo lleven aplicado IVA.</xs:documentation>
-							</xs:annotation>
-							<xs:simpleType>
-								<xs:restriction base="xs:decimal">
-									<xs:totalDigits value="14"/>
-									<xs:fractionDigits value="4"/>
-								</xs:restriction>
-							</xs:simpleType>
+						<xs:element name="ConceptoIVA" minOccurs="0" maxOccurs="6">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Concepto" type="TipoConcepto" minOccurs="0"/>
+									<xs:element name="ImporteConceptoIVA" minOccurs="0">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="14"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="Observaciones" type="X100" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
 						</xs:element>
 						<xs:element name="IVA" type="TipoIVAIGIC"/>
 						<xs:element name="IVAIGICReducido" type="TipoIVAIGIC" minOccurs="0"/>
-						<xs:element name="Medidas" minOccurs="0" maxOccurs="10">
+						<xs:element name="Refacturaciones" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Refacturacion" maxOccurs="6">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Tipo" type="TipoConcepto"/>
+												<xs:element name="RFechaDesde" type="xs:date" minOccurs="0"/>
+												<xs:element name="RFechaHasta" type="xs:date" minOccurs="0"/>
+												<xs:element name="RConsumo">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="13"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="ImporteTotal" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="14"/>
+															<xs:fractionDigits value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="Observaciones" type="X100" minOccurs="0"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element><xs:element name="Medidas" minOccurs="0" maxOccurs="10">
 							<xs:complexType>
 								<xs:sequence>
 									<xs:element name="CodUnificadoPuntoSuministro">

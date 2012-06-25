@@ -7,8 +7,16 @@ from lxml import objectify, etree
 import switching
 from switching.types import DecimalElement, check_decimal_element
 
-XSD_DATA = {'F1': 'Facturacion.xsd',
-            'Q1': 'SaldoLecturasFacturacion.xsd'}
+XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
+            'Q1': {'01': 'SaldoLecturasFacturacion.xsd'},
+            'C1': {'01': 'CambiodeComercializadoraSinCambios.xsd',
+                   '02': ('AceptacionCambiodeComercializadoraSinCambios.xsd',
+                          'RechazoATRDistribuidoras.xsd'),
+                   '05': 'ActivacionCambiodeComercializadoraSinCambios.xsd',
+                   '06': 'NotificacionComercializadoraSaliente.xsd',
+                   '08': 'AnulacionSolicitud.xsd',
+                   '09': 'AceptacionAnulacion.xsd'}
+           }
 
 _ = gettext.gettext
 
@@ -20,7 +28,7 @@ decimal_type.register(before='float')
 
 class Message(object):
     """Classe base"""
-    def __init__(self, xml, force_tipus=''):
+    def __init__(self, xml, force_tipus=None):
         """Construeix un missatge base."""
         if isinstance(xml, file):
             self.check_fpos(xml)
@@ -34,34 +42,55 @@ class Message(object):
         uxml = etree.tostring(root).decode('iso-8859-1')
         self.str_xml = uxml
         self.tipus = ''
+        self._header = ''
+        self.pas = ''
         self.f_xsd = ''
-        self.set_tipus()
-        if self.tipus != force_tipus:
-            msg = 'L\'XML no es correspon al tipus %s' % force_tipus
-            raise except_f1('Error', _(msg))
+        self.set_tipus_i_pas()
+        if self.tipus != force_tipus and force_tipus:
+            msg = _('L\'XML no es correspon al tipus %s') % force_tipus
+            raise except_f1('Error', msg)
         self.set_xsd()
     
-    def set_tipus(self):
+    def set_tipus_i_pas(self):
         """Setejar el tipus de missatge"""
         try:
             obj = objectify.fromstring(self.str_xml)
             self.tipus = obj.Cabecera.CodigoDelProceso.text
+            self.pas = obj.Cabecera.CodigoDePaso.text
         except: 
-            msg = 'No s\'ha pogut identificar el tipus'
-            raise except_f1('Error', _(msg))
+            msg = _('No s\'ha pogut identificar el codi de proces o '\
+                    'codi de pas')
+            raise except_f1('Error', msg)
 
     def set_xsd(self):
         """Setejar el fitxer xsd"""
         if self.tipus not in XSD_DATA:
-            msg = ('Tipus \'%s\'  no suportat' % self.tipus)
-            raise except_f1('Error', _(msg))
+            msg = _('Codi de proces \'%s\' no suportat') % self.tipus
+            raise except_f1('Error', msg)
+        if self.pas not in XSD_DATA[self.tipus]:
+            msg = _('Codi de pas \'%s\'  no suportat') % self.pas
+            raise except_f1('Error', msg)
         try:
-            xsd = switching.get_data(XSD_DATA[self.tipus])
+            if isinstance(XSD_DATA[self.tipus][self.pas], tuple):
+                trobat = False
+                root = objectify.fromstring(self.str_xml)
+                for fitxer in XSD_DATA[self.tipus][self.pas]:
+                    if fitxer.split(".xsd")[0] in root.tag:
+                        trobat = True
+                        break
+                if not trobat: 
+                    msg = (_('Tipus de fitxer \'%s\' no suportat') % 
+                                                              root.tag)
+                    raise except_f1('Error', msg)
+            else:
+                fitxer = XSD_DATA[self.tipus][self.pas]
+            self._header = fitxer.split(".xsd")[0]
+            xsd = switching.get_data(fitxer)
             self.f_xsd = open(xsd, 'r') 
         except:
-            msg = ('Fitxer \'%s\' corrupte' % 
+            msg = (_('Fitxer \'%s\' corrupte') % 
                         switching.get_data(XSD_DATA[self.tipus]))
-            raise except_f1('Error', _(msg))
+            raise except_f1('Error', msg)
 
     def check_fpos(self, f_obj):
         """Setejar la posició actual dels fixers"""
@@ -71,6 +100,10 @@ class Message(object):
     def get_tipus_xml(self):
         """Obtenir el tipus de missatge"""
         return self.tipus
+
+    def get_pas_xml(self):
+        """Obtenir el pas del missatge"""
+        return self.pas
 
     def parse_xml(self):
         """Importar el contingut de l'xml"""
@@ -85,14 +118,21 @@ class Message(object):
     # Funcions relacionades amb la capçalera del XML
     @property
     def get_codi_emisor(self):
-        ref = int(self.obj.Cabecera.CodigoREEEmpresaEmisora.text)
+        ref = self.obj.Cabecera.CodigoREEEmpresaEmisora.text
         if not ref:
             raise except_f1('Error', _('Document sense emisor'))
-        return '%04d' % ref
+        return ref
+
+    @property
+    def get_codi_destinatari(self):
+        ref = self.obj.Cabecera.CodigoREEEmpresaDestino.text
+        if not ref:
+            raise except_f1('Error', _('Document sense destinatari'))
+        return ref
 
     @property
     def get_codi(self):
-        ref = self.obj.Cabecera.Codigo.text
+        ref = self.obj.Cabecera.Codigo.text.strip()
         if not ref:
             raise except_f1('Error', _('Document sense codi'))
         return ref
@@ -113,6 +153,20 @@ class Message(object):
                                        ' seqüencial de sol·licitud'))
         return ref
 
+    @property
+    def data_sollicitud(self):
+        ref = self.obj.Cabecera.FechaSolicitud.text
+        if not ref:
+            raise except_f1('Error', _('Document sense data de'\
+                                       ' sol·licitud'))
+        return ref
+
+    @property
+    def versio(self):
+        ref = self.obj.Cabecera.Version.text
+        if not ref:
+            raise except_f1('Error', _('Document sense versio'))
+        return ref
 
 class except_f1(Exception):
     def __init__(self, name, value):

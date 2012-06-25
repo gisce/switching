@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TipoCabecera.xsd"/>
+	<xs:include schemaLocation="TipoMensajeBe.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<xs:annotation>
+		<xs:documentation>
+			Version 0.0 OCSUM 2011.01.31
+		</xs:documentation>
+	</xs:annotation>
+	<xs:element name="MensajeAceptacionCambiodeComercializadoraSinCambios">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Cabecera" type="Cabecera"/>
+				<xs:element name="AceptacionCambiodeComercializadoraSinCambios" type="AceptacionBe"/>
+			</xs:sequence>
+			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
