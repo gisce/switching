@@ -59,6 +59,12 @@ class C1(Message):
     def notificacio(self):
         """Retorna l'objecte Activacio"""
         return Notificacio(self.obj.NotificacionComercializadoraSaliente)
+    
+
+    @property
+    def anullacio(self):
+        """Retorna l'object Anullacio"""
+        return Anullacio(self.obj.AnulacionSolicitud)
 
 
 class PuntMesura(object):
@@ -582,4 +588,37 @@ class Rebuig(object):
         except AttributeError:
             pass
         return contracte
+
+
+class Anullacio(object):
+    """Classe Anul·lació"""
     
+    def __init__(self, data):
+        self.obj = data
+
+    @property
+    def sollicitud(self):
+        val = ''
+        try:
+            val = Sollicitud(self.obj.DatosSolicitud)
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def client(self):
+        val = ''
+        try:
+            val = Client(self.obj.Cliente)
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def contracte(self):
+        vals = ''
+        try:
+            val = Contracte(self.obj.IdContrato)
+        except AttributeError:
+            pass
+        return val
