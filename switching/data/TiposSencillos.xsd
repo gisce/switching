@@ -8,6 +8,16 @@
 -Incluidos nuevos códigos Periodo Discriminación Horaria (80,81,82,83)
 			Version 1.0 OCSUM 2012.02.01
 -Incluida la nueva tabla de motivos de rechazo
+			Version 2.0 OCSUM 2012.06.18 ModoControlPotencia + DatosCIE
+-Incluido el tipo "ModoControlPotencia" como un numérico de 1 posición con valores posibles: 1 (icp) y 2 (maxímetro).
+-Incluido el tipo X35
+-Incluido el valor 8 en tabla 35 (TipoDH) de DH de Supervalle
+-Incluido el valor 8 en tabla 50 (TipoDHMaximas) para la tarifa de 6 máximas. Los valores 5, 6 y 7 se marcan como obsoletos
+-Vinculado el campo "TipoDHActiva" con los valores de validación de la tabla 35
+			Version 2.1 2.1 OCSUM 2012.08.01 Refacturacion de Peajes
+-Se ha añadido el bloque X100
+-Se incluyen los valores 40,41,42 en el campo "TipoConcepto" (tabla 103)
+
 
 		</xs:documentation>
 	</xs:annotation>
@@ -214,6 +224,12 @@
 			<xs:maxLength value="32"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="X35">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="X40">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
@@ -236,6 +252,12 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
 			<xs:maxLength value="80"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="X100">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="X120">
@@ -443,7 +465,17 @@
 	</xs:simpleType>
 	<xs:simpleType name="TipoDH">
 		<xs:annotation>
-			<xs:documentation>Tipo discriminacion horaria (Tabla 35)</xs:documentation>
+			<xs:documentation>Tipo discriminacion horaria (Tabla 35)
+			0 -Dos períodos (Tarifa Nocturna)	No aplica
+			1 -Sin Discriminación Horaria	Tarifa 2.0 y 2.1
+			2 -Dos períodos	Tarifa 2.0 DH y 2.1 DH
+			3 -Tres períodos, sin discriminación de sábados y festivos	Tarifa 3.1 A tipo 3
+			4 -Tres períodos, con discriminación de sábados y festivos	No aplica
+			5 -Cinco períodos	No aplica
+			6 -Seis períodos	Tarifa 3.0 A, Tarifa 3.1A Tipo 4, Tarifa 6.X
+			7 -Siete períodos	No aplica
+			8 -DH Supervalle	Tarifa 2.1 DHS y 2.1 DHS
+			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="0"/>
@@ -454,6 +486,7 @@
 			<xs:enumeration value="5"/>
 			<xs:enumeration value="6"/>
 			<xs:enumeration value="7"/>
+			<xs:enumeration value="8"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="MagnitudMedida">
@@ -750,22 +783,41 @@
 	</xs:simpleType>
 	<xs:simpleType name="TipoDHActiva">
 		<xs:annotation>
-			<xs:documentation>tipo de discriminacion horaria activa</xs:documentation>
+			<xs:documentation>tipo de discriminacion horaria activa (tabla 35)
+			0 -Dos períodos (Tarifa Nocturna)	No aplica
+			1 -Sin Discriminación Horaria	Tarifa 2.0 y 2.1
+			2 -Dos períodos	Tarifa 2.0 DH y 2.1 DH
+			3 -Tres períodos, sin discriminación de sábados y festivos	Tarifa 3.1 A tipo 3
+			4 -Tres períodos, con discriminación de sábados y festivos	No aplica
+			5 -Cinco períodos	No aplica
+			6 -Seis períodos	Tarifa 3.0 A, Tarifa 3.1 Tipo 4, Tarifa 6.X
+			7 -Siete períodos	No aplica
+			8 -DH Supervalle	Tarifa 2.1 DHS y 2.1 DHS
+			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:length value="1"/>
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="4"/>
+			<xs:enumeration value="5"/>
+			<xs:enumeration value="6"/>
+			<xs:enumeration value="7"/>
+			<xs:enumeration value="8"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoDHMaximas">
 		<xs:annotation>
 			<xs:documentation>Tipo de discriminacion horaria maximas Tabla 50
-			Modo 1 Sin Maximetro
-			Modo 2 Con un maximetro
-			Modo 3 Con dos maximetros
-			Modo 4 Con tres maximetros
-			Modo 5 Estacional Tipo A
-			Modo 6 Estacional Tipo B
-			THP
+			1 -Modo 1 Sin Maximetro
+			2 -Modo 2 Con un maximetro
+			3 -Modo 3 Con dos maximetros(OBSOLETO. NO USAR)
+			4 -Modo 4 Con tres maximetros
+			5 -Modo 5 Estacional Tipo A (OBSOLETO. NO USAR)
+			6 -Modo 6 Estacional Tipo B (OBSOLETO. NO USAR)
+			7 -THP (OBSOLETO. NO USAR)
+			8 -Modo 8 Tarifa de 6 máximas
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -776,6 +828,7 @@
 			<xs:enumeration value="5"/>
 			<xs:enumeration value="6"/>
 			<xs:enumeration value="7"/>
+			<xs:enumeration value="8"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoPropiedadAparato">
@@ -1431,6 +1484,9 @@
 			19	Coste de reposición
 			32	Coste de corte a petición de comercializador
 			33	Coste de reconexión a petición de comercializador
+			40	Recargo fraccionado por refacturación (Orden IET/843/2012) del cuarto trimestre de 2011
+			41	Recargo fraccionado por refacturación (Orden IET/843/2012) del primer trimestre de 2012
+			42	Recargo fraccionado por refacturación (Orden IET/843/2012) de abril de 2012
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1455,6 +1511,9 @@
 			<xs:enumeration value="19"/>
 			<xs:enumeration value="32"/>
 			<xs:enumeration value="33"/>
+			<xs:enumeration value="40"/>
+			<xs:enumeration value="41"/>
+			<xs:enumeration value="42"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoCodigoPeriodoDH">
@@ -1588,6 +1647,8 @@
 			<xs:enumeration value="004"/>
 			<xs:enumeration value="005"/>
 			<xs:enumeration value="006"/>
+			<xs:enumeration value="007"/>
+			<xs:enumeration value="008"/>
 			<xs:enumeration value="011"/>
 			<xs:enumeration value="012"/>
 			<xs:enumeration value="013"/>
@@ -2269,6 +2330,18 @@
 			<xs:enumeration value="AU"/>
 			<xs:enumeration value="PR"/>
 			<xs:enumeration value="LO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ModoControlPotencia">
+		<xs:annotation>
+			<xs:documentation>
+			1 - ICP 
+			2 - Maximetro
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

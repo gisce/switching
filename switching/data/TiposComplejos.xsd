@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<xs:annotation>
 		<xs:documentation>
 			Version 0.0 OCSUM 2011.01.31
+			Version 2.0 OCSUM 2012.06.18 ModoControlPotencia + DatosCIE
+				Se sustituye el nombre de las etiquetas "ICPAportadoInstalado" por "ControlPotenciaPropiedad" e "ICPInstalacion" 
+				por "ControlPotenciaInstalacion" en los tipos complejos  "Medida", "MedidaC2" y "MedidaResto" 
+				Se ha añadido el tipo complejo "CondicionesContractualesD".
+				Se ha añadido la etiqueta "ModoControlPotencia" en "CondicionesContractuales" como elemento opcional
+				Se ha añadido la etiqueta "ModoControlPotencia" en "CondicionesContractualesC" como elemento opcional
+				Se han añadido los tipos complejos DocTecnica, CIEPapel y CIEElectronico.
+				En el tipo complejo DatosCIE se añade CIEPapel, CIEElectronico, ValidezCIE.
+				En el tipo complejo DatosCIE se eliminan las etiqueta CieAportado, CodigoCie, SelloElectronico, PotenciaInstBT, 
+					FechaEmisionCie, FechaCaducidadCie, NifInstalador, NombreInstalador, TensionSuministroCIE, IntensidadDif, 
+					SensibilidadDif, SeccionCable y TipoSuministro.
+				En el tipo complejo DatosAPM se han añadido las etiquetas NifInstalador/CodigoInstalador y NombreInstalador y se ha eliminado la etiqueta ApmAportado.
 		</xs:documentation>
 	</xs:annotation>
 	<xs:complexType name="IdContrato">
@@ -163,8 +175,8 @@
 	<!-- del registro A-->
 	<xs:complexType name="Medida">
 		<xs:sequence>
-			<xs:element name="ICPAportadoInstalado" type="IndicativoNCD"/>
-			<xs:element name="ICPInstalacion" type="IndicativoYCD"/>
+			<xs:element name="ControlPotenciaPropiedad" type="IndicativoNCD"/>
+			<xs:element name="ControlPotenciaInstalacion" type="IndicativoYCD"/>
 			<xs:element name="EquipoAportadoCliente" type="IndicativoNCD"/>
 			<xs:element name="EquipoInstaladoCliente" type="IndicativoYCD"/>
 			<xs:element name="TipoEquipoMedida" type="TiposEquipoMedida"/>
@@ -173,8 +185,8 @@
 	</xs:complexType>
 	<xs:complexType name="MedidaC2">
 		<xs:sequence>
-			<xs:element name="ICPAportadoInstalado" type="IndicativoNCD"/>
-			<xs:element name="ICPInstalacion" type="IndicativoYCD"/>
+			<xs:element name="ControlPotenciaPropiedad" type="IndicativoNCD"/>
+			<xs:element name="ControlPotenciaInstalacion" type="IndicativoYCD"/>
 			<xs:element name="EquipoAportadoCliente" type="IndicativoNCD"/>
 			<xs:element name="EquipoInstaladoCliente" type="IndicativoYCD"/>
 			<xs:element name="TipoEquipoMedida" type="TiposEquipoMedida" minOccurs="0"/>
@@ -183,8 +195,8 @@
 	</xs:complexType>
 	<xs:complexType name="MedidaResto">
 		<xs:sequence>
-			<xs:element name="ICPAportadoInstalado" type="IndicativoNCD" minOccurs="0"/>
-			<xs:element name="ICPInstalacion" type="IndicativoYCD" minOccurs="0"/>
+			<xs:element name="ControlPotenciaPropiedad" type="IndicativoNCD" minOccurs="0"/>
+			<xs:element name="ControlPotenciaInstalacion" type="IndicativoYCD" minOccurs="0"/>
 			<xs:element name="EquipoAportadoCliente" type="IndicativoNCD" minOccurs="0"/>
 			<xs:element name="EquipoInstaladoCliente" type="IndicativoYCD" minOccurs="0"/>
 			<xs:element name="TipoEquipoMedida" type="TiposEquipoMedida"/>
@@ -217,6 +229,14 @@
 			<xs:element name="TarifaATR" type="Tarifa"/>
 			<xs:element name="PotenciasContratadas" type="Potencias"/>
 			<xs:element name="PotenciasMaximas" type="Potencias" minOccurs="0"/>
+			<xs:element name="ModoControlPotencia" type="ModoControlPotencia" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CondicionesContractualesD">
+		<xs:sequence>
+			<xs:element name="TarifaATR" type="Tarifa"/>
+			<xs:element name="PotenciasContratadas" type="Potencias"/>
+			<xs:element name="PotenciasMaximas" type="Potencias" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CondicionesContractualesC">
@@ -224,6 +244,7 @@
 			<xs:element name="TarifaATR" type="Tarifa"/>
 			<xs:element name="PotenciasContratadas" type="Potencias"/>
 			<xs:element name="PotenciasMaximas" type="Potencias" minOccurs="0"/>
+			<xs:element name="ModoControlPotencia" type="ModoControlPotencia" minOccurs="0"/>
 			<xs:element name="MarcaMedidaBTConPerdidas" type="X2" minOccurs="0"/>
 			<xs:element name="KVAsTrafo" type="Potencia" minOccurs="0"/>
 			<xs:element name="PorcentajePerdidasPactadas" type="X6" minOccurs="0"/>
@@ -276,7 +297,6 @@
 				<xs:element name="Duracion" type="Decimal2"/>
 			</xs:choice>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
-			<xs:element name="ValidezCIE" type="AmbitoValidezCIE" minOccurs="0"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractuales"/>
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
@@ -292,7 +312,6 @@
 				<xs:element name="Duracion" type="Decimal2"/>
 			</xs:choice>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
-			<xs:element name="ValidezCIE" type="AmbitoValidezCIE" minOccurs="0"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractuales"/>
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
@@ -543,32 +562,56 @@
 			<xs:element name="NumeroSerie" type="X10"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="DocTecnica">
+		<xs:sequence>
+			<xs:element name="DatosCie" type="DatosCIE" minOccurs="0"/>
+			<xs:element name="DatosApm" type="DatosAPM" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="DatosCIE">
 		<xs:sequence>
-			<xs:element name="CieAportado" type="Indicativo" minOccurs="0"/>
-			<xs:element name="CieElectronico" type="Indicativo" minOccurs="0"/>
-			<xs:element name="CodigoCie" type="X11" minOccurs="0"/>
-			<xs:element name="SelloElectronico" type="X30" minOccurs="0"/>
-			<xs:element name="PotenciaInstBT" type="Potencia" minOccurs="0"/>
-			<xs:element name="FechaEmisionCie" type="xs:date" minOccurs="0"/>
+			<xs:element name="CieElectronico" type="X1"/>
+			<xs:element name="CIEPapel" type="CIEPapel" minOccurs="0"/>
+			<xs:element name="CIEElectronico" type="CIEElectronico" minOccurs="0"/>
+			<xs:element name="ValidezCIE" type="AmbitoValidezCIE" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CIEPapel">
+		<xs:sequence>
+			<xs:element name="CodigoCie" type="X35"/>
+			<xs:element name="PotenciaInstBT" type="Decimal11"/>
+			<xs:element name="FechaEmisionCie" type="xs:date"/>
 			<xs:element name="FechaCaducidadCie" type="xs:date" minOccurs="0"/>
-			<xs:element name="NifInstalador" type="X9" minOccurs="0"/>
-			<xs:element name="NombreInstalador" type="X45" minOccurs="0"/>
-			<xs:element name="TensionSuministroCIE" type="TensionSuministroCIEyAPM" minOccurs="0"/>
+			<xs:choice>
+				<xs:element name="NifInstalador" type="X9"/>
+				<xs:element name="CodigoInstalador" type="X9"/>
+			</xs:choice>
+			<xs:element name="NombreInstalador" type="X45"/>
+			<xs:element name="TensionSuministroCIE" type="TensionSuministroCIEyAPM"/>
 			<xs:element name="IntensidadDif" type="X2" minOccurs="0"/>
 			<xs:element name="SensibilidadDif" type="X2" minOccurs="0"/>
 			<xs:element name="SeccionCable" type="X2" minOccurs="0"/>
-			<xs:element name="TipoSuministro" type="TiposSuministro" minOccurs="0"/>
+			<xs:element name="TipoSuministro" type="TiposSuministro"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CIEElectronico">
+		<xs:sequence>
+			<xs:element name="CodigoCie" type="X35" minOccurs="0"/>
+			<xs:element name="SelloElectronico" type="X30" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="DatosAPM">
 		<xs:sequence>
-			<xs:element name="ApmAportado" type="Indicativo" minOccurs="0"/>
-			<xs:element name="CodigoApm" type="X20" minOccurs="0"/>
-			<xs:element name="PotenciaInstAT" type="Potencia" minOccurs="0"/>
-			<xs:element name="FechaEmisionApm" type="xs:date" minOccurs="0"/>
+			<xs:element name="CodigoApm" type="X35"/>
+			<xs:element name="PotenciaInstAT" type="Decimal11"/>
+			<xs:element name="FechaEmisionApm" type="xs:date"/>
 			<xs:element name="FechaCaducidadApm" type="xs:date" minOccurs="0"/>
-			<xs:element name="TensionSuministroAPM" type="TensionSuministroCIEyAPM" minOccurs="0"/>
+			<xs:element name="TensionSuministroAPM" type="TensionSuministroCIEyAPM"/>
+			<xs:choice>
+				<xs:element name="NifInstalador" type="X9"/>
+				<xs:element name="CodigoInstalador" type="X9"/>
+			</xs:choice>
+			<xs:element name="NombreInstalador" type="X45"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RegistroDoc">
