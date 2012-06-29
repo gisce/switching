@@ -18,7 +18,7 @@ decimal_type = objectify.PyType('decimal', check_decimal_element,
 decimal_type.register(before='float')
 
 
-class Message(object):
+class MessageBase(object):
     """Classe base"""
     def __init__(self, xml, force_tipus=''):
         """Construeix un missatge base."""
@@ -36,10 +36,35 @@ class Message(object):
         self.tipus = ''
         self.f_xsd = ''
         self.set_tipus()
-        if self.tipus != force_tipus:
+        if force_tipus and self.tipus != force_tipus:
             msg = 'L\'XML no es correspon al tipus %s' % force_tipus
             raise except_f1('Error', _(msg))
         self.set_xsd()
+    
+    def set_tipus(self):
+        """Set type of message. To implement in child classes"""
+        raise NotImplementedError('This method is not implemented!')
+
+    def set_xsd(self):
+        """Set xsd. To implement in child classes"""
+        raise NotImplementedError('This method is not implemented!')
+
+    def check_fpos(self, f_obj):
+        """Setejar la posició actual dels fixers"""
+        if (isinstance(f_obj, file) and f_obj.tell() != 0):
+            f_obj.seek(0)
+
+    def get_tipus_xml(self):
+        """Obtenir el tipus de missatge"""
+        return self.tipus
+
+    def parse_xml(self):
+        """Import xml content. To implement in child classes"""
+        raise NotImplementedError('This method is not implemented!')
+
+
+class Message(MessageBase):
+    """Classe base intercanvi informacio comer-distri"""
     
     def set_tipus(self):
         """Setejar el tipus de missatge"""
@@ -62,15 +87,6 @@ class Message(object):
             msg = ('Fitxer \'%s\' corrupte' % 
                         switching.get_data(XSD_DATA[self.tipus]))
             raise except_f1('Error', _(msg))
-
-    def check_fpos(self, f_obj):
-        """Setejar la posició actual dels fixers"""
-        if (isinstance(f_obj, file) and f_obj.tell() != 0):
-            f_obj.seek(0)
-
-    def get_tipus_xml(self):
-        """Obtenir el tipus de missatge"""
-        return self.tipus
 
     def parse_xml(self):
         """Importar el contingut de l'xml"""
@@ -112,6 +128,53 @@ class Message(object):
             raise except_f1('Error', _('Document sense codi de'\
                                        ' seqüencial de sol·licitud'))
         return ref
+
+
+class MessageTG(MessageBase):
+    """Classe base missatges telegestio"""
+    
+    def set_tipus(self):
+        """Setejar el tipus de missatge"""
+        try:
+            obj = objectify.fromstring(self.str_xml)
+            self.tipus = obj.get('IdRpt')
+        except: 
+            msg = 'No s\'ha pogut identificar el tipus'
+            raise except_f1('Error', _(msg))
+
+    def set_xsd(self):
+        """Set xsd file. TG XML files do not use xsd :("""
+        pass
+
+    def parse_xml(self):
+        """Import xml content"""
+        try:
+            self.obj = objectify.fromstring(self.str_xml)
+        except:
+            raise except_f1('Error', _('Document invàlid'))
+
+    # Funcions relacionades amb la capçalera del XML
+    @property
+    def version(self):
+        ref = self.obj.get('Version')
+        if not ref:
+            raise except_f1('Error', _('Document sense versió'))
+        return ref
+
+    @property
+    def petition(self):
+        ref = self.obj.get('IdPet')
+        if not ref:
+            raise except_f1('Error', _('Document sense codi de'\
+                                       ' petició'))
+        return ref
+
+    @property
+    def supported(self):
+        if self.tipus in ('S02', 'S04', 'S05'):
+            return True
+        else:
+            return False
 
 
 class except_f1(Exception):
