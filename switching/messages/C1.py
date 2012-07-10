@@ -27,9 +27,8 @@ class C1(Message):
     @property
     def acceptacio(self):
         """Retorna l'objecte Acceptacio"""
-        return Acceptacio(self.obj.\
-                          AceptacionCambiodeComercializadoraSinCambios.\
-                          DatosAceptacion)
+        obj = getattr(self.obj, self._header)
+        return Acceptacio(obj.DatosAceptacion)
 
     @property
     def rebuig(self):
