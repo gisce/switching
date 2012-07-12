@@ -36,6 +36,11 @@ class C1(Message):
         return Rebuig(self.obj.RechazoATRDistribuidoras.Rechazo)
 
     @property
+    def rebuig_anullacio(self):
+        """Retorna l'objecte Rebuig"""
+        return Rebuig(self.obj.RechazoDeAnulacion.RechazoAnulacion)
+
+    @property
     def header(self):
         return self._header
 
