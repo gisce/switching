@@ -192,16 +192,28 @@ class Factura(object):
         """Retornat els periodes d'energia"""
         periode = []
         total = 0
+        comptadors = self.get_comptadors()
+        lectures = []
+        #lectures.extend([i.get_lectures() for i in comptadors])
+        for i in comptadors:
+            lectures.extend(i.get_lectures())
+        lect_activa = self.select_consum_from_lectures(lectures, 'A')
         try:
             for ea in self.factura.EnergiaActiva.TerminoEnergiaActiva:
                 d_ini = ea.FechaDesde.text
                 d_fi = ea.FechaHasta.text
                 p = 0
                 for i in ea.Periodo:
+                    p += 1
                     if float(i.PrecioEnergia.text):
-                        p += 1
-                        periode.append(PeriodeActiva(i, 'P%d' % p,
-                                                            d_ini, d_fi))
+                        nom_p = 'P%d' % p
+                        val = float(i.ValorEnergiaActiva.text)
+                        if val in lect_activa.values():
+                            per = [k for k in lect_activa if 
+                                                        lect_activa[k] == val]
+                            if len(per) == 1:
+                                nom_p = per[0]
+                        periode.append(PeriodeActiva(i, nom_p, d_ini, d_fi))
             total = float(self.factura.EnergiaActiva.
                                             ImporteTotalEnergiaActiva.text)
         except AttributeError:
@@ -254,6 +266,8 @@ class Factura(object):
             else:
                 nom_periodes_uniq = list(nom_periodes)
         nom_periodes_uniq.sort()
+        if not nom_periodes_uniq:
+            return None, None
         try:
             for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
                 d_ini = er.FechaDesde.text
@@ -278,8 +292,8 @@ class Factura(object):
                 d_fi = pot.FechaHasta.text
                 p = 0
                 for i in pot.Periodo:
+                    p += 1
                     if float(i.PrecioPotencia.text):
-                        p += 1
                         periode.append(PeriodePotencia(i, 'P%d' % p,
                                                             d_ini, d_fi))
             total = float(self.factura.Potencia.
