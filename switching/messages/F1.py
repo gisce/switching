@@ -208,7 +208,7 @@ class Factura(object):
                         nom_p = 'P%d' % p
                         val = float(i.ValorEnergiaActiva.text)
                         if val in lect_activa.values():
-                            per = [k for k in lect_activa if 
+                            per = [k for k in lect_activa if
                                                         lect_activa[k] == val]
                             if len(per) == 1:
                                 nom_p = per[0]
