@@ -194,7 +194,6 @@ class Factura(object):
         total = 0
         comptadors = self.get_comptadors()
         lectures = []
-        #lectures.extend([i.get_lectures() for i in comptadors])
         for i in comptadors:
             lectures.extend(i.get_lectures())
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
