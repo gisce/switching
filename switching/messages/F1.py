@@ -192,9 +192,8 @@ class Factura(object):
         """Retornat els periodes d'energia"""
         periode = []
         total = 0
-        comptadors = self.get_comptadors()
         lectures = []
-        for i in comptadors:
+        for i in self.get_comptadors():
             lectures.extend(i.get_lectures())
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
         try:
