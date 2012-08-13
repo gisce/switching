@@ -19,6 +19,8 @@
 -Se modifica el Tipo de dato de Refacturaciones.Refacturacion.ImporteTotal de "S9(13)V(2)" a "S9(10)V(4)"
 			2012.07.06
 -Se añade una ocurrencia al campo IVAIGICreducido
+			2012.07.18
+-Se añade una ocurrencia al campo IVA
 
 		</xs:documentation>
 	</xs:annotation>
@@ -492,7 +494,7 @@
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="IVA" type="TipoIVAIGIC"/>
+						<xs:element name="IVA" type="TipoIVAIGIC" maxOccurs="2"/>
 						<xs:element name="IVAIGICReducido" type="TipoIVAIGIC" minOccurs="0" maxOccurs="2"/>
 						<xs:element name="Refacturaciones" minOccurs="0">
 							<xs:complexType>
