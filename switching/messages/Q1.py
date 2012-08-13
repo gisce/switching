@@ -117,7 +117,13 @@ class Lectura(object):
                    '65': 'P5',  # Periodo 5
                    '66': 'P6'}  # Periodo 6
 
-        return relacio[self.lectura.CodigoPeriodo.text]
+        return relacio.get(self.lectura.CodigoPeriodo.text, None)
+
+    @property
+    def ometre(self):
+        # Ignorar totalitzadors de les tarifes 3.0
+        skip_periode = ('60')
+        return self.lectura.CodigoPeriodo.text in skip_periode
 
     @property
     def constant_multiplicadora(self):
