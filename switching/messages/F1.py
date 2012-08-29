@@ -172,7 +172,9 @@ class Factura(object):
                                                                   'reactiva'],
                        'Alquileres': [self.get_info_lloguers, 'lloguer'],
                        'ExcesoPotencia': [self.get_info_exces,
-                                                             'exces_potencia']}
+                                                             'exces_potencia'],
+                       'Refacturaciones': [self.get_info_refacturacions,
+                                                             'refacturacions']}
         contingut = []
         for key in noms_funcio:
             try:
@@ -325,6 +327,21 @@ class Factura(object):
         except AttributeError:
             obj = ''
         return obj
+
+    def get_info_refacturacions(self):
+        """Linies de refacturació"""
+        refact = []
+        total = 0
+        try:
+            if not hasattr(self.factura, 'Refacturaciones'):
+                return refact
+            for ref in self.factura.Refacturaciones.Refacturacion:
+                _ref = Refacturacio(ref)
+                refact.append(_ref)
+                total += _ref.import_total
+        except AttributeError:
+            pass
+        return refact, total
 
     @property
     def pot_data_inici(self):
@@ -536,3 +553,29 @@ class Lloguer(object):
     @property
     def data_final(self):
         return self._data_final
+
+
+class Refacturacio(object):
+    """Classe amb la informació de refacturació"""
+    def __init__(self, ref):
+        self.ref = ref
+
+    @property
+    def tipus(self):
+        return self.ref.Tipo.text
+
+    @property
+    def data_inici(self):
+        return self.ref.RFechaDesde.text
+
+    @property
+    def data_final(self):
+        return self.ref.RFechaHasta.text
+
+    @property
+    def consum(self):
+        return float(self.ref.RConsumo.text)
+
+    @property
+    def import_total(self):
+        return float(self.ref.ImporteTotal.text)
