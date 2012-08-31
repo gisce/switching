@@ -328,6 +328,19 @@ class Factura(object):
             obj = ''
         return obj
 
+    def get_parcials_refacturacio(self):
+        """Parcials de refacturacio"""
+        parcial = {}
+        for val in self.factura.ConceptoIVA:
+            tipus = val.Concepto.text
+            if not tipus in parcial:
+                parcial.update({tipus: float(val.ImporteConceptoIVA.text)})
+            else:
+                msg = _('Existeix més d\'un valor de refacturació parcial '
+                        '(ConceptoIVA) amb tipus %s.') % tipus
+                raise except_f1('Error', msg)
+        return parcial
+
     def get_info_refacturacions(self):
         """Linies de refacturació"""
         refact = []
@@ -335,8 +348,9 @@ class Factura(object):
         try:
             if not hasattr(self.factura, 'Refacturaciones'):
                 return refact
+            parcial = self.get_parcials_refacturacio()
             for ref in self.factura.Refacturaciones.Refacturacion:
-                _ref = Refacturacio(ref)
+                _ref = Refacturacio(ref, parcial)
                 refact.append(_ref)
                 total += _ref.import_total
         except AttributeError:
@@ -557,8 +571,13 @@ class Lloguer(object):
 
 class Refacturacio(object):
     """Classe amb la informació de refacturació"""
-    def __init__(self, ref):
+    def __init__(self, ref, parcial):
         self.ref = ref
+        self._import_parcial = parcial.get(self.ref.Tipo.text, False)
+        if not self._import_parcial:
+            msg = _('No s\'ha trobat el valor de refacturació parcial '
+                    '(ConceptoIVA) amb tipus %s.') % self.ref.Tipo.text
+            raise except_f1('Error', msg)
 
     @property
     def tipus(self):
@@ -573,9 +592,13 @@ class Refacturacio(object):
         return self.ref.RFechaHasta.text
 
     @property
-    def consum(self):
+    def consum_total(self):
         return float(self.ref.RConsumo.text)
 
     @property
     def import_total(self):
         return float(self.ref.ImporteTotal.text)
+
+    @property
+    def import_parcial(self):
+        return self._import_parcial
