@@ -571,8 +571,8 @@ class Refacturacio(object):
         self.ref = ref
         self._import_parcial = parcial.get(self.ref.Tipo.text, False)
         if not self._import_parcial:
-            msg = _('No s\'ha trobat el valor de refacturació parcial '
-                    '(ConceptoIVA) amb tipus %s.') % self.ref.Tipo.text
+            msg = _(u'No s\'ha trobat el valor de refacturació parcial '
+                    u'(ConceptoIVA) amb tipus %s.') % self.ref.Tipo.text
             raise except_f1('Error', msg)
 
     @property
