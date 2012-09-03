@@ -172,7 +172,9 @@ class Factura(object):
                                                                   'reactiva'],
                        'Alquileres': [self.get_info_lloguers, 'lloguer'],
                        'ExcesoPotencia': [self.get_info_exces,
-                                                             'exces_potencia']}
+                                                             'exces_potencia'],
+                       'Refacturaciones': [self.get_info_refacturacions,
+                                                             'refacturacions']}
         contingut = []
         for key in noms_funcio:
             try:
@@ -325,6 +327,31 @@ class Factura(object):
         except AttributeError:
             obj = ''
         return obj
+
+    def get_parcials_refacturacio(self):
+        """Parcials de refacturacio"""
+        parcial = {}
+        for val in self.factura.ConceptoIVA:
+            tipus = val.Concepto.text
+            if not tipus in parcial:
+                parcial.update({tipus: float(val.ImporteConceptoIVA.text)})
+            else:
+                msg = _(u'Existeix més d\'un valor de refacturació parcial '
+                        u'(ConceptoIVA) amb tipus %s.') % tipus
+                raise except_f1('Error', msg)
+        return parcial
+
+    def get_info_refacturacions(self):
+        """Linies de refacturació"""
+        refact = []
+        total = 0
+        if hasattr(self.factura, 'Refacturaciones'):
+            parcial = self.get_parcials_refacturacio()
+            for ref in self.factura.Refacturaciones.Refacturacion:
+                _ref = Refacturacio(ref, parcial)
+                refact.append(_ref)
+                total += _ref.import_total
+        return refact, total
 
     @property
     def pot_data_inici(self):
@@ -536,3 +563,38 @@ class Lloguer(object):
     @property
     def data_final(self):
         return self._data_final
+
+
+class Refacturacio(object):
+    """Classe amb la informació de refacturació"""
+    def __init__(self, ref, parcial):
+        self.ref = ref
+        self._import_parcial = parcial.get(self.ref.Tipo.text, False)
+        if not self._import_parcial:
+            msg = _(u'No s\'ha trobat el valor de refacturació parcial '
+                    u'(ConceptoIVA) amb tipus %s.') % self.ref.Tipo.text
+            raise except_f1('Error', msg)
+
+    @property
+    def tipus(self):
+        return self.ref.Tipo.text
+
+    @property
+    def data_inici(self):
+        return self.ref.RFechaDesde.text
+
+    @property
+    def data_final(self):
+        return self.ref.RFechaHasta.text
+
+    @property
+    def consum_total(self):
+        return float(self.ref.RConsumo.text)
+
+    @property
+    def import_total(self):
+        return float(self.ref.ImporteTotal.text)
+
+    @property
+    def import_parcial(self):
+        return self._import_parcial
