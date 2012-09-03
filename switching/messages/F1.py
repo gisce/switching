@@ -336,8 +336,8 @@ class Factura(object):
             if not tipus in parcial:
                 parcial.update({tipus: float(val.ImporteConceptoIVA.text)})
             else:
-                msg = _('Existeix més d\'un valor de refacturació parcial '
-                        '(ConceptoIVA) amb tipus %s.') % tipus
+                msg = _(u'Existeix més d\'un valor de refacturació parcial '
+                        u'(ConceptoIVA) amb tipus %s.') % tipus
                 raise except_f1('Error', msg)
         return parcial
 
@@ -345,16 +345,12 @@ class Factura(object):
         """Linies de refacturació"""
         refact = []
         total = 0
-        try:
-            if not hasattr(self.factura, 'Refacturaciones'):
-                return refact
+        if hasattr(self.factura, 'Refacturaciones'):
             parcial = self.get_parcials_refacturacio()
             for ref in self.factura.Refacturaciones.Refacturacion:
                 _ref = Refacturacio(ref, parcial)
                 refact.append(_ref)
                 total += _ref.import_total
-        except AttributeError:
-            pass
         return refact, total
 
     @property
