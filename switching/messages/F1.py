@@ -310,7 +310,7 @@ class Factura(object):
         try:
             for i in self.factura.ExcesoPotencia.Periodo:
                 p += 1
-                if float(i.ValorExcesoPotencia):
+                if float(i.ValorExcesoPotencia.text):
                     periode.append(PeriodeExces(i, 'P%d' % p,
                                                 self.data_inici,
                                                 self.data_final))
