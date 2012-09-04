@@ -332,7 +332,10 @@ class Factura(object):
         """Parcials de refacturacio"""
         parcial = {}
         for val in self.factura.ConceptoIVA:
-            tipus = val.Concepto.text
+            try:
+                tipus = val.Concepto.text
+            except AttributeError:
+                continue
             if not tipus in parcial:
                 parcial.update({tipus: float(val.ImporteConceptoIVA.text)})
             else:
