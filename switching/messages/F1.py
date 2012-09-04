@@ -310,7 +310,8 @@ class Factura(object):
         try:
             for i in self.factura.ExcesoPotencia.Periodo:
                 p += 1
-                periode.append(PeriodeExces(i, 'P%d' % p,
+                if float(i.ValorExcesoPotencia):
+                    periode.append(PeriodeExces(i, 'P%d' % p,
                                                 self.data_inici,
                                                 self.data_final))
             total = float(self.factura.ExcesoPotencia.ImporteTotalExcesos.text)
