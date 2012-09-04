@@ -310,7 +310,8 @@ class Factura(object):
         try:
             for i in self.factura.ExcesoPotencia.Periodo:
                 p += 1
-                periode.append(PeriodeExces(i, 'P%d' % p,
+                if float(i.ValorExcesoPotencia.text):
+                    periode.append(PeriodeExces(i, 'P%d' % p,
                                                 self.data_inici,
                                                 self.data_final))
             total = float(self.factura.ExcesoPotencia.ImporteTotalExcesos.text)
@@ -332,7 +333,10 @@ class Factura(object):
         """Parcials de refacturacio"""
         parcial = {}
         for val in self.factura.ConceptoIVA:
-            tipus = val.Concepto.text
+            try:
+                tipus = val.Concepto.text
+            except AttributeError:
+                continue
             if not tipus in parcial:
                 parcial.update({tipus: float(val.ImporteConceptoIVA.text)})
             else:
