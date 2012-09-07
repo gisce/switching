@@ -15,8 +15,9 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
                    '05': 'ActivacionCambiodeComercializadoraSinCambios.xsd',
                    '06': 'NotificacionComercializadoraSaliente.xsd',
                    '08': 'AnulacionSolicitud.xsd',
-                   '09': ('AceptacionAnulacion.xsd', 
-                          'RechazoAnulacion.xsd')}
+                   '09': ('AceptacionAnulacion.xsd',
+                          'RechazoAnulacion.xsd'),
+                   '10': 'NotificacionComercializadoraSaliente.xsd'}
            }
 
 _ = gettext.gettext
