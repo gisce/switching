@@ -222,6 +222,15 @@ class Notificacio(object):
             pass
         return data
 
+    @property
+    def contracte(self):
+        contracte = ''
+        try:
+            contracte = Contracte(self.notificacio.Contrato)
+        except AttributeError:
+            pass
+        return contracte
+
 
 class Activacio(object):
     """Classe que implementa l'activació"""
@@ -622,7 +631,7 @@ class Anullacio(object):
     def contracte(self):
         vals = ''
         try:
-            val = Contracte(self.obj.IdContrato)
+            val = self.obj.IdContrato.CodContrato.text
         except AttributeError:
             pass
         return val
