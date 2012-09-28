@@ -174,7 +174,9 @@ class Factura(object):
                        'ExcesoPotencia': [self.get_info_exces,
                                                              'exces_potencia'],
                        'Refacturaciones': [self.get_info_refacturacions,
-                                                             'refacturacions']}
+                                                             'refacturacions'],
+                       'ConceptoIVA': [self.get_info_reg_refact,
+                                                           'regularitzacions']}
         contingut = []
         for key in noms_funcio:
             try:
@@ -310,7 +312,8 @@ class Factura(object):
         try:
             for i in self.factura.ExcesoPotencia.Periodo:
                 p += 1
-                periode.append(PeriodeExces(i, 'P%d' % p,
+                if float(i.ValorExcesoPotencia.text):
+                    periode.append(PeriodeExces(i, 'P%d' % p,
                                                 self.data_inici,
                                                 self.data_final))
             total = float(self.factura.ExcesoPotencia.ImporteTotalExcesos.text)
@@ -332,7 +335,10 @@ class Factura(object):
         """Parcials de refacturacio"""
         parcial = {}
         for val in self.factura.ConceptoIVA:
-            tipus = val.Concepto.text
+            try:
+                tipus = val.Concepto.text
+            except AttributeError:
+                continue
             if not tipus in parcial:
                 parcial.update({tipus: float(val.ImporteConceptoIVA.text)})
             else:
@@ -352,6 +358,20 @@ class Factura(object):
                 refact.append(_ref)
                 total += _ref.import_total
         return refact, total
+
+    def get_info_reg_refact(self):
+        """Línies de regularitzacio de refacturació"""
+        regul = []
+        total = 0
+        if hasattr(self.factura, 'ConceptoIVA'):
+            parcials = self.get_parcials_refacturacio()
+            for tipus, val in parcials.items():
+                # els valors de regularització venen amb signe negatiu
+                if val > 0:
+                    continue
+                regul.append(RegRefact(tipus, val))
+                total += val
+        return regul, total
 
     @property
     def pot_data_inici(self):
@@ -598,3 +618,18 @@ class Refacturacio(object):
     @property
     def import_parcial(self):
         return self._import_parcial
+
+
+class RegRefact(object):
+    """Classe amb la informació de regularització de refacturació"""
+    def __init__(self, tipus, val):
+        self._tipus = tipus
+        self._import = val
+
+    @property
+    def tipus(self):
+        return self._tipus
+
+    @property
+    def import_parcial(self):
+        return self._import
