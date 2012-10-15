@@ -45,8 +45,9 @@ class Meter(object):
 class Values(object):
     '''return values'''
 
-    def __init__(self, meter, report_type):
+    def __init__(self, meter, report_type, version):
         self.report_type = report_type
+        self.version = version
         self.meter = meter
 
     def get(self):
