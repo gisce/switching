@@ -369,7 +369,8 @@ class Factura(object):
                 # els valors de regularització venen amb signe negatiu
                 if val > 0:
                     continue
-                regul.append(RegRefact(tipus, val))
+                regul.append(RegRefact(tipus, val,
+                                       self.data_inici, self.data_final))
                 total += val
         return regul, total
 
@@ -622,9 +623,11 @@ class Refacturacio(object):
 
 class RegRefact(object):
     """Classe amb la informació de regularització de refacturació"""
-    def __init__(self, tipus, val):
+    def __init__(self, tipus, val, d_ini, d_fi):
         self._tipus = tipus
         self._import = val
+        self._d_ini = d_ini
+        self._d_fi = d_fi
 
     @property
     def tipus(self):
@@ -633,3 +636,11 @@ class RegRefact(object):
     @property
     def import_parcial(self):
         return self._import
+
+    @property
+    def data_inici(self):
+        return self._d_fi
+
+    @property
+    def data_final(self):
+        return self._d_ini
