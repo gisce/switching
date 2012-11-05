@@ -354,7 +354,10 @@ class Factura(object):
         if hasattr(self.factura, 'Refacturaciones'):
             parcial = self.get_parcials_refacturacio()
             for ref in self.factura.Refacturaciones.Refacturacion:
-                _ref = Refacturacio(ref, parcial)
+                try:
+                    _ref = Refacturacio(ref, parcial)
+                except except_f1:
+                    continue
                 refact.append(_ref)
                 total += _ref.import_total
         return refact, total
