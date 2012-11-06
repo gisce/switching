@@ -1,0 +1,15 @@
+README
+setup.py
+switching/__init__.py
+switching/messages/F1.py
+switching/messages/Q1.py
+switching/messages/TG.py
+switching/messages/__init__.py
+switching/messages/defs.py
+switching/messages/message.py
+switching/types/__init__.py
+switching/data/Facturacion.xsd
+switching/data/SaldoLecturasFacturacion.xsd
+switching/data/TipoCabecera.xsd
+switching/data/TiposComplejos.xsd
+switching/data/TiposSencillos.xsd
