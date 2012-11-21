@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<xs:annotation>
+		<xs:documentation>
+		Version 0.0 OCSUM 2011.01.31
+		</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="NotificacionComercializadoraSalienteD">
+		<xs:sequence>
+			<xs:element name="DatosNotificacion" type="DatosNotificacionComercializadoraSalienteD"/>
+			<xs:element name="Contrato" type="ContratoNotificacionComercializadoraSalienteD"/>
+			<xs:element name="PuntosDeMedida" type="PuntosDeMedida"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Tipos secundarios de la transacción actual -->
+	<xs:complexType name="DatosNotificacionComercializadoraSalienteD">
+		<xs:sequence>
+			<xs:element name="FechaActivacion" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContratoNotificacionComercializadoraSalienteD">
+		<xs:sequence>
+			<xs:element name="IdContrato" type="IdContrato"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

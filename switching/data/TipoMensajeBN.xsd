@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!-- 
+		Version 0.0 OCSUM 2011.01.31
+		Version 2.0 OCSUM 2012.06.18 ModoControlPotencia
+			Se actualiza el tipo asociado a la etiqueta "CondicionesContractuales" por "CondicionesContractualesD"
+	-->
+	<!-- Aceptacion -->
+	<xs:complexType name="AceptacionAnulacionBN">
+		<xs:sequence>
+			<xs:element name="DatosAceptacion" type="DatosAceptacion"/>
+			<xs:element name="Contrato" type="ContratoAceptacionAnulacion"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContratoAceptacionAnulacion">
+		<xs:sequence>
+			<xs:element name="IdContrato" type="IdContrato"/>
+			<xs:element name="CondicionesContractuales" type="CondicionesContractualesD"/>
+			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Rechazo -->
+	<xs:complexType name="RechazoAnulacionBN">
+		<xs:sequence>
+			<xs:element name="RechazoAnulacion" type="RechazoAnulacion" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RechazoAnulacion">
+		<xs:sequence>
+			<xs:element name="Secuencial" type="Decimal2"/>
+			<xs:element name="CodigoMotivo" type="CodigoMotivoRechazo"/>
+			<xs:element name="Texto" type="X120"/>
+			<xs:element name="Fecha" type="xs:date"/>
+			<xs:element name="Hora" type="xs:time"/>
+			<xs:element name="IdContrato" type="IdContrato"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
