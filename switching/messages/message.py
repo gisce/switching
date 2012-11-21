@@ -71,6 +71,10 @@ class MessageBase(object):
         """Obtenir el tipus de missatge"""
         return self.tipus
 
+    def get_xml(self):
+        """Obtenir el fitxer"""
+        return self.xml
+
     def parse_xml(self):
         """Import xml content. To implement in child classes"""
         raise NotImplementedError('This method is not implemented!')
