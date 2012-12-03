@@ -3,6 +3,7 @@ setup.py
 switching/__init__.py
 switching/messages/F1.py
 switching/messages/Q1.py
+switching/messages/C1.py
 switching/messages/TG.py
 switching/messages/__init__.py
 switching/messages/defs.py

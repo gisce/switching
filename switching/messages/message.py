@@ -36,6 +36,7 @@ class MessageBase(object):
         if isinstance(xml, file):
             self.check_fpos(xml)
             xml = xml.read()
+        self.xml_orig = xml
         # Fem desaparèixer el header amb l'encoding de l'xml
         # <?xml version="1.0" encoding="ISO-8859-1"?>
         try:
@@ -73,7 +74,7 @@ class MessageBase(object):
 
     def get_xml(self):
         """Obtenir el fitxer"""
-        return self.xml
+        return self.xml_orig
 
     def parse_xml(self):
         """Import xml content. To implement in child classes"""
