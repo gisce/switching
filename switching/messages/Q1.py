@@ -122,7 +122,7 @@ class Lectura(object):
     @property
     def ometre(self):
         # Ignorar totalitzadors
-        skip_periode = ('00', '10', '20', '30', '40', '50', '60', '70', '80')
+        skip_periode = ('00', '60')
         return self.lectura.CodigoPeriodo.text in skip_periode
 
     @property
