@@ -121,8 +121,8 @@ class Lectura(object):
 
     @property
     def ometre(self):
-        # Ignorar totalitzadors de les tarifes 3.0
-        skip_periode = ('60')
+        # Ignorar totalitzadors
+        skip_periode = ('00', '10', '20', '30', '40', '50', '60', '70', '80')
         return self.lectura.CodigoPeriodo.text in skip_periode
 
     @property
