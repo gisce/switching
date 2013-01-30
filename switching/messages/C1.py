@@ -66,7 +66,7 @@ class C1(Message):
         """Retorna una llista de punts de mesura"""
         data = []
         obj = getattr(self.obj, self._header)
-        for i in self.obj.PuntosDeMedida:
+        for i in obj.PuntosDeMedida.PuntoDeMedida:
             data.append(PuntMesura(i))
         return data
 
@@ -186,7 +186,7 @@ class PuntMesura(object):
     @property
     def alta(self):
         """Fecha de alta del Punto de Medida"""
-        val = ''
+        val = False
         try:
             val = self.pm.FechaAlta.text
         except AttributeError:
@@ -196,7 +196,7 @@ class PuntMesura(object):
     @property
     def baixa(self):
         """Fecha de baja del Punto de Medida"""
-        val = ''
+        val = False
         try:
             val = self.pm.FechaBaja.text
         except AttributeError:
@@ -276,7 +276,7 @@ class PuntMesura(object):
     def aparatos(self):
         """Retorna una llista d'aparells"""
         data = []
-        for i in self.pm.Aparatos:
+        for i in self.pm.Aparatos.Aparato:
             data.append(Aparato(i))
         return data
 
@@ -284,8 +284,9 @@ class PuntMesura(object):
     def comentarios(self):
         """Retorna una llista de comentaris"""
         data = []
-        for i in self.pm.ComentariosPM:
-            data.appen(i.ComentarioPM.Texto.text)
+        if hasattr(self.pm, 'ComentariosPM'):
+            for i in self.pm.ComentariosPM.ComentarioPM:
+                data.append(i.ComentarioPM.Texto.text)
         return data
 
 class Aparato(object):
@@ -371,17 +372,26 @@ class Aparato(object):
         return val
 
     @property
+    def icp(self):
+        if hasattr(self.aparato, 'DatosAparatoICP'):
+            return True
+        else:
+            return False
+
+    @property
     def datos_aparato(self):
-        return (self.aparato.DatosAparatoNoICP and
-                DatosAparato(self.aparato.DatosAparatoNoICP) or
-                DatosAparato(self.aparato.DatosAparatoICP))
+        if hasattr(self.aparato, 'DatosAparatoICP'):
+            return DatosAparato(self.aparato.DatosAparatoICP)
+        else:
+            return DatosAparato(self.aparato.DatosAparatoNoICP)
 
     @property
     def medidas(self):
         """Retorna una llista de mesures"""
         data = []
-        for i in self.aparato.Medidas:
-            data.append(Medida(i))
+        if hasattr(self.aparato, 'Medidas'):
+            for i in self.aparato.Medidas.Medida:
+                data.append(Medida(i))
         return data
 
 
@@ -389,13 +399,13 @@ class ModeloAparato(object):
     '''Classe que implementa els models dels aparells'''
 
     def __init__(self, data):
-        self.modelo = data
+        self.datosmodelo = data
 
     @property
     def tipo(self):
         val = ''
         try:
-            val = self.modelo.Tipo.text
+            val = self.datosmodelo.Tipo.text
         except AttributeError:
             pass
         return val
@@ -404,7 +414,7 @@ class ModeloAparato(object):
     def marca(self):
         val = ''
         try:
-            val = self.modelo.Marca.text
+            val = self.datosmodelo.Marca.text
         except AttributeError:
             pass
         return val
@@ -413,7 +423,7 @@ class ModeloAparato(object):
     def modelo(self):
         val = ''
         try:
-            val = self.modelo.ModeloMarca.text
+            val = self.datosmodelo.ModeloMarca.text
         except AttributeError:
             pass
         return val
