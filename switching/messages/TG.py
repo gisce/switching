@@ -12,12 +12,19 @@ class Concentrator(object):
     def name(self):
         return self.concentrator.get('Id')
 
+    @property
+    def has_meters(self):
+        '''return True if concentrator has meter child tags'''
+        if hasattr(self.concentrator, 'Cnt'):
+            return True
+        else:
+            return False
+
     def get_meters(self):
         '''Return all Meters in the concentrator'''
         if len(self.concentrator.getchildren()):
             return [Meter(x, self.name) for x in self.concentrator.Cnt]
         return []
-
 
 class Meter(object):
     '''Implements meter'''
@@ -52,9 +59,14 @@ class Values(object):
 
     def get(self):
         '''generic get function'''
+        #if meter is a concentrator instance
+        if isinstance(self.meter, Concentrator):
+            if not len(self.meter.concentrator.getchildren()):
+                return {}
         #If the meter has no children, nothing to do
-        if not len(self.meter.meter.getchildren()):
-            return {}
+        if isinstance(self.meter, Meter):
+            if not len(self.meter.meter.getchildren()):
+                return {}
         return getattr(self, 'get_%s' % self.report_type)()
 
     def get_timestamp(self, element, value):
@@ -62,6 +74,9 @@ class Values(object):
                         strptime(element.get(value)[:-1],
                                  '%Y%m%d%H%M%S'),
                                  '%Y-%m-%d %H:%M:%S')
+
+    def get_boolean(self, element, value):
+        return element.get(value) == 'Y' and True or False
 
     def get_S02(self):
         '''get function for S02 type values'''
@@ -146,4 +161,102 @@ class Values(object):
                                  })
                 ret_values.append(tmp_vals)
 
+        return ret_values
+
+    def get_S12(self):
+        '''get function for S12 type values'''
+        cnc_name = self.meter.name
+        ret_values = []
+        for S12_header in self.meter.concentrator.S12:
+            timestamp = self.get_timestamp(S12_header, 'Fh')
+            if self.version == '3.1c':
+                fw_up_to_field = 'TimeOutMeterFwU'
+            else:
+                fw_up_to_field = 'TimeOutPrimeFwU' 
+            vals = {
+                'date': timestamp,
+                'model': S12_header.get('Mod'),
+                'mf_year': S12_header.get('Af'),
+                'type': S12_header.get('Te'),
+                'w_password': S12_header.get('DCPwdAdm'),
+                'r_password': S12_header.get('DCPwdRead'),
+                'fw_version': S12_header.get('Vf'),
+                'fw_comm_version': S12_header.get('VfComm'),
+                'protocol': S12_header.get('Pro'),
+                'communication': S12_header.get('Com'),
+                'battery_mon': S12_header.get('Bat'),
+                'ip_address': S12_header.get('ipCom'),
+                'dc_ws_port': S12_header.get('PortWS'),
+                'ip_mask': S12_header.get('ipMask'),
+                'ip_gtw': S12_header.get('ipGtw'),
+                'dhcp': self.get_boolean(S12_header, 'ipDhcp'),
+                'slave1': S12_header.get('Slave1'),
+                'slave2': S12_header.get('Slave2'),
+                'slave3': S12_header.get('Slave3'),
+                'local_ip_address': S12_header.get('ipLoc'),
+                'local_ip_mask': S12_header.get('ipMaskLoc'),
+                'plc_mac': S12_header.get('Macplc'),
+                'serial_port_speed': S12_header.get('Pse'),
+                'priority': self.get_boolean(S12_header, 'Priority'),
+                'stg_ws_ip_address': S12_header.get('IPstg'),
+                'stg_ws_password': S12_header.get('stgPwd'),
+                'ntp_ip_address': S12_header.get('IPNTP'),
+                'rpt_ftp_ip_address': S12_header.get('IPftp'),
+                'rpt_ftp_user': S12_header.get('FTPUserReport'),
+                'rpt_ftp_password': S12_header.get('FTPPwdReport'),
+                'fwdcup_ftp_ip_address': S12_header.get('IPftpDCUpg'),
+                'fwdcup_ftp_user': S12_header.get('UserftpDCUpg'),
+                'fwdcup_ftp_password': S12_header.get('PwdftpDCUpg'),
+                'fwmtup_ftp_ip_address': S12_header.get('IPftpMeterUpg'),
+                'fwmtup_ftp_user': S12_header.get('UserftpMeterUpg'),
+                'fwmtup_ftp_password': S12_header.get('UserftpMeterUpg'),
+                'retries': int(S12_header.get('RetryFtp')),
+                'time_btw_retries': int(S12_header.get('TimeBetwFtp')),
+                'cycle_ftp_ip_address': S12_header.get('IPftpCycles'),
+                'cycle_ftp_user': S12_header.get('UserftpCycles'),
+                'cycle_ftp_password': S12_header.get('PwdftpCycles'),
+                'cycle_ftp_dir': S12_header.get('DestDirCycles'),
+                'sync_meter': self.get_boolean(S12_header, 'SyncMeter'),
+                'fwmtup_timeout': int(S12_header.get(fw_up_to_field) or 0),
+                'max_time_deviation': int(S12_header.get('TimeDevOver')),
+                'min_time_deviation': int(S12_header.get('TimeDev')),
+                'reset_msg': self.get_boolean(S12_header, 'ResetMsg'),
+                'rpt_meter_limit': int(S12_header.get('NumMeters')),
+                'rpt_time_limit': int(S12_header.get('TimeSendReq')),
+                'disconn_time': int(S12_header.get('TimeDisconMeter')),
+                'disconn_retries': int(S12_header.get('RetryDisconMeter')),
+                'disconn_retry_interval': int(S12_header.get('TimeRetryInterval')),
+                'meter_reg_data': S12_header.get('MeterRegData'),
+                'report_format': S12_header.get('ReportFormat'),
+                's26_content': S12_header.get('S26Content'),
+                'values_check_delay': int(S12_header.get('ValuesCheckDelay')),
+                'max_order_outdate': int(S12_header.get('MaxOrderOutdate') or 0),
+                'restart_delay': int(S12_header.get('TimeDelayRestart') or 0),
+                'ntp_max_deviation': int(S12_header.get('NTPMaxDeviation') or 0),
+                'session_timeout': int(S12_header.get('AccInacTimeout') or 0),
+                'max_sessions': int(S12_header.get('AccSimulMax') or 0),
+                }
+            tasks = []
+            for task in S12_header.TP:
+                task_values = {
+                    'name': task.get('TpTar'),
+                    'priority': int(task.get('TpPrio')),
+                    'date_from': self.get_timestamp(task, 'TpHi'),
+                    'periodicity': task.get('TpPer'),
+                    'complete': self.get_boolean(task, 'TpCompl'),
+                    'meters': task.get('TpMet'),
+                    }
+                task_data_values = []
+                for task_data in task.TpPro:
+                    task_data_value = {
+                        'request': task_data.get('TpReq'),
+                        'stg_send': self.get_boolean(task_data, 'TpSend'),
+                        'store': self.get_boolean(task_data, 'TpStore'),
+                        'attributes': task_data.get('TpAttr'),
+                        }
+                    task_data_values.append(task_data_value)
+                task_values['task_data'] = task_data_values
+                tasks.append(task_values)
+            vals['tasks'] = tasks
+            ret_values.append(vals)
         return ret_values

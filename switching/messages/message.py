@@ -233,7 +233,7 @@ class MessageTG(MessageBase):
 
     @property
     def supported(self):
-        if self.tipus in ('S02', 'S04', 'S05'):
+        if self.tipus in ('S02', 'S04', 'S05', 'S12'):
             return True
         else:
             return False
