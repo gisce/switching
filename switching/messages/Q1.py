@@ -177,6 +177,11 @@ class Comptador(object):
         return lectures
 
     @property
+    def codiDH(self):
+        """Retorna el codi de Discriminació Horaria"""
+        return self.obj.CodigoDH.text
+    
+    @property
     def nom_comptador(self):
         """Retorna el número de comptador"""
         return self.obj.NumeroSerie.text
