@@ -23,15 +23,8 @@ class Q1(Message):
                 for aparell in mesura.Aparato:
                     compt = Comptador(aparell)
                     di, df = compt.dates_inici_i_final
-                    carregat = False
-                    pos = 0
-                    for pos, val in enumerate(comptadors):
-                        if di < val[0]:
-                            comptadors.insert(pos, (di, df, compt))
-                            carregat = True
-                            break
-                    if not carregat:
-                        comptadors.insert(pos+1, (di, df, compt))
+                    comptadors.append((di, df, compt))
+        comptadors = sorted(comptadors, lambda x,y: cmp(x[0], y[0]))
         _comptadors = []
         for compt in comptadors:
             _comptadors.append(compt[2])
