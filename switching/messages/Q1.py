@@ -21,8 +21,21 @@ class Q1(Message):
             if mesura.CodUnificadoPuntoSuministro.text[:20] == \
                                                     self.get_codi[:20]:
                 for aparell in mesura.Aparato:
-                    comptadors.append(Comptador(aparell))
-        return comptadors
+                    compt = Comptador(aparell)
+                    di, df = compt.dates_inici_i_final
+                    carregat = False
+                    pos = 0
+                    for pos, val in enumerate(comptadors):
+                        if di < val[0]:
+                            comptadors.insert(pos, (di, df, compt))
+                            carregat = True
+                            break
+                    if not carregat:
+                        comptadors.insert(pos+1, (di, df, compt))
+        _comptadors = []
+        for compt in comptadors:
+            _comptadors.append(compt[2])
+        return _comptadors
 
     @staticmethod
     def agrupar_lectures_per_periode(lectures):
@@ -189,3 +202,14 @@ class Comptador(object):
     @property
     def gir_comptador(self):
         return (10 ** int(self.obj.Integrador.NumeroRuedasEnteras.text))
+
+    @property
+    def dates_inici_i_final(self):
+        di = ''
+        df = ''
+        for lect in self.get_lectures():
+           c_di = datetime.strptime(lect.data_lectura_inicial, '%Y-%m-%d')
+           c_df = datetime.strptime(lect.data_lectura_final, '%Y-%m-%d')
+           di = (not di or c_di < di) and c_di or di
+           df = (not df or c_df > df) and c_df or df
+        return di, df
