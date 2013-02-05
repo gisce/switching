@@ -24,11 +24,7 @@ class Q1(Message):
                     compt = Comptador(aparell)
                     di, df = compt.dates_inici_i_final
                     comptadors.append((di, df, compt))
-        comptadors = sorted(comptadors, lambda x,y: cmp(x[0], y[0]))
-        _comptadors = []
-        for compt in comptadors:
-            _comptadors.append(compt[2])
-        return _comptadors
+        return [a[2] for a in sorted(comptadors, lambda x,y: cmp(x[0], y[0]))]
 
     @staticmethod
     def agrupar_lectures_per_periode(lectures):
