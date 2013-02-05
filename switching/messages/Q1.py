@@ -23,19 +23,8 @@ class Q1(Message):
                 for aparell in mesura.Aparato:
                     compt = Comptador(aparell)
                     di, df = compt.dates_inici_i_final
-                    carregat = False
-                    pos = 0
-                    for pos, val in enumerate(comptadors):
-                        if di < val[0]:
-                            comptadors.insert(pos, (di, df, compt))
-                            carregat = True
-                            break
-                    if not carregat:
-                        comptadors.insert(pos+1, (di, df, compt))
-        _comptadors = []
-        for compt in comptadors:
-            _comptadors.append(compt[2])
-        return _comptadors
+                    comptadors.append((di, df, compt))
+        return [a[2] for a in sorted(comptadors, lambda x,y: cmp(x[0], y[0]))]
 
     @staticmethod
     def agrupar_lectures_per_periode(lectures):
