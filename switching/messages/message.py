@@ -183,7 +183,7 @@ class Message(MessageBase):
         if not ref:
             raise except_f1('Error', _('Document sense data de'\
                                        ' sol·licitud'))
-        return ref
+        return ' '.join(ref.split('T'))
 
     @property
     def versio(self):
