@@ -27,8 +27,10 @@ class C1(Message):
     @property
     def acceptacio(self):
         """Retorna l'objecte Acceptacio"""
-        obj = getattr(self.obj, self._header)
-        return Acceptacio(obj.DatosAceptacion)
+        obj = getattr(self.obj, self._header, False)
+        if obj:
+            return Acceptacio(obj.DatosAceptacion)
+        return False
 
     @property
     def rebuig(self):
@@ -44,15 +46,6 @@ class C1(Message):
     def header(self):
         return self._header
 
-    @property
-    def punts_mesura(self):
-        """Retorna una llista de punts de mesura"""
-        data = []
-        obj = getattr(self.obj, self._header)
-        for i in obj.PuntosDeMedida.PuntoDeMedida:
-            data.append(PuntMesura(i))
-        return data
-    
     @property
     def activacio(self):
         """Retorna l'objecte Activacio"""
@@ -70,13 +63,19 @@ class C1(Message):
         """Retorna l'object Anullacio"""
         return Anullacio(self.obj.AnulacionSolicitud)
 
+    @property
+    def punts_mesura(self):
+        """Retorna una llista de punts de mesura"""
+        data = []
+        obj = getattr(self.obj, self._header)
+        for i in obj.PuntosDeMedida.PuntoDeMedida:
+            data.append(PuntMesura(i))
+        return data
+
 
 class PuntMesura(object):
     """Classe que implementa el punt de mesura
     """
-    # Es deixa per més endevant la implementació de la funció
-    # obtenir_aparells() que retornaria una llista d'objectes Aparell
-    # per a representar la informació del tag opcional <Aparatos>
 
     def __init__(self, data):
         self.pm = data
@@ -189,7 +188,7 @@ class PuntMesura(object):
     @property
     def alta(self):
         """Fecha de alta del Punto de Medida"""
-        val = ''
+        val = False
         try:
             val = self.pm.FechaAlta.text
         except AttributeError:
@@ -199,9 +198,381 @@ class PuntMesura(object):
     @property
     def baixa(self):
         """Fecha de baja del Punto de Medida"""
-        val = ''
+        val = False
         try:
             val = self.pm.FechaBaja.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def codree(self):
+        """Código de REE del punto de medida"""
+        val = ''
+        try:
+            val = self.pm.CodREE.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def direccion_enlace(self):
+        """Direccion de enlace para comunicacion con el registrador"""
+        val = ''
+        try:
+            val = self.pm.DireccionEnlace.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def numlinea(self):
+        """Numero de linea para comunicacion con el registrador"""
+        val = ''
+        try:
+            val = self.pm.NumLinea.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def telefono_telemedida(self):
+        """Teléfono para telemedida"""
+        val = ''
+        try:
+            val = self.pm.TelefonoTelemedida.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def estado_telefono(self):
+        """Estado del teléfono"""
+        val = ''
+        try:
+            val = self.pm.EstadoTelefono.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def clave_acceso(self):
+        """Clave de acceso al punto de medida"""
+        val = ''
+        try:
+            val = self.pm.ClaveAcceso.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def password(self):
+        val = ''
+        try:
+            val = self.pm.PasswordPM.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def aparatos(self):
+        """Retorna una llista d'aparells"""
+        data = []
+        for i in self.pm.Aparatos.Aparato:
+            data.append(Aparato(i))
+        return data
+
+    @property
+    def comentarios(self):
+        """Retorna una llista de comentaris"""
+        data = []
+        if hasattr(self.pm, 'ComentariosPM'):
+            for i in self.pm.ComentariosPM.ComentarioPM:
+                data.append(i.ComentarioPM.Texto.text)
+        return data
+
+class Aparato(object):
+    '''Classe que implementa els aparells de mesura'''
+
+    def __init__(self, data):
+        self.aparato = data
+
+    @property
+    def modelo(self):
+        return ModeloAparato(self.aparato.Modelo)
+
+    @property
+    def tipo_movimiento(self):
+        val = ''
+        try:
+            val = self.aparato.TipoMovimiento.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def tipo_equipo(self):
+        val = ''
+        try:
+            val = self.aparato.TipoEquipoMedida.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def tipo_propiedad(self):
+        val = ''
+        try:
+            val = self.aparato.TipoPropiedadAparato.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def propietario(self):
+        val = ''
+        try:
+            val = self.aparato.Propietario.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def extraccion_lecturas(self):
+        val = ''
+        try:
+            val = self.aparato.ExtraccionLecturas.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def dh_activa(self):
+        val = ''
+        try:
+            val = self.aparato.DiscriminacionHorariaActiva.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def lectura_directa(self):
+        val = ''
+        try:
+            val = self.aparato.LecturaDirecta.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def cod_precinto(self):
+        val = ''
+        try:
+            val = self.aparato.CodPrecinto.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def icp(self):
+        if hasattr(self.aparato, 'DatosAparatoICP'):
+            return True
+        else:
+            return False
+
+    @property
+    def datos_aparato(self):
+        if hasattr(self.aparato, 'DatosAparatoICP'):
+            return DatosAparato(self.aparato.DatosAparatoICP)
+        else:
+            return DatosAparato(self.aparato.DatosAparatoNoICP)
+
+    @property
+    def medidas(self):
+        """Retorna una llista de mesures"""
+        data = []
+        if hasattr(self.aparato, 'Medidas'):
+            for i in self.aparato.Medidas.Medida:
+                data.append(Medida(i))
+        return data
+
+
+class ModeloAparato(object):
+    '''Classe que implementa els models dels aparells'''
+
+    def __init__(self, data):
+        self.datosmodelo = data
+
+    @property
+    def tipo(self):
+        val = ''
+        try:
+            val = self.datosmodelo.Tipo.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def marca(self):
+        val = ''
+        try:
+            val = self.datosmodelo.Marca.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def modelo(self):
+        val = ''
+        try:
+            val = self.datosmodelo.ModeloMarca.text
+        except AttributeError:
+            pass
+        return val
+
+
+class DatosAparato(object):
+
+    def __init__(self, data):
+        self.datos = data
+
+    @property
+    def periodo_fabricacion(self):
+        val = ''
+        try:
+            val = self.datos.PeriodoFabricacion.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def numero_serie(self):
+        val = ''
+        try:
+            val = self.datos.NumeroSerie.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def funcion(self):
+        val = ''
+        try:
+            val = self.datos.FuncionAparato.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def integradores(self):
+        val = ''
+        try:
+            val = self.datos.NumIntegradores.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def constante_energia(self):
+        val = ''
+        try:
+            val = self.datos.ConstanteEnergia.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def constante_maximetro(self):
+        val = ''
+        try:
+            val = self.datos.ConstanteMaximetro.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def ruedas_enteras(self):
+        val = ''
+        try:
+            val = self.datos.RuedasEnteras.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def ruedas_decimales(self):
+        val = ''
+        try:
+            val = self.datos.RuedasDecimales.text
+        except AttributeError:
+            pass
+        return val
+
+
+class Medida(object):
+
+    def __init__(self, data):
+        self.medida = data
+
+    @property
+    def tipo_dh(self):
+        val = ''
+        try:
+            val = self.medida.TipoDH.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def periodo(self):
+        val = ''
+        try:
+            val = self.medida.Periodo.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def magnitud(self):
+        val = ''
+        try:
+            val = self.medida.MagnitudMedida.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def procedencia(self):
+        val = ''
+        try:
+            val = self.medida.Procedencia.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def lectura_anterior(self):
+        val = ''
+        try:
+            val = self.medida.LecturaAnterior.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def anomalia(self):
+        val = ''
+        try:
+            val = self.medida.Anomalia.text
+        except AttributeError:
+            pass
+        return val
+
+    @property
+    def texto_anomalia(self):
+        val = ''
+        try:
+            val = self.medida.TextoAnomalia.text
         except AttributeError:
             pass
         return val
@@ -230,7 +601,6 @@ class Notificacio(object):
         except AttributeError:
             pass
         return contracte
-
 
 class Activacio(object):
     """Classe que implementa l'activació"""
@@ -539,8 +909,8 @@ class Condicions(object):
     def potencies(self):
         pot = []
         for i in self.cond.PotenciasContratadas.Potencia:
-            pot.append(int(i.text))
-        return pot
+            pot.append((int(i.get('Periodo')), int(i.text)))
+        return sorted(pot)
 
 class Rebuig(object):
     """Classe Rebuig"""
