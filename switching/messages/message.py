@@ -19,7 +19,7 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
                           'RechazoAnulacion.xsd'),
                    '10': 'NotificacionComercializadoraSaliente.xsd',
                    '11': 'AceptacionCambiodeComercializadoraSinCambios.xsd'},
-            'C2': {'01': 'CambioComercializadoraConCambios.xsd',
+            'C2': {'01': 'CambiodeComercializadoraConCambios.xsd',
                    '02': ('AceptacionCambiodeComercializadoraConCambios.xsd',
                           'RechazoATRDistribuidoras.xsd'),
                    }

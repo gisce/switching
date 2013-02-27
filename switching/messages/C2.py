@@ -56,7 +56,7 @@ class C2(Message):
     @property
     def activacio(self):
         """Retorna l'objecte Activacio"""
-        return Activacio(self.obj.\
+        return C1.Activacio(self.obj.\
                             ActivacionCambiodeComercializadoraConCambios)
 
     @property
@@ -79,79 +79,130 @@ class C2(Message):
             data.append(C1.PuntMesura(i))
         return data
 
+    @property
+    def mesura(self):
+        """Retorna l'objecte mesura"""
+        obj = getattr(self.obj, self._header)
+        return Mesura(obj.Medida)
+
+    @property
+    def comentaris(self):
+        """Retorna una llista de comentaris"""
+        data = []
+        obj = getattr(self.obj, self._header)
+        if hasattr(obj, 'Comentarios'):
+            for i in obj.Comentarios.Comentario:
+                data.append(Comentari(i))
+        return data
+
+    @property
+    def cnae(self):
+        value = ''
+        try:
+            value = self.obj.CambiodeComercializadoraConCambios.CNAE.text
+        except AttributeError:
+            pass
+        return value
+
+    @property
+    def vivenda(self):
+        value = ''
+        try:
+            value = (self.obj.CambiodeComercializadoraConCambios.
+                                        ViviendaHabitual.text)
+        except AttributeError:
+            pass
+        return value
+
+    @property
+    def canvi_titular(self):
+        value = ''
+        try:
+            value = (self.obj.CambiodeComercializadoraConCambios.
+                                        TipoCambioTitular.text)
+        except AttributeError:
+            pass
+        return value
 
 
-class Activacio(object):
-    """Classe que implementa l'activació"""
-    
+class Comentari(object):
+
     def __init__(self, data):
-        self.activacio = data
+        self.comentari = data
     
+    @property
+    def text(self):
+        value = ''
+        try:
+            value = self.comentari.Texto.text
+        except AttributeError:
+            pass
+        return value
+
     @property
     def data(self):
-        data = ''
+        value = ''
         try:
-            data = self.activacio.DatosActivacion.Fecha.text
+            value = self.comentari.Fecha.text
         except AttributeError:
             pass
-        return data
-    
+        return value
+
     @property
     def hora(self):
-        hora = ''
+        value = ''
         try:
-            hora = self.activacio.DatosActivacion.Hora.text
+            value = self.comentari.Hora.text
         except AttributeError:
             pass
-        return hora
+        return value
 
-    @property
-    def contracte(self):
-        contracte = ''
-        try:
-            contracte = Contracte(self.activacio.Contrato)
-        except AttributeError:
-            pass
-        return contracte
+class Mesura(object):
 
-class Acceptacio(object):
-    """Classe Acceptacio"""
-    
     def __init__(self, data):
-        self.acc = data
+        self.mesura = data
     
     @property
-    def data_acceptacio(self):
-        data = ''
+    def cp_propietat(self):
+        value = ''
         try:
-            data = self.acc.FechaAceptacion.text
+            value = self.mesura.ControlPotenciaPropiedad.text
         except AttributeError:
             pass
-        return data
+        return value
 
     @property
-    def potencia(self):
-        pot = ''
+    def cp_installacio(self):
+        value = ''
         try:
-            pot = int(self.acc.PotenciaActual.text)
+            value = self.mesura.ControlPotenciaInstalacion.text
         except AttributeError:
             pass
-        return pot
+        return value
 
     @property
-    def actuacio_camp(self):
-        act = ''
+    def equip_aportat_client(self):
+        value = ''
         try:
-            act = self.acc.ActuacionCampo.text
+            value = self.mesura.EquipoAportadoCliente.text
         except AttributeError:
             pass
-        return act
+        return value
 
     @property
-    def data_ult_lect(self):
-        data = ''
+    def equip_installat_client(self):
+        value = ''
         try:
-            data = self.acc.FechaUltimaLectura.text
+            value = self.mesura.EquipoInstaladoCliente.text
         except AttributeError:
             pass
-        return data
+        return value
+
+    @property
+    def tipus_equip_mesura(self):
+        value = ''
+        try:
+            value = self.mesura.TipoEquipoMedida.text
+        except AttributeError:
+            pass
+        return value

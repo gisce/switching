@@ -633,6 +633,15 @@ class Activacio(object):
         return hora
 
     @property
+    def tipus(self):
+        tipus = ''
+        try:
+            tipus = self.activacio.DatosActivacion.TipoActivacion.text
+        except AttributeError:
+            pass
+        return tipus
+
+    @property
     def contracte(self):
         contracte = ''
         try:
@@ -657,6 +666,16 @@ class Sollicitud(object):
         except AttributeError:
             pass
         return linia
+
+    @property
+    def sollicitudadm(self):
+        """Sol·licitud administrativa contractual"""
+        sol = ''
+        try:
+            sol = self.sollicitud.SolicitudAdmContractual.text
+        except AttributeError:
+            pass
+        return sol
 
     @property
     def cicle_activacio(self):
@@ -746,6 +765,15 @@ class Contracte(object):
         except AttributeError:
             pass
         return adreca
+
+    @property
+    def direccio(self):
+        direccio = False
+        try:
+            direccio = Direccio(self.contracte.DireccionCorrespondencia.Direccion)
+        except AttributeError:
+            pass
+        return direccio
 
     @property
     def condicions(self):
@@ -852,6 +880,23 @@ class Client(object):
         except AttributeError:
             pass
         return prefix
+
+    @property
+    def indicador(self):
+        '''Indicador tipus adreça'''
+        indicador = ''
+        try:
+            indicador = self.client.IndicadorTipoDireccion.text
+        except AttributeError:
+            pass
+        return indicador
+
+    @property
+    def direccio(self):
+        if hasattr(self.client, 'Direccion'):
+            return Direccio(self.client.Direccion)
+        return False
+
 
 class Acceptacio(object):
     """Classe Acceptacio"""
@@ -1011,3 +1056,137 @@ class Anullacio(object):
         except AttributeError:
             pass
         return val
+
+class Direccio(object):
+    """Classe que implementa la direccio"""
+
+    def __init__(self, data):
+        self.direccio = data
+
+    @property
+    def pais(self):
+        pais = ''
+        try:
+            pais = self.direccio.Pais.text
+        except AttributeError:
+            pass
+        return pais
+
+    @property
+    def provincia(self):
+        provincia = ''
+        try:
+            provincia = self.direccio.Provincia.text
+        except AttributeError:
+            pass
+        return provincia
+
+    @property
+    def municipi(self):
+        municipi = ''
+        try:
+            municipi = self.direccio.Municipio.text
+        except AttributeError:
+            pass
+        return municipi
+
+    @property
+    def poblacio(self):
+        poblacio = ''
+        try:
+            poblacio = self.direccio.Poblacion.text
+        except AttributeError:
+            pass
+        return poblacio
+
+    @property
+    def tv(self):
+        tv = ''
+        try:
+            tv = self.direccio.TipoVia.text
+        except AttributeError:
+            pass
+        return tv
+
+    @property
+    def cp(self):
+        cp = ''
+        try:
+            cp = self.direccio.CodPostal.text
+        except AttributeError:
+            pass
+        return cp
+
+    @property
+    def carrer(self):
+        carrer = ''
+        try:
+            carrer = self.direccio.Calle.text
+        except AttributeError:
+            pass
+        return carrer
+
+    @property
+    def num(self):
+        '''Numero de finca'''
+        num = ''
+        try:
+            num = self.direccio.NumeroFinca.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def dup(self):
+        '''Duplicador de finca'''
+        dup = ''
+        try:
+            dup = self.direccio.DuplicadorFinca.text
+        except AttributeError:
+            pass
+        return dup
+
+    @property
+    def escala(self):
+        escala = ''
+        try:
+            escala = self.direccio.Escalera.text
+        except AttributeError:
+            pass
+        return escala
+
+    @property
+    def pis(self):
+        pis = ''
+        try:
+            pis = self.direccio.Piso.text
+        except AttributeError:
+            pass
+        return pis
+
+    @property
+    def porta(self):
+        porta = ''
+        try:
+            porta = self.direccio.Puerta.text
+        except AttributeError:
+            pass
+        return porta
+
+    @property
+    def tipus_aclarador(self):
+        tipus = ''
+        try:
+            tipus = self.direccio.TipoAclarador.text
+        except AttributeError:
+            pass
+        return tipus
+
+    @property
+    def aclarador(self):
+        aclarador = ''
+        try:
+            aclarador = self.direccio.Aclarador.text
+        except AttributeError:
+            pass
+        return aclarador
