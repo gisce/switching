@@ -34,13 +34,19 @@ class C1(Message):
 
     @property
     def rebuig(self):
-        """Retorna l'objecte Rebuig"""
-        return Rebuig(self.obj.RechazoATRDistribuidoras.Rechazo)
+        """Retorna una llista de Rebuig"""
+        data = []
+        for i in self.obj.RechazoATRDistribuidoras.Rechazo:
+            data.append(C1.Rebuig(i))
+        return data
 
     @property
     def rebuig_anullacio(self):
         """Retorna l'objecte Rebuig"""
-        return Rebuig(self.obj.RechazoDeAnulacion.RechazoAnulacion)
+        data = []
+        for i in self.obj.RechazoDeAnulacion.RechazoAnulacion:
+            data.append(C1.Rebuig(i))
+        return data
 
     @property
     def header(self):
