@@ -90,7 +90,8 @@ class C2(Message):
         """Retorna una llista de comentaris"""
         data = []
         obj = getattr(self.obj, self._header)
-        if hasattr(obj, 'Comentarios'):
+        if (hasattr(obj, 'Comentarios') and
+            hasattr(obj.Comentarios, 'Comentario')):
             for i in obj.Comentarios.Comentario:
                 data.append(Comentari(i))
         return data
