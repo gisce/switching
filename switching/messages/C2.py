@@ -96,6 +96,14 @@ class C2(Message):
         return data
 
     @property
+    def incidencies(self):
+        """Retorna una llista de incidencies"""
+        data = []
+        for i in self.obj.IncidenciasATRDistribuidoras.Incidencia:
+            data.append(C1.Rebuig(i))
+        return data
+
+    @property
     def cnae(self):
         value = ''
         try:
