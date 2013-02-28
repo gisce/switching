@@ -22,6 +22,9 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
             'C2': {'01': 'CambiodeComercializadoraConCambios.xsd',
                    '02': ('AceptacionCambiodeComercializadoraConCambios.xsd',
                           'RechazoATRDistribuidoras.xsd'),
+                   '03': 'IncidenciasATRDistribuidoras.xsd',
+                   '04': 'RechazoATRDistribuidoras.xsd',
+                   '05': 'ActivacionCambiodeComercializadoraConCambios.xsd',
                    }
            }
 
