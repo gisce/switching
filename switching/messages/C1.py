@@ -28,8 +28,8 @@ class C1(Message):
     def acceptacio(self):
         """Retorna l'objecte Acceptacio"""
         obj = getattr(self.obj, self._header, False)
-        if obj:
-            return Acceptacio(obj.DatosAceptacion)
+        if obj and hasattr(obj, 'DatosAceptacion'):
+            return C1.Acceptacio(obj.DatosAceptacion)
         return False
 
     @property
