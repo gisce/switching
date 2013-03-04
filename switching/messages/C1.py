@@ -37,7 +37,7 @@ class C1(Message):
         """Retorna una llista de Rebuig"""
         data = []
         for i in self.obj.RechazoATRDistribuidoras.Rechazo:
-            data.append(C1.Rebuig(i))
+            data.append(Rebuig(i))
         return data
 
     @property
@@ -45,7 +45,7 @@ class C1(Message):
         """Retorna l'objecte Rebuig"""
         data = []
         for i in self.obj.RechazoDeAnulacion.RechazoAnulacion:
-            data.append(C1.Rebuig(i))
+            data.append(Rebuig(i))
         return data
 
     @property
