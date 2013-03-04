@@ -18,7 +18,22 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
                    '09': ('AceptacionAnulacion.xsd',
                           'RechazoAnulacion.xsd'),
                    '10': 'NotificacionComercializadoraSaliente.xsd',
-                   '11': 'AceptacionCambiodeComercializadoraSinCambios.xsd'}
+                   '11': 'AceptacionCambiodeComercializadoraSinCambios.xsd'},
+            'C2': {'01': 'CambiodeComercializadoraConCambios.xsd',
+                   '02': ('AceptacionCambiodeComercializadoraConCambios.xsd',
+                          'RechazoATRDistribuidoras.xsd'),
+                   '03': 'IncidenciasATRDistribuidoras.xsd',
+                   '04': 'RechazoATRDistribuidoras.xsd',
+                   '05': 'ActivacionCambiodeComercializadoraConCambios.xsd',
+                   '06': 'NotificacionComercializadoraSaliente.xsd',
+                   '07': 'ActivacionCambiodeComercializadoraConCambios.xsd',
+                   '08': 'AnulacionSolicitud.xsd',
+                   '09': ('AceptacionAnulacion.xsd',
+                          'RechazoAnulacion.xsd'),
+                   '10': 'NotificacionComercializadoraSaliente.xsd',
+                   '11': 'AceptacionCambiodeComercializadoraConCambios.xsd',
+                   '12': 'AceptacionCambiodeComercializadoraConCambios.xsd',
+                   }
            }
 
 _ = gettext.gettext
