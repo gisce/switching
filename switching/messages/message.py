@@ -33,6 +33,16 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
                    '10': 'NotificacionComercializadoraSaliente.xsd',
                    '11': 'AceptacionCambiodeComercializadoraConCambios.xsd',
                    '12': 'AceptacionCambiodeComercializadoraConCambios.xsd',
+                   },
+            'M1': {'01': 'ModificacionDeATR.xsd',
+                   '02': ('AceptacionModificacionDeATR.xsd',
+                          'RechazoATRDistribuidoras.xsd'),
+                   '03': 'IncidenciasATRDistribuidoras.xsd',
+                   '04': 'RechazoATRDistribuidoras.xsd',
+                   '05': 'ActivacionModificacionDeATR.xsd',
+                   '06': 'AnulacionSolicitud.xsd',
+                   '07': ('AceptacionAnulacion.xsd',
+                          'RechazoAnulacion.xsd'),
                    }
            }
 
