@@ -707,6 +707,14 @@ class Sollicitud(object):
             pass
         return rep
 
+    @property
+    def canvi_titular(self):
+        value = ''
+        try:
+            value = (self.sollicitud.TipoCambioTitular.text)
+        except AttributeError:
+            pass
+        return value
 
 class Contracte(object):
     """Classe Contracte"""
@@ -896,6 +904,16 @@ class Client(object):
         if hasattr(self.client, 'Direccion'):
             return Direccio(self.client.Direccion)
         return False
+
+    @property
+    def titular_pagador(self):
+        '''Indicador titular = pagador'''
+        value = ''
+        try:
+            value = self.client.TitularContratoVsTitularPago.text
+        except AttributeError:
+            pass
+        return value
 
 
 class Acceptacio(object):
