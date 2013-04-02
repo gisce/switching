@@ -70,8 +70,12 @@ class Values(object):
         return getattr(self, 'get_%s' % self.report_type)()
 
     def get_timestamp(self, element, value):
+        if len(element.get(value)) > 15:
+            date_value = element.get(value)[0:14] + element.get(value)[-1]
+        else:
+            date_value = element.get(value)
         return datetime.strftime(datetime.\
-                        strptime(element.get(value)[:-1],
+                        strptime(date_value[:-1],
                                  '%Y%m%d%H%M%S'),
                                  '%Y-%m-%d %H:%M:%S')
 
