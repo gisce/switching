@@ -2,6 +2,7 @@
 from datetime import date, datetime
 
 from message import Message, except_f1
+from defs import *
 
 
 class Q1(Message):
@@ -91,11 +92,7 @@ class Lectura(object):
 
     @property
     def tipus(self):
-        tipus = {'AE': 'A',
-                 'R1': 'R',
-                 'PM': 'M',
-                 'EP': 'EP'}
-        return tipus.get(self.lectura.Magnitud.text)
+        return MAGNITUDS_OCSUM.get(self.lectura.Magnitud.text)
 
     @property
     def magnitud(self):
@@ -107,25 +104,11 @@ class Lectura(object):
 
     @property
     def periode(self):
-        # taula 42
-        relacio = {'01': 'P1',  # Punta + Llano
-                   '21': 'P1',  # Punta
-                   '03': 'P2',  # Valle
-                   '10': 'P1',  # Totalizador
-                   '61': 'P1',  # Periodo 1
-                   '62': 'P2',  # Periodo 2
-                   '63': 'P3',  # Periodo 3
-                   '64': 'P4',  # Periodo 4
-                   '65': 'P5',  # Periodo 5
-                   '66': 'P6'}  # Periodo 6
-
-        return relacio.get(self.lectura.CodigoPeriodo.text, None)
+        return PERIODE_OCSUM.get(self.lectura.CodigoPeriodo.text, None)
 
     @property
     def ometre(self):
-        # Ignorar totalitzadors
-        skip_periode = ('00', '60')
-        return self.lectura.CodigoPeriodo.text in skip_periode
+        return self.lectura.CodigoPeriodo.text in SKIP_TOTALITZADORS
 
     @property
     def constant_multiplicadora(self):
