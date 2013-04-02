@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Definició de variables de llibreria
+# Taula 107 del document d'OCSUM:
+# OCSUM - E - Tablas de códigos 2012.05.23.doc
 INFO_TARIFA = {
              #ocsum    descripcio  marge_reactiva   agrupar_consums
              '001': {'name': '2.0A', 'marge': 0.5, 'agrupat': False},
@@ -18,3 +20,24 @@ INFO_TARIFA = {
              '016': {'name': '6.5', 'marge': 0.33, 'agrupat': False}, 
           }
 
+# Retorna el nom de periode segons el periode d'OCSUM
+PERIODE_OCSUM = {'01': 'P1',  # Punta + Llano
+                 '03': 'P2',  # Valle
+                 '10': 'P1',  # Totalizador
+                 '21': 'P1',  # P1 Tarifes: 004, 006
+                 '22': 'P2',  # P2 Tarifes: 004, 006
+                 '61': 'P1',  # Periodo 1 Tarifa 011
+                 '62': 'P2',  # Periodo 2 Tarifa 011
+                 '63': 'P3',  # Periodo 3 Tarifa 011
+                 '64': 'P4',  # Periodo 4 Tarifa 011
+                 '65': 'P5',  # Periodo 5 Tarifa 011
+                 '66': 'P6'}  # Periodo 6 Tarifa 011
+
+# Magnituds d'OCSUM
+MAGNITUDS_OCSUM = {'AE': 'A',
+                   'R1': 'R',
+                   'PM': 'M',
+                   'EP': 'EP'}
+
+# Totalitzadors a ignorar
+SKIP_TOTALITZADORS = ('00', '60')

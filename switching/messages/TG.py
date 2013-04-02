@@ -70,8 +70,12 @@ class Values(object):
         return getattr(self, 'get_%s' % self.report_type)()
 
     def get_timestamp(self, element, value):
+        if len(element.get(value)) > 15:
+            date_value = element.get(value)[0:14] + element.get(value)[-1]
+        else:
+            date_value = element.get(value)
         return datetime.strftime(datetime.\
-                        strptime(element.get(value)[:-1],
+                        strptime(date_value[:-1],
                                  '%Y%m%d%H%M%S'),
                                  '%Y-%m-%d %H:%M:%S')
 
@@ -232,10 +236,17 @@ class Values(object):
                 'values_check_delay': int(S12_header.get('ValuesCheckDelay')),
                 'max_order_outdate': int(S12_header.get('MaxOrderOutdate') or 0),
                 'restart_delay': int(S12_header.get('TimeDelayRestart') or 0),
-                'ntp_max_deviation': int(S12_header.get('NTPMaxDeviation') or 0),
-                'session_timeout': int(S12_header.get('AccInacTimeout') or 0),
-                'max_sessions': int(S12_header.get('AccSimulMax') or 0),
+                'ntp_max_deviation': (isinstance(S12_header.get('NTPMaxDeviation'), int)
+                                      and int(S12_header.get('NTPMaxDeviation')) or 0),
+                'session_timeout': (isinstance(S12_header.get('AccInacTimeout'), int)
+                                      and int(S12_header.get('AccInacTimeout')) or 0),
+                'max_sessions':  (isinstance(S12_header.get('AccSimulMax'), int)
+                                      and int(S12_header.get('AccSimulMax')) or 0),
                 }
+            if not hasattr(S12_header, 'TP'):
+                vals['tasks'] = []
+                ret_values.append(vals)
+                continue
             tasks = []
             for task in S12_header.TP:
                 task_values = {
