@@ -44,3 +44,4 @@ switching/messages/message.py
 switching/messages/Q1.py
 switching/messages/TG.py
 switching/types/__init__.py
+switching/__init__.py
