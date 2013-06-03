@@ -26,12 +26,15 @@ PERIODE_OCSUM = {'01': 'P1',  # Punta + Llano
                  '10': 'P1',  # Totalizador
                  '21': 'P1',  # P1 Tarifes: 004, 006
                  '22': 'P2',  # P2 Tarifes: 004, 006
-                 '61': 'P1',  # Periodo 1 Tarifa 011
-                 '62': 'P2',  # Periodo 2 Tarifa 011
-                 '63': 'P3',  # Periodo 3 Tarifa 011
-                 '64': 'P4',  # Periodo 4 Tarifa 011
-                 '65': 'P5',  # Periodo 5 Tarifa 011
-                 '66': 'P6'}  # Periodo 6 Tarifa 011
+                 '31': 'P1',  # P1 Tarifa 011
+                 '32': 'P2',  # P2 Tarifa 011
+                 '33': 'P3',  # P3 Tarifa 011
+                 '61': 'P1',  # Periodo 1 Tarifes: 003, 011, 012 - 016
+                 '62': 'P2',  # Periodo 2 Tarifes: 003, 011, 012 - 016
+                 '63': 'P3',  # Periodo 3 Tarifes: 003, 011, 012 - 016
+                 '64': 'P4',  # Periodo 4 Tarifes: 003, 011, 012 - 016
+                 '65': 'P5',  # Periodo 5 Tarifes: 003, 011, 012 - 016
+                 '66': 'P6'}  # Periodo 6 Tarifes: 003, 011, 012 - 016
 
 # Magnituds d'OCSUM
 MAGNITUDS_OCSUM = {'AE': 'A',
