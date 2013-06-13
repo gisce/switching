@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!--
+		Version 0.0 OCSUM 2011.01.31
+		Version 2.0 OCSUM 2012.06.18  DatosCIE
+			Se eliminan las etiquetas DatosCie y DatosApm. Se añade la etiqueta DocTecnica.
+	-->
+	<xs:complexType name="CambiodeComercializadoraConCambiosAC2">
+		<xs:sequence>
+			<xs:element name="DatosSolicitud" type="DatosCambiodeComercializadoraConCambiosAC2"/>
+			<xs:element name="Contrato" type="ContratoConModificacion"/>
+			<xs:element name="Cliente" type="ClienteConDireccion"/>
+			<xs:element name="Medida" type="MedidaC2"/>
+			<xs:element name="DocTecnica" type="DocTecnica" minOccurs="0"/>
+			<xs:element name="Comentarios" type="Comentarios"/>
+			<xs:element name="RegistrosDocumento" type="RegistrosDocs" minOccurs="0"/>
+			<xs:element name="CNAE" type="X5" minOccurs="0" />	
+			<xs:element name="ViviendaHabitual" type="Indicativo" minOccurs="0"/>
+			<xs:element name="TipoCambioTitular" type="IndicativoTipoCambioTitular" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Tipos secundarios de la transacción actual -->
+	<xs:complexType name="DatosCambiodeComercializadoraConCambiosAC2">
+		<xs:sequence>
+			<xs:element name="LineaNegocioElectrica" type="LineaNegocio"/>
+			<xs:element name="SolicitudAdmContractual" type="IndicativoNSA"/>
+			<xs:element name="IndActivacionLectura" type="Indicativo"/>
+			<xs:element name="FechaPrevistaAccion" type="xs:date" minOccurs="0"/>
+			<xs:element name="IndSustitutoMandatario" type="IndSustitutoMandatario"/>
+		</xs:sequence>
+		<!-- 
+		Datos propios de la solicitud, no pertenecen a ninguna entidad 
+		-->
+	</xs:complexType>
+</xs:schema>

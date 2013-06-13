@@ -2,6 +2,7 @@
 from datetime import date, datetime
 
 from message import Message, except_f1
+from defs import *
 
 
 class Q1(Message):
@@ -21,8 +22,10 @@ class Q1(Message):
             if mesura.CodUnificadoPuntoSuministro.text[:20] == \
                                                     self.get_codi[:20]:
                 for aparell in mesura.Aparato:
-                    comptadors.append(Comptador(aparell))
-        return comptadors
+                    compt = Comptador(aparell)
+                    di, df = compt.dates_inici_i_final
+                    comptadors.append((di, df, compt))
+        return [a[2] for a in sorted(comptadors, lambda x,y: cmp(x[0], y[0]))]
 
     @staticmethod
     def agrupar_lectures_per_periode(lectures):
@@ -89,11 +92,7 @@ class Lectura(object):
 
     @property
     def tipus(self):
-        tipus = {'AE': 'A',
-                 'R1': 'R',
-                 'PM': 'M',
-                 'EP': 'EP'}
-        return tipus.get(self.lectura.Magnitud.text)
+        return MAGNITUDS_OCSUM.get(self.lectura.Magnitud.text)
 
     @property
     def magnitud(self):
@@ -105,25 +104,11 @@ class Lectura(object):
 
     @property
     def periode(self):
-        # taula 42
-        relacio = {'01': 'P1',  # Punta + Llano
-                   '21': 'P1',  # Punta
-                   '03': 'P2',  # Valle
-                   '10': 'P1',  # Totalizador
-                   '61': 'P1',  # Periodo 1
-                   '62': 'P2',  # Periodo 2
-                   '63': 'P3',  # Periodo 3
-                   '64': 'P4',  # Periodo 4
-                   '65': 'P5',  # Periodo 5
-                   '66': 'P6'}  # Periodo 6
-
-        return relacio.get(self.lectura.CodigoPeriodo.text, None)
+        return PERIODE_OCSUM.get(self.lectura.CodigoPeriodo.text, None)
 
     @property
     def ometre(self):
-        # Ignorar totalitzadors de les tarifes 3.0
-        skip_periode = ('60')
-        return self.lectura.CodigoPeriodo.text in skip_periode
+        return self.lectura.CodigoPeriodo.text in SKIP_TOTALITZADORS
 
     @property
     def constant_multiplicadora(self):
@@ -177,6 +162,11 @@ class Comptador(object):
         return lectures
 
     @property
+    def codiDH(self):
+        """Retorna el codi de Discriminació Horaria"""
+        return self.obj.CodigoDH.text
+    
+    @property
     def nom_comptador(self):
         """Retorna el número de comptador"""
         return self.obj.NumeroSerie.text
@@ -184,3 +174,14 @@ class Comptador(object):
     @property
     def gir_comptador(self):
         return (10 ** int(self.obj.Integrador.NumeroRuedasEnteras.text))
+
+    @property
+    def dates_inici_i_final(self):
+        di = ''
+        df = ''
+        for lect in self.get_lectures():
+           c_di = datetime.strptime(lect.data_lectura_inicial, '%Y-%m-%d')
+           c_df = datetime.strptime(lect.data_lectura_final, '%Y-%m-%d')
+           di = (not di or c_di < di) and c_di or di
+           df = (not df or c_df > df) and c_df or df
+        return di, df

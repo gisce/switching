@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!--
+		Version 0.0 OCSUM 2011.01.31
+	-->
+	<xs:complexType name="AnulacionATRAN">
+		<xs:sequence>
+			<xs:element name="DatosSolicitud" type="DatosAnulacionATRAN"/>
+			<xs:element name="Cliente" type="IdYNombreCliente"/>
+			<xs:element name="IdContrato" type="IdContrato"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Tipos secundarios de la transacción actual -->
+	<xs:complexType name="DatosAnulacionATRAN">
+		<xs:sequence>
+			<xs:element name="LineaNegocioElectrica" type="LineaNegocio"/>
+		</xs:sequence>
+		<!-- 
+		Datos propios de la solicitud, no pertenecen a ninguna entidad 
+		-->
+	</xs:complexType>
+</xs:schema>
