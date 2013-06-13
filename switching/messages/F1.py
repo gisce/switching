@@ -75,6 +75,13 @@ class Factura(object):
                DatosGeneralesFactura.IndicativoFacturaRectificadora.text
 
     @property
+    def factura_rectificada(self):
+        """Retorna el número de factura rectificada.
+        """
+        return self.factura.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.NumeroFacturaRectificada.text
+
+    @property
     def data_factura(self):
         """Retornar el tipus de factura"""
         return self.factura.DatosGeneralesFacturaATR.\
