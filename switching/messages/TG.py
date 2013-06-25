@@ -176,7 +176,10 @@ class Values(object):
             if self.version == '3.1c':
                 fw_up_to_field = 'TimeOutMeterFwU'
             else:
-                fw_up_to_field = 'TimeOutPrimeFwU' 
+                fw_up_to_field = 'TimeOutPrimeFwU'
+            #Els concentradors current retornen el camp IPftp1
+            rpt_ftp_ip_address = (S12_header.get('IPftp', False)
+                                  or S12_header.get('IPftp1'))
             vals = {
                 'date': timestamp,
                 'model': S12_header.get('Mod'),
@@ -205,7 +208,7 @@ class Values(object):
                 'stg_ws_ip_address': S12_header.get('IPstg'),
                 'stg_ws_password': S12_header.get('stgPwd'),
                 'ntp_ip_address': S12_header.get('IPNTP'),
-                'rpt_ftp_ip_address': S12_header.get('IPftp'),
+                'rpt_ftp_ip_address': rpt_ftp_ip_address,
                 'rpt_ftp_user': S12_header.get('FTPUserReport'),
                 'rpt_ftp_password': S12_header.get('FTPPwdReport'),
                 'fwdcup_ftp_ip_address': S12_header.get('IPftpDCUpg'),
