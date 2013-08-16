@@ -75,6 +75,13 @@ class Factura(object):
                DatosGeneralesFactura.IndicativoFacturaRectificadora.text
 
     @property
+    def factura_rectificada(self):
+        """Retorna el número de factura rectificada.
+        """
+        return self.factura.DatosGeneralesFacturaATR.\
+               DatosGeneralesFactura.NumeroFacturaRectificada.text
+
+    @property
     def data_factura(self):
         """Retornar el tipus de factura"""
         return self.factura.DatosGeneralesFacturaATR.\
@@ -275,6 +282,8 @@ class Factura(object):
                 d_ini = er.FechaDesde.text
                 d_fi = er.FechaHasta.text
                 for pos, i in enumerate(er.Periodo):
+                    if pos >= len(nom_periodes_uniq):
+                        continue
                     pr = PeriodeReactiva(i, nom_periodes_uniq[pos],
                                                                 d_ini, d_fi)
                     periode.append(pr)
