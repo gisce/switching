@@ -282,6 +282,8 @@ class Factura(object):
                 d_ini = er.FechaDesde.text
                 d_fi = er.FechaHasta.text
                 for pos, i in enumerate(er.Periodo):
+                    if pos >= len(nom_periodes_uniq):
+                        continue
                     pr = PeriodeReactiva(i, nom_periodes_uniq[pos],
                                                                 d_ini, d_fi)
                     periode.append(pr)
