@@ -17,7 +17,12 @@
 			Version 2.1 2.1 OCSUM 2012.08.01 Refacturacion de Peajes
 -Se ha añadido el bloque X100
 -Se incluyen los valores 40,41,42 en el campo "TipoConcepto" (tabla 103)
-
+			Version 3.0 OCSUM 2013.06.13 (RD 1718/2013)
+-Se incluye el tipo de dato sencillo "MotivoCambioATRDesdeDistribuidora", forma parte del Proceso D y hace referencia a la tabla 109.
+-Se añade el valor P en el tipo de dato "IndicativoNSA", hace refencia al paso 1 del Proceso M1.
+-Se crea el tipo de dato "Periodicidad", hace refencia al paso 1 y 5 del Proceso M1 y al paso 5 de los procesos A3, C1 y C2.
+-Se incluyen los motivos de rechazo 66, 67, 68, 69 y 70 en el tipo de dato CodigoMotivoRechazo.
+-Se modifican los valores del tipo de dato sencillo "TipoContrato", el descriptor del valor 02 pasa de ser "Eventual" a ser "Eventual medido" y se eliminan los valores 04 y 06.
 
 		</xs:documentation>
 	</xs:annotation>
@@ -383,11 +388,11 @@
 	</xs:simpleType>
 	<xs:simpleType name="IndicativoNSA">
 		<xs:annotation>
-			<xs:documentation>indicativo modificaciones administrativas (N no lleva modificaciones administrativas/ S tiene modificaciones administrativas/ A ambas)</xs:documentation>
+			<xs:documentation>indicativo modificaciones administrativas (N no lleva modificaciones administrativas/ S tiene modificaciones administrativas/ A ambas/ P Cambio en la periodicidad de la facturación)</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:length value="1"/>
-			<xs:pattern value="N|S|A"/>
+			<xs:pattern value="N|S|A|P"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="IndicativoTipoCambioTitular">
@@ -563,11 +568,9 @@
 		<xs:annotation>
 			<xs:documentation>tipo de contrato  ATR  Tabla 9
 			01	Anual
-			02	Eventual
+			02	Eventual medido
 			03	Temporada
-			04	Energia Adicional
 			05	Suministro a instalaciones acogidos al regimen especial
-			06	Interconexiones internacionales
 			07	Suministro de Obras
 			08	Suministro de Socorros
 			09	Eventual a tanto alzado
@@ -927,7 +930,9 @@
 			Modo 4 Con tres maximetros
 			Modo 5 Estacional Tipo A
 			Modo 6 Estacional Tipo B
-			THP
+			Modo 7 THP
+			Modo 8 Tarifa de 6 máximas
+			
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -938,6 +943,7 @@
 			<xs:enumeration value="5"/>
 			<xs:enumeration value="6"/>
 			<xs:enumeration value="7"/>
+			<xs:enumeration value="8"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoFacturacion">
@@ -1266,6 +1272,11 @@
 			<xs:enumeration value="63"/>
 			<xs:enumeration value="64"/>
 			<xs:enumeration value="65"/>
+			<xs:enumeration value="66"/>
+			<xs:enumeration value="67"/>
+			<xs:enumeration value="68"/>
+			<xs:enumeration value="69"/>
+			<xs:enumeration value="70"/>
 			<xs:enumeration value="99"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -2342,6 +2353,24 @@
 		<xs:restriction base="xs:integer">
 			<xs:enumeration value="1"/>
 			<xs:enumeration value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MotivoCambioATRDesdeDistribuidora"> 
+		<xs:annotation>
+			<xs:documentation>Tabla 109</xs:documentation>
+		</xs:annotation>			
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Periodicidad"> 
+		<xs:annotation>
+			<xs:documentation>Tabla 108</xs:documentation>
+		</xs:annotation>			
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
