@@ -16,6 +16,9 @@
 					FechaEmisionCie, FechaCaducidadCie, NifInstalador, NombreInstalador, TensionSuministroCIE, IntensidadDif, 
 					SensibilidadDif, SeccionCable y TipoSuministro.
 				En el tipo complejo DatosAPM se han añadido las etiquetas NifInstalador/CodigoInstalador y NombreInstalador y se ha eliminado la etiqueta ApmAportado.
+			Version 3.0 OCSUM 2013.04.26 (RD 1718/2013)
+				Se incluye el tipo de dato complejo "NotificacionCambiosATRDesdeDistribuidor" compuesto por un tipo nuevo sencillo, hace referencia al Proceso D.
+				Se incluye el elemento opcional PeriodicidadFacturacion en el tipo complejo "CondicionesContractualesC", hace referencia al paso 5 del Proceso M1, A3, C1, C2.
 		</xs:documentation>
 	</xs:annotation>
 	<xs:complexType name="IdContrato">
@@ -242,6 +245,7 @@
 	<xs:complexType name="CondicionesContractualesC">
 		<xs:sequence>
 			<xs:element name="TarifaATR" type="Tarifa"/>
+			<xs:element name="PeriodicidadFacturacion" type="Periodicidad"/>
 			<xs:element name="PotenciasContratadas" type="Potencias"/>
 			<xs:element name="PotenciasMaximas" type="Potencias" minOccurs="0"/>
 			<xs:element name="ModoControlPotencia" type="ModoControlPotencia" minOccurs="0"/>
@@ -763,6 +767,11 @@
 		<xs:sequence>
 			<xs:element name="CodAnomalia" type="TipoAnomalia"/>
 			<xs:element name="Descripcion" type="X45"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="NotificacionCambiosATRDesdeDistribuidor">
+		<xs:sequence>
+			<xs:element name="MotivoCambioATRDesdeDistribuidora" type="MotivoCambioATRDesdeDistribuidora"/> 
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
