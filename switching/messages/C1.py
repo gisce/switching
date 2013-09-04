@@ -982,6 +982,15 @@ class Condicions(object):
         except AttributeError:
             pass
         return tarifa
+    
+    @property
+    def periodicitat_facturacio(self):
+        periodicitat = ''
+        try:
+            periodicitat = self.cond.PeriodicidadFacturacion.text
+        except AttributeError:
+            pass
+        return periodicitat
         
     @property
     def potencies(self):
