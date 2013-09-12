@@ -9,6 +9,7 @@ from switching.types import DecimalElement, check_decimal_element
 
 XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
             'Q1': {'01': 'SaldoLecturasFacturacion.xsd'},
+            'A3': {'01': 'PasoMRAMLConCambiosRestoTarifa.xsd'},
             'C1': {'01': 'CambiodeComercializadoraSinCambios.xsd',
                    '02': ('AceptacionCambiodeComercializadoraSinCambios.xsd',
                           'RechazoATRDistribuidoras.xsd'),

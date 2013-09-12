@@ -724,6 +724,15 @@ class Sollicitud(object):
         except AttributeError:
             pass
         return value
+    
+    @property
+    def cnae(self):
+        value = ''
+        try:
+            value = (self.sollicitud.CNAE.text)
+        except AttributeError:
+            pass
+        return value
 
 class Contracte(object):
     """Classe Contracte"""
