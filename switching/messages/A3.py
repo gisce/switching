@@ -4,14 +4,15 @@
 from message import Message, except_f1
 import C1, C2
 
+
 class A3(Message):
     """Classe que implementa A3."""
-    
+
     @property
     def sollicitud(self):
         """Retorna l'objecte Sollicitud"""
         return C1.Sollicitud(self.obj.PasoMRAMLConCambiosRestoTarifa.\
-                          DatosSolicitud)
+                             DatosSolicitud)
 
     @property
     def contracte(self):
@@ -24,7 +25,7 @@ class A3(Message):
         """Retorna l'objecte Client"""
         return C1.Client(self.obj.PasoMRAMLConCambiosRestoTarifa.\
                          Cliente)
-        
+
     @property
     def acceptacio(self):
         """Retorna l'objecte Acceptacio"""
@@ -32,7 +33,7 @@ class A3(Message):
         if obj and hasattr(obj, 'DatosAceptacion'):
             return C1.Acceptacio(obj.DatosAceptacion)
         return False
-    
+
     @property
     def rebuig(self):
         """Retorna una llista de Rebuig"""
@@ -48,17 +49,17 @@ class A3(Message):
         for i in self.obj.RechazoDeAnulacion.RechazoAnulacion:
             data.append(C1.Rebuig(i))
         return data
-        
+
     @property
     def header(self):
         return self._header
-    
+
     @property
     def activacio(self):
         """Retorna l'objecte Activacio"""
         return C1.Activacio(self.obj.\
                             ActivacionPasoMRAMLConCambiosRestoTarifas)
-    
+
     @property
     def anullacio(self):
         """Retorna l'object Anullacio"""
@@ -89,7 +90,7 @@ class A3(Message):
             for i in obj.Comentarios.Comentario:
                 data.append(C2.Comentari(i))
         return data
-    
+
     @property
     def incidencies(self):
         """Retorna una llista de incidencies"""

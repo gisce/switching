@@ -85,7 +85,7 @@ class MessageBase(object):
             msg = 'L\'XML no es correspon al tipus %s' % force_tipus
             raise except_f1('Error', _(msg))
         self.set_xsd()
-    
+
     def set_tipus(self):
         """Set type of message. To implement in child classes"""
         raise NotImplementedError('This method is not implemented!')
@@ -114,14 +114,14 @@ class MessageBase(object):
 
 class Message(MessageBase):
     """Classe base intercanvi informacio comer-distri"""
-    
+
     def set_tipus(self):
         """Setejar el tipus de missatge"""
         try:
             obj = objectify.fromstring(self.str_xml)
             self.tipus = obj.Cabecera.CodigoDelProceso.text
             self.pas = obj.Cabecera.CodigoDePaso.text
-        except: 
+        except:
             msg = _('No s\'ha pogut identificar el codi de proces o '\
                     'codi de pas')
             raise except_f1('Error', msg)
@@ -142,18 +142,18 @@ class Message(MessageBase):
                     if fitxer.split(".xsd")[0] in root.tag:
                         trobat = True
                         break
-                if not trobat: 
-                    msg = (_('Tipus de fitxer \'%s\' no suportat') % 
+                if not trobat:
+                    msg = (_('Tipus de fitxer \'%s\' no suportat') %
                                                               root.tag)
                     raise except_f1('Error', msg)
             else:
                 fitxer = XSD_DATA[self.tipus][self.pas]
             self._header = fitxer.split(".xsd")[0]
             xsd = switching.get_data(fitxer)
-            self.f_xsd = open(xsd, 'r') 
+            self.f_xsd = open(xsd, 'r')
         except:
-            msg = (_('Fitxer \'%s\' corrupte') % 
-                        switching.get_data(XSD_DATA[self.tipus]))
+            msg = (_('Fitxer \'%s\' corrupte') %
+                     switching.get_data(XSD_DATA[self.tipus]))
             raise except_f1('Error', msg)
 
     def get_pas_xml(self):
@@ -223,15 +223,16 @@ class Message(MessageBase):
             raise except_f1('Error', _('Document sense versio'))
         return ref
 
+
 class MessageTG(MessageBase):
     """Classe base missatges telegestio"""
-    
+
     def set_tipus(self):
         """Setejar el tipus de missatge"""
         try:
             obj = objectify.fromstring(self.str_xml)
             self.tipus = obj.get('IdRpt')
-        except: 
+        except:
             msg = 'No s\'ha pogut identificar el tipus'
             raise except_f1('Error', _(msg))
 
