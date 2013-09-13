@@ -26,8 +26,43 @@ class A3(Message):
                          Cliente)
         
     @property
+    def acceptacio(self):
+        """Retorna l'objecte Acceptacio"""
+        obj = getattr(self.obj, self._header, False)
+        if obj and hasattr(obj, 'DatosAceptacion'):
+            return C1.Acceptacio(obj.DatosAceptacion)
+        return False
+    
+    @property
+    def rebuig(self):
+        """Retorna una llista de Rebuig"""
+        data = []
+        for i in self.obj.RechazoATRDistribuidoras.Rechazo:
+            data.append(C1.Rebuig(i))
+        return data
+
+    @property
+    def rebuig_anullacio(self):
+        """Retorna l'objecte Rebuig"""
+        data = []
+        for i in self.obj.RechazoDeAnulacion.RechazoAnulacion:
+            data.append(C1.Rebuig(i))
+        return data
+        
+    @property
     def header(self):
         return self._header
+    
+    @property
+    def activacio(self):
+        """Retorna l'objecte Activacio"""
+        return C1.Activacio(self.obj.\
+                            ActivacionPasoMRAMLConCambiosRestoTarifas)
+    
+    @property
+    def anullacio(self):
+        """Retorna l'object Anullacio"""
+        return C1.Anullacio(self.obj.AnulacionSolicitud)
 
     @property
     def punts_mesura(self):
@@ -53,4 +88,12 @@ class A3(Message):
             hasattr(obj.Comentarios, 'Comentario')):
             for i in obj.Comentarios.Comentario:
                 data.append(C2.Comentari(i))
+        return data
+    
+    @property
+    def incidencies(self):
+        """Retorna una llista de incidencies"""
+        data = []
+        for i in self.obj.IncidenciasATRDistribuidoras.Incidencia:
+            data.append(C1.Rebuig(i))
         return data

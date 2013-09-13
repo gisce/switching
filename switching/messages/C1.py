@@ -779,7 +779,10 @@ class Contracte(object):
         try:
             tipus = self.contracte.TipoContratoATR.text
         except AttributeError:
-            pass
+            try:
+                tipus = self.contracte.TipoContrato.text
+            except AttributeError:
+                pass
         return tipus
 
     @property
