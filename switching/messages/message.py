@@ -18,6 +18,8 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
                    '06': 'AnulacionSolicitud.xsd',
                    '07': ('AceptacionAnulacion.xsd',
                           'RechazoAnulacion.xsd'),},
+            'B1': {'01': 'BajaEnergia.xsd'
+                   },
             'C1': {'01': 'CambiodeComercializadoraSinCambios.xsd',
                    '02': ('AceptacionCambiodeComercializadoraSinCambios.xsd',
                           'RechazoATRDistribuidoras.xsd'),

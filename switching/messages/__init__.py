@@ -4,6 +4,7 @@ from F1 import F1, Factura, LiniesFactura
 from F1 import PeriodeActiva, PeriodeReactiva, PeriodePotencia, Lloguer
 from Q1 import Q1, Lectura, Comptador
 from A3 import A3
+from B1 import B1
 from C1 import C1
 from C2 import C2
 from M1 import M1
