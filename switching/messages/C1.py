@@ -734,6 +734,15 @@ class Sollicitud(object):
         except AttributeError:
             pass
         return value
+    
+    @property
+    def motiu(self):
+        value = ''
+        try:
+            value = (self.sollicitud.Motivo.text)
+        except AttributeError:
+            pass
+        return value
 
 
 class Contracte(object):
@@ -749,7 +758,10 @@ class Contracte(object):
         try:
             codi = self.contracte.IdContrato.CodContrato.text
         except AttributeError:
-            pass
+            try:
+                codi = self.contracte.CodContrato.text
+            except AttributeError:
+                pass
         return codi
 
     @property
