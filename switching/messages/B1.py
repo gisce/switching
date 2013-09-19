@@ -15,6 +15,22 @@ class B1(Message):
     def client(self):
         """Retorna l'objecte Client"""
         return C1.Client(self.obj.BajaEnergia.Cliente)
+    
+    @property
+    def acceptacio(self):
+        """Retorna l'objecte Acceptacio"""
+        obj = getattr(self.obj, self._header, False)
+        if obj and hasattr(obj, 'DatosAceptacion'):
+            return C1.Acceptacio(obj.DatosAceptacion)
+        return False
+
+    @property
+    def rebuig(self):
+        """Retorna una llista de Rebuig"""
+        data = []
+        for i in self.obj.RechazoATRDistribuidoras.Rechazo:
+            data.append(C1.Rebuig(i))
+        return data
    
     @property
     def contracte(self):
