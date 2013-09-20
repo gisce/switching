@@ -621,7 +621,10 @@ class Activacio(object):
         try:
             data = self.activacio.DatosActivacion.Fecha.text
         except AttributeError:
-            pass
+            try:
+                data = self.activacio.DatosActivacionYBaja.Fecha.text
+            except AttributeError:
+                pass
         return data
 
     @property
@@ -630,7 +633,10 @@ class Activacio(object):
         try:
             hora = self.activacio.DatosActivacion.Hora.text
         except AttributeError:
-            pass
+            try:
+                hora = self.activacio.DatosActivacionYBaja.Hora.text
+            except AttributeError:
+                pass
         return hora
 
     @property

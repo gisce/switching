@@ -25,6 +25,11 @@ class B1(Message):
         return False
 
     @property
+    def activacio(self):
+        """Retorna l'objecte Activacio"""
+        return C1.Activacio(self.obj.NotificacionBajaEnergia)
+        
+    @property
     def anullacio(self):
         """Retorna l'object Anullacio"""
         return C1.Anullacio(self.obj.AnulacionSolicitud)
@@ -68,6 +73,15 @@ class B1(Message):
     @property
     def header(self):
         return self._header
+    
+    @property
+    def punts_mesura(self):
+        """Retorna una llista de punts de mesura"""
+        data = []
+        obj = getattr(self.obj, self._header)
+        for i in obj.PuntosDeMedida.PuntoDeMedida:
+            data.append(C1.PuntMesura(i))
+        return data
     
     @property
     def comentaris(self):
