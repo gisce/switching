@@ -25,10 +25,23 @@ class B1(Message):
         return False
 
     @property
+    def anullacio(self):
+        """Retorna l'object Anullacio"""
+        return C1.Anullacio(self.obj.AnulacionSolicitud)
+    
+    @property
     def rebuig(self):
         """Retorna una llista de Rebuig"""
         data = []
         for i in self.obj.RechazoATRDistribuidoras.Rechazo:
+            data.append(C1.Rebuig(i))
+        return data
+    
+    @property
+    def rebuig_anullacio(self):
+        """Retorna l'objecte Rebuig"""
+        data = []
+        for i in self.obj.RechazoDeAnulacion.RechazoAnulacion:
             data.append(C1.Rebuig(i))
         return data
    
@@ -36,7 +49,12 @@ class B1(Message):
     def contracte(self):
         """Retorna l'objecte Contracte"""
         obj = getattr(self.obj, self._header)
-        return C1.Contracte(obj.IdContrato)
+        try:
+            idcontrato = C1.Contracte(obj.IdContrato)
+        except AttributeError:
+            # Step 04 Acceptacio has the classic structure
+            idcontrato = C1.Contracte(obj.Contrato)
+        return idcontrato 
          
     @property
     def direccio_correspondecia(self):
