@@ -34,7 +34,10 @@ PERIODE_OCSUM = {'01': 'P1',  # Punta + Llano
                  '63': 'P3',  # Periodo 3 Tarifes: 003, 011, 012 - 016
                  '64': 'P4',  # Periodo 4 Tarifes: 003, 011, 012 - 016
                  '65': 'P5',  # Periodo 5 Tarifes: 003, 011, 012 - 016
-                 '66': 'P6'}  # Periodo 6 Tarifes: 003, 011, 012 - 016
+                 '66': 'P6',  # Periodo 6 Tarifes: 003, 011, 012 - 016
+                 '81': 'P1',  # P1 Tarifa 007
+                 '82': 'P2',  # P2 Tarifa 007
+                 '83': 'P3'}  # P3 Tarifa 007
 
 # Magnituds d'OCSUM
 MAGNITUDS_OCSUM = {'AE': 'A',
