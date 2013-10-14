@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TipoCabecera.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:annotation>
+		<xs:documentation>
+			Version 3.0 OCSUM 2013.04.26
+		</xs:documentation>
+	</xs:annotation>
+	<xs:element name="MensajeMotivo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Cabecera" type="Cabecera"/>
+				<xs:element name="NotificacionCambiosATRDesdeDistribuidor" type="NotificacionCambiosATRDesdeDistribuidor"/>	
+				<xs:element name="PeriodicidadFacturacion" type="Periodicidad" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

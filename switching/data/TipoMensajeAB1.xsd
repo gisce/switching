@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!--
+		Version 0.0 OCSUM 2011.01.31
+	-->
+	<xs:complexType name="BajaEnergiaAB1">
+		<xs:sequence>
+			<xs:element name="DatosSolicitud" type="DatosBajaATRAB1"/>
+			<xs:element name="Cliente" type="Cliente"/>
+			<xs:element name="IdContrato" type="IdContrato"/>
+			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
+			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
+			<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+			<xs:element name="Comentarios" type="Comentarios"/>
+			<xs:element name="RegistrosDocumento" type="RegistrosDocs" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Tipos secundarios de la transacción actual -->
+	<xs:complexType name="DatosBajaATRAB1">
+		<xs:sequence>
+			<xs:element name="LineaNegocioElectrica" type="LineaNegocio"/>
+			<xs:element name="FechaPrevistaAccion" type="xs:date" minOccurs="0"/>
+			<xs:element name="Motivo" type="MotivoBaja"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

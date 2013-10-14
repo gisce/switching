@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!-- 
+		Version 0.0 OCSUM 2011.01.31		
+-->
+	<!-- Aceptacion -->
+	<xs:complexType name="AceptacionBc">
+		<xs:sequence>
+			<xs:element name="DatosAceptacion" type="DatosAceptacion"/>
+			<xs:element name="IdContrato" type="IdContrato"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
