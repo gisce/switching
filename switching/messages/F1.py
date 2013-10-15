@@ -11,46 +11,25 @@ from Q1 import Q1, Lectura, Comptador
 _ = gettext.gettext
 
 
-class F1(Message):
-    """Classe que implementa F1."""
-
-    @property
-    def num_factures(self):
-        nelem = 0
-        try:
-            nelem = len(list(self.obj.Facturas.FacturaATR))
-        except AttributeError:
-            pass
-        return nelem
-
-    def __get_factura(self, fact):
-        return Factura(self.obj.Facturas.FacturaATR[fact])
-
-    def get_factures(self):
-        fact = []
-        try:
-            for ch in self.obj.Facturas.FacturaATR:
-                fact.append(Factura(ch))
-        except AttributeError:
-            pass
-        return fact
-
-    @property
-    def data_limit_pagament(self):
-        return self.obj.Facturas.RegistroFin.FechaLimitePago.text
-
-
-class Factura(object):
+class Facturas(object):
 
     def __init__(self, fact):
         self.factura = fact
+
+    @property
+    def tipus(self):
+        return self.__class__.__name__
+
+    @property
+    def _dades_generals(self):
+        path = 'DatosGenerales%s' % self.tipus
+        return getattr(self.factura, path)
 
     # Dades generals
     @property
     def cups(self):
         """Retornar el CUPS"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DireccionSuministro.CUPS.text
+        return self._dades_generals.DireccionSuministro.CUPS.text
 
     @property
     def get_codi(self):
@@ -59,51 +38,46 @@ class Factura(object):
     @property
     def numero_factura(self):
         """Retornar el número de factura"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.NumeroFactura.text
+        return self._dades_generals.DatosGeneralesFactura.NumeroFactura.text
 
     @property
     def tipus_factura(self):
         """Retornar el tipus de factura"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.TipoFactura.text
+        return self._dades_generals.DatosGeneralesFactura.TipoFactura.text
 
     @property
     def tipus_rectificadora(self):
         """Retornar el tipus de rectificadora"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.IndicativoFacturaRectificadora.text
+        return self._dades_generals.DatosGeneralesFactura\
+            .IndicativoFacturaRectificadora.text
 
     @property
     def factura_rectificada(self):
         """Retorna el número de factura rectificada.
         """
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.NumeroFacturaRectificada.text
+        return self._dades_generals.DatosGeneralesFactura\
+            .NumeroFacturaRectificada.text
 
     @property
     def data_factura(self):
         """Retornar el tipus de factura"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.FechaFactura.text
+        return self._dades_generals.DatosGeneralesFactura.FechaFactura.text
 
     @property
     def CIF_emisora(self):
         """Retornar el CIF"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.CIFEmisora.text
+        return self._dades_generals.DatosGeneralesFactura.CIFEmisora.text
 
     @property
     def observacions(self):
         """Retornar les observacions"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosGeneralesFactura.Observaciones.text
+        return self._dades_generals.DatosGeneralesFactura.Observaciones.text
 
     @property
     def import_total_factura(self):
         """Retornar l'import total"""
-        return float(self.factura.DatosGeneralesFacturaATR.\
-                     DatosGeneralesFactura.ImporteTotalFactura.text)
+        return float(self._dades_generals.DatosGeneralesFactura\
+            .ImporteTotalFactura.text)
 
     @property
     def import_iva(self):
@@ -118,14 +92,21 @@ class Factura(object):
     @property
     def saldo_factura(self):
         """Retornar el saldo"""
-        return float(self.factura.DatosGeneralesFacturaATR.\
-                     DatosGeneralesFactura.SaldoFactura.text)
+        return float(self._dades_generals.DatosGeneralesFactura\
+                        .SaldoFactura.text)
 
     @property
     def saldo_cobrament(self):
         """Retornar el cobrament"""
-        return float(self.factura.DatosGeneralesFacturaATR.\
-                       DatosGeneralesFactura.SaldoCobro.text)
+        return float(self._dades_generals\
+                       .DatosGeneralesFactura.SaldoCobro.text)
+
+
+class OtrasFacturas(Facturas):
+    pass
+
+
+class FacturaATR(Facturas):
 
     @property
     def tipus_facturacio(self):
@@ -656,3 +637,39 @@ class RegRefact(object):
     @property
     def data_final(self):
         return self._d_ini
+
+
+class F1(Message):
+    """Classe que implementa F1."""
+
+    tipus_factures = {
+        'FacturaATR': FacturaATR,
+        'OtrasFacturas': OtrasFacturas
+    }
+
+    @property
+    def num_factures(self):
+        nelem = {}
+        for tipus in self.tipus_factures:
+            nelem.setdefault(tipus, 0)
+            try:
+                factures = getattr(self.obj.Facturas, tipus)
+                nelem[tipus] = len(list(factures))
+            except AttributeError:
+                pass
+        return nelem
+
+    def get_factures(self):
+        fact = {}
+        for tipus in self.tipus_factures:
+            fact.setdefault(tipus, [])
+            try:
+                for ch in getattr(self.obj.Facturas, tipus):
+                    fact[tipus].append(self.tipus_factures[tipus](ch))
+            except AttributeError:
+                pass
+        return fact
+
+    @property
+    def data_limit_pagament(self):
+        return self.obj.Facturas.RegistroFin.FechaLimitePago.text
