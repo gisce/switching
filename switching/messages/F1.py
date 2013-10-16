@@ -26,6 +26,9 @@ class Facturas(object):
 
     def __init__(self, fact):
         self.factura = fact
+        self.mapa_linies_factura = {
+            'ConceptoIVA': [self.get_info_reg_refact, 'regularitzacions']
+        }
 
     @property
     def tipus(self):
@@ -112,12 +115,71 @@ class Facturas(object):
         return float(self._dades_generals\
                        .DatosGeneralesFactura.SaldoCobro.text)
 
+    def get_linies_factura(self):
+        """Retorna una llista de llistes de LiniesFactura"""
+        contingut = []
+        noms_funcio = self.mapa_linies_factura
+        for key in noms_funcio:
+            try:
+                test = list(getattr(self.factura, key))
+                if key == 'Alquileres':
+                    data = noms_funcio[key][0]()
+                    pobj = LiniesFactura(data, noms_funcio[key][1])
+                else:
+                    data, total = noms_funcio[key][0]()
+                    pobj = LiniesFactura(data, noms_funcio[key][1], total)
+                contingut.append(pobj)
+            except AttributeError:
+                pass
+        return contingut
+
+    def get_info_reg_refact(self):
+        """Línies de regularitzacio de refacturació"""
+        regul = []
+        total = 0
+        if hasattr(self.factura, 'ConceptoIVA'):
+            parcials = self.get_parcials_refacturacio()
+            for tipus, val in parcials.items():
+                # els valors de regularització venen amb signe negatiu
+                if val > 0:
+                    continue
+                regul.append(RegRefact(tipus, val,
+                                       self.data_inici, self.data_final))
+                total += val
+        return regul, total
+
 
 class OtrasFacturas(Facturas):
-    pass
+
+    def __init__(self, fact):
+        super(OtrasFacturas, self).__init__(fact)
+        self.mapa_linies_factura.update({
+            'Concepto': [self.get_info_conceptes, 'altres'],
+        })
+
+    def get_info_conceptes(self):
+        conceptes = []
+        total = 0
+        for concepte in list(self.factura.Concepto):
+            c = Concepte(concepte)
+            total += c.total
+            conceptes.append(c)
+        return conceptes, total
 
 
 class FacturaATR(Facturas):
+
+    def __init__(self, fact):
+        super(FacturaATR, self).__init__(fact)
+        self.mapa_linies_factura.update({
+            'Potencia': [self.get_info_potencia, 'potencia'],
+            'EnergiaActiva': [self.get_info_activa, 'energia'],
+            'EnergiaReactiva': [self.get_info_reactiva, 'reactiva'],
+            'Alquileres': [self.get_info_lloguers, 'lloguer'],
+            'ExcesoPotencia': [self.get_info_exces, 'exces_potencia'],
+            'Refacturaciones': [self.get_info_refacturacions,
+                                'refacturacions'],
+        })
 
     @property
     def tipus_facturacio(self):
@@ -162,34 +224,6 @@ class FacturaATR(Facturas):
         """Retornar el nombre de mesos"""
         return float(self.factura.DatosGeneralesFacturaATR.\
                     DatosFacturaATR.Periodo.NumeroMeses.text)
-
-    def get_linies_factura(self):
-        """Retorna una llista de llistes de LiniesFactura"""
-        noms_funcio = {'Potencia': [self.get_info_potencia, 'potencia'],
-                       'EnergiaActiva': [self.get_info_activa, 'energia'],
-                       'EnergiaReactiva': [self.get_info_reactiva,
-                                                                  'reactiva'],
-                       'Alquileres': [self.get_info_lloguers, 'lloguer'],
-                       'ExcesoPotencia': [self.get_info_exces,
-                                                             'exces_potencia'],
-                       'Refacturaciones': [self.get_info_refacturacions,
-                                                             'refacturacions'],
-                       'ConceptoIVA': [self.get_info_reg_refact,
-                                                           'regularitzacions']}
-        contingut = []
-        for key in noms_funcio:
-            try:
-                test = list(eval("self.factura.%s" % key))
-                if key == 'Alquileres':
-                    data = noms_funcio[key][0]()
-                    pobj = LiniesFactura(data, noms_funcio[key][1])
-                else:
-                    data, total = noms_funcio[key][0]()
-                    pobj = LiniesFactura(data, noms_funcio[key][1], total)
-                contingut.append(pobj)
-            except AttributeError:
-                pass
-        return contingut
 
     def get_info_activa(self):
         """Retornat els periodes d'energia"""
@@ -362,21 +396,6 @@ class FacturaATR(Facturas):
                 refact.append(_ref)
                 total += _ref.import_total
         return refact, total
-
-    def get_info_reg_refact(self):
-        """Línies de regularitzacio de refacturació"""
-        regul = []
-        total = 0
-        if hasattr(self.factura, 'ConceptoIVA'):
-            parcials = self.get_parcials_refacturacio()
-            for tipus, val in parcials.items():
-                # els valors de regularització venen amb signe negatiu
-                if val > 0:
-                    continue
-                regul.append(RegRefact(tipus, val,
-                                       self.data_inici, self.data_final))
-                total += val
-        return regul, total
 
     @property
     def pot_data_inici(self):
@@ -648,6 +667,32 @@ class RegRefact(object):
     @property
     def data_final(self):
         return self._d_ini
+
+
+class Concepte(object):
+    def __init__(self, concepte):
+        self.concepte = concepte
+        self.tipus = 'altres'
+
+    @property
+    def codi(self):
+        return get_rec_attr(self.concepte, 'TipoConcepto.text')
+
+    @property
+    def quantitat(self):
+        return float(get_rec_attr(self.concepte, 'UnidadesConcepto.text', 1))
+
+    @property
+    def preu(self):
+        return float(
+            get_rec_attr(self.concepte, 'ImporteUnidadConcepto.text', 0)
+        )
+
+    @property
+    def total(self):
+        return float(
+            get_rec_attr(self.concepte, 'ImporteTotalConcepto.text', 0)
+        )
 
 
 class F1(Message):
