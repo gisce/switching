@@ -11,6 +11,17 @@ from Q1 import Q1, Lectura, Comptador
 _ = gettext.gettext
 
 
+def get_rec_attr(obj, attr, default=None):
+    try:
+        res = reduce(getattr, attr.split('.'), obj)
+    except AttributeError:
+        if not default is None:
+            res = default
+        else:
+            raise
+    return res
+
+
 class Facturas(object):
 
     def __init__(self, fact):
