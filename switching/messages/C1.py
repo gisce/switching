@@ -56,13 +56,12 @@ class C1(Message):
     def activacio(self):
         """Retorna l'objecte Activacio"""
         return Activacio(self.obj.\
-                            ActivacionCambiodeComercializadoraSinCambios)
+                         ActivacionCambiodeComercializadoraSinCambios)
 
     @property
     def notificacio(self):
         """Retorna l'objecte Activacio"""
         return Notificacio(self.obj.NotificacionComercializadoraSaliente)
-    
 
     @property
     def anullacio(self):
@@ -85,7 +84,7 @@ class PuntMesura(object):
 
     def __init__(self, data):
         self.pm = data
-    
+
     @property
     def codi(self):
         codi = ''
@@ -124,7 +123,7 @@ class PuntMesura(object):
 
     @property
     def codi_principal(self):
-        """Código del punto de medida principal al que está asociado este 
+        """Código del punto de medida principal al que está asociado este
            punto de medida"""
         val = ''
         try:
@@ -296,6 +295,7 @@ class PuntMesura(object):
             for i in self.pm.ComentariosPM.ComentarioPM:
                 data.append(i.ComentarioPM.Texto.text)
         return data
+
 
 class Aparato(object):
     '''Classe que implementa els aparells de mesura'''
@@ -586,7 +586,7 @@ class Medida(object):
 
 class Notificacio(object):
     """Classe que implementa la notificació"""
-    
+
     def __init__(self, data):
         self.notificacio = data
 
@@ -608,28 +608,35 @@ class Notificacio(object):
             pass
         return contracte
 
+
 class Activacio(object):
     """Classe que implementa l'activació"""
-    
+
     def __init__(self, data):
         self.activacio = data
-    
+
     @property
     def data(self):
         data = ''
         try:
             data = self.activacio.DatosActivacion.Fecha.text
         except AttributeError:
-            pass
+            try:
+                data = self.activacio.DatosActivacionYBaja.Fecha.text
+            except AttributeError:
+                pass
         return data
-    
+
     @property
     def hora(self):
         hora = ''
         try:
             hora = self.activacio.DatosActivacion.Hora.text
         except AttributeError:
-            pass
+            try:
+                hora = self.activacio.DatosActivacionYBaja.Hora.text
+            except AttributeError:
+                pass
         return hora
 
     @property
@@ -716,6 +723,34 @@ class Sollicitud(object):
             pass
         return value
 
+    @property
+    def periodicitat_facturacio(self):
+        value = ''
+        try:
+            value = (self.sollicitud.PeriodicidadFacturacion.text)
+        except AttributeError:
+            pass
+        return value
+
+    @property
+    def cnae(self):
+        value = ''
+        try:
+            value = (self.sollicitud.CNAE.text)
+        except AttributeError:
+            pass
+        return value
+    
+    @property
+    def motiu(self):
+        value = ''
+        try:
+            value = (self.sollicitud.Motivo.text)
+        except AttributeError:
+            pass
+        return value
+
+
 class Contracte(object):
     """Classe Contracte"""
 
@@ -729,12 +764,15 @@ class Contracte(object):
         try:
             codi = self.contracte.IdContrato.CodContrato.text
         except AttributeError:
-            pass
+            try:
+                codi = self.contracte.CodContrato.text
+            except AttributeError:
+                pass
         return codi
 
     @property
     def durada(self):
-        """Retorna la durada del contracte en mesos en el cas que la 
+        """Retorna la durada del contracte en mesos en el cas que la
            durada del contracte sigui superior a 12 mesos"""
         mesos = ''
         try:
@@ -745,7 +783,7 @@ class Contracte(object):
 
     @property
     def data_finalitzacio(self):
-        """Retorna la data de finalització en el cas que la durada del 
+        """Retorna la data de finalització en el cas que la durada del
            contracte sigui inferior a 12 mesos"""
         data = ''
         try:
@@ -761,7 +799,10 @@ class Contracte(object):
         try:
             tipus = self.contracte.TipoContratoATR.text
         except AttributeError:
-            pass
+            try:
+                tipus = self.contracte.TipoContrato.text
+            except AttributeError:
+                pass
         return tipus
 
     @property
@@ -778,7 +819,8 @@ class Contracte(object):
     def direccio(self):
         direccio = False
         try:
-            direccio = Direccio(self.contracte.DireccionCorrespondencia.Direccion)
+            direccio = Direccio(self.contracte.DireccionCorrespondencia.\
+                                Direccion)
         except AttributeError:
             pass
         return direccio
@@ -797,7 +839,7 @@ class Contracte(object):
         except AttributeError:
             pass
         return consum
-   
+
     @property
     def tipus_activacio(self):
         """Retorna el tipus d'activacio"""
@@ -817,11 +859,11 @@ class Contracte(object):
         except AttributeError:
             pass
         return data
-       
- 
+
+
 class Client(object):
     """Classe Client"""
-    
+
     def __init__(self, data):
         self.client = data
 
@@ -832,14 +874,14 @@ class Client(object):
     @property
     def codi_identificacio(self):
         return self.client.IdCliente.Identificador.text
-    
+
     @property
     def nom(self):
         nom = ''
         try:
             nom = self.client.Nombre.NombreDePila.text
         except AttributeError:
-            try: 
+            try:
                 nom = self.client.Nombre.RazonSocial.text
             except AttributeError:
                 pass
@@ -918,10 +960,10 @@ class Client(object):
 
 class Acceptacio(object):
     """Classe Acceptacio"""
-    
+
     def __init__(self, data):
         self.acc = data
-    
+
     @property
     def data_acceptacio(self):
         data = ''
@@ -961,10 +1003,10 @@ class Acceptacio(object):
 
 class Condicions(object):
     """Classe Condicions"""
-    
+
     def __init__(self, data):
         self.cond = data
-    
+
     @property
     def tarifa(self):
         tarifa = ''
@@ -973,7 +1015,16 @@ class Condicions(object):
         except AttributeError:
             pass
         return tarifa
-        
+
+    @property
+    def periodicitat_facturacio(self):
+        periodicitat = ''
+        try:
+            periodicitat = self.cond.PeriodicidadFacturacion.text
+        except AttributeError:
+            pass
+        return periodicitat
+
     @property
     def potencies(self):
         pot = []
@@ -981,16 +1032,17 @@ class Condicions(object):
             pot.append((int(i.get('Periodo')), int(i.text)))
         return sorted(pot)
 
+
 class Rebuig(object):
     """Classe Rebuig"""
-    
+
     def __init__(self, data):
         self.rebuig = data
 
     @property
     def sequencial(self):
         seq = ''
-        try: 
+        try:
             seq = int(self.rebuig.Secuencial.text)
         except AttributeError:
             pass
@@ -999,7 +1051,7 @@ class Rebuig(object):
     @property
     def motiu(self):
         motiu = ''
-        try: 
+        try:
             motiu = str(int(self.rebuig.CodigoMotivo.text))
         except AttributeError:
             pass
@@ -1008,7 +1060,7 @@ class Rebuig(object):
     @property
     def descripcio(self):
         motiu = ''
-        try: 
+        try:
             motiu = self.rebuig.Texto.text
         except AttributeError:
             pass
@@ -1017,7 +1069,7 @@ class Rebuig(object):
     @property
     def data(self):
         data = ''
-        try: 
+        try:
             data = self.rebuig.Fecha.text
         except AttributeError:
             pass
@@ -1026,16 +1078,16 @@ class Rebuig(object):
     @property
     def hora(self):
         hora = ''
-        try: 
+        try:
             hora = self.rebuig.Hora.text
         except AttributeError:
             pass
         return hora
-    
+
     @property
     def contracte(self):
         contracte = ''
-        try: 
+        try:
             contracte = self.rebuig.IdContrato.CodContrato.text
         except AttributeError:
             pass
@@ -1044,7 +1096,7 @@ class Rebuig(object):
 
 class Anullacio(object):
     """Classe Anul·lació"""
-    
+
     def __init__(self, data):
         self.obj = data
 
@@ -1074,6 +1126,7 @@ class Anullacio(object):
         except AttributeError:
             pass
         return val
+
 
 class Direccio(object):
     """Classe que implementa la direccio"""
