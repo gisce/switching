@@ -1,0 +1,2 @@
+include AUTHOR COPYING README
+recursive-include *.py *.xsd
