@@ -182,6 +182,11 @@ class FacturaATR(Facturas):
         })
 
     @property
+    def contracte_distri(self):
+        """Retornar el tipus de facturacio"""
+        return self.factura.DatosGeneralesFacturaATR.Contrato.text
+
+    @property
     def tipus_facturacio(self):
         """Retornar el tipus de facturacio"""
         return self.factura.DatosGeneralesFacturaATR.\
