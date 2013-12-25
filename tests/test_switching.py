@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from switching.messages import F1, message
+from switching.input.messages import F1, message
 import unittest
 import os
 import decimal
