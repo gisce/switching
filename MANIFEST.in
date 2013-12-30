@@ -1,2 +1,3 @@
 include AUTHOR COPYING README
-recursive-include *.py *.xsd
+recursive-include switching *.py
+recursive-include switching *.xsd
