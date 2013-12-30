@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """Setup per la llibreria de Switching"""
 import os
+import shutil
 import unittest
 from distutils.command.clean import clean as _clean
-from distutils.core import setup, Command
+from distutils.core import Command
+from setuptools import setup, find_packages
 
 from switching import __version__
 
-PACKAGES = ['switching', 'switching.messages', 'switching.types']
 PACKAGES_DATA = {'switching': ['data/*.xsd']}
 
 
@@ -49,7 +50,7 @@ setup(name='switching',
       long_description='''Long description''',
       provides=['switching'],
       install_requires=['lxml', 'libfacturacioatr'],
-      packages=PACKAGES,  
+      packages=find_packages(),
       package_data=PACKAGES_DATA,
       scripts=[],
       cmdclass={'clean': Clean, 'test': Test})
