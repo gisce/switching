@@ -6,8 +6,8 @@
 import re
 
 from libcomxml.core import XmlModel, XmlField
-import libcomxml.messages.mesures as m
-from libcomxml.messages.switching import Cabecera, Cliente
+import switching.output.messages.mesures as m
+from switching.output.messages.base import Cabecera, Cliente
 
 
 class DatosGeneralesFactura(XmlModel):

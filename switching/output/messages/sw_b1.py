@@ -2,7 +2,7 @@
 
 from libcomxml.core import XmlModel, XmlField
 
-from libcomxml.messages.switching import Cabecera
+from switching.output.messages.base import Cabecera
 from sw_c1 import DatosSolicitud, Cliente, Contrato, DireccionCorrespondencia
 from sw_c1 import IdContrato, DatosAceptacion, DatosActivacion, PuntosDeMedida
 from sw_c2 import Comentarios, RegistrosDocumento
