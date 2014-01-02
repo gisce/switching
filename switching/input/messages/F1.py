@@ -244,8 +244,8 @@ class FacturaATR(Facturas):
                 d_fi = ea.FechaHasta.text
                 p = 0
                 for i in ea.Periodo:
-                    p += 1
                     if float(i.PrecioEnergia.text):
+                        p += 1
                         nom_p = 'P%d' % p
                         val = float(i.ValorEnergiaActiva.text)
                         if val in lect_activa.values():
@@ -334,8 +334,8 @@ class FacturaATR(Facturas):
                 d_fi = pot.FechaHasta.text
                 p = 0
                 for i in pot.Periodo:
-                    p += 1
                     if float(i.PrecioPotencia.text):
+                        p += 1
                         periode.append(PeriodePotencia(i, 'P%d' % p,
                                                             d_ini, d_fi))
             total = float(self.factura.Potencia.
@@ -351,8 +351,8 @@ class FacturaATR(Facturas):
         p = 0
         try:
             for i in self.factura.ExcesoPotencia.Periodo:
-                p += 1
                 if float(i.ValorExcesoPotencia.text):
+                    p += 1
                     periode.append(PeriodeExces(i, 'P%d' % p,
                                                 self.data_inici,
                                                 self.data_final))
