@@ -315,12 +315,25 @@ class FacturaATR(Facturas):
             for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
                 d_ini = er.FechaDesde.text
                 d_fi = er.FechaHasta.text
-                for pos, i in enumerate(er.Periodo):
-                    if pos >= len(nom_periodes_uniq):
-                        continue
-                    pr = PeriodeReactiva(i, nom_periodes_uniq[pos],
-                                                                d_ini, d_fi)
-                    periode.append(pr)
+                done = []
+                for tp_er in er.Periodo:
+                    # Per ordre intentem buscar els que casen segons
+                    # el valor d'energia reactiva facturada
+                    for p_name in nom_periodes_uniq:
+                        value = nom_periodes[p_name]
+                        if p_name in done:
+                            continue
+                        # Busquem amb un llindar de +/- 1 ja que hi ha empreses
+                        # que arrodoneixen cap a munt i altres agafen només
+                        # la part entera.
+                        if value - 1 <= tp_er.ValorEnergiaReactiva <= value + 1:
+                            pr = PeriodeReactiva(tp_er, p_name, d_ini, d_fi)
+                            periode.append(pr)
+                            done.append(p_name)
+                # Ens assegurem que hem detectat tots els periodes que s'havien
+                # de facturar
+                assert set(done) == set(nom_periodes_uniq)
+
             total = float(self.factura.EnergiaReactiva.\
                              ImporteTotalEnergiaReactiva.text)
         except AttributeError:
