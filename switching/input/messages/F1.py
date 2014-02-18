@@ -276,7 +276,7 @@ class FacturaATR(Facturas):
             lect_reactiva = tarifes.aggr_consums(lect_reactiva)
         periodes = lect_reactiva.keys()
         periodes.sort()
-        calc = []
+        calc = {}
         marge = INFO_TARIFA[self.codi_tarifa]['marge']
         try:
             for i in periodes:
@@ -284,8 +284,10 @@ class FacturaATR(Facturas):
                 reactiva = lect_reactiva[i]
                 val = float("%.2f" %
                                 tarifes.exces_reactiva(activa, reactiva, marge))
-                if val > 0:
-                    calc.append(i)
+                # Comprovem que hi ha accés de reactiva i que el període en
+                # el que estem es pot facturar la reactiva
+                if val > 0 and i in INFO_TARIFA[self.codi_tarifa]['reactiva']:
+                    calc[i] = val
             return calc
         except KeyError, e:
             msg = _('No s\'ha trobat el periode \'%s\' en les lectures '\
@@ -302,9 +304,10 @@ class FacturaATR(Facturas):
             lectures = i.get_lectures()
             nom_periodes = self.get_periodes_reactiva(lectures)
             if nom_periodes_uniq:
-                nom_periodes_uniq = list(set(nom_periodes_uniq + nom_periodes))
+                nom_periodes_uniq = list(set(nom_periodes_uniq
+                                             + nom_periodes.keys()))
             else:
-                nom_periodes_uniq = list(nom_periodes)
+                nom_periodes_uniq = list(nom_periodes.keys())
         nom_periodes_uniq.sort()
         if not nom_periodes_uniq:
             return None, None
@@ -312,12 +315,25 @@ class FacturaATR(Facturas):
             for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
                 d_ini = er.FechaDesde.text
                 d_fi = er.FechaHasta.text
-                for pos, i in enumerate(er.Periodo):
-                    if pos >= len(nom_periodes_uniq):
-                        continue
-                    pr = PeriodeReactiva(i, nom_periodes_uniq[pos],
-                                                                d_ini, d_fi)
-                    periode.append(pr)
+                done = []
+                for tp_er in er.Periodo:
+                    # Per ordre intentem buscar els que casen segons
+                    # el valor d'energia reactiva facturada
+                    for p_name in nom_periodes_uniq:
+                        value = nom_periodes[p_name]
+                        if p_name in done:
+                            continue
+                        # Busquem amb un llindar de +/- 1 ja que hi ha empreses
+                        # que arrodoneixen cap a munt i altres agafen només
+                        # la part entera.
+                        if value - 1 <= tp_er.ValorEnergiaReactiva <= value + 1:
+                            pr = PeriodeReactiva(tp_er, p_name, d_ini, d_fi)
+                            periode.append(pr)
+                            done.append(p_name)
+                # Ens assegurem que hem detectat tots els periodes que s'havien
+                # de facturar
+                assert set(done) == set(nom_periodes_uniq)
+
             total = float(self.factura.EnergiaReactiva.\
                              ImporteTotalEnergiaReactiva.text)
         except AttributeError:
