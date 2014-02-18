@@ -276,7 +276,7 @@ class FacturaATR(Facturas):
             lect_reactiva = tarifes.aggr_consums(lect_reactiva)
         periodes = lect_reactiva.keys()
         periodes.sort()
-        calc = []
+        calc = {}
         marge = INFO_TARIFA[self.codi_tarifa]['marge']
         try:
             for i in periodes:
@@ -284,8 +284,10 @@ class FacturaATR(Facturas):
                 reactiva = lect_reactiva[i]
                 val = float("%.2f" %
                                 tarifes.exces_reactiva(activa, reactiva, marge))
-                if val > 0:
-                    calc.append(i)
+                # Comprovem que hi ha accés de reactiva i que el període en
+                # el que estem es pot facturar la reactiva
+                if val > 0 and i in INFO_TARIFA[self.codi_tarifa]['reactiva']:
+                    calc[i] = val
             return calc
         except KeyError, e:
             msg = _('No s\'ha trobat el periode \'%s\' en les lectures '\
