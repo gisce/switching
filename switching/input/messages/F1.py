@@ -304,9 +304,10 @@ class FacturaATR(Facturas):
             lectures = i.get_lectures()
             nom_periodes = self.get_periodes_reactiva(lectures)
             if nom_periodes_uniq:
-                nom_periodes_uniq = list(set(nom_periodes_uniq + nom_periodes))
+                nom_periodes_uniq = list(set(nom_periodes_uniq
+                                             + nom_periodes.keys()))
             else:
-                nom_periodes_uniq = list(nom_periodes)
+                nom_periodes_uniq = list(nom_periodes.keys())
         nom_periodes_uniq.sort()
         if not nom_periodes_uniq:
             return None, None
