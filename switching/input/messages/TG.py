@@ -85,7 +85,7 @@ class Values(object):
     def get_S02(self):
         '''get function for S02 type values'''
         meter_name = self.meter.name
-        magn = self.meter.multiplier
+        magn = int(self.meter.multiplier)
         ret_values = []
         for value in self.meter.meter.S02:
             timestamp = self.get_timestamp(value, 'Fh')
@@ -93,12 +93,13 @@ class Values(object):
                                'timestamp': timestamp, 
                                'season':value.get('Fh')[-1:],
                                'magn': magn,
-                               'ai': value.get('AI'),
-                               'ae': value.get('AE'),
-                               'r1': value.get('R1'),
-                               'r2': value.get('R2'),
-                               'r3': value.get('R3'),
-                               'r4': value.get('R4'),
+                               'ai': float(value.get('AI')),
+                               'ae': float(value.get('AE')),
+                               'r1': float(value.get('R1')),
+                               'r2': float(value.get('R2')),
+                               'r3': float(value.get('R3')),
+                               'r4': float(value.get('R4')),
+                               'bc': value.get('Bc')
                                })
 
         return ret_values
