@@ -326,7 +326,9 @@ class FacturaATR(Facturas):
                         # Busquem amb un llindar de +/- 1 ja que hi ha empreses
                         # que arrodoneixen cap a munt i altres agafen només
                         # la part entera.
-                        if value - 1 <= tp_er.ValorEnergiaReactiva <= value + 1:
+                        if (value - 1
+                                <= float(tp_er.ValorEnergiaReactiva.pyval)
+                                    <= value + 1):
                             pr = PeriodeReactiva(tp_er, p_name, d_ini, d_fi)
                             periode.append(pr)
                             done.append(p_name)
