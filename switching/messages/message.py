@@ -179,8 +179,8 @@ class Message(MessageBase):
         parser = objectify.makeparser(schema=schema)
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)
-        except:
-            raise except_f1('Error', _('Document invàlid'))
+        except Exception, e:
+            raise except_f1('Error', _('Document invàlid: %s') % e)
 
     # Funcions relacionades amb la capçalera del XML
     @property
