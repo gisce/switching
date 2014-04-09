@@ -50,7 +50,7 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
                    '11': 'AceptacionCambiodeComercializadoraConCambios.xsd',
                    '12': 'AceptacionCambiodeComercializadoraConCambios.xsd',
                    },
-            'D1': {'05': 'NotificacionCambiosATRDesdeDistribuidor.xsd'
+            'D1': {'01': 'NotificacionCambiosATRDesdeDistribuidor.xsd'
                    },
             'M1': {'01': 'ModificacionDeATR.xsd',
                    '02': ('AceptacionModificacionDeATR.xsd',
