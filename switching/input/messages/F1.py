@@ -7,6 +7,7 @@ from message import Message, except_f1
 from libfacturacioatr import tarifes
 
 from Q1 import Q1, Lectura, Comptador
+from switching.helpers.funcions import CODIS_REG_REFACT
 
 _ = gettext.gettext
 
@@ -27,7 +28,7 @@ class Facturas(object):
     def __init__(self, fact):
         self.factura = fact
         self.mapa_linies_factura = {
-            'ConceptoIVA': [self.get_info_reg_refact, 'regularitzacions']
+            'ConceptoIVA': [self.get_info_conceptes_iva, 'altres']
         }
 
     @property
@@ -133,20 +134,21 @@ class Facturas(object):
                 pass
         return contingut
 
-    def get_info_reg_refact(self):
-        """Línies de regularitzacio de refacturació"""
-        regul = []
+    def get_info_conceptes_iva(self):
+        conceptes = []
         total = 0
-        if hasattr(self.factura, 'ConceptoIVA'):
-            parcials = self.get_parcials_refacturacio()
-            for tipus, val in parcials.items():
-                # els valors de regularització venen amb signe negatiu
-                if val > 0:
-                    continue
-                regul.append(RegRefact(tipus, val,
-                                       self.data_inici, self.data_final))
-                total += val
-        return regul, total
+        for concepte in list(self.factura.ConceptoIVA):
+            c = ConcepteIVA(concepte)
+            # Si és una regularització refacturació 40, 41 i 42 el valor
+            # només pot ser negatiu.
+            # Es comprova ja que hi ha empreses que envien la refacturació
+            # i també el ConceptoIVA i s'importaria dues vegades.
+            if c.codi in CODIS_REG_REFACT.values() and c.total >= 0:
+                continue
+            elif c.total:
+                total += c.total
+                conceptes.append(c)
+        return conceptes, total
 
 
 class OtrasFacturas(Facturas):
@@ -690,6 +692,25 @@ class RegRefact(object):
     @property
     def data_final(self):
         return self._d_ini
+
+
+class ConcepteIVA(object):
+    def __init__(self, concepte_iva):
+        self.concepte_iva = concepte_iva
+        self.tipus = 'altres'
+        self.quantitat = 1
+        self.total = self.preu
+
+    @property
+    def codi(self):
+        return get_rec_attr(self.concepte_iva, 'Concepto.text')
+
+    @property
+    def preu(self):
+        return float(
+            get_rec_attr(self.concepte_iva, 'ImporteConceptoIVA.text', 0)
+        )
+
 
 
 class Concepte(object):
