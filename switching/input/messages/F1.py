@@ -240,6 +240,7 @@ class FacturaATR(Facturas):
         for i in self.get_comptadors():
             lectures.extend(i.get_lectures())
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
+        lect_activa = tarifes.aggr_consums(lect_activa)
         try:
             for ea in self.factura.EnergiaActiva.TerminoEnergiaActiva:
                 d_ini = ea.FechaDesde.text
@@ -256,6 +257,8 @@ class FacturaATR(Facturas):
                             if len(per) == 1:
                                 nom_p = per[0]
                         periode.append(PeriodeActiva(i, nom_p, d_ini, d_fi))
+                        if nom_p in lect_activa:
+                            del lect_activa[nom_p]
             total = float(self.factura.EnergiaActiva.
                                             ImporteTotalEnergiaActiva.text)
         except AttributeError:
@@ -296,14 +299,50 @@ class FacturaATR(Facturas):
                     ' d\'activa') % e[0]
             raise except_f1('Error', msg)
 
+    def find_terme_periode_reactiva(self, reactiva_dict, done_list,
+                                    aprox=0):
+        periodes = []
+        for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
+            d_ini = er.FechaDesde.text
+            d_fi = er.FechaHasta.text
+            for tp_er in er.Periodo:
+                # Per ordre intentem buscar els que casen segons
+                # el valor d'energia reactiva facturada
+                for p_name in reactiva_dict:
+                    value = reactiva_dict[p_name]
+                    if p_name in done_list:
+                        continue
+                    # Busquem amb un llindar de +/- 1 ja que hi ha empreses
+                    # que arrodoneixen cap a munt i altres agafen només
+                    # la part entera.
+                    if (value - aprox
+                            <= float(tp_er.ValorEnergiaReactiva.pyval)
+                                <= value + aprox):
+                        pr = PeriodeReactiva(tp_er, p_name, d_ini, d_fi)
+                        done_list.append(p_name)
+                        periodes.append(pr)
+        return periodes
+
+
     def get_info_reactiva(self):
         """Retorna els periodes de reactiva"""
         comptadors = self.get_comptadors()
         total = 0
-        periode = []
+        periodes = []
         nom_periodes_uniq = []
+        done = []
+        consums = {}
         for i in comptadors:
             lectures = i.get_lectures()
+            # Fem un diccionari pels consums ja que UNION FENOSA no posene
+            # l'excés de reactiva en el valor del terme sino que hi posen
+            # el consum. Per detectar quin període és primer ho fem segons
+            # l'excés i si no el troba ho buscarem pel consum
+            consums_no_agg = self.select_consum_from_lectures(lectures, 'R')
+            for p, c in tarifes.aggr_consums(consums_no_agg).items():
+                consums.setdefault(p, 0)
+                consums[p] += c
+
             nom_periodes = self.get_periodes_reactiva(lectures)
             if nom_periodes_uniq:
                 nom_periodes_uniq = list(set(nom_periodes_uniq
@@ -314,35 +353,30 @@ class FacturaATR(Facturas):
         if not nom_periodes_uniq:
             return None, None
         try:
-            for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
-                d_ini = er.FechaDesde.text
-                d_fi = er.FechaHasta.text
-                done = []
-                for tp_er in er.Periodo:
-                    # Per ordre intentem buscar els que casen segons
-                    # el valor d'energia reactiva facturada
-                    for p_name in nom_periodes_uniq:
-                        value = nom_periodes[p_name]
-                        if p_name in done:
-                            continue
-                        # Busquem amb un llindar de +/- 1 ja que hi ha empreses
-                        # que arrodoneixen cap a munt i altres agafen només
-                        # la part entera.
-                        if (value - 1
-                                <= float(tp_er.ValorEnergiaReactiva.pyval)
-                                    <= value + 1):
-                            pr = PeriodeReactiva(tp_er, p_name, d_ini, d_fi)
-                            periode.append(pr)
-                            done.append(p_name)
-                # Ens assegurem que hem detectat tots els periodes que s'havien
-                # de facturar
-                assert set(done) == set(nom_periodes_uniq)
+            # Primer busquem per exces de reactiva
+            periodes += self.find_terme_periode_reactiva(nom_periodes, done, 1)
+            # Eliminem tots els períodes que ja hem identificat del diccionari
+            # de consums
+            for p in set(done):
+                if p in consums:
+                    del consums[p]
+            if consums:
+                for p in consums.keys():
+                    if p not in INFO_TARIFA[self.codi_tarifa]['reactiva']:
+                        del consums[p]
+                periodes += self.find_terme_periode_reactiva(consums, done, 0)
+                falten = sorted(set(consums.keys()) - set(done))
+                if falten:
+                    raise Exception(
+                        _("No s'ha pogut identificar tots els períodes de "
+                          "reactiva per facturar: %s") % ', '.join(falten)
+                    )
 
             total = float(self.factura.EnergiaReactiva.\
                              ImporteTotalEnergiaReactiva.text)
         except AttributeError:
             pass
-        return periode, total
+        return periodes, total
 
     def get_info_potencia(self):
         """Retorna els periodes de potència"""
