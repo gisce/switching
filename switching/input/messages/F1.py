@@ -240,6 +240,7 @@ class FacturaATR(Facturas):
         for i in self.get_comptadors():
             lectures.extend(i.get_lectures())
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
+        lect_activa = tarifes.aggr_consums(lect_activa)
         try:
             for ea in self.factura.EnergiaActiva.TerminoEnergiaActiva:
                 d_ini = ea.FechaDesde.text
@@ -256,6 +257,8 @@ class FacturaATR(Facturas):
                             if len(per) == 1:
                                 nom_p = per[0]
                         periode.append(PeriodeActiva(i, nom_p, d_ini, d_fi))
+                        if nom_p in lect_activa:
+                            del lect_activa[nom_p]
             total = float(self.factura.EnergiaActiva.
                                             ImporteTotalEnergiaActiva.text)
         except AttributeError:
