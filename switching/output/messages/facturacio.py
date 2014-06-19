@@ -258,13 +258,14 @@ class ConceptoIEIVA(XmlModel):
 
 
 class ConceptoIVA(XmlModel):
-    _sort_order = ('conceptoiva', 'concepto', 'importe')
+    _sort_order = ('conceptoiva', 'concepto', 'importe', 'observaciones')
 
     def __init__(self):
         self.conceptoiva = XmlField('ConceptoIVA')
         self.concepto = XmlField('Concepto')
         self.importe = XmlField('ImporteConceptoIVA',
                                  rep=lambda x: '%.4f' % x)
+        self.observaciones = XmlField('Observaciones')
         super(ConceptoIVA, self).__init__('ConceptoIVA', 'conceptoiva')
 
 
