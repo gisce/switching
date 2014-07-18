@@ -1032,6 +1032,15 @@ class Condicions(object):
             pot.append((int(i.get('Periodo')), int(i.text)))
         return sorted(pot)
 
+    @property
+    def control_potencia(self):
+        control_potencia = ''
+        try:
+            control_potencia = self.cond.ModoControlPotencia.text
+        except AttributeError:
+            pass
+        return control_potencia
+
 
 class Rebuig(object):
     """Classe Rebuig"""
