@@ -323,6 +323,17 @@ class FacturaATR(Facturas):
                         periodes.append(pr)
         return periodes
 
+    def find_unic_terme_periode_reactiva(self, reactiva_dict):
+        periodes = []
+        for er in self.factura.EnergiaReactiva.TerminoEnergiaReactiva:
+            d_ini = er.FechaDesde.text
+            d_fi = er.FechaHasta.text
+            for tp_er in er.Periodo:
+                p_name = reactiva_dict.keys()[0]
+                pr = PeriodeReactiva(tp_er, p_name, d_ini, d_fi)
+                if not periodes or pr.quantitat > periodes[0].quantitat:
+                    periodes = [pr]
+        return periodes
 
     def get_info_reactiva(self):
         """Retorna els periodes de reactiva"""
@@ -365,12 +376,22 @@ class FacturaATR(Facturas):
                     if p not in INFO_TARIFA[self.codi_tarifa]['reactiva']:
                         del consums[p]
                 periodes += self.find_terme_periode_reactiva(consums, done, 0)
+                # treiem els periodes que no tenen excés de reactiva
+                for p in consums.keys():
+                    if p not in nom_periodes_uniq:
+                        del consums[p]
                 falten = sorted(set(consums.keys()) - set(done))
                 if falten:
-                    raise Exception(
-                        _("No s'ha pogut identificar tots els períodes de "
-                          "reactiva per facturar: %s") % ', '.join(falten)
-                    )
+                    # Si només tenim un període de reactiva i no l'hem trobat,
+                    # agafem el que tingui més "consum"
+                    if len(INFO_TARIFA[self.codi_tarifa]['reactiva']) == 1:
+                        peri = self.find_unic_terme_periode_reactiva(consums)
+                        periodes += peri
+                    if not periodes:
+                        raise Exception(
+                            _("No s'ha pogut identificar tots els períodes de "
+                              "reactiva per facturar: %s") % ', '.join(falten)
+                             )
 
             total = float(self.factura.EnergiaReactiva.\
                              ImporteTotalEnergiaReactiva.text)
