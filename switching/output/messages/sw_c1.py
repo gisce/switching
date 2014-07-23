@@ -108,10 +108,20 @@ class CondicionesContractuales(XmlModel):
                              __init__('CondicionesContractuales', 'condicions')
 
 
+class Contacto(XmlModel):
+    _sort_order = ('nombre', 'telefon')
+
+    def __init__(self):
+        self.contacte = XmlField('Contacto')
+        self.nombre = Nombre()
+        self.telefon = Telefono()
+        super(Contacto, self).__init__('Contacto', 'contacte')
+
+
 class Contrato(XmlModel):
     _sort_order = ('contrato', 'idcontrato', 'duracion', 'fechafin',
                    'tipo', 'condiciones', 'direccion', 'consumoanual',
-                   'tipoactivacion', 'fechaactivacion')
+                   'contacto', 'tipoactivacion', 'fechaactivacion',)
 
     def __init__(self, tag_tipo='TipoContratoATR'):
         self.contrato = XmlField('Contrato')
@@ -124,6 +134,7 @@ class Contrato(XmlModel):
         self.tipoactivacion = XmlField('TipoActivacionPrevista')
         self.fechaactivacion = XmlField('FechaActivacionPrevista')
         self.condiciones = CondicionesContractuales()
+        self.contacto = Contacto()
         super(Contrato, self).__init__('Contrato', 'contrato')
 
 
