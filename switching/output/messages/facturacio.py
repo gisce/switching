@@ -374,7 +374,7 @@ class OtrasFacturas(XmlModel):
         self.datosotras = DatosGeneralesOtrasFacturas()
         self.concepto = Concepto()
         self.iva = IVA()
-        self.conceptoieiva = EnergiaActiva()
+        self.ivaigicreducido = IVAIGICReducido()
         super(OtrasFacturas, self).__init__('OtrasFacturas', 'otrasfacturas')
 
 
