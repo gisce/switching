@@ -303,13 +303,12 @@ class Concepto(XmlModel):
 
     def __init__(self):
         self.concepto = XmlField('Concepto')
-        self.tipoconcepto = XmlField('Tipo Concepto')
-        self.unidadesconcepto = XmlField('Unidades Concepto')
-        self.importeunidadconcept = XmlField('Importe Unidad Concepto',
+        self.tipoconcepto = XmlField('TipoConcepto')
+        self.unidadesconcepto = XmlField('UnidadesConcepto')
+        self.importeunidadconcept = XmlField('ImporteUnidadConcepto',
                                              rep=lambda x: '%.4f' % x)
-        self.importetotalconcept = XmlField('Importe Total Concepto',
+        self.importetotalconcept = XmlField('ImporteTotalConcepto',
                                             rep=lambda x: '%.4f' % x)
-        self.observaciones = XmlField('Observaciones')
         super(Concepto, self).__init__('Concepto', 'concepto')
 
 
