@@ -303,6 +303,7 @@ class Concepto(XmlModel):
 
     def __init__(self):
         self.concepto = XmlField('Concepto')
+        self.tipoconcepto = XmlField('Tipo Concepto')
         self.unidadesconcepto = XmlField('Unidades Concepto')
         self.importeunidadconcept = XmlField('Importe Unidad Concepto',
                                              rep=lambda x: '%.4f' % x)
