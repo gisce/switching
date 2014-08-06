@@ -21,6 +21,8 @@
 -Se añade una ocurrencia al campo IVAIGICreducido
 			2012.07.18
 -Se añade una ocurrencia al campo IVA
+			Version X.X OCSUM 2014.05.22
+-Se modifican los campos para que la cuenta bancaria sea un sólo campo llamado IBAN tipo X34
 
 		</xs:documentation>
 	</xs:annotation>
@@ -805,7 +807,7 @@
 								<xs:documentation>Fecha teorica de pago </xs:documentation>
 							</xs:annotation>
 						</xs:element>
-						<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+						<xs:element name="IBAN" type="X34" minOccurs="0"/>
 						<xs:element name="IdRemesa">
 							<xs:annotation>
 								<xs:documentation>identificacion remesa o agrupación</xs:documentation>

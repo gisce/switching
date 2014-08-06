@@ -23,7 +23,8 @@
 -Se crea el tipo de dato "Periodicidad", hace refencia al paso 1 y 5 del Proceso M1 y al paso 5 de los procesos A3, C1 y C2.
 -Se incluyen los motivos de rechazo 66, 67, 68, 69 y 70 en el tipo de dato CodigoMotivoRechazo.
 -Se modifican los valores del tipo de dato sencillo "TipoContrato", el descriptor del valor 02 pasa de ser "Eventual" a ser "Eventual medido" y se eliminan los valores 04 y 06.
-
+      Version X.X
+-Se incluye el campo X34 para poder utilizar el nuevo campo IBAN de cuentas bancarias de 34 caracteres alfanuméricos
 		</xs:documentation>
 	</xs:annotation>
 	<xs:simpleType name="Decimal1">
@@ -227,6 +228,12 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
 			<xs:maxLength value="32"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="X34">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="34"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="X35">

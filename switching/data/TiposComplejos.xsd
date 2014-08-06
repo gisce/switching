@@ -19,6 +19,8 @@
 			Version 3.0 OCSUM 2013.04.26 (RD 1718/2013)
 				Se incluye el tipo de dato complejo "NotificacionCambiosATRDesdeDistribuidor" compuesto por un tipo nuevo sencillo, hace referencia al Proceso D.
 				Se incluye el elemento opcional PeriodicidadFacturacion en el tipo complejo "CondicionesContractualesC", hace referencia al paso 5 del Proceso M1, A3, C1, C2.
+			Version X.X OCSUM 2014.04.01
+			  Se modifican los nodos que contienen CuentaBancaria para que en su lugar contengan IBAN que es un tiposimple X34
 		</xs:documentation>
 	</xs:annotation>
 	<xs:complexType name="IdContrato">
@@ -46,7 +48,7 @@
 			</xs:choice>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+			<xs:element name="IBAN" type="X34" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ContratoPasoMRAMLTarifa2ConCambios">
@@ -60,7 +62,7 @@
 			<xs:element name="CondicionesContractuales2n" type="CondicionesContractuales2n"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+			<xs:element name="IBAN" type="X34" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Direccion">
@@ -305,7 +307,7 @@
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+			<xs:element name="IBAN" type="X34" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ContratoConModificacion">
@@ -320,7 +322,7 @@
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+			<xs:element name="IBAN" type="X34" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!-- del tipo C -->
