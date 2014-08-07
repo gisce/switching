@@ -23,7 +23,7 @@
 -Se añade una ocurrencia al campo IVA
 			Version X.X OCSUM 2014.05.22
 -Se modifican los campos para que la cuenta bancaria sea un sólo campo llamado IBAN tipo X34
-
+-GISCE: Es fa un choice entre IBAN i CuentaBancaria 
 		</xs:documentation>
 	</xs:annotation>
 	<xs:element name="MensajeFacturacion">
@@ -807,7 +807,10 @@
 								<xs:documentation>Fecha teorica de pago </xs:documentation>
 							</xs:annotation>
 						</xs:element>
-						<xs:element name="IBAN" type="X34" minOccurs="0"/>
+						<xs:choice minOccurs="0">
+							<xs:element name="IBAN" type="X34"/>
+							<xs:element name="CuentaBancaria" type="CuentaBancaria"/>
+						</xs:choice>
 						<xs:element name="IdRemesa">
 							<xs:annotation>
 								<xs:documentation>identificacion remesa o agrupación</xs:documentation>
