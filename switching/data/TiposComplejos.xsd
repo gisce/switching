@@ -21,6 +21,8 @@
 				Se incluye el elemento opcional PeriodicidadFacturacion en el tipo complejo "CondicionesContractualesC", hace referencia al paso 5 del Proceso M1, A3, C1, C2.
 			Version X.X OCSUM 2014.04.01
 			  Se modifican los nodos que contienen CuentaBancaria para que en su lugar contengan IBAN que es un tiposimple X34
+			Version X.X GISCE 2014.08.07
+                          S'afegeix un altre cop CuentaBancaria amb un choice amb IBAN
 		</xs:documentation>
 	</xs:annotation>
 	<xs:complexType name="IdContrato">
@@ -48,7 +50,10 @@
 			</xs:choice>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="IBAN" type="X34" minOccurs="0"/>
+			<xs:choice minOccurs="0">
+				<xs:element name="IBAN" type="X34"/>
+				<xs:element name="CuentaBancaria" type="CuentaBancaria"/>
+			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ContratoPasoMRAMLTarifa2ConCambios">
@@ -62,7 +67,10 @@
 			<xs:element name="CondicionesContractuales2n" type="CondicionesContractuales2n"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="IBAN" type="X34" minOccurs="0"/>
+			<xs:choice minOccurs="0">
+				<xs:element name="IBAN" type="X34"/>
+				<xs:element name="CuentaBancaria" type="CuentaBancaria"/>
+			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Direccion">
@@ -307,7 +315,10 @@
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="IBAN" type="X34" minOccurs="0"/>
+			<xs:choice minOccurs="0">
+				<xs:element name="IBAN" type="X34"/>
+				<xs:element name="CuentaBancaria" type="CuentaBancaria"/>
+			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ContratoConModificacion">
@@ -322,7 +333,10 @@
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
 			<xs:element name="Contacto" type="Contacto" minOccurs="0"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="IBAN" type="X34" minOccurs="0"/>
+			<xs:choice minOccurs="0">
+				<xs:element name="IBAN" type="X34"/>
+				<xs:element name="CuentaBancaria" type="CuentaBancaria"/>
+			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
 	<!-- del tipo C -->

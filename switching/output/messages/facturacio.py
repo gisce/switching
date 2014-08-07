@@ -308,9 +308,22 @@ class FacturaATR(XmlModel):
         super(FacturaATR, self).__init__('FacturaATR', 'factura')
 
 
+class CuentaBancaria(XmlModel):
+    _sort_order = ('ccc', 'banco', 'sucursal', 'digcontrol', 'cuenta')
+
+    def __init__(self):
+        self.ccc = XmlField('CuentaBancaria')
+        self.banco = XmlField('Banco')
+        self.sucursal = XmlField('Sucursal')
+        self.digcontrol = XmlField('DC')
+        self.cuenta = XmlField('Cuenta')
+        super(CuentaBancaria, self).__init__('CuentaBancaria', 'ccc')
+
+
 class RegistroFin(XmlModel):
     _sort_order = ('registro', 'importe', 'sfacturacion', 'scobro', 'totalrec',
-                   'tipomoneda', 'fvalor', 'flimite', 'iban', 'idremesa')
+                   'tipomoneda', 'fvalor', 'flimite', 'ccc', 'iban',
+                   'idremesa')
 
     def __init__(self):
         self.registro = XmlField('RegistroFin')
@@ -322,6 +335,7 @@ class RegistroFin(XmlModel):
         self.tipomoneda = XmlField('TipoMoneda')
         self.fvalor = XmlField('FechaValor')
         self.flimite = XmlField('FechaLimitePago')
+        self.ccc = CuentaBancaria()
         self.iban = XmlField('IBAN')
         self.idremesa = XmlField('IdRemesa')
         super(RegistroFin, self).__init__('RegistroFin', 'registro')

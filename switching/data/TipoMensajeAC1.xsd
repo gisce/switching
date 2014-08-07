@@ -4,6 +4,10 @@
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<!--
 		Version 0.0 OCSUM 2011.01.31
+	  Version X.X OCSUM 2014.04.01
+-Se modifican los campos para que la cuenta bancaria sea un sólo campo llamado IBAN tipo X34
+		Version X.X GISCE 2014.08.07
+-S'afegeix un altre cop CuentaBancaria amb un choice amb IBAN
 	-->
 	<xs:complexType name="CambiodeComercializadoraSinCambiosAC1">
 		<xs:sequence>
@@ -37,7 +41,10 @@
 			</xs:choice>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
 			<xs:element name="DireccionCorrespondencia" type="DireccionCorrespondencia"/>
-			<xs:element name="CuentaBancaria" type="CuentaBancaria" minOccurs="0"/>
+			<xs:choice minOccurs="0">
+				<xs:element name="IBAN" type="X34"/>
+				<xs:element name="CuentaBancaria" type="CuentaBancaria"/>
+			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
