@@ -97,7 +97,7 @@ class DatosGeneralesOtrasFacturas(XmlModel):
         self.contrato = XmlField('Contrato',
                                  rep=lambda x: re.sub('[^0-9]', '', x))
         self.datosgrles = DatosGeneralesFactura()
-        self.linea = XmlField('Linea Negocio')
+        self.linea = XmlField('LineaNegocio')
         super(DatosGeneralesOtrasFacturas,
               self).__init__('DatosGeneralesOtrasFacturas', 'datosotras')
 
@@ -365,15 +365,15 @@ class FacturaConcepto(XmlModel):
 
 
 class OtrasFacturas(XmlModel):
-    _sort_order = ('otrasfacturas', 'datpsptras', 'concepto', 'iva',
-                   'conceptoieiva')
+    _sort_order = ('otrasfacturas', 'datosotras', 'concepto', 'iva',
+                   'ivaigic')
 
     def __init__(self):
         self.otrasfacturas = XmlField('OtrasFacturas')
         self.datosotras = DatosGeneralesOtrasFacturas()
         self.concepto = Concepto()
         self.iva = IVA()
-        self.ivaigicreducido = IVAIGICReducido()
+        self.ivaigic = IVAIGICReducido()
         super(OtrasFacturas, self).__init__('OtrasFacturas', 'otrasfacturas')
 
 
