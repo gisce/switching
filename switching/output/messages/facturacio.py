@@ -91,7 +91,7 @@ class DatosGeneralesOtrasFacturas(XmlModel):
                    'datosgrles', 'linea')
 
     def __init__(self):
-        self.datosotras = XmlField('DatosGeneralesOtrasFactura')
+        self.datosotras = XmlField('DatosGeneralesOtrasFacturas')
         self.direccion = DireccionSuministro()
         self.cliente = Cliente()
         self.contrato = XmlField('Contrato',
