@@ -85,6 +85,23 @@ class DatosGeneralesFacturaATR(XmlModel):
         super(DatosGeneralesFacturaATR,
               self).__init__('DatosGeneralesFacturaATR', 'datos')
 
+
+class DatosGeneralesOtrasFacturas(XmlModel):
+    _sort_order = ('datosotras', 'direccion', 'cliente', 'contrato',
+                   'datosgrles', 'linea')
+
+    def __init__(self):
+        self.datosotras = XmlField('DatosGeneralesOtrasFacturas')
+        self.direccion = DireccionSuministro()
+        self.cliente = Cliente()
+        self.contrato = XmlField('Contrato',
+                                 rep=lambda x: re.sub('[^0-9]', '', x))
+        self.datosgrles = DatosGeneralesFactura()
+        self.linea = XmlField('LineaNegocio')
+        super(DatosGeneralesOtrasFacturas,
+              self).__init__('DatosGeneralesOtrasFacturas', 'datosotras')
+
+
 class TerminoPotencia(XmlModel):
     _sort_order = ('termino', 'fecha_desde', 'fecha_hasta', 'periodos')
 
@@ -246,6 +263,17 @@ class IVA(XmlModel):
         super(IVA, self).__init__('IVA', 'iva')
 
 
+class IVAIGICReducido(XmlModel):
+    _sort_order = ('ivaigic', 'base', 'porcentaje', 'importe')
+
+    def __init__(self):
+        self.ivaigic = XmlField('IVAIGICReducido')
+        self.base = XmlField('BaseImponible', rep=lambda x: '%.4f' % x)
+        self.porcentaje = XmlField('Porcentaje', rep=lambda x: '%.2f' % x)
+        self.importe = XmlField('Importe', rep=lambda x: '%.4f' % x)
+        super(IVAIGICReducido, self).__init__('IVAIGICReducido', 'ivaigic')
+
+
 class ConceptoIEIVA(XmlModel):
     _sort_order = ('conceptoieiva', 'concepto', 'importe')
 
@@ -267,6 +295,21 @@ class ConceptoIVA(XmlModel):
                                  rep=lambda x: '%.4f' % x)
         self.observaciones = XmlField('Observaciones')
         super(ConceptoIVA, self).__init__('ConceptoIVA', 'conceptoiva')
+
+
+class Concepto(XmlModel):
+    _sort_order = ('tipoconcepto', 'unidadesconcepto', 'importeunidadconcept',
+                   'importetotalconcept')
+
+    def __init__(self):
+        self.concepto = XmlField('Concepto')
+        self.tipoconcepto = XmlField('TipoConcepto')
+        self.unidadesconcepto = XmlField('UnidadesConcepto')
+        self.importeunidadconcept = XmlField('ImporteUnidadConcepto',
+                                             rep=lambda x: '%.4f' % x)
+        self.importetotalconcept = XmlField('ImporteTotalConcepto',
+                                            rep=lambda x: '%.4f' % x)
+        super(Concepto, self).__init__('Concepto', 'concepto')
 
 
 class Refacturacion(XmlModel):
@@ -306,6 +349,32 @@ class FacturaATR(XmlModel):
         self.refacturaciones =  XmlField('Refacturaciones')
         self.medidas = m.Medidas()
         super(FacturaATR, self).__init__('FacturaATR', 'factura')
+
+
+class FacturaConcepto(XmlModel):
+    _sort_order = ('factura', 'datosatr', 'potencia', 'exceso',
+                   'energia', 'reactiva', 'conceptoieiva', 'iese',
+                   'alquileres', 'conceptoiva', 'iva',
+                   'refacturaciones', 'medidas')
+
+    def __init__(self):
+        self.facturaconcepto = XmlField('FacturaConcepto')
+        self.otrasfacturas = OtrasFacturas()
+        self.registro = RegistroFin()
+        super(FacturaConcepto, self).__init__('FacturaConcepto', 'factura')
+
+
+class OtrasFacturas(XmlModel):
+    _sort_order = ('otrasfacturas', 'datosotras', 'concepto', 'iva',
+                   'ivaigic')
+
+    def __init__(self):
+        self.otrasfacturas = XmlField('OtrasFacturas')
+        self.datosotras = DatosGeneralesOtrasFacturas()
+        self.concepto = Concepto()
+        self.iva = IVA()
+        self.ivaigic = IVAIGICReducido()
+        super(OtrasFacturas, self).__init__('OtrasFacturas', 'otrasfacturas')
 
 
 class CuentaBancaria(XmlModel):
