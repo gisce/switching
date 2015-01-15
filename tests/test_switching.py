@@ -80,7 +80,6 @@ class testSwP0(unittest.TestCase):
         xml = str(pas01)
         self.assertEqual(self.xml_p101.read(), xml)
 
-
     def test_create_pas02(self):
         sup = supportClass()
         pas02 = p0.MensajeRechazoSolicitudInfRegistroPS()
@@ -97,6 +96,20 @@ class testSwP0(unittest.TestCase):
         xml = str(pas02)
 
         self.assertEqual(self.xml_p102.read(), xml)
+
+    def test_create_pas03(self):
+        sup = supportClass()
+        pas03 = p0.EnvioInformacionAlRegistroDePuntosDeSuministro()
+        header = sup.getHeader('P0', '03')
+        pas03.set_agente('1234')
+
+        pas03.feed({'capcalera': header})
+        pas03.build_tree()
+        pas03.pretty_print = True
+        xml = str(pas03)
+        print xml
+
+        #self.assertEqual(self.xml_p102.read(), xml)
 
 if __name__ == '__main__':
     unittest.main()
