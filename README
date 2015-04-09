@@ -5,3 +5,5 @@ switching
 Aquesta llibreria permet importar fitxers XML de switching a models Python.
 
 Es poden veure exemples al directori test/
+
+
