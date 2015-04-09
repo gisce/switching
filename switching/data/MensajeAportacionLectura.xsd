@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation>
+		
+Version x.x   2014.06.04
+
+		</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="TipoCabecera.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:element name="SolicitudAportacionLectura">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Cabecera" type="Cabecera"/>
+				<xs:element name="FechaLectura" type="xs:date" minOccurs="1"/>
+				<xs:element name="CodigoDH" type="CodigoDH" minOccurs="1"/>
+				<xs:element name="LecturaAportada" minOccurs="1" maxOccurs="20">
+					<xs:complexType>
+						<xs:sequence>							
+							<xs:element name="Integrador" type="MagnitudMedida" minOccurs="1"/>
+							<xs:element name="CodigoPeriodoDH" type="TipoCodigoPeriodoDH" minOccurs="1"/>
+							<xs:element name="LecturaPropuesta" type="DecimalS10V2" minOccurs="1"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
