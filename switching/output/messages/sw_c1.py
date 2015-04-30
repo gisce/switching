@@ -120,7 +120,7 @@ class Contacto(XmlModel):
     def set_data(self, es_persona_juridica, nom, cognom_1, cognom_2, telefon, prefix):
         con_nom = Nombre()
 
-        if es_persona_juridica and False:
+        if es_persona_juridica:
             nom = {
                 'razon': nom,
             }
