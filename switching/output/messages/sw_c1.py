@@ -117,6 +117,34 @@ class Contacto(XmlModel):
         self.telefon = Telefono()
         super(Contacto, self).__init__('Contacto', 'contacte')
 
+    def set_data(self, es_persona_juridica, nom, cognom_1, cognom_2, telefon, prefix):
+        con_nom = Nombre()
+
+        if es_persona_juridica:
+            nom = {
+                'razon': nom,
+            }
+        else:
+            nom = {
+                'nombrepila': nom,
+                'apellido1': cognom_1,
+                'apellido2': cognom_2,
+            }
+
+        con_nom.feed(nom)
+
+        con_fields = {'nombre': con_nom}
+        if telefon:
+            con_telefon = Telefono()
+            telf_fields = {
+                'numero': telefon,
+                'prefijo': prefix or '34',
+            }
+            con_telefon.feed(telf_fields)
+            con_fields.update({'telefon': con_telefon})
+
+        self.feed(con_fields)
+
 
 class Contrato(XmlModel):
     _sort_order = ('contrato', 'idcontrato', 'duracion', 'fechafin',

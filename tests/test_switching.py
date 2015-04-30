@@ -7,6 +7,8 @@ import os
 import decimal
 import sys
 
+import test_helpers
+
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
 def get_data(path):
@@ -20,6 +22,7 @@ class test_F1(unittest.TestCase):
         self.xml_err = open(get_data("F1_exemple_err.xml"), "r")
         self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
+    @unittest.skip("Not implemented yet")
     def test_F1(self):
         f1 = F1(self.xml_con)
         tipus = f1.get_tipus_xml()
