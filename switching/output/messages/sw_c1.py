@@ -138,7 +138,7 @@ class Contacto(XmlModel):
             con_telefon = Telefono()
             telf_fields = {
                 'numero': telefon,
-                'prefijo': 34,
+                'prefijo': prefix or '34',
             }
             con_telefon.feed(telf_fields)
             con_fields.update({'telefon': con_telefon})
