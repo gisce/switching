@@ -22,24 +22,6 @@ class Clean(_clean):
             shutil.rmtree(self.build_base)
 
 
-class Test(Command):
-    """Passarem els tests unitaris que tinguem definits."""
-    user_options = []
-
-    def initialize_options(self):
-        """Inicialitzem."""
-        pass
-    
-    def run(self):
-        """Executem els tests."""
-        import tests
-        suite = unittest.TestLoader().loadTestsFromModule(tests.test_switching)
-        unittest.TextTestRunner(verbosity=2).run(suite)
-    
-    def finalize_options(self):
-        """Finalitzem."""
-        pass
-
 setup(name='switching',
       description='Llibreria de switching',
       author='GISCE Enginyeria',
@@ -53,4 +35,6 @@ setup(name='switching',
       packages=find_packages(),
       package_data=PACKAGES_DATA,
       scripts=[],
-      cmdclass={'clean': Clean, 'test': Test})
+      cmdclass={'clean': Clean},
+      test_suite='tests',
+)
