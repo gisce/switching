@@ -134,17 +134,16 @@ class Contacto(XmlModel):
         con_nom.feed(nom)
 
         con_fields = {'nombre': con_nom}
-        self.feed(con_fields)
-        return
         if telefon:
             con_telefon = Telefono()
             telf_fields = {
                 'numero': telefon,
-                'prefijo': prefix or 34,
+                'prefijo': 34,
             }
             con_telefon.feed(telf_fields)
             con_fields.update({'telefon': con_telefon})
 
+        self.feed(con_fields)
 
 
 class Contrato(XmlModel):

@@ -51,6 +51,20 @@ class test_Contacto(unittest.TestCase):
         xml = str(c)
         self.assertXmlEqual(xml,self.loadFile('Contacto_juridica.xml'))
 
+    def test_build_tree_with_phone(self):
+        c = Contacto()
+        c.set_data(
+            es_persona_juridica=False,
+            nom="Perico",
+            cognom_1="Palote",
+            cognom_2=u"Pérez",
+            telefon='555123123',
+            prefix='',
+        )
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml,self.loadFile('Contacto_withphone.xml'))
+
 
 
 if __name__ == '__main__':
