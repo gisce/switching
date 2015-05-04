@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation>
+		
+Version x.x   2014.03.03
+se eliminan los elementos FechaLectura, LecturaRegistrada y el minOccurs 1 de FechaAceptacion ya que por defecto es obligatorio
+Se modifica el nombre del nodo AceptacionLectura a DatosAceptacionLectura
+
+
+
+		</xs:documentation>
+	</xs:annotation>
+	
+	<xs:include schemaLocation="TipoCabecera.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:element name="AceptacionAportacionLectura">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Cabecera" type="Cabecera"/>
+				<xs:element name="DatosAceptacionLectura">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="FechaAceptacion" type="xs:date"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
