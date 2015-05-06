@@ -15,6 +15,9 @@ CODIS_REG_REFACT = {'RGT42011': '40',
                     'RGT12012': '41',
                     'RGM42012': '42'}
 
+PERIODES_AGRUPATS = [('P1', 'P4'), ('P2', 'P5'), ('P3', 'P6')]
+
+
 def rodes(giro):
     """Retorna el nombre de rodes senceres segons el giro
     """
@@ -103,3 +106,34 @@ def parse_totals_refact(cadena):
             totals.append(float(x))
     return totals[0], totals[1]
 
+
+def aggr_consums(consums):
+    """Agrega els consums segons els periodes.
+
+    És a dir P1 = P1 + P4, P2 = P2 + P5, P3 = P3 + P6
+    :param consums: Diccionari de maxímetres
+    :type consums: dict
+    :returns: Un nou diccionari amb els consums agrupats P1, P2 i P3
+    :rtype: dict
+    """
+    if len(consums.keys()) <= len(PERIODES_AGRUPATS):
+        return consums
+
+    resultat = {}
+    for periode in PERIODES_AGRUPATS:
+        resultat[periode[0]] = consums.get(periode[0], 0) \
+                                    + consums.get(periode[1], 0)
+    return resultat
+
+
+def exces_reactiva(consum_activa, consum_reactiva, marge):
+    """Calcula l'excés de reactiva segons un marge donat.
+
+    :param consum_activa: El consum d'activa
+    :type consum_activa: numeric
+    :param consum_reactiva: El consum de reactiva
+    :type consum_reactiva: numeric
+    :param marge: Marge que es pot aplicar (en tant per 1 entre 0-1)
+    :type marge: float
+    """
+    return consum_reactiva - (consum_activa * marge)

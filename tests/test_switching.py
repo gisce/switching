@@ -21,7 +21,7 @@ class Switching_F1_Test(unittest.TestCase):
     def setUp(self):
         self.xml = open(get_data("F1_exemple.xml"), "r")
         self.xml_err = open(get_data("F1_exemple_err.xml"), "r")
-        self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
+        #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
     def test_F1(self):
@@ -32,6 +32,17 @@ class Switching_F1_Test(unittest.TestCase):
         emisor = f1.get_codi_emisor
         self.assertEqual(tipus, 'F1')
         self.assertEqual(emisor, ch_emisor)
+
+    def test_get_info_activa(self):
+        f1 = F1(self.xml)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        periodes, total = f1_atr.get_info_activa()
+        periode = periodes[0]
+        self.assertEqual(total, 74.1424)
+        self.assertEqual(periode.name, 'P1')
+        self.assertEqual(periode.data_inici, '2010-03-01')
+        self.assertEqual(periode.data_final, '2010-04-30')
 
 
 class supportClass(object):
