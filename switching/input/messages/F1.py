@@ -4,10 +4,11 @@ import gettext
 
 from defs import *
 from message import Message, except_f1
-from libfacturacioatr import tarifes
 
 from Q1 import Q1, Lectura, Comptador
-from switching.helpers.funcions import CODIS_REG_REFACT
+from switching.helpers.funcions import (
+    CODIS_REG_REFACT, exces_reactiva, aggr_consums
+)
 
 _ = gettext.gettext
 
@@ -240,7 +241,7 @@ class FacturaATR(Facturas):
         for i in self.get_comptadors():
             lectures.extend(i.get_lectures())
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
-        lect_activa = tarifes.aggr_consums(lect_activa)
+        lect_activa = aggr_consums(lect_activa)
         try:
             for ea in self.factura.EnergiaActiva.TerminoEnergiaActiva:
                 d_ini = ea.FechaDesde.text
@@ -277,8 +278,8 @@ class FacturaATR(Facturas):
                     'de reactiva.')
             raise except_f1('Error', msg)
         if agrupat:
-            lect_activa = tarifes.aggr_consums(lect_activa)
-            lect_reactiva = tarifes.aggr_consums(lect_reactiva)
+            lect_activa = aggr_consums(lect_activa)
+            lect_reactiva = aggr_consums(lect_reactiva)
         periodes = lect_reactiva.keys()
         periodes.sort()
         calc = {}
@@ -287,8 +288,7 @@ class FacturaATR(Facturas):
             for i in periodes:
                 activa = lect_activa[i]
                 reactiva = lect_reactiva[i]
-                val = float("%.2f" %
-                                tarifes.exces_reactiva(activa, reactiva, marge))
+                val = float("%.2f" % exces_reactiva(activa, reactiva, marge))
                 # Comprovem que hi ha accés de reactiva i que el període en
                 # el que estem es pot facturar la reactiva
                 if val > 0 and i in INFO_TARIFA[self.codi_tarifa]['reactiva']:
@@ -350,7 +350,7 @@ class FacturaATR(Facturas):
             # el consum. Per detectar quin període és primer ho fem segons
             # l'excés i si no el troba ho buscarem pel consum
             consums_no_agg = self.select_consum_from_lectures(lectures, 'R')
-            for p, c in tarifes.aggr_consums(consums_no_agg).items():
+            for p, c in aggr_consums(consums_no_agg).items():
                 consums.setdefault(p, 0)
                 consums[p] += c
 
