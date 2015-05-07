@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import unittest
+from . import unittest
 
 def assertXmlEqual(self, got, want):
     from lxml.doctestcompare import LXMLOutputChecker
