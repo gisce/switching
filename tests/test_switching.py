@@ -5,7 +5,7 @@ from switching.input.messages import F1, message
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages.base import Cabecera
 import os
-import unittest
+from . import unittest
 
 import test_helpers
 

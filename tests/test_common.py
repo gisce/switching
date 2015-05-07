@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from switching.output.messages.sw_c1 import Contacto
-import unittest
+from . import unittest
 import os
 import decimal
 import sys
