@@ -23,6 +23,8 @@
 			  Se modifican los nodos que contienen CuentaBancaria para que en su lugar contengan IBAN que es un tiposimple X34
 			Version X.X GISCE 2014.08.07
                           S'afegeix un altre cop CuentaBancaria amb un choice amb IBAN
+			Version X.X GISCE 2015.05.22
+                          Afegim tag inventat Iberdrola TipodeTelegestión opcional
 		</xs:documentation>
 	</xs:annotation>
 	<xs:complexType name="IdContrato">
@@ -256,6 +258,7 @@
 		<xs:sequence>
 			<xs:element name="TarifaATR" type="Tarifa"/>
 			<xs:element name="PeriodicidadFacturacion" type="Periodicidad"/>
+                        <xs:element name="TipodeTelegestion" type="xs:string" minOccurs="0"/>
 			<xs:element name="PotenciasContratadas" type="Potencias"/>
 			<xs:element name="PotenciasMaximas" type="Potencias" minOccurs="0"/>
 			<xs:element name="ModoControlPotencia" type="ModoControlPotencia" minOccurs="0"/>
