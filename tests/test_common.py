@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from switching.output.messages.sw_c1 import Contacto
+from switching.output.messages.sw_c2 import CiePapel
 from . import unittest
 import os
 import decimal
 import sys
 
 import test_helpers
+from copy import copy, deepcopy
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -80,6 +82,42 @@ class test_Contacto(unittest.TestCase):
         self.assertXmlEqual(xml,self.loadFile('Contacto_withprefix.xml'))
 
 
+class test_CiePapel(unittest.TestCase):
+
+    basic_data = {}
+
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        self.basic_data = {
+            'codigo_cie': '1234567',
+            'potencia_inst_bt': 3500,
+            'fecha_emision': '2015-06-04',
+            'nif_instalador': '12345678Z',
+            'nombre_instalador': 'Acme',
+            'tension_suministro': '10',
+            'tipo_suministro': 'VI', }
+        pass
+
+    def test_build_tree_simple(self):
+        c = CiePapel()
+        c.feed(self.basic_data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('CiePapel_simple.xml'))
+
+
+    def test_build_tree_codigo_instalador(self):
+        c = CiePapel()
+        data = copy(self.basic_data)
+        data.update({'codigo_instalador': '987654321'})
+        del data['nif_instalador']
+        c.feed(data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('CiePapel_codinst.xml'))
 
 if __name__ == '__main__':
     unittest.main()

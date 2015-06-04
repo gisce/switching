@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CiePapel>
+    <CodigoCie>1234567</CodigoCie>
+    <PotenciaInstBT>3500</PotenciaInstBT>
+    <FechaEmisionCie>2015-06-04</FechaEmisionCie>
+    <NifInstalador>12345678Z</NifInstalador>
+    <Nombreinstalador>Acme</Nombreinstalador>
+    <TensionSuministroCIE>10</TensionSuministroCIE>
+    <TipoSuministro>VI</TipoSuministro>
+</CiePapel>
