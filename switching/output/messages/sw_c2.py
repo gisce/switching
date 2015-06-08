@@ -11,6 +11,7 @@ from mesures import Aparatos, Modelos
 from sw_c1 import DatosSolicitud, Contrato, Cliente, DatosAceptacion
 from sw_c1 import DatosActivacion, PuntosDeMedida
 
+
 class CiePapel(XmlModel):
 
     _sort_order = ('cie_papel', 'codigo_cie', 'potencia_inst_bt',
@@ -35,6 +36,37 @@ class CiePapel(XmlModel):
         self.seccion_cable = XmlField('SeccionCable')
         self.tipo_suministro = XmlField('TipoSuministro')
         super(CiePapel, self).__init__('CiePapel', 'cie_papel')
+
+
+class DatosCie(XmlModel):
+
+    _sort_order = ('datos_cie', 'cie_electronico', 'cie_papel', 'validez_cie',
+                   'CIE_electronico')
+
+    def __init__(self):
+        self.datos_cie = XmlField('DatosCie')
+        self.cie_electronico = XmlField('CieElectronico')
+        self.cie_papel = CiePapel()
+
+        # Not implemented
+        self.validez_cie = XmlField('ValidezCie')
+        self.CIE_electronico = XmlField('CIEElectronico')
+
+        super(DatosCie, self).__init__('DatosCie', 'datos_cie')
+
+
+class DocTecnica(XmlModel):
+
+    _sort_order = ('doc_tecnica', 'datos_cie', 'datos_apm', )
+
+    def __init__(self):
+        self.doc_tecnica = XmlField('DocTecnica')
+        self.datos_cie = DatosCie()
+
+        #Not implemented
+        self.datos_apm = XmlField('DatosApm')
+
+        super(DocTecnica, self).__init__('DocTecnica', 'doc_tecnica')
 
 
 class Medida(XmlModel):

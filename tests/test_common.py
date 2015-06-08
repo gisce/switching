@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from switching.output.messages.sw_c1 import Contacto
-from switching.output.messages.sw_c2 import CiePapel
+from switching.output.messages.sw_c2 import CiePapel, DatosCie, DocTecnica
 from . import unittest
 import os
 import decimal
@@ -38,7 +38,7 @@ class test_Contacto(unittest.TestCase):
         )
         c.build_tree()
         xml = str(c)
-        self.assertXmlEqual(xml,self.loadFile('Contacto_simple.xml'))
+        self.assertXmlEqual(xml, self.loadFile('Contacto_simple.xml'))
 
     def test_build_tree_juridica(self):
         c = Contacto()
@@ -52,7 +52,7 @@ class test_Contacto(unittest.TestCase):
         )
         c.build_tree()
         xml = str(c)
-        self.assertXmlEqual(xml,self.loadFile('Contacto_juridica.xml'))
+        self.assertXmlEqual(xml, self.loadFile('Contacto_juridica.xml'))
 
     def test_build_tree_with_phone(self):
         c = Contacto()
@@ -66,7 +66,7 @@ class test_Contacto(unittest.TestCase):
         )
         c.build_tree()
         xml = str(c)
-        self.assertXmlEqual(xml,self.loadFile('Contacto_withphone.xml'))
+        self.assertXmlEqual(xml, self.loadFile('Contacto_withphone.xml'))
 
     def test_build_tree_with_prefix(self):
         c = Contacto()
@@ -80,7 +80,7 @@ class test_Contacto(unittest.TestCase):
         )
         c.build_tree()
         xml = str(c)
-        self.assertXmlEqual(xml,self.loadFile('Contacto_withprefix.xml'))
+        self.assertXmlEqual(xml, self.loadFile('Contacto_withprefix.xml'))
 
 
 class test_CiePapel(unittest.TestCase):
@@ -100,7 +100,6 @@ class test_CiePapel(unittest.TestCase):
             'nombre_instalador': 'Acme',
             'tension_suministro': '10',
             'tipo_suministro': 'VI', }
-        pass
 
     def test_build_tree_simple(self):
         c = CiePapel()
@@ -146,6 +145,67 @@ class test_CiePapel(unittest.TestCase):
         c.build_tree()
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CiePapel_seccion.xml'))
+
+
+class test_DatosCie(unittest.TestCase):
+
+    basic_data = {}
+
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        cie_paper = CiePapel()
+        cie_paper_data = {
+            'codigo_cie': '1234567',
+            'potencia_inst_bt': 3500,
+            'fecha_emision': '2015-06-04',
+            'nif_instalador': '12345678Z',
+            'nombre_instalador': 'Acme',
+            'tension_suministro': '10',
+            'tipo_suministro': 'VI', }
+        cie_paper.feed(cie_paper_data)
+        self.basic_data = {'cie_electronico': 'N',
+                           'cie_papel': cie_paper}
+
+    def test_build_tree_simple(self):
+        c = DatosCie()
+        c.feed(self.basic_data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('DatosCie_simple.xml'))
+
+
+class test_DocTecnica(unittest.TestCase):
+
+    basic_data = {}
+
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        cie_paper = CiePapel()
+        cie_paper.feed({
+            'codigo_cie': '1234567',
+            'potencia_inst_bt': 3500,
+            'fecha_emision': '2015-06-04',
+            'nif_instalador': '12345678Z',
+            'nombre_instalador': 'Acme',
+            'tension_suministro': '10',
+            'tipo_suministro': 'VI', })
+        dades_cie = DatosCie()
+        dades_cie.feed({'cie_electronico': 'N',
+                        'cie_papel': cie_paper})
+        self.basic_data = {'datos_cie': dades_cie}
+
+    def test_build_tree_simple(self):
+        c = DocTecnica()
+        c.feed(self.basic_data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('DocTecnica_simple.xml'))
 
 if __name__ == '__main__':
     unittest.main()
