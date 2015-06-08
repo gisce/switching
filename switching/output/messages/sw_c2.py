@@ -14,8 +14,10 @@ from sw_c1 import DatosActivacion, PuntosDeMedida
 class CiePapel(XmlModel):
 
     _sort_order = ('cie_papel', 'codigo_cie', 'potencia_inst_bt',
-                   'fecha_emision', 'nif_instalador', 'codigo_instalador',
-                   'nombre_instalador', 'tension_suministro',
+                   'fecha_emision', 'fecha_caducidad', 'nif_instalador',
+                   'codigo_instalador', 'nombre_instalador',
+                   'tension_suministro', 'intensidad_diferencial',
+                   'sensibilidad_diferencial', 'seccion_cable',
                    'tipo_suministro',)
 
     def __init__(self):
@@ -23,10 +25,14 @@ class CiePapel(XmlModel):
         self.codigo_cie = XmlField('CodigoCie')
         self.potencia_inst_bt = XmlField('PotenciaInstBT')
         self.fecha_emision = XmlField('FechaEmisionCie')
+        self.fecha_caducidad = XmlField('FechaCaducidadCie')
         self.nif_instalador = XmlField('NifInstalador')
         self.codigo_instalador = XmlField('CodigoInstalador')
         self.nombre_instalador = XmlField('Nombreinstalador')
         self.tension_suministro = XmlField('TensionSuministroCIE')
+        self.intensidad_diferencial = XmlField('IntensidadDif')
+        self.sensibilidad_diferencial = XmlField('SensibilidadDif')
+        self.seccion_cable = XmlField('SeccionCable')
         self.tipo_suministro = XmlField('TipoSuministro')
         super(CiePapel, self).__init__('CiePapel', 'cie_papel')
 

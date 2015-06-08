@@ -13,6 +13,7 @@ from copy import copy, deepcopy
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
+
 def get_data(path):
     return os.path.join(_ROOT, 'data', path)
 
@@ -108,7 +109,6 @@ class test_CiePapel(unittest.TestCase):
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CiePapel_simple.xml'))
 
-
     def test_build_tree_codigo_instalador(self):
         c = CiePapel()
         data = copy(self.basic_data)
@@ -118,6 +118,34 @@ class test_CiePapel(unittest.TestCase):
         c.build_tree()
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CiePapel_codinst.xml'))
+
+    def test_build_tree_fecha_caducidad(self):
+        c = CiePapel()
+        data = copy(self.basic_data)
+        data.update({'fecha_caducidad': '9999-01-01'})
+        c.feed(data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('CiePapel_caducidad.xml'))
+
+    def test_build_tree_diferencial(self):
+        c = CiePapel()
+        data = copy(self.basic_data)
+        data.update({'intensidad_diferencial': 20,
+                     'sensibilidad_diferencial': 300})
+        c.feed(data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('CiePapel_diferencial.xml'))
+
+    def test_build_tree_seccion(self):
+        c = CiePapel()
+        data = copy(self.basic_data)
+        data.update({'seccion_cable': 16})
+        c.feed(data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('CiePapel_seccion.xml'))
 
 if __name__ == '__main__':
     unittest.main()
