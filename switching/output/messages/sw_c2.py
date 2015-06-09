@@ -22,20 +22,20 @@ class CiePapel(XmlModel):
                    'tipo_suministro',)
 
     def __init__(self):
-        self.cie_papel = XmlField('CiePapel')
+        self.cie_papel = XmlField('CIEPapel')
         self.codigo_cie = XmlField('CodigoCie')
         self.potencia_inst_bt = XmlField('PotenciaInstBT')
         self.fecha_emision = XmlField('FechaEmisionCie')
         self.fecha_caducidad = XmlField('FechaCaducidadCie')
         self.nif_instalador = XmlField('NifInstalador')
         self.codigo_instalador = XmlField('CodigoInstalador')
-        self.nombre_instalador = XmlField('Nombreinstalador')
+        self.nombre_instalador = XmlField('NombreInstalador')
         self.tension_suministro = XmlField('TensionSuministroCIE')
         self.intensidad_diferencial = XmlField('IntensidadDif')
         self.sensibilidad_diferencial = XmlField('SensibilidadDif')
         self.seccion_cable = XmlField('SeccionCable')
         self.tipo_suministro = XmlField('TipoSuministro')
-        super(CiePapel, self).__init__('CiePapel', 'cie_papel')
+        super(CiePapel, self).__init__('CIEPapel', 'cie_papel')
 
 
 class DatosCie(XmlModel):
@@ -57,16 +57,16 @@ class DatosCie(XmlModel):
 
 class DocTecnica(XmlModel):
 
-    _sort_order = ('doc_tecnica', 'datos_cie', 'datos_apm', )
+    _sort_order = ('doctecnica', 'datos_cie', 'datos_apm', )
 
     def __init__(self):
-        self.doc_tecnica = XmlField('DocTecnica')
+        self.doctecnica = XmlField('DocTecnica')
         self.datos_cie = DatosCie()
 
         #Not implemented
         self.datos_apm = XmlField('DatosApm')
 
-        super(DocTecnica, self).__init__('DocTecnica', 'doc_tecnica')
+        super(DocTecnica, self).__init__('DocTecnica', 'doctecnica')
 
 
 class Medida(XmlModel):
@@ -142,7 +142,7 @@ class CambiodeComercializadoraConCambios(XmlModel):
         self.contrato = Contrato()
         self.cliente = Cliente()
         self.medida = Medida()
-        self.doctecnica = XmlField('DocTecnica')
+        self.doctecnica = DocTecnica()
         self.comentario = Comentarios()
         self.registro = RegistrosDocumento()
         self.cnae = XmlField('CNAE')

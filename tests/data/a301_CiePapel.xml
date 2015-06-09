@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<MensajeCambiodeComercializadoraConCambios AgenteSolicitante="1234"
-                                           xmlns="http://localhost/elegibilidad">
+<MensajePasoMRAMLConCambiosRestoTarifa AgenteSolicitante="1234"
+                                       xmlns="http://localhost/elegibilidad">
     <Cabecera>
         <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
         <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
-        <CodigoDelProceso>C2</CodigoDelProceso>
+        <CodigoDelProceso>A3</CodigoDelProceso>
         <CodigoDePaso>01</CodigoDePaso>
         <CodigoDeSolicitud>201412111009</CodigoDeSolicitud>
         <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
@@ -12,12 +12,13 @@
         <FechaSolicitud>2014-04-16T22:13:37</FechaSolicitud>
         <Version>02</Version>
     </Cabecera>
-    <CambiodeComercializadoraConCambios>
+    <PasoMRAMLConCambiosRestoTarifa>
         <DatosSolicitud>
             <LineaNegocioElectrica>01</LineaNegocioElectrica>
             <SolicitudAdmContractual>S</SolicitudAdmContractual>
-            <IndActivacionLectura>S</IndActivacionLectura>
-            <FechaPrevistaAccion>2015-05-27</FechaPrevistaAccion>
+            <IndActivacionLectura>N</IndActivacionLectura>
+            <FechaPrevistaAccion>2015-05-18</FechaPrevistaAccion>
+            <CNAE>9820</CNAE>
             <IndSustitutoMandatario>S</IndSustitutoMandatario>
         </DatosSolicitud>
         <Contrato>
@@ -29,7 +30,7 @@
             <CondicionesContractuales>
                 <TarifaATR>001</TarifaATR>
                 <PotenciasContratadas>
-                    <Potencia Periodo="1">4400</Potencia>
+                    <Potencia Periodo="1">2300</Potencia>
                 </PotenciasContratadas>
             </CondicionesContractuales>
             <DireccionCorrespondencia>
@@ -75,8 +76,5 @@
             </DatosCie>
         </DocTecnica>
         <Comentarios/>
-        <CNAE>9820</CNAE>
-        <ViviendaHabitual>S</ViviendaHabitual>
-        <TipoCambioTitular>S</TipoCambioTitular>
-    </CambiodeComercializadoraConCambios>
-</MensajeCambiodeComercializadoraConCambios>
+    </PasoMRAMLConCambiosRestoTarifa>
+</MensajePasoMRAMLConCambiosRestoTarifa>

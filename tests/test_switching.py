@@ -5,6 +5,8 @@ from switching.input.messages import F1, message
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
+from switching.output.messages import sw_m1 as m1
+from switching.output.messages import sw_a3 as a3
 from switching.output.messages.base import Cabecera
 import os
 from . import unittest
@@ -247,8 +249,8 @@ class SwitchingC2Test(unittest.TestCase):
         dades_cie.feed({'cie_electronico': 'N',
                         'cie_papel': cie_paper})
 
-        doc_tecnica = c2.DocTecnica()
-        doc_tecnica.feed({'datos_cie': dades_cie})
+        doctecnica = c2.DocTecnica()
+        doctecnica.feed({'datos_cie': dades_cie})
 
         #sol·licitud de canvi
         canvi = c2.CambiodeComercializadoraConCambios()
@@ -257,7 +259,7 @@ class SwitchingC2Test(unittest.TestCase):
             'contrato': contracte,
             'cliente': client,
             'medida': mesura,
-            'doc_tecnica': doc_tecnica,
+            'doctecnica': doctecnica,
             'cnae': '9820',
             'vivenda': 'S',
             'tipuscanvititular': 'S',
@@ -270,7 +272,175 @@ class SwitchingC2Test(unittest.TestCase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_c201.read())
+        self.assertXmlEqual(xml, self.xml_c201_ciepapel.read())
+
+
+class SwitchingA3Test(unittest.TestCase):
+    """test de C2"""
+
+    def setUp(self):
+        self.xml_a301 = open(get_data("a301.xml"), "r")
+        self.xml_a301_ciepapel = open(get_data("a301_CiePapel.xml"), "r")
+
+        #sol·licitud
+        self.sollicitud = c1.DatosSolicitud()
+        sol_fields = {
+            'linea': '01',
+            'solicitudadm': 'S',
+            'activacionlectura': 'N',
+            'fechaprevista': '2015-05-18',
+            'cnae': '9820',
+            'sustituto': 'S',
+        }
+        self.sollicitud.feed(sol_fields)
+
+        # contracte
+        # Id contracte
+        idcontracte = c1.IdContrato()
+        nom_ctr = '111111111'
+        idcontracte.feed({
+            'codigo': nom_ctr,
+        })
+        # Condicions contractuals
+        potencies = c1.PotenciasContratadas()
+        potencies.feed({'p1': 2300})
+
+        condicions = c1.CondicionesContractuales()
+        condicions.feed({
+            'tarifa': '001',
+            'potencies': potencies,
+        })
+
+        dir_corresp = c1.DireccionCorrespondencia()
+        dir_corresp.feed({
+            'indicador': 'S',
+        })
+
+        self.contracte = c1.Contrato()
+        ctr_fields = {
+            'tipo': '01',
+            'duracion': 12,
+            'idcontrato': idcontracte,
+            'condiciones': condicions,
+            'direccion': dir_corresp,
+        }
+        self.contracte.feed(ctr_fields)
+
+        #client
+        idclient = c1.IdCliente()
+        idclient.feed({
+            'cifnif': 'DN',
+            'identificador': '11111111H',
+        })
+
+        nomclient = c1.Nombre()
+        nom = {'nombrepila': 'Carla',
+               'apellido1': 'Aramberri',
+               'apellido2': 'Cadenas'}
+        nomclient.feed(nom)
+
+        telefon = c1.Telefono()
+        telf_fields = {
+            'numero': '71407365',
+            'prefijo': 34
+        }
+        telefon.feed(telf_fields)
+
+        self.client = c1.Cliente()
+        cli_fields = {
+            'idcliente': idclient,
+            'nombre': nomclient,
+            'indicador': 'S',
+            'telefono': telefon,
+        }
+        self.client.feed(cli_fields)
+
+        #mesura
+        self.mesura = c2.Medida()
+        self.mesura.feed({
+            'cp_propietat': 'N',
+            'cp_installacio': 'Y',
+            'equip_aportat_client': 'N',
+            'equip_installat_client': 'Y',
+            'tipus_equip': 'L00',
+        })
+
+    def test_create_pas01(self):
+        sup = supportClass()
+        pas01 = a3.MensajePasoMRAMLConCambiosRestoTarifas()
+        capcalera = sup.getHeader('A3', '01')
+        pas01.set_agente('1234')
+
+        sollicitud = self.sollicitud
+        contracte = self.contracte
+        client = self.client
+        mesura = self.mesura
+
+        #sol·licitud de canvi
+        canvi = a3.PasoMRAMLConCambiosRestoTarifas()
+        canvi_vals = {
+            'solicitud': sollicitud,
+            'contrato': contracte,
+            'cliente': client,
+            'medida': mesura,
+        }
+        canvi.feed(canvi_vals)
+
+        pas01.feed({
+            'cabecera': capcalera,
+            'cambio': canvi
+        })
+        pas01.build_tree()
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_a301.read())
+
+    def test_create_pas01_ciepapel(self):
+        sup = supportClass()
+        pas01 = a3.MensajePasoMRAMLConCambiosRestoTarifas()
+        capcalera = sup.getHeader('A3', '01')
+        pas01.set_agente('1234')
+
+        sollicitud = self.sollicitud
+        contracte = self.contracte
+        client = self.client
+        mesura = self.mesura
+
+        cie_paper = c2.CiePapel()
+        cie_paper.feed({
+            'codigo_cie': '1234567',
+            'potencia_inst_bt': 3500,
+            'fecha_emision': '2015-06-04',
+            'nif_instalador': '12345678Z',
+            'nombre_instalador': 'Acme',
+            'tension_suministro': '10',
+            'tipo_suministro': 'VI',
+        })
+
+        dades_cie = c2.DatosCie()
+        dades_cie.feed({'cie_electronico': 'N',
+                        'cie_papel': cie_paper})
+
+        doctecnica = c2.DocTecnica()
+        doctecnica.feed({'datos_cie': dades_cie})
+
+        #sol·licitud de canvi
+        canvi = a3.PasoMRAMLConCambiosRestoTarifas()
+        canvi_vals = {
+            'solicitud': sollicitud,
+            'contrato': contracte,
+            'cliente': client,
+            'medida': mesura,
+            'doctecnica': doctecnica,
+        }
+        canvi.feed(canvi_vals)
+
+        pas01.feed({
+            'cabecera': capcalera,
+            'cambio': canvi
+        })
+        pas01.build_tree()
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_a301_ciepapel.read())
 
 if __name__ == '__main__':
     unittest.main()
