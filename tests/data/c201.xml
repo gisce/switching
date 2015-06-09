@@ -2,8 +2,8 @@
 <MensajeCambiodeComercializadoraConCambios AgenteSolicitante="1234"
                                            xmlns="http://localhost/elegibilidad">
     <Cabecera>
-        <CodigoREEEmpresaEmisora>0762</CodigoREEEmpresaEmisora>
-        <CodigoREEEmpresaDestino>0021</CodigoREEEmpresaDestino>
+        <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+        <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
         <CodigoDelProceso>C2</CodigoDelProceso>
         <CodigoDePaso>01</CodigoDePaso>
         <CodigoDeSolicitud>201412111009</CodigoDeSolicitud>

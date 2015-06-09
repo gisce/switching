@@ -58,8 +58,8 @@ class supportClass(object):
             'solicitud': '20141211100908',
             'secuencia': '01',
             'codigo': 'ES1234000000000001JN0F',
-            'ree_emisora': '0762',
-            'ree_destino': '0021',
+            'ree_emisora': '1234',
+            'ree_destino': '4321',
             'fecha': '2014-04-16T22:13:37',
         }
         header.feed(vals)
