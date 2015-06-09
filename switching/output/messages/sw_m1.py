@@ -9,7 +9,7 @@ from libcomxml.core import XmlModel, XmlField
 from switching.output.messages.base import Cabecera
 from sw_c1 import DatosSolicitud, Contrato, Cliente, DatosAceptacion
 from sw_c1 import DatosActivacion, PuntosDeMedida
-from sw_c2 import Medida, Comentarios, RegistrosDocumento
+from sw_c2 import Medida, Comentarios, RegistrosDocumento, DocTecnica
 
 
 class ModificacionDeATR(XmlModel):
@@ -24,7 +24,7 @@ class ModificacionDeATR(XmlModel):
         self.cliente = Cliente()
         self.cliente_saliente = Cliente()
         self.medida = Medida()
-        self.doctecnica = XmlField('DocTecnica')
+        self.doctecnica = DocTecnica()
         self.comentario = Comentarios()
         self.registro = RegistrosDocumento()
         super(ModificacionDeATR, self).\
