@@ -1,7 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+
 from . import unittest
+
+_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+
+def get_data(path):
+    return os.path.join(_ROOT, 'data', path)
+
 
 def assertXmlEqual(self, got, want):
     from lxml.doctestcompare import LXMLOutputChecker

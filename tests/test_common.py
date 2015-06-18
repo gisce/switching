@@ -8,14 +8,8 @@ import os
 import decimal
 import sys
 
-import test_helpers
+from .test_helpers import get_data
 from copy import copy, deepcopy
-
-_ROOT = os.path.abspath(os.path.dirname(__file__))
-
-
-def get_data(path):
-    return os.path.join(_ROOT, 'data', path)
 
 
 class test_Contacto(unittest.TestCase):
