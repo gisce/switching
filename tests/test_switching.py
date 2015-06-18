@@ -8,16 +8,11 @@ from switching.output.messages import sw_c2 as c2
 from switching.output.messages import sw_m1 as m1
 from switching.output.messages import sw_a3 as a3
 from switching.output.messages.base import Cabecera
-import os
 from . import unittest
 
-import test_helpers
-
-_ROOT = os.path.abspath(os.path.dirname(__file__))
+from .test_helpers import get_data
 
 
-def get_data(path):
-    return os.path.join(_ROOT, 'data', path)
 
 
 #@unittest.skip('uncommited data')
