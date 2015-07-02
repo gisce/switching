@@ -68,8 +68,8 @@ class Switching_W1_Test(unittest.TestCase):
 
     def setUp(self):
         self.xml_w101 = open(get_data("w101.xml"), "r")
-#        self.xml_w102_ok = open(get_data("w102-aceptacion.xml"), "r")
-#        self.xml_w102_ko = open(get_data("w102-rebuig.xml"), "r")
+        self.xml_w102_ok = open(get_data("w102-aceptacio.xml"), "r")
+        self.xml_w102_ko = open(get_data("w102-rebuig.xml"), "r")
 
     def test_create_pas01(self):
         sup = supportClass()
@@ -94,7 +94,37 @@ class Switching_W1_Test(unittest.TestCase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(self.xml_w101.read(), xml)
+        self.assertXmlEqual(xml, self.xml_w101.read())
+
+    def test_create_pas02_accept(self):
+        sup = supportClass()
+        pas02 = w1.AceptacionAportacionLectura()
+        header = sup.getHeader('W1', '01')
+        pas02.set_agente('1234')
+        dades_accept = w1.DatosAceptacionLectura()
+        dades_accept.feed({'fecha_aceptacion': '2015-07-02'})
+        pas02.feed({
+            'capcalera': header,
+            'datos_aceptacion': dades_accept})
+        pas02.build_tree()
+        xml = str(pas02)
+        self.assertXmlEqual(xml, self.xml_w102_ok.read())
+
+    def test_create_pas02_reject(self):
+        sup = supportClass()
+        pas02 = w1.RechazoAportacionLectura()
+        header = sup.getHeader('W1', '01')
+        pas02.set_agente('1234')
+        dades_reject = w1.DatosRechazoLectura()
+        dades_reject.feed(
+            {'fecha_rechazo': '2015-07-02',
+             'motivo': '01'})
+        pas02.feed({
+            'capcalera': header,
+            'datos_rechazo': dades_reject})
+        pas02.build_tree()
+        xml = str(pas02)
+        self.assertXmlEqual(xml, self.xml_w102_ko.read())
 
 
 class SwitchingC2Test(unittest.TestCase):
