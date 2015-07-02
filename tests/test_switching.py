@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from switching.input.messages import F1, message
+from switching.input.messages import F1, message, W1
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
@@ -11,8 +11,6 @@ from switching.output.messages.base import Cabecera
 from . import unittest
 
 from .test_helpers import get_data
-
-
 
 
 #@unittest.skip('uncommited data')
@@ -71,6 +69,11 @@ class Switching_W1_Test(unittest.TestCase):
         self.xml_w102_ok = open(get_data("w102-aceptacio.xml"), "r")
         self.xml_w102_ko = open(get_data("w102-rebuig.xml"), "r")
 
+    def tearDown(self):
+        self.xml_w101.close()
+        self.xml_w102_ok.close()
+        self.xml_w102_ko.close()
+
     def test_create_pas01(self):
         sup = supportClass()
         pas01 = w1.SolicitudAportacionLectura()
@@ -125,6 +128,22 @@ class Switching_W1_Test(unittest.TestCase):
         pas02.build_tree()
         xml = str(pas02)
         self.assertXmlEqual(xml, self.xml_w102_ko.read())
+
+    def test_read_w101(self):
+        self.w101_xml = W1.W1(self.xml_w101)
+        self.w101_xml.parse_xml()
+        date = self.w101_xml.fecha_lectura
+        cdh = self.w101_xml.codigo_dh
+        lecturas = []
+        for lect in self.w101_xml.lecturas:
+            lecturas.append(
+                (lect.integrador,
+                 int(lect.codigo_periodo_dh),
+                 '%.2f' % float(lect.lectura_propuesta))
+            )
+        assert len(lecturas) == 2
+        assert lecturas[0] == ('AE', 21, '1162.00')
+        assert lecturas[1] == ('AE', 22, '3106.00')
 
 
 class SwitchingC2Test(unittest.TestCase):

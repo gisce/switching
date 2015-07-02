@@ -3,9 +3,7 @@
 from libcomxml.core import XmlModel, XmlField
 
 from switching.output.messages.base import Cabecera
-from sw_c1 import DatosSolicitud, Contrato, Cliente, DatosAceptacion
-from sw_c1 import DatosActivacion, PuntosDeMedida
-from sw_c2 import Medida, Comentarios, RegistrosDocumento
+
 
 class DatosAceptacionLectura(XmlModel):
     _sort_order = (
@@ -62,7 +60,7 @@ class SolicitudAportacionLectura(XmlModel):
         'fecha_lectura',
         'codigodh',
         'lecturas',
-        )
+    )
         
     def __init__(self):
         self.doc_root = None
