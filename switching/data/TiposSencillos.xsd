@@ -23,8 +23,41 @@
 -Se crea el tipo de dato "Periodicidad", hace refencia al paso 1 y 5 del Proceso M1 y al paso 5 de los procesos A3, C1 y C2.
 -Se incluyen los motivos de rechazo 66, 67, 68, 69 y 70 en el tipo de dato CodigoMotivoRechazo.
 -Se modifican los valores del tipo de dato sencillo "TipoContrato", el descriptor del valor 02 pasa de ser "Eventual" a ser "Eventual medido" y se eliminan los valores 04 y 06.
-      Version X.X
+			Version 3.2
 -Se incluye el campo X34 para poder utilizar el nuevo campo IBAN de cuentas bancarias de 34 caracteres alfanuméricos
+			Version 3.3 Desdoble tarifa 6.1 1/1/2015
+-Se incluye el desdoblamiento de la tarifa 6.1 incluyendo un nuevo valor 017 con descriptor 6.1B y se cambia el descriptor del valor 012 por 6.1A en los tipos de datos sencillos "Tarifa" y "TarifaATR".
+			Version 0.0 CNMC 2015.06.10 
+-Se incluyen los motivos de rechazo 71, 72, 73, 74, 75, 76, 77, 78, 79, 80 que hacen referencia a formato W1 (lecturas aportadas)
+-Se incluye tipo de dato sencillo "X22", forma parte del proceso de Reclamación o Petición, paso 1 ReclamacionPeticion.		
+-Se incluye tipo de dato sencillo "TipoReclamacionPeticion", forma parte del proceso de Reclamación o Petición, paso 1 ReclamacionPeticion, y hace referencia a la tabla 81.
+-Se incluye tipo de dato sencillo "SubtipoReclamacionPeticion", forma parte del proceso de Reclamación o Petición, paso 1 ReclamacionPeticion, y hace referencia a la tabla 82.
+-Se incluye tipo de dato sencillo "TipoConceptoFacturado", forma parte del proceso de Reclamación o Petición, paso 1 ReclamacionPeticion, y hace referencia a la tabla 77.
+-Se incluye tipo de dato sencillo "Decimal10V2", forma parte del proceso de Reclamación o Petición, paso 1 ReclamacionPeticion.
+-Se incluye tipo de dato sencillo "Decimal20", forma parte del proceso de Reclamación o Petición, paso 1 ReclamacionPeticion.
+-Se incluye tipo de dato sencillo "TipoReclamante", forma parte del proceso de Reclamacióno Petición, paso 1 ReclamacionPeticion, y hace referencia a la tabla 83.
+-Se incluye tipo de dato sencillo "TipoComunicacionReclamacion", forma parte del proceso de Reclamación o Petición, paso 3 PeticionInformacionAdicionalReclamacion, y hace referencia a la tabla 84.
+-Se incluye tipo de dato sencillo "TipoIntervencion", forma parte del proceso de Reclamación o Petición, paso 3 PeticionInformacionAdicionalReclamacion, y hace referencia a la tabla 74.
+-Se incluye tipo de dato sencillo "ResultadoIntervencion", forma parte del proceso de Reclamación o Petición, paso 3 PeticionInformacionAdicionalReclamacion, y hace referencia a la tabla 75.
+-Se incluye el tipo de dato sencillo "Variable" que hace referencia a la tabla 76.
+-Se incluye tipo de dato sencillo "TipoInformacionAdicional", forma parte del proceso de Reclamación o Petición, paso 3 PeticionInformacionAdicionalReclamacion, y hace referencia a la tabla 85.
+-Se incluye tipo de dato sencillo "ResultadoReclamacion", forma parte del proceso de Reclamación o Petición, paso 5 CierreReclamacion, y hace referencia a la tabla 80.
+-Se incluye tipo de dato sencillo "DetalleResultado", forma parte del proceso de Reclamación o Petición, paso 5 CierreReclamacion, y hace referencia a la tabla 73.
+-Se incluye tipo de dato sencillo "ParametroContratacion", forma parte del proceso de Reclamación o Petición, paso 1 ReclamacionPeticion, y hace referencia a la tabla 79.
+-TipoReclamante es modificado con un cero delante de todos los códigos para ajustarse al formato X(2)
+-Se incluyen los motivos de rechazo 84, 85, 86, 67, 88, 89 y 99
+-Se incluye tipo de dato sencillo S9(10)V(4)
+-Se incluye tipo de datos sencillo TipoIncidencia aludiendo a la tabla de códigos 86.
+-Se incluyen los tipos alfanumericos x60 y x4000
+-Se elimina el tipo CodigoDH que apunta a la tabla 52 ya que no se usa en ningún XSD y dicha tabla desaparece del catálogo (ya existe la 35 que representa lo mismo). 
+-Se incluye el tipo TipoAtencionIncorrecta asociada a la tabla 87
+-Se incluye el valor "20 - Supervisión de Instalaciones" Cedidas en la tabla 103 (modificación pendiente OCSUM)
+-Se incluye el motivo de rechazo 83 en la Tabla 27 para informar pobreza enegética (modificación pendiente OCSUM)
+-NIE incluido como valor en el campo de la tabla 6 (modificación pendiente OCSUM)
+Se incluyen modificaciones para PVPC:
+-Se incluye el elemento TipodeTelegestion.
+-Se incluye el elemento IndicativoCurvadeCarga.
+-Se actualiza los tipos enumerados del elemento "MotivoCambioATRDesdeDistribuidora", añadiendo el valor 03.
 		</xs:documentation>
 	</xs:annotation>
 	<xs:simpleType name="Decimal1">
@@ -81,6 +114,12 @@
 			<xs:fractionDigits value="0"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="Decimal10V2">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="12"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="Decimal11">
 		<xs:restriction base="xs:long">
 			<xs:totalDigits value="11"/>
@@ -105,6 +144,12 @@
 			<xs:fractionDigits value="0"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="Decimal20">
+		<xs:restriction base="xs:long">
+			<xs:totalDigits value="20"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="DecimalS9V3">
 		<xs:restriction base="xs:decimal">
 			<xs:totalDigits value="12"/>
@@ -121,6 +166,12 @@
 		<xs:restriction base="xs:decimal">
 			<xs:totalDigits value="12"/>
 			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DecimalS10V4">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="4"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="DecimalS12V3">
@@ -212,10 +263,22 @@
 			<xs:maxLength value="20"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="X22">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="22"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="X25">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
 			<xs:maxLength value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="X26">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="26"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="X30">
@@ -260,6 +323,12 @@
 			<xs:maxLength value="50"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="X60">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="60"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="X80">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
@@ -295,6 +364,12 @@
 			<xs:minLength value="1"/>
 			<xs:maxLength value="400"/>
 		</xs:restriction>
+	</xs:simpleType>	
+	<xs:simpleType name="X4000">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="4000"/>
+		</xs:restriction>	
 	</xs:simpleType>
 	<xs:simpleType name="X1000">
 		<xs:restriction base="xs:string">
@@ -548,11 +623,12 @@
 			007     2.0 DHS
 			008	2.1 DHS
 			011	3.1A
-			012	6.1
+			012	6.1A
 			013	6.2	
 			014	6.3	
 			015	6.4	
 			016	6.5
+			017 6.1B
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -569,6 +645,7 @@
 			<xs:enumeration value="014"/>
 			<xs:enumeration value="015"/>
 			<xs:enumeration value="016"/>
+			<xs:enumeration value="017"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoContrato">
@@ -978,28 +1055,6 @@
 			<xs:fractionDigits value="0"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="CodigoDH">
-		<xs:annotation>
-			<xs:documentation>Codigo DH   Tabla 52
-			0 Sin Discriminacion
-			1 Sin Contador Discriminador
-			2 Tarifa 2.0 nocturna o contador con doble tarifa
-			3 Con contador triple tarifa sin discriminacion sabados y festivos
-			4 Con contador triple tarifa y discriminacion sabados y festivos	
-			5 Con contador de quintuple tarifa	
-			6 THP
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="0"/>
-			<xs:enumeration value="1"/>
-			<xs:enumeration value="2"/>
-			<xs:enumeration value="3"/>
-			<xs:enumeration value="4"/>
-			<xs:enumeration value="5"/>
-			<xs:enumeration value="6"/>
-		</xs:restriction>
-	</xs:simpleType>
 	<xs:simpleType name="Energia">
 		<xs:annotation>
 			<xs:documentation>Energia</xs:documentation>
@@ -1044,6 +1099,7 @@
 				NV	N.I.V.A.
 				OT	N
 				PS	Pasaporte
+				NE	N.I.E.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1054,6 +1110,7 @@
 			<xs:enumeration value="NV"/>
 			<xs:enumeration value="OT"/>
 			<xs:enumeration value="PS"/>
+			<xs:enumeration value="NE"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoVia">
@@ -1217,36 +1274,28 @@
 			<xs:enumeration value="01"/>
 			<xs:enumeration value="02"/>
 			<xs:enumeration value="03"/>
-						
-			
 			<xs:enumeration value="06"/>
 			<xs:enumeration value="07"/>
 			<xs:enumeration value="08"/>
 			<xs:enumeration value="09"/>
-	
 			<xs:enumeration value="11"/>
 			<xs:enumeration value="12"/>
 			<xs:enumeration value="13"/>
 			<xs:enumeration value="14"/>
 			<xs:enumeration value="15"/>
-	
 			<xs:enumeration value="17"/>
 			<xs:enumeration value="18"/>
-	
 			<xs:enumeration value="20"/>
 			<xs:enumeration value="21"/>
 			<xs:enumeration value="22"/>
 			<xs:enumeration value="23"/>
-	
 			<xs:enumeration value="25"/>
 			<xs:enumeration value="26"/>
 			<xs:enumeration value="27"/>
 			<xs:enumeration value="28"/>
 			<xs:enumeration value="29"/>
-	
 			<xs:enumeration value="31"/>
 			<xs:enumeration value="32"/>
-	
 			<xs:enumeration value="34"/>
 			<xs:enumeration value="35"/>
 			<xs:enumeration value="36"/>
@@ -1284,6 +1333,23 @@
 			<xs:enumeration value="68"/>
 			<xs:enumeration value="69"/>
 			<xs:enumeration value="70"/>
+			<xs:enumeration value="71"/>
+			<xs:enumeration value="72"/>
+			<xs:enumeration value="73"/>
+			<xs:enumeration value="74"/>
+			<xs:enumeration value="75"/>
+			<xs:enumeration value="76"/>
+			<xs:enumeration value="77"/>
+			<xs:enumeration value="78"/>
+			<xs:enumeration value="79"/>
+			<xs:enumeration value="80"/>
+			<xs:enumeration value="83"/>
+			<xs:enumeration value="84"/>
+			<xs:enumeration value="85"/>
+			<xs:enumeration value="86"/>
+			<xs:enumeration value="87"/>
+			<xs:enumeration value="88"/>
+			<xs:enumeration value="89"/>
 			<xs:enumeration value="99"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -1500,6 +1566,7 @@
 			17	Abono por calidad de suministro
 			18	Abono por calidad individual
 			19	Coste de reposición
+			20	Supervisión instalaciones cedidas
 			32	Coste de corte a petición de comercializador
 			33	Coste de reconexión a petición de comercializador
 			40	Recargo fraccionado por refacturación (Orden IET/843/2012) del cuarto trimestre de 2011
@@ -1527,6 +1594,7 @@
 			<xs:enumeration value="17"/>
 			<xs:enumeration value="18"/>
 			<xs:enumeration value="19"/>
+			<xs:enumeration value="20"/>
 			<xs:enumeration value="32"/>
 			<xs:enumeration value="33"/>
 			<xs:enumeration value="40"/>
@@ -1637,7 +1705,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="TarifaATR">
 		<xs:annotation>
-			<xs:documentation>tipo Tarifa  
+			<xs:documentation>tipo Tarifa tabla 17
 			001	2.0.A	
 			002	2.0.N.A 	
 			003	3.0A	
@@ -1647,11 +1715,12 @@
 			007     2.0 DHS
 			008	2.1 DHS							
 			011	3.1A	
-			012	6.1	
+			012	6.1A	
 			013	6.2	
 			014	6.3	
 			015	6.4	
 			016	6.5
+			017 6.1B
 			901 Tf.Peaje BT 2.0 Modo 2
 			902 Tf.Peaje BT 2.0N Modo 2
 			903 2.1.A Modo 2
@@ -1673,6 +1742,7 @@
 			<xs:enumeration value="014"/>
 			<xs:enumeration value="015"/>
 			<xs:enumeration value="016"/>
+			<xs:enumeration value="017"/>
 			<xs:enumeration value="901"/>
 			<xs:enumeration value="902"/>
 			<xs:enumeration value="903"/>
@@ -1718,33 +1788,38 @@
 			<xs:pattern value="L|F|C"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="TipoReclamante">
+	
+	<xs:simpleType name="TipodeTelegestion">
 		<xs:annotation>
-			<xs:documentation>Tipo Reclamante Tabla 60
-			1-Cliente
-			2-Afectado no titular
-			3-Compañía de seguros
-			4-Abogado del cliente
-			5-OMIC
-			6-Consumo
-			7-Industria
-			8-Otros
+			<xs:documentation>Tipo de Telegestión (Tabla 111)
+				01-Telegestión operativa con Curva de Carga Horaria
+				02-Telegestión Operativa sin curva de carga Horaria 
+				03-Sin Telegestión 
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="1"/>
-			<xs:enumeration value="2"/>
-			<xs:enumeration value="3"/>
-			<xs:enumeration value="4"/>
-			<xs:enumeration value="5"/>
-			<xs:enumeration value="6"/>
-			<xs:enumeration value="7"/>
-			<xs:enumeration value="8"/>
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IndicativoCurvaCarga">
+		<xs:annotation>
+			<xs:documentation>Indicativo Curva de Carga  (Tabla 110)
+				01-Acompaña curva de carga (Sólo tarifas 2.XA integradas en el sistema de Telegestión con capacidad de obtener CCH)
+				02-Perfilado (contratos sin CCH)
+				03-No aplica (Tarifas de AT)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoReclamacion">
 		<xs:annotation>
-			<xs:documentation>Tipo Reclamacion Tabla 57
+			<xs:documentation>Tipo Reclamación (Tabla 81)
 			01-Atención personal
 			02-Facturación
 			03-Cobro
@@ -1768,7 +1843,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="RdoReclamacion">
 		<xs:annotation>
-			<xs:documentation>Resultado de la Reclamacion Tabla 58
+			<xs:documentation>Resultado de la Reclamacion (Tabla 80)
 			01-Disculpas. Tomamos nota para evitar a futuro
 			02-No estimar a futuro
 			03-Error lectura. Se rectifica
@@ -1965,7 +2040,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="TiposDocumentacion">
 		<xs:annotation>
-			<xs:documentation>Tipos de Documentación
+			<xs:documentation>Tipos de Documentación (tabla 61)
 			01	CIE
 			02	Acta de Puesta en Marcha
 			03	Acta de Inspección
@@ -2362,22 +2437,969 @@
 			<xs:enumeration value="2"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="MotivoCambioATRDesdeDistribuidora"> 
+	<xs:simpleType name="MotivoCambioATRDesdeDistribuidora">
 		<xs:annotation>
 			<xs:documentation>Tabla 109</xs:documentation>
-		</xs:annotation>			
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Periodicidad">
+		<xs:annotation>
+			<xs:documentation>Tabla 108</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+		</xs:restriction>
+		</xs:simpleType>
+	<xs:simpleType name="TipoReclamacionPeticion">
+		<xs:annotation>
+			<xs:documentation>Tipo de Reclamación o Petición (Tabla 81)
+			01	ATENCIÓN PERSONAL
+			02	FACTURACIÓN Y MEDIDA
+			03	CONTRATACIÓN
+			04	GESTIÓN DE ACOMETIDAS
+			05	CALIDAD DE SUMINISTRO
+			06	SITUACIÓN DE INSTALACIONES
+			07	ATENCION REGLAMENTARIA
+					</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
+			<xs:enumeration value="07"/>
+					</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SubtipoReclamacionPeticion">
+		<xs:annotation>
+			<xs:documentation>Subtipo de Reclamación o Petición (Tabla 82)
+			01	ATENCION INCORRECTA
+			02	PRIVACIDAD DE LOS DATOS
+			03	INCIDENCIA EN EQUIPOS DE MEDIDA
+			04	DAÑOS ORIGINADOS POR EQUIPO DE MEDIDA
+			05	CONTADOR EN FACTURA NO CORRESPONDE CON INSTALADO
+			06	CONTRATOS ATR/PEAJE
+			07	CUPS NO PERTENECE A COMERCIALIZADORA O NO VIGENTE EN PERIODO DE FACTURA
+			08	DISCONFORMIDAD CON CONCEPTOS FACTURADOS
+			09	DISCONFORMIDAD CON LECTURA FACTURADA
+			10	DISCONFORMIDAD EN FACTURA ANOMALÍA / FRAUDE
+			11	RECLAMACIÓN FACTURA  PAGO DUPLICADO
+			12	REFACTURACION NO RECIBIDA
+			13	DISCONFORMIDAD CON CAMBIO DE SUMINISTRADOR
+			14	REQUERIMIENTO DE FIANZA / DEPÓSITO DE GARANTÍA
+			15	RETRASO CORTE DE SUMINISTRO
+			16	RETRASO EN PLAZO ACEPTACIÓN
+			17	RETRASO EN PLAZO ACTIVACIÓN
+			18	DISCONFORMIDAD CON CRITERIOS ECONÓMICOS / COBROS
+			19	DISCONFORMIDAD CON CRITERIOS TÉCNICOS / OBRA EJECUTADA
+			20	CALIDAD DE ONDA
+			21	CON PETICIÓN DE INDEMNIZACIÓN
+			22	SIN PETICIÓN DE INDEMNIZACIÓN
+			23	RETRASO EN PAGO INDEMNIZACION
+			24	DAÑOS A TERCEROS POR INSTALACIONES 
+			25	IMPACTO AMBIENTAL INSTALACIONES
+			26	RECLAMACIONES SOBRE INSTALACIONES
+			27	DISCONFORMIDAD DESCUENTO SERVICIO INDIVIDUAL 
+			28	EJECUCIÓN INDEBIDA DE CORTE
+			29	RETRASO EN LA ATENCIÓN A RECLAMACIONES  
+			30	RETRASO PLAZO DE CONTESTACIÓN NUEVOS SUMINISTROS
+			31	RETRASO PLAZO DE EJECUCIÓN NUEVO SUMINISTRO
+			32	RETRASO REENGANCHE TRAS CORTE
+			34	DISCONFORMIDAD CON CONCEPTOS DE CONTRATACIÓN ATR/PEAJE
+			35	DISCONFORMIDAD RECHAZO SOLICITUD ATR/PEAJE
+			36	PETICIÓN DE REFACTURACIÓN APORTANDO LECTURA
+			37	FICHERO XML INCORRECTO
+			38	PRIVACIDAD DE LOS DATOS
+			39	SOLICITUD DE CERTIFICADO / INFORME DE CALIDAD
+			40	SOLICITUD DE DUPLICADO DE FACTURA
+			41	SOLICITUD DE ACTUACIÓN SOBRE INSTALACIONES
+			42	SOLICITUD DE DESCARGO
+			43	PETICIÓN DE PRECINTADO / DESPRECINTADO DE EQUIPOS
+			44	PETICIONES CON ORIGEN EN CAMPAÑAS DE TELEGESTIÓN
+			45	ACTUALIZACIÓN  DE DIRECCIÓN  DEL PUNTO DE SUMINISTRO
+			46	CERTIFICADO DE LECTURA
+			47	SOLICITUD RECALCULO CCH SIN MODIFICACION CIERRE ATR	FASE 1 PVPC
+			48  Petición Información adicional rechazo 
+			49	Falta fichero medida
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
+			<xs:enumeration value="07"/>
+			<xs:enumeration value="08"/>
+			<xs:enumeration value="09"/>
+			<xs:enumeration value="10"/>
+			<xs:enumeration value="11"/>
+			<xs:enumeration value="12"/>
+			<xs:enumeration value="13"/>
+			<xs:enumeration value="14"/>
+			<xs:enumeration value="15"/>
+			<xs:enumeration value="16"/>
+			<xs:enumeration value="17"/>
+			<xs:enumeration value="18"/>
+			<xs:enumeration value="19"/>
+			<xs:enumeration value="20"/>
+			<xs:enumeration value="21"/>
+			<xs:enumeration value="22"/>
+			<xs:enumeration value="23"/>
+			<xs:enumeration value="24"/>
+			<xs:enumeration value="25"/>
+			<xs:enumeration value="26"/>
+			<xs:enumeration value="27"/>
+			<xs:enumeration value="28"/>
+			<xs:enumeration value="29"/>
+			<xs:enumeration value="30"/>
+			<xs:enumeration value="31"/>
+			<xs:enumeration value="32"/>
+			<xs:enumeration value="34"/>
+			<xs:enumeration value="35"/>
+			<xs:enumeration value="36"/>
+			<xs:enumeration value="37"/>
+			<xs:enumeration value="38"/>
+			<xs:enumeration value="39"/>
+			<xs:enumeration value="40"/>
+			<xs:enumeration value="41"/>
+			<xs:enumeration value="42"/>
+			<xs:enumeration value="43"/>
+			<xs:enumeration value="44"/>
+			<xs:enumeration value="45"/>
+			<xs:enumeration value="46"/>
+			<xs:enumeration value="47"/>
+			<xs:enumeration value="48"/>
+			<xs:enumeration value="49"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoConceptoFacturado">
+		<xs:annotation>
+			<xs:documentation>Tipos de Conceptos Facturados(Tabla 77)
+			01	Potencia
+			02	Reactiva
+			03	Penalización ICP
+			04	Alquiler de equipo de medida
+			05	Impuestos
+			06	Excesos de potencia
+			07	Derechos
+			08	Depósito de garantía
+			09	Verificación de equipos de medida
+			10	Derechos de corte y reconexión
+			11	Abono por calidad de suministro
+			12	Abono por calidad individual
+			13	Coste de reposición
+			14	Refacturaciones regulatorias
+			15	Término de energia
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
+			<xs:enumeration value="07"/>
+			<xs:enumeration value="08"/>
+			<xs:enumeration value="09"/>
+			<xs:enumeration value="10"/>
+			<xs:enumeration value="11"/>
+			<xs:enumeration value="12"/>
+			<xs:enumeration value="13"/>
+			<xs:enumeration value="14"/>
+			<xs:enumeration value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoReclamante">
+		<xs:annotation>
+			<xs:documentation>Identificador Origen de la Reclamación (Tabla 83)
+			01	Cliente / Titular de PS
+			02	Representante Legal
+			03	Aseguradora
+			04	Organismo Oficial
+			05	Organismo Público
+			06	Comercializador
+			07	Juzgados
+			08	Afectado no titular del PS
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
+			<xs:enumeration value="07"/>
+			<xs:enumeration value="08"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoComunicacionReclamacion">
+		<xs:annotation>
+			<xs:documentation>Tipo de Comunicación intermedia (Tabla 84)
+			01	Solicitud de Información adicional
+			02	Comunicación de estado intermedia
+			03	Comunicación de retipificación de la reclamación
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoIntervencion">
+		<xs:annotation>
+			<xs:documentation>Tipo de Intervención(Tabla 74)
+			01	Concertación de Visita
+			02	Ejecución visita
+			</xs:documentation>
+		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="01"/>
 			<xs:enumeration value="02"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="Periodicidad"> 
+	<xs:simpleType name="ResultadoIntervencion">
 		<xs:annotation>
-			<xs:documentation>Tabla 108</xs:documentation>
-		</xs:annotation>			
+			<xs:documentation>Resultado de la Intervención (Tabla 75)
+			001	Ausente
+			002	Imposible de localizar
+			003	Deshabilitado
+			004	Anomalia instalación
+			005	No realizada por causas imputables al cliente
+			006	No realizada por causas imputables al distribuidor
+			007	Concertación de visita
+			008	Concertación anterior anulada. Pendiente concertar
+			009	Concertación fallida
+			010	No concertada
+			011	Programado en > 6 días
+						
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="001"/>
+			<xs:enumeration value="002"/>
+			<xs:enumeration value="003"/>
+			<xs:enumeration value="004"/>
+			<xs:enumeration value="005"/>
+			<xs:enumeration value="006"/>
+			<xs:enumeration value="007"/>
+			<xs:enumeration value="008"/>
+			<xs:enumeration value="009"/>
+			<xs:enumeration value="010"/>
+			<xs:enumeration value="011"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+		<xs:simpleType name="TipoInformacionAdicional">
+		<xs:annotation>
+			<xs:documentation>Tipo de Información Adicional (Tabla 85)
+			01	Factura  reparación
+			02	Nuevos Datos de Contacto
+			03	Documento oficial
+			04	Contacto y documentos
+			</xs:documentation>
+		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="01"/>
 			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ResultadoReclamacion">
+		<xs:annotation>
+			<xs:documentation>Resultado de la Reclamacion (Tabla 80)
+			01	Procedente / Favorable
+			02	Improcedente / Desfavorable
+			03	No gestionable
+			04	Mal Tipificada
+			05  	Duplicada
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DetalleResultado">
+		<xs:annotation>
+			<xs:documentation>Detalle de la resolución (Tabla 73)
+			010101	Se piden disculpas
+			010201	Desacuerdo con la reclamación
+			010501	Duplicada	
+			020101	Se modifica estado Cliente Robinson/ Cliente
+			020102	Se indemniza al cliente
+			020201	No consta solicitud previa
+			020202	Ajeno a la distribuidora
+			020501	Duplicada	
+			030101	Equipo incorrecto. Incluye equipo desaparecido
+			030102	Instalación incorrecta. Incluye relación de transformación
+			030103	Lectura errónea
+			030201	Equipo correcto
+			030202	Instalación correcta
+			030203	Histórico de consumos / lecturas coherente
+			030204	Detectada anomalía en visita
+			030205	Expediente por anomalía en curso
+			030301	No se localiza al cliente
+			030302	No corresponde a distribuidora
+			030303	Cliente no aporta información adicional
+			030304	Acceso denegado
+			030305	Visita anulada por cliente
+			030401	Mal tipificada
+			030501	Duplicada	
+			040101	Favorable
+			040201	Desfavorable con explicación de motivos en texto resultado 
+			040202	Sin incidencia
+			040203	Incidencia que no justifica daños
+			040204	Trabajos programados que no justifican daños
+			040205	Avería instalación particular cliente
+			040206	Originada por terceros 
+			040207	Tiempo de interrupción no justifica pérdida de perecederos
+			040208	Se reitera la respuesta anterior
+			040301	Imposible por documentación pendiente por parte del cliente
+			040302	Imposible llegar a un acuerdo
+			040501	Duplicada	
+			050101	Asignamos correctamente y refacturamos
+			050102  Informamos correctamente el nº contador (no hay que refacturar)
+			050201	El contador es correcto
+			050301	No se localiza al cliente
+			050302	Acceso denegado
+			050303	Visita anulada por cliente
+			050401	Mal tipificado
+			050501	Duplicada	
+			060101	Error del Sistema                                           
+			060102	Incidencia: datos Concentrador Secundario / Telemedida                             
+			060103	Modificaciones contractuales pendientes (fuera de plazo)          
+			060104	Contador interior                                           
+			060105	Pendiente trabajo domicilio cliente (Facturado. Tarea de cliente realizada)                                         	060201	No tomada medida real
+			060202	Modificaciones contractuales pendientes (dentro de plazo)
+			060203	Período legal de facturación
+			060204	Contrato Facturado                                                   
+			060205	Pendiente trabajo domicilio cliente (sigue pendiente tarea del cliente)                                            	060206	Contrato en baja 
+			060207	Contrato con otra comercializadora
+			060209  CUPS no vigente en periodo de factura
+			060401	Mal tipificada
+			060501	Duplicada	
+			070101	Se anula factura
+			070201	Facturación correcta (incluir explicación en campo comentarios)
+			070401	Mal tipificada
+			070501	Duplicada	
+			080101	Se refactura el concepto reclamado
+			080102	Se refacturan otros conceptos / varios conceptos
+			080201	Conceptos reclamados correctamente facturados (incluir explicación en campo comentarios)
+			080401	Mal tipificada
+			080502	Duplicada	
+			090101	Equipo de Medida con acceso y consumo acumulado más de un año se refactura  a un año
+			090102	Se anula estimación                   
+			090103	Error Lectura Montaje / Desmontaje                              
+			090104	Error lectura lector                                        
+			090105	Perfil estimado curva de carga en gráfico factura                     
+			090106	Error en Telemedida / Telegestión
+			090107  No conforme aplicación reactiva
+			090108  Error cargo / abono realizado
+			090201	Equipo de Medida sin acceso más de un año, facturación correcta
+			090202	Consumo correcto  (lectura correcta)                                  
+			090203	Estimación correcta                                         
+			090204	Lectura aportada errónea                                  
+			090205	Consumo acumulado                                           
+			090206	Contador interior                                           
+			090207	Lectura real correcta                                       
+			090208	Perfil estimado curva de carga en gráfico factur
+			090209  Aplicación reactiva correcta
+			090210  Cargo / abono realizado correcto        
+			090301	Visita fallida                                              
+			090401	Mal tipificada
+			090501	Duplicada	
+			100101	Se refactura
+			100102	Se anula la factura
+			100201	Factura correcta según normativa
+			100202	Expediente en curso                                     
+			100401	Mal tipificada
+			100501	Duplicada	
+			110101	Se abona el duplicado
+			110102	Se refactura
+			110103  Se anula la factura
+			110201	Factura correcta
+			110401	Mal tipificada
+			110501	Duplicada	
+			120101	Se refactura
+			120201	Factura ya estaba rectificada
+			120202	No procede la refacturación
+			120401	Mal tipificada
+			120501	Duplicada	
+			120101	Procedente
+			120201	Improcedente
+			120501	Duplicada	
+			140101	Se devuelve fianza
+			140102	Se corrige devolución errónea y se reenvía fianza
+			140201	La devolución se efectuó correctamente
+			140202	No procede devolver
+			140501	Duplicada	
+			150101	Corte ejecutado
+			150201	Corte ejecutado en plazo
+			150202	Corte ejecutado con retraso imputable a cliente
+			150301	Imputable a cliente
+			150302	Requerimiento de la administración judicial / legal (incluye esencialidad)
+			150501	Duplicada	
+			160101	Se gestiona la publicación del paso
+			160102	Movimiento realizado fuera de plazos
+			160201	No existe solicitud
+			160202	Movimiento realizado en plazos
+			160501	Duplicada	
+			170101	Se gestiona la publicación del paso
+			170102	Movimiento realizado fuera de plazos
+			170201	No existe solicitud
+			170202	Movimiento realizado en plazos
+			170203	Imputable a cliente
+			170501	Duplicada		
+			180101	Se corrigen criterios económicos en presupuesto
+			180102	Se corrige factura emitida (datos de facturación, importe)
+			180201	Factura correcta
+			180202	Criterios económicos correctos
+			180401	Mal tipificada
+			180501	Duplicada	
+			190101	Se modifican criterios técnicos 
+			190102	Se reparan desperfectos / se indemnizan daños
+			190103	Licencia de obra / permisos particulares de obra no solicitados
+			190104	Ejecución incorrecta de obras
+			190105	Asesoramiento técnico erróneo en contestación
+			190201	Criterios técnicos/ejecución obra correctos
+			190202	Petición de suministro no finalizada
+			190203	Plazo correcto
+			190204	Pendiente de documentación del cliente
+			190401	Mal tipificada
+			190501	Duplicada	
+			200101	Se corrige calidad de onda (tensión, frecuencia, armónicos e interrupciones)
+			200201	Incidencia con origen ajeno a la red de distribución (tercero y/o propio cliente))
+			200202	Calidad de onda correcta  (tensión, frecuencia,  e interrupciones por actuación protecciones)
+			200203	Nos reiteramos respuesta anterior
+			200501	Duplicada	
+			210101	Favorable
+			210201	Desfavorable con explicación de motivos en texto resultado 
+			210202	Sin incidencia
+			210203	Incidencia que no justifica daños
+			210204	Trabajos programados que no justifican daños
+			210205	Avería instalación particular cliente
+			210206	Originada por terceros 
+			210207	Tiempo de interrupción no justifica pérdida de perecederos
+			210208	Se actúa de acuerdo a la normativa de calidad individual y zonal vigente
+			210209	Se reitera la respuesta anterior
+			210301	Imposible por documentación pendiente por parte del cliente
+			210302	Imposible llegar a un acuerdo
+			210501	Duplicada	
+			220101	Se corrige situación
+			220201	Desfavorable con explicación de motivos en texto resultado 
+			220202	Sin incidencia
+			220203	Trabajos programados
+			220204	Avería instalación particular cliente
+			220205	Originada por terceros 
+			220206	Se reitera la respuesta anterior
+			220207	No legitimada. Relación extracontractual
+			220501	Duplicada	
+			230101	Favorable
+			230201	Desfavorable con explicación de motivos en texto resultado 
+			230202	No legitimada. Relación extracontractual
+			230501	Duplicada	
+			240101	Favorable. Se corrige o resarcen daños
+			240201	Desfavorable con explicación de motivos en texto resultado 
+			240202	No legitimada. Relación extracontractual
+			240501	Duplicada	
+			250101	Se corrige la situación
+			250201	Instalación correcta
+			250202	No legitimada. Relación extracontractual
+			250203	Instalación ajena a la distribuidora
+			250301	Imposible gestionar por faltar datos
+			250501	Duplicada	
+			260101	Corregimos situación
+			260201	Instalación correcta
+			260202	No legitimada. Relación extracontractual
+			260203	Instalación ajena a la distribuidora
+			260501	Duplicada	
+			270101	Se corrige importe y se traslada al comercializador
+			270201	Cálculo y pago  ICDS correcto
+			270202	Cálculo correcto. No procede el abono
+			270401	Mal tipificada
+			270501	Duplicada	
+			280101	Se reestablece el suministro
+			280102	Se reestablece el suministro con indemnización
+			280201	Corte correcto por solicitud del comercializador
+			280202	Corte correcto por cualquier motivo reconocido en la normativa vigente
+			280401	Mal tipificada
+			280501	Duplicada	
+			290101	Se indemniza incumplimiento de calidad de atención en próxima factura
+			290201	Reclamación atendida en plazo
+			290401	Mal tipificada
+			290501	Duplicada	
+			300101	Se indemniza incumplimiento de calidad de atención en próxima factura
+			300201	Solicitud de información NNSS atendida en plazo
+			300401	Mal tipificada
+			300501	Duplicada	
+			310101	Se indemniza incumplimiento de calidad de atención en próxima factura
+			310201	Ejecución de NNSS atendido en plazo
+			310401	Mal tipificada
+			310501	Duplicada	
+			320101	Se indemniza incumplimiento de calidad de atención en próxima factura
+			320201	Reconexión atendida en plazo
+			320202	Incumplimiento por causa imputable al cliente  
+			320203	Plazo superado por motivos ajenos a la distribuidora (indicar motivo)
+			320401	Mal tipificada
+			320501	Duplicada	
+			340101	Corregido parámetro 
+			340102  Corregido parámetro potencia
+			340103  Corregido parámetro tensión
+			340104  Corregido parámetro tarifa
+			340105  Corregido parámetro caudal
+			340106  Corregido parámetro fecha activación
+			340107  Corregido parámetro dirección
+			340201	Contratación realizada según solicitud
+			340501	Duplicada		
+			350101	Problema resuelto, reenviar solicitud
+			350201	Solicitud correctamente rechazada
+			350202  Imposible contactar cliente
+			350203  Deficiencias en la instación
+			350204  Falta documentación (CIE) 
+			350205  Error de formato 
+			350206  Datos ATR/Peaje incoherentes
+			350207  Error en el cliente / NIF
+			350501  Duplicada 	
+			360101	Se refactura con lectura aportada
+			360201	Lectura con integradores incorrectos                           
+			360202	Lectura anterior a la última real                                   
+			360203	El suministro se liquida con curva de carga
+			360204	Periodo ajeno a esa comercializadora
+			360205  Estimación superior a un año
+			360206  Lectura aportada adelantada
+			360206  Lectura aportada errónea
+			360501	Duplicada	
+			370101	Se republica fichero
+			370201	Fichero correcto
+			370501	Duplicada	
+			380101	Se modifican datos cliente
+			380201	Cliente no consta en la base de datos
+			380501	Duplicada	
+			390101	Se envía certificado / informe
+			390201	No existe obligación legal de enviar certificado / informe
+			390202  Sin incidencia
+			390203  Trabajos programados
+			390204  Avería instalación particular cliente
+			390205  Originada por terceros 
+			390301	No gestionable por falta de datos
+			390501	Duplicada	
+			400101	Se envía duplicado solicitado
+			400201	No es posible enviar duplicado (motivos en texto resultado)
+			400202	Periodo ajeno a esa comercializadora
+			400501	Duplicada	
+			410101	Se corrige la situación
+			410201	Instalación correcta
+			410202	No legitimada. Relación extracontractual
+			410203	Instalación ajena a la distribuidora
+			410301	No gestionable por falta de datos
+			410501	Duplicada	
+			420101	Solicitud descargo aceptada
+			420201	Solicitud descargo rechazada
+			420202	Instalación ajena a la distribuidora
+			420501	Duplicada	
+			430101	Se procede al precintado / desprecintado
+			430201	No se procede al precintado / desprecintado
+			430501	Duplicada	
+			440101	Procede, explicación en campo resultado
+			440201	No procede, explicación en campo resultado
+			440501	Duplicada	
+			450101	Dirección actualizada
+			450201	No procede, explicación en campo resultado
+			450501	Duplicada	
+			460101	Procede
+			460201	No procede, explicación en campo resultado
+			460501	Duplicada
+			470101  Se genera curva
+			470201  No existe mejor curva disponible (no se genera curva)
+			470501  Duplicada
+			480101  Aclaración enviada
+			480201  No existe rechazo
+			480501  Duplicada
+			490101  Enviado fichero
+			490201  No existe fichero
+			490501  Duplicada
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="010101"/>
+			<xs:enumeration value="010201"/>
+			<xs:enumeration value="010501"/>
+			<xs:enumeration value="020101"/>
+			<xs:enumeration value="020102"/>
+			<xs:enumeration value="020201"/>
+			<xs:enumeration value="020202"/>
+			<xs:enumeration value="020501"/>
+			<xs:enumeration value="030101"/>
+			<xs:enumeration value="030102"/>
+			<xs:enumeration value="030103"/>
+			<xs:enumeration value="030201"/>
+			<xs:enumeration value="030202"/>
+			<xs:enumeration value="030203"/>
+			<xs:enumeration value="030204"/>
+			<xs:enumeration value="030205"/>
+			<xs:enumeration value="030301"/>
+			<xs:enumeration value="030302"/>
+			<xs:enumeration value="030303"/>
+			<xs:enumeration value="030304"/>
+			<xs:enumeration value="030305"/>
+			<xs:enumeration value="030401"/>
+			<xs:enumeration value="030501"/>
+			<xs:enumeration value="040101"/>
+			<xs:enumeration value="040201"/>
+			<xs:enumeration value="040202"/>
+			<xs:enumeration value="040203"/>
+			<xs:enumeration value="040204"/>
+			<xs:enumeration value="040205"/>
+			<xs:enumeration value="040206"/>
+			<xs:enumeration value="040207"/>
+			<xs:enumeration value="040208"/>
+			<xs:enumeration value="040301"/>
+			<xs:enumeration value="040302"/>
+			<xs:enumeration value="040501"/>
+			<xs:enumeration value="050101"/>
+			<xs:enumeration value="050102"/>
+			<xs:enumeration value="050201"/>
+			<xs:enumeration value="050301"/>
+			<xs:enumeration value="050302"/>
+			<xs:enumeration value="050303"/>
+			<xs:enumeration value="050401"/>
+			<xs:enumeration value="050501"/>
+			<xs:enumeration value="060101"/>
+			<xs:enumeration value="060102"/>
+			<xs:enumeration value="060103"/>
+			<xs:enumeration value="060104"/>
+			<xs:enumeration value="060105"/>
+			<xs:enumeration value="060201"/>
+			<xs:enumeration value="060202"/>
+			<xs:enumeration value="060203"/>
+			<xs:enumeration value="060204"/>
+			<xs:enumeration value="060205"/>
+			<xs:enumeration value="060206"/>
+			<xs:enumeration value="060207"/>
+			<xs:enumeration value="060209"/>
+			<xs:enumeration value="060401"/>
+			<xs:enumeration value="060501"/>
+			<xs:enumeration value="070101"/>
+			<xs:enumeration value="070201"/>
+			<xs:enumeration value="070401"/>
+			<xs:enumeration value="070501"/>
+			<xs:enumeration value="080101"/>
+			<xs:enumeration value="080102"/>
+			<xs:enumeration value="080201"/>
+			<xs:enumeration value="080401"/>
+			<xs:enumeration value="080502"/>
+			<xs:enumeration value="090101"/>
+			<xs:enumeration value="090102"/>
+			<xs:enumeration value="090103"/>
+			<xs:enumeration value="090104"/>
+			<xs:enumeration value="090105"/>
+			<xs:enumeration value="090106"/>
+			<xs:enumeration value="090107"/>
+			<xs:enumeration value="090108"/>
+			<xs:enumeration value="090201"/>
+			<xs:enumeration value="090202"/>
+			<xs:enumeration value="090203"/>
+			<xs:enumeration value="090204"/>
+			<xs:enumeration value="090205"/>
+			<xs:enumeration value="090206"/>
+			<xs:enumeration value="090207"/>
+			<xs:enumeration value="090208"/>
+			<xs:enumeration value="090209"/>
+			<xs:enumeration value="090210"/>
+			<xs:enumeration value="090301"/>
+			<xs:enumeration value="090401"/>
+			<xs:enumeration value="090501"/>
+			<xs:enumeration value="100101"/>
+			<xs:enumeration value="100102"/>
+			<xs:enumeration value="100201"/>
+			<xs:enumeration value="100202"/>
+			<xs:enumeration value="100401"/>
+			<xs:enumeration value="100501"/>
+			<xs:enumeration value="110101"/>
+			<xs:enumeration value="110102"/>
+			<xs:enumeration value="110103"/>
+			<xs:enumeration value="110201"/>
+			<xs:enumeration value="110401"/>
+			<xs:enumeration value="110501"/>
+			<xs:enumeration value="120101"/>
+			<xs:enumeration value="120201"/>
+			<xs:enumeration value="120202"/>
+			<xs:enumeration value="120401"/>
+			<xs:enumeration value="120501"/>
+			<xs:enumeration value="130101"/>
+			<xs:enumeration value="130201"/>
+			<xs:enumeration value="130501"/>
+			<xs:enumeration value="140101"/>
+			<xs:enumeration value="140102"/>
+			<xs:enumeration value="140201"/>
+			<xs:enumeration value="140202"/>
+			<xs:enumeration value="140501"/>
+			<xs:enumeration value="150101"/>
+			<xs:enumeration value="150201"/>
+			<xs:enumeration value="150202"/>
+			<xs:enumeration value="150301"/>
+			<xs:enumeration value="150302"/>
+			<xs:enumeration value="150501"/>
+			<xs:enumeration value="160101"/>
+			<xs:enumeration value="160102"/>
+			<xs:enumeration value="160201"/>
+			<xs:enumeration value="160202"/>
+			<xs:enumeration value="160501"/>
+			<xs:enumeration value="170101"/>
+			<xs:enumeration value="170102"/>
+			<xs:enumeration value="170201"/>
+			<xs:enumeration value="170202"/>
+			<xs:enumeration value="170203"/>
+			<xs:enumeration value="170501"/>
+			<xs:enumeration value="180101"/>
+			<xs:enumeration value="180102"/>
+			<xs:enumeration value="180201"/>
+			<xs:enumeration value="180202"/>
+			<xs:enumeration value="180401"/>
+			<xs:enumeration value="180501"/>
+			<xs:enumeration value="190101"/>
+			<xs:enumeration value="190102"/>
+			<xs:enumeration value="190103"/>
+			<xs:enumeration value="190104"/>
+			<xs:enumeration value="190105"/>
+			<xs:enumeration value="190201"/>
+			<xs:enumeration value="190202"/>
+			<xs:enumeration value="190203"/>
+			<xs:enumeration value="190204"/>
+			<xs:enumeration value="190401"/>
+			<xs:enumeration value="190501"/>
+			<xs:enumeration value="200101"/>
+			<xs:enumeration value="200201"/>
+			<xs:enumeration value="200202"/>
+			<xs:enumeration value="200203"/>
+			<xs:enumeration value="200501"/>
+			<xs:enumeration value="210101"/>
+			<xs:enumeration value="210201"/>
+			<xs:enumeration value="210202"/>
+			<xs:enumeration value="210203"/>
+			<xs:enumeration value="210204"/>
+			<xs:enumeration value="210205"/>
+			<xs:enumeration value="210206"/>
+			<xs:enumeration value="210207"/>
+			<xs:enumeration value="210208"/>
+			<xs:enumeration value="210209"/>
+			<xs:enumeration value="210301"/>
+			<xs:enumeration value="210302"/>
+			<xs:enumeration value="210501"/>
+			<xs:enumeration value="220101"/>
+			<xs:enumeration value="220201"/>
+			<xs:enumeration value="220202"/>
+			<xs:enumeration value="220203"/>
+			<xs:enumeration value="220204"/>
+			<xs:enumeration value="220205"/>
+			<xs:enumeration value="220206"/>
+			<xs:enumeration value="220207"/>
+			<xs:enumeration value="220501"/>
+			<xs:enumeration value="230101"/>
+			<xs:enumeration value="230201"/>
+			<xs:enumeration value="230202"/>
+			<xs:enumeration value="230501"/>
+			<xs:enumeration value="240101"/>
+			<xs:enumeration value="240201"/>
+			<xs:enumeration value="240202"/>
+			<xs:enumeration value="240501"/>
+			<xs:enumeration value="250101"/>
+			<xs:enumeration value="250201"/>
+			<xs:enumeration value="250202"/>
+			<xs:enumeration value="250203"/>
+			<xs:enumeration value="250301"/>
+			<xs:enumeration value="250501"/>
+			<xs:enumeration value="260101"/>
+			<xs:enumeration value="260201"/>
+			<xs:enumeration value="260202"/>
+			<xs:enumeration value="260203"/>
+			<xs:enumeration value="260501"/>
+			<xs:enumeration value="270101"/>
+			<xs:enumeration value="270201"/>
+			<xs:enumeration value="270202"/>
+			<xs:enumeration value="270401"/>
+			<xs:enumeration value="270501"/>
+			<xs:enumeration value="280101"/>
+			<xs:enumeration value="280102"/>
+			<xs:enumeration value="280201"/>
+			<xs:enumeration value="280202"/>
+			<xs:enumeration value="280401"/>
+			<xs:enumeration value="280501"/>
+			<xs:enumeration value="290101"/>
+			<xs:enumeration value="290201"/>
+			<xs:enumeration value="290401"/>
+			<xs:enumeration value="290501"/>
+			<xs:enumeration value="300101"/>
+			<xs:enumeration value="300201"/>
+			<xs:enumeration value="300401"/>
+			<xs:enumeration value="300501"/>
+			<xs:enumeration value="310101"/>
+			<xs:enumeration value="310201"/>
+			<xs:enumeration value="310401"/>
+			<xs:enumeration value="310501"/>
+			<xs:enumeration value="320101"/>
+			<xs:enumeration value="320201"/>
+			<xs:enumeration value="320202"/>
+			<xs:enumeration value="320203"/>
+			<xs:enumeration value="320401"/>
+			<xs:enumeration value="320501"/>
+			<xs:enumeration value="340101"/>
+			<xs:enumeration value="340102"/>
+			<xs:enumeration value="340103"/>
+			<xs:enumeration value="340104"/>
+			<xs:enumeration value="340105"/>
+			<xs:enumeration value="340106"/>
+			<xs:enumeration value="340107"/>
+			<xs:enumeration value="340201"/>
+			<xs:enumeration value="340501"/>
+			<xs:enumeration value="350101"/>
+			<xs:enumeration value="350201"/>
+			<xs:enumeration value="350202"/>
+			<xs:enumeration value="350203"/>
+			<xs:enumeration value="350204"/>
+			<xs:enumeration value="350205"/>
+			<xs:enumeration value="350206"/>
+			<xs:enumeration value="350207"/>
+			<xs:enumeration value="350501"/>
+			<xs:enumeration value="360101"/>
+			<xs:enumeration value="360201"/>
+			<xs:enumeration value="360202"/>
+			<xs:enumeration value="360203"/>
+			<xs:enumeration value="360204"/>
+			<xs:enumeration value="360205"/>
+			<xs:enumeration value="360206"/>
+			<xs:enumeration value="360207"/>
+			<xs:enumeration value="360501"/>
+			<xs:enumeration value="370101"/>
+			<xs:enumeration value="370201"/>
+			<xs:enumeration value="370501"/>
+			<xs:enumeration value="380101"/>
+			<xs:enumeration value="380201"/>
+			<xs:enumeration value="380501"/>
+			<xs:enumeration value="390101"/>
+			<xs:enumeration value="390201"/>
+			<xs:enumeration value="390202"/>
+			<xs:enumeration value="390203"/>
+			<xs:enumeration value="390204"/>
+			<xs:enumeration value="390205"/>
+			<xs:enumeration value="390301"/>
+			<xs:enumeration value="390501"/>
+			<xs:enumeration value="400101"/>
+			<xs:enumeration value="400201"/>
+			<xs:enumeration value="400202"/>
+			<xs:enumeration value="400501"/>
+			<xs:enumeration value="410101"/>
+			<xs:enumeration value="410201"/>
+			<xs:enumeration value="410202"/>
+			<xs:enumeration value="410203"/>
+			<xs:enumeration value="410301"/>
+			<xs:enumeration value="410501"/>
+			<xs:enumeration value="420101"/>
+			<xs:enumeration value="420201"/>
+			<xs:enumeration value="420202"/>
+			<xs:enumeration value="420501"/>
+			<xs:enumeration value="430101"/>
+			<xs:enumeration value="430201"/>
+			<xs:enumeration value="430501"/>
+			<xs:enumeration value="440101"/>
+			<xs:enumeration value="440201"/>
+			<xs:enumeration value="440501"/>
+			<xs:enumeration value="450101"/>
+			<xs:enumeration value="450201"/>
+			<xs:enumeration value="450501"/>
+			<xs:enumeration value="460101"/>
+			<xs:enumeration value="460201"/>
+			<xs:enumeration value="460501"/>
+			<xs:enumeration value="470101"/>
+			<xs:enumeration value="470201"/>
+			<xs:enumeration value="470501"/>
+			<xs:enumeration value="480101"/>
+			<xs:enumeration value="480201"/>
+			<xs:enumeration value="480501"/>
+			<xs:enumeration value="490101"/>
+			<xs:enumeration value="490201"/>
+			<xs:enumeration value="490501"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ParametroContratacion">
+		<xs:annotation>
+			<xs:documentation>Parámetros de la Contratación(Tabla 79)
+			01	Potencia Contratada
+			02	Titular
+			03	Tarifa de acceso
+			04	Propiedad del equipo de medida
+			05	Fecha de activación
+			06	Tipo de contratro
+			07	Modo control potencia
+			08	Periodicidad facturación
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
+			<xs:enumeration value="07"/>
+			<xs:enumeration value="08"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoIncidencia">
+		<xs:annotation>
+			<xs:documentation>Tipo de incidencia en equipos de medida (Tabla 86)
+			01	Comprobación
+			02	Verificación con patrón
+			03	Contador robado/ Sin contador
+			04	Contador averiado: parado, pantalla apagada/falla, sigue contando sin nada conectado en domicilio, quemado, error conexionado, suministro sin tensión.
+			05	Incidencias ICP
+			06  	Contador desprogramado: DH o reloj desprogramado (sólo marca en punta o en valle o las muestra cambiadas, dígitos contador no se corresponde con factura.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoAtencionIncorrecta">
+		<xs:annotation>
+			<xs:documentation>Tipo de atención incorrecta (Tabla 87)
+			01	Por personal de canales de atención
+			02	Por operarios de equipos de medida
+			03	Por operarios de nuevos suministros
+			04	Por operarios de inspección
+			05	Por operaciones
+			06  	Por operarios de lecturas
+		</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

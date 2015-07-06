@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<xs:annotation>
 		<xs:documentation>
@@ -19,8 +19,31 @@
 			Version 3.0 OCSUM 2013.04.26 (RD 1718/2013)
 				Se incluye el tipo de dato complejo "NotificacionCambiosATRDesdeDistribuidor" compuesto por un tipo nuevo sencillo, hace referencia al Proceso D.
 				Se incluye el elemento opcional PeriodicidadFacturacion en el tipo complejo "CondicionesContractualesC", hace referencia al paso 5 del Proceso M1, A3, C1, C2.
-			Version X.X OCSUM 2014.04.01
+			Version 3.2 OCSUM 2014.04.01
 			  Se modifican los nodos que contienen CuentaBancaria para que en su lugar contengan IBAN que es un tiposimple X34
+		
+			Version 3.4 OCSUM 2015.02.05 Cambio de numeración telefónica en el punto de medida
+				Se modifica el campo "TelefonoTelemedida" del tipo complejo "PuntoDeMedida" para que permita 13 digitos en vez de 9.
+			
+			Version 0.0 CNMC 2015.06.10
+Reclamaciones o Peticiones
+				Se incluye el tipo de dato complejo "DatosAceptacionReclamacion" y "DatoAceptacionReclamacion", hacen referencia al ProcesoR1 AceptacionReclamacion.
+				Se incluye el tipo de dato complejo "DatosRechazoReclamacion" y "DatoRechazoReclamacion", hacen referencia al ProcesoR1 RechazoReclamacion.
+				Se incluye el tipo de dato complejo "EnvioInformacionReclamacion", "DatosEnvioInformacion", "VariablesAportacionInformacion" y "VariableAportacionInformacion", hacen referencia al Proceso EnvioInformacionReclamacion.
+				Se incluye el tipo de dato complejo "CierreReclamacion", "DatosCierre" y "ContratoReclamacionPeticion", hacen referencia al Proceso CierreReclamacion.
+				Idreclamante del tipo complejo reclamante pasa a ser opcional
+				El nodo VariablesAportacionInformacion pasa a ser opcional
+				Se incluye el tipo de dato complejo "Retipificacion"
+				El nodo RegistrosDocs es opcional el padre y obligatorios todos los subcampos
+				Se incluye el tipo ClienteConDireccionYCorreoE para incluir el correo electrónico en el proceso R
+				Se incluye ContactoConCorreoE para incluir el correo electrónico en el proceso R 
+				Se modifica Reclamante para incluir el correo electrónico en el proceso R
+				Los campos TipoInformacion y DescPeticionInformacion pasan del grupo DatosEnvioInformacion a VariableAportacionInformacion para que el paso 04 del proceso R pueda contestar a n peticioness de información relizadas en el paso 03
+				Se modifica el comentario de los campos EnvioInformacionReclamacion/CierreReclamacion para pasarlo a un X4000 -paso 04/05 de reclamaciones-
+
+Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en el tipo complejo "CondicionesContractualesC", hace referencia a los movimientos de Activación (M1, C1, C2, A3).
+			
+				
 			Version X.X GISCE 2014.08.07
                           S'afegeix un altre cop CuentaBancaria amb un choice amb IBAN
 			Version X.X GISCE 2015.05.22
@@ -159,6 +182,25 @@
 		</xs:sequence>
 		<!-- Nombre Dirección Telefono Fax  -->
 	</xs:complexType>
+	<xs:complexType name="ClienteConDireccionYCorreoE">
+		<xs:sequence>
+			<xs:element name="IdCliente" type="IdCliente"/>
+			<xs:element name="Nombre" type="NombreCliente"/>
+			<xs:element name="Fax" type="TelefonoInternacional" minOccurs="0"/>
+			<xs:element name="Telefono" type="TelefonoInternacional" minOccurs="0"/>
+			<xs:element name="CorreoElectronico" type="X60" minOccurs="0"/>
+			<xs:element name="IndicadorTipoDireccion">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="F"/>
+						<xs:enumeration value="S"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Direccion" type="Direccion" minOccurs="0"/>
+		</xs:sequence>
+		<!-- Nombre Dirección Telefono Fax  -->
+	</xs:complexType>
 	<xs:complexType name="IdYNombreCliente">
 		<xs:sequence>
 			<xs:element name="IdCliente" type="IdCliente"/>
@@ -258,7 +300,7 @@
 		<xs:sequence>
 			<xs:element name="TarifaATR" type="Tarifa"/>
 			<xs:element name="PeriodicidadFacturacion" type="Periodicidad"/>
-                        <xs:element name="TipodeTelegestion" type="xs:string" minOccurs="0"/>
+			<xs:element name="TipodeTelegestion" type="TipodeTelegestion" minOccurs="0"/>
 			<xs:element name="PotenciasContratadas" type="Potencias"/>
 			<xs:element name="PotenciasMaximas" type="Potencias" minOccurs="0"/>
 			<xs:element name="ModoControlPotencia" type="ModoControlPotencia" minOccurs="0"/>
@@ -290,6 +332,13 @@
 		<xs:sequence>
 			<xs:element name="Nombre" type="NombreCliente"/>
 			<xs:element name="Telefono" type="TelefonoInternacional"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContactoConCorreoE">
+		<xs:sequence>
+			<xs:element name="Nombre" type="NombreCliente"/>
+			<xs:element name="Telefono" type="TelefonoInternacional"/>
+			<xs:element name="CorreoElectronico" type="X60" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CuentaBancaria">
@@ -362,7 +411,7 @@
 			<xs:element name="DireccionEnlace" type="X10" minOccurs="0"/>
 			<xs:element name="DireccionPuntoMedida" type="X10" minOccurs="0"/>
 			<xs:element name="NumLinea" type="Decimal2" minOccurs="0"/>
-			<xs:element name="TelefonoTelemedida" type="Decimal9" minOccurs="0"/>
+			<xs:element name="TelefonoTelemedida" type="Decimal13" minOccurs="0"/>
 			<xs:element name="EstadoTelefono" type="EstadoTelefono" minOccurs="0"/>
 			<xs:element name="ClaveAcceso" type="X10" minOccurs="0"/>
 			<xs:element name="TensionPM" type="Decimal9" minOccurs="0"/>
@@ -500,6 +549,7 @@
 			<xs:element name="Nombre" type="NombreCliente"/>
 			<xs:element name="Fax" type="TelefonoInternacional" minOccurs="0"/>
 			<xs:element name="Telefono" type="TelefonoInternacional" minOccurs="0"/>
+			<xs:element name="CorreoElectronico" type="X60" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="IdReclamante">
@@ -790,7 +840,98 @@
 	</xs:complexType>
 	<xs:complexType name="NotificacionCambiosATRDesdeDistribuidor">
 		<xs:sequence>
-			<xs:element name="MotivoCambioATRDesdeDistribuidora" type="MotivoCambioATRDesdeDistribuidora"/> 
+			<xs:element name="MotivoCambioATRDesdeDistribuidora" type="MotivoCambioATRDesdeDistribuidora"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DatosAceptacionReclamacion">
+		<xs:sequence>
+			<xs:element name="DatosAceptacion" type="DatoAceptacionReclamacion"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DatoAceptacionReclamacion">
+		<xs:sequence>
+			<xs:element name="FechaAceptacion" type="xs:date"/>
+			<xs:element name="CodigoReclamacionDistribuidora" type="X26"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DatosRechazoReclamacion">
+		<xs:sequence>
+			<xs:element name="Rechazo" type="DatoRechazoReclamacion" maxOccurs="5"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DatoRechazoReclamacion">
+		<xs:sequence>
+			<xs:element name="Secuencial" type="DecimalS9V2"/>
+			<xs:element name="CodigoMotivo" type="CodigoMotivoRechazo"/>
+			<xs:element name="Texto" type="X120" minOccurs="0"/>
+			<xs:element name="Fecha" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EnvioInformacionReclamacion">
+		<xs:sequence>
+			<xs:element name="DatosEnvioInformacion" type="DatosEnvioInformacion"/>
+			<xs:element name="VariablesAportacionInformacion" type="VariablesAportacionInformacion" minOccurs="0"/>
+			<xs:element name="Comentarios" type="X4000"/>
+			<xs:element name="RegistrosDocumento" type="RegistrosDocs" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DatosEnvioInformacion">
+		<xs:sequence>
+			<xs:element name="NumExpedienteAcometida" type="X20" minOccurs="0"/>
+			<xs:element name="FechaInformacion" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VariablesAportacionInformacion">
+		<xs:sequence>
+			<xs:element name="VariableAportacionInformacion" type="VariableAportacionInformacion" maxOccurs="10"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VariableAportacionInformacion">
+		<xs:sequence>
+			<xs:element name="Variable" type="X20"/>
+			<xs:element name="Valor" type="X45"/>
+			<xs:element name="TipoInformacion" type="TipoInformacionAdicional"/>
+			<xs:element name="DescPeticionInformacion" type="X255" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CierreReclamacion">
+		<xs:sequence>
+			<xs:element name="DatosCierre" type="DatosCierre"/>
+			<xs:element name="Retipificacion" type="Retipificacion" minOccurs="0"/>
+			<xs:element name="CodContrato" type="CodigoContrato" minOccurs="0"/>
+			<xs:element name="Comentarios" type="X4000"/>
+			<xs:element name="RegistrosDocumento" type="RegistrosDocs" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Retipificacion">
+		<xs:sequence>
+			<xs:element name="Tipo" type="TipoReclamacionPeticion"/>
+			<xs:element name="Subtipo" type="SubtipoReclamacionPeticion"/>
+			<xs:element name="DescRetipificacion" type="X255" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DatosCierre">
+		<xs:sequence>
+			<xs:element name="NumExpedienteAcometida" type="X20" minOccurs="0"/>
+			<xs:element name="Fecha" type="xs:date"/>
+			<xs:element name="Hora" type="xs:time"/>
+			<xs:element name="Tipo" type="TipoReclamacionPeticion"/>
+			<xs:element name="Subtipo" type="SubtipoReclamacionPeticion"/>
+			<xs:element name="CodigoReclamacionDistribuidora" type="X26"/>
+			<xs:element name="ResultadoReclamacion" type="ResultadoReclamacion"/>
+			<xs:element name="DetalleResultado" type="DetalleResultado" minOccurs="0"/>
+			<xs:element name="Observaciones" type="X400" minOccurs="0"/>
+			<xs:element name="IndemnizacionAbonada" type="DecimalS10V2" minOccurs="0"/>
+			<xs:element name="NumExpedienteAnomaliaFraude" type="X20" minOccurs="0"/>
+			<xs:element name="FechaMovimiento" type="xs:date" minOccurs="0"/>
+			<xs:element name="CodigoSolicitud" type="CodigoDeSolicitud" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContratoReclamacionPeticion">
+		<xs:sequence>
+			<xs:element name="IdContrato" type="IdContrato"/>
+			<xs:element name="TipoContratoATR" type="TipoContrato"/>
+			<xs:element name="TarifaATR" type="TarifaATR"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
