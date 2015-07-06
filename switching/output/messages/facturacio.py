@@ -33,6 +33,16 @@ class DatosGeneralesFactura(XmlModel):
                                                     'datos')
 
 
+class PeriodoCCH(XmlModel):
+    _sort_order = ('periodocch', 'fecha_desde', 'fecha_hasta')
+
+    def __init__(self):
+        self.periodocch = XmlField('PeriodoCCH')
+        self.fecha_desde = XmlField('FechaDesdeCCH')
+        self.fecha_hasta = XmlField('FechaHastaCCH')
+        super(PeriodoCCH, self).__init__('PeriodoCCH', 'periodocch')
+
+
 class Periodo(XmlModel):
     _sort_order = ('periodo', 'fecha_desde', 'fecha_hasta', 'meses')
 
@@ -45,7 +55,8 @@ class Periodo(XmlModel):
 
 
 class DatosFacturaATR(XmlModel):
-    _sort_order = ('datos', 'tipo', 'boe', 'tarifa', 'mcp', 'imab', 'periodo')
+    _sort_order = ('datos', 'tipo', 'boe', 'tarifa', 'mcp', 'imab',
+                   'indicativo_curva_carga', 'periodocch', 'periodo')
 
     def __init__(self):
         self.datos = XmlField('DatosFacturaATR')
@@ -54,6 +65,8 @@ class DatosFacturaATR(XmlModel):
         self.tarifa = XmlField('CodigoTarifa')
         self.mcp = XmlField('ModoControlPotencia')
         self.imab = XmlField('IndAltamedidoenBaja')
+        self.indicativo_curva_carga = XmlField('IndicativoCurvaCarga')
+        self.periodocch = PeriodoCCH()
         self.periodo = Periodo()
         super(DatosFacturaATR, self).__init__('DatosFacturaATR', 'datos')
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com)  -->
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="TipoCabecera.xsd"/>
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<xs:include schemaLocation="TiposComplejos.xsd"/>
@@ -23,22 +24,24 @@
 -Se añade una ocurrencia al campo IVA
 			Version X.X OCSUM 2014.05.22
 -Se modifican los campos para que la cuenta bancaria sea un sólo campo llamado IBAN tipo X34
-			Version X.X GISCE 2014.08.07
--S'afegeix un altre cop CuentaBancaria amb un choice amb IBAN
+			Version 0.0 OCSUM 2015.06.10
+- Se permite incorporar valores negativos para el campo ImporteTotalTerminoPotencia
+- Se incluyen modificaciones PVPC: el campo obligatorio "IndicativoCurvaCarga", el tipo complejo opcional "PeriodoCCH" que incluye los campos simples obligatorios "FechaDesdeCCH", "FechaHastaCCH" en el tipo complejo "DatosFacturaATR".
+			Versió X.X GISCE 2015.07.06
+- Tag IndicativoCurvaCarga opcional per compatibilitat enrera
 		</xs:documentation>
 	</xs:annotation>
-	<xs:element name="MensajeFacturacion">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Cabecera" type="Cabecera"/>
-				<xs:element name="Facturas" type="Facturas"/>
-				<xs:element name="OtrosDatosFactura" type="OtrosDatosFactura" minOccurs="0"/>
-				<xs:any namespace="##other" processContents="skip" minOccurs="0"/>
-			</xs:sequence>
-			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
-			<xs:attribute name="Firmar" type="xs:string" use="optional"/>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="MensajeFacturacion" type="MensajeFacturacion"/>
+	<xs:complexType name="MensajeFacturacion">
+		<xs:sequence>
+			<xs:element name="Cabecera" type="Cabecera"/>
+			<xs:element name="Facturas" type="Facturas"/>
+			<xs:element name="OtrosDatosFactura" type="OtrosDatosFactura" minOccurs="0"/>
+			<xs:any namespace="##other" processContents="skip" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
+		<xs:attribute name="Firmar" type="xs:string" use="optional"/>
+	</xs:complexType>
 	<xs:complexType name="TipoDatosGeneralesFactura">
 		<xs:sequence>
 			<xs:element name="NumeroFactura">
@@ -172,12 +175,25 @@
 														<xs:documentation>Tabla 107</xs:documentation>
 													</xs:annotation>
 												</xs:element>
-												<xs:element name="ModoControlPotencia" type="ModoControlPotencia"  minOccurs="0">
+												<xs:element name="ModoControlPotencia" type="ModoControlPotencia" minOccurs="0">
 													<xs:annotation>
 														<xs:documentation> (2=maximetrro o 1 =ICP)</xs:documentation>
 													</xs:annotation>
 												</xs:element>
 												<xs:element name="IndAltamedidoenBaja" type="Indicativo"/>
+												<xs:element name="IndicativoCurvaCarga" type="IndicativoCurvaCarga" minOccurs="0">
+													<xs:annotation>
+														<xs:documentation>Tabla 110 </xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="PeriodoCCH" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="FechaDesdeCCH" type="xs:date"/>
+															<xs:element name="FechaHastaCCH" type="xs:date"/>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
 												<xs:element name="Periodo">
 													<xs:complexType>
 														<xs:sequence>
@@ -264,8 +280,7 @@
 									<xs:element name="ImporteTotalTerminoPotencia">
 										<xs:simpleType>
 											<xs:restriction base="xs:decimal">
-												<xs:minInclusive value="0"/>
-												<xs:totalDigits value="14"/>
+														<xs:totalDigits value="14"/>
 												<xs:fractionDigits value="4"/>
 											</xs:restriction>
 										</xs:simpleType>
@@ -530,7 +545,8 @@
 									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
-						</xs:element><xs:element name="Medidas" minOccurs="0" maxOccurs="10">
+						</xs:element>
+						<xs:element name="Medidas" minOccurs="0" maxOccurs="10">
 							<xs:complexType>
 								<xs:sequence>
 									<xs:element name="CodUnificadoPuntoSuministro">
@@ -808,10 +824,7 @@
 								<xs:documentation>Fecha teorica de pago </xs:documentation>
 							</xs:annotation>
 						</xs:element>
-						<xs:choice minOccurs="0">
-							<xs:element name="IBAN" type="X34"/>
-							<xs:element name="CuentaBancaria" type="CuentaBancaria"/>
-						</xs:choice>
+						<xs:element name="IBAN" type="X34" minOccurs="0"/>
 						<xs:element name="IdRemesa">
 							<xs:annotation>
 								<xs:documentation>identificacion remesa o agrupación</xs:documentation>

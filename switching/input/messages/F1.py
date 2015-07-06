@@ -233,6 +233,29 @@ class FacturaATR(Facturas):
         return float(self.factura.DatosGeneralesFacturaATR.\
                     DatosFacturaATR.Periodo.NumeroMeses.text)
 
+    def info_curva_carga(self):
+        """Returns CCH information (curva de carga)"""
+        res = {'indicativo': '02', 'desde': '', 'hasta': ''}
+        try:
+            indicativo_curva_carga = self.factura.DatosGeneralesFacturaATR.\
+                DatosFacturaATR.IndicativoCurvaCarga.text
+
+            if indicativo_curva_carga in ['01']:
+                periodcch = self.factura.DatosGeneralesFacturaATR.\
+                    DatosFacturaATR.PeriodoCCH
+                return {
+                    'indicativo': indicativo_curva_carga,
+                    'desde': periodcch.FechaDesde.text,
+                    'hasta': periodcch.FechaHasta.text,
+                }
+            else:
+                return {'indicativo': indicativo_curva_carga,
+                        'desde': '', 'hasta': ''}
+        except AttributeError:
+            pass
+
+        return res
+
     def get_info_activa(self):
         """Retornat els periodes d'energia"""
         periode = []
