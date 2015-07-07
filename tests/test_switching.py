@@ -102,7 +102,7 @@ class Switching_W1_Test(unittest.TestCase):
     def test_create_pas02_accept(self):
         sup = supportClass()
         pas02 = w1.AceptacionAportacionLectura()
-        header = sup.getHeader('W1', '01')
+        header = sup.getHeader('W1', '02')
         pas02.set_agente('1234')
         dades_accept = w1.DatosAceptacionLectura()
         dades_accept.feed({'fecha_aceptacion': '2015-07-02'})
@@ -116,7 +116,7 @@ class Switching_W1_Test(unittest.TestCase):
     def test_create_pas02_reject(self):
         sup = supportClass()
         pas02 = w1.RechazoAportacionLectura()
-        header = sup.getHeader('W1', '01')
+        header = sup.getHeader('W1', '02')
         pas02.set_agente('1234')
         dades_reject = w1.DatosRechazoLectura()
         dades_reject.feed(
@@ -144,6 +144,25 @@ class Switching_W1_Test(unittest.TestCase):
         assert len(lecturas) == 2
         assert lecturas[0] == ('AE', 21, '1162.00')
         assert lecturas[1] == ('AE', 22, '3106.00')
+
+    def test_read_w102_ok(self):
+        self.w102_xml = W1.W1(self.xml_w102_ok)
+        self.w102_xml.parse_xml()
+        date = ''
+        if self.w102_xml.aceptacion:
+            date = self.w102_xml.aceptacion.fecha_aceptacion
+        assert date == '2015-07-02'
+
+    def test_read_w102_ko(self):
+        self.w102_xml = W1.W1(self.xml_w102_ko)
+        self.w102_xml.parse_xml()
+        date = ''
+        reason = ''
+        if not self.w102_xml.aceptacion:
+            date = self.w102_xml.rechazo.fecha_rechazo
+            reason = self.w102_xml.rechazo.motivo_rechazo
+        assert date == '2015-07-02'
+        assert reason == '01'
 
 
 class SwitchingC2Test(unittest.TestCase):

@@ -25,6 +25,24 @@ class W1(Message):
         return fecha_lectura
 
     @property
+    def aceptacion(self):
+        aceptacion = ''
+        try:
+            aceptacion = Aceptacion(self.obj.DatosAceptacionLectura)
+        except AttributeError:
+            pass
+        return aceptacion
+
+    @property
+    def rechazo(self):
+        rechazo = ''
+        try:
+            rechazo = Rechazo(self.obj.DatosRechazoLectura)
+        except AttributeError:
+            pass
+        return rechazo
+
+    @property
     def codigo_dh(self):
         codigo_dh = ''
         try:
@@ -66,3 +84,44 @@ class LecturaAportada(object):
         except AttributeError:
             pass
         return lectura_propuesta
+
+
+class Aceptacion(object):
+    """Classe que implementa la aceptació"""
+
+    def __init__(self, data):
+        self.aceptacion = data
+
+    @property
+    def fecha_aceptacion(self):
+        fecha_aceptacion = ''
+        try:
+            fecha_aceptacion = self.aceptacion.FechaAceptacion.text
+        except AttributeError:
+            pass
+        return fecha_aceptacion
+
+
+class Rechazo(object):
+    """Classe que implementa la aceptació"""
+
+    def __init__(self, data):
+        self.rechazo = data
+
+    @property
+    def fecha_rechazo(self):
+        fecha_rechazo = ''
+        try:
+            fecha_rechazo = self.rechazo.FechaRechazo.text
+        except AttributeError:
+            pass
+        return fecha_rechazo
+
+    @property
+    def motivo_rechazo(self):
+        motivo_rechazo = ''
+        try:
+            motivo_rechazo = self.rechazo.CodigoMotivo.text
+        except AttributeError:
+            pass
+        return motivo_rechazo
