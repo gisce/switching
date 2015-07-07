@@ -240,17 +240,18 @@ class FacturaATR(Facturas):
             indicativo_curva_carga = self.factura.DatosGeneralesFacturaATR.\
                 DatosFacturaATR.IndicativoCurvaCarga.text
 
+            res.update({'indicativo': indicativo_curva_carga})
+
             if indicativo_curva_carga in ['01']:
                 periodcch = self.factura.DatosGeneralesFacturaATR.\
                     DatosFacturaATR.PeriodoCCH
-                return {
-                    'indicativo': indicativo_curva_carga,
-                    'desde': periodcch.FechaDesde.text,
-                    'hasta': periodcch.FechaHasta.text,
-                }
+                res.update({
+                    'desde': periodcch.FechaDesdeCCH.text,
+                    'hasta': periodcch.FechaHastaCCH.text,
+                })
+                return res
             else:
-                return {'indicativo': indicativo_curva_carga,
-                        'desde': '', 'hasta': ''}
+                return res
         except AttributeError:
             pass
 
