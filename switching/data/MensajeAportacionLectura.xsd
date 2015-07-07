@@ -3,7 +3,7 @@
 	<xs:annotation>
 		<xs:documentation>
 		
-Version x.x   2014.06.04
+Version 0.0 CNMC 2015.06.12
 
 		</xs:documentation>
 	</xs:annotation>
@@ -15,7 +15,7 @@ Version x.x   2014.06.04
 			<xs:sequence>
 				<xs:element name="Cabecera" type="Cabecera"/>
 				<xs:element name="FechaLectura" type="xs:date" minOccurs="1"/>
-				<xs:element name="CodigoDH" type="CodigoDH" minOccurs="1"/>
+				<xs:element name="CodigoDH" type="TipoDH" minOccurs="1"/>
 				<xs:element name="LecturaAportada" minOccurs="1" maxOccurs="20">
 					<xs:complexType>
 						<xs:sequence>							

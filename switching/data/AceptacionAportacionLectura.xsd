@@ -3,7 +3,7 @@
 	<xs:annotation>
 		<xs:documentation>
 		
-Version x.x   2014.03.03
+		Version 0.0 CNMC 2015.06.10
 se eliminan los elementos FechaLectura, LecturaRegistrada y el minOccurs 1 de FechaAceptacion ya que por defecto es obligatorio
 Se modifica el nombre del nodo AceptacionLectura a DatosAceptacionLectura
 
