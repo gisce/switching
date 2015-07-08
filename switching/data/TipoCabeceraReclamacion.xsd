@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns="http://localhost/elegibilidad" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified">
+
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!--
+		Version X.X OCSUM 2014.04.03 Reclamaciones, Incidencias o Peticiones
+			Creación xsd
+			Se incluye el campo CUPS como opcional
+		Version 0.0 CNMC 2015.06.10 Reclamaciones o Peticiones. 
+		
+	-->
+	<xs:complexType name="Cabecera">
+		<xs:sequence>
+
+			<xs:element name="CodigoREEEmpresaEmisora"	type="Agente"/>
+			<xs:element name="CodigoREEEmpresaDestino"	type="Agente"/>
+			<xs:element name="CodigoDelProceso"		type="CodigoDelProceso"/>
+			<xs:element name="CodigoDePaso"			type="CodigoDePaso"/>
+			<xs:element name="CodigoDeSolicitud"		type="CodigoDeSolicitud"/>
+			<xs:element name="SecuencialDeSolicitud"	type="SecuencialDeSolicitud"/>
+			<xs:element name="FechaSolicitud"		type="xs:dateTime"/>
+			<xs:element name="CUPS"					type="CUPS" minOccurs="0"/>
+
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

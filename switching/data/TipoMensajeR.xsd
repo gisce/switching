@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://localhost/elegibilidad" targetNamespace="http://localhost/elegibilidad" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!--
+		Version X.X OCSUM 2014.06.04 Reclamaciones, Incidencias o Peticiones
+			Creación xsd
+version X.X OCSUM 2014.10.16 Se corrige el campo Cliente, FechaLectura, CodigoDH y LecturaAportada  para que sean opcionales y el campo TipoReclamante para que sea obligatorio tal y como se define en el excel explicativo. 
+		Version 0.0 CNMC 2015.06.10 Se elimina el campo Proceso y se sustituye el tipo Comentario por un x4000
+	-->
+	<xs:complexType name="SolicitudReclamacion">
+		<xs:sequence>
+			<xs:element name="DatosSolicitud" type="DatosPasoSolicitud"/>
+			<xs:element name="VariablesDetalleReclamacion" type="VariablesDetalleReclamacion"/>
+			<xs:element name="Cliente" type="ClienteConDireccionYCorreoE" minOccurs="0"/>
+			<xs:element name="TipoReclamante" type="TipoReclamante"/>
+			<xs:element name="Reclamante" type="DatosReclamante" minOccurs="0"/>
+			<xs:element name="Comentarios" type="X4000"/>
+			<xs:element name="RegistrosDocumento" type="RegistrosDocs" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Tipos secundarios de la transaccion actual -->
+	<xs:complexType name="DatosPasoSolicitud">
+		<xs:sequence>
+			<xs:element name="Tipo" type="TipoReclamacionPeticion"/>
+			<xs:element name="Subtipo" type="SubtipoReclamacionPeticion"/>
+			<xs:element name="ReferenciaOrigen" type="X22" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VariablesDetalleReclamacion">
+		<xs:sequence>
+			<xs:element name="VariableDetalleReclamacion" type="VariableDetalleReclamacion" maxOccurs="10"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VariableDetalleReclamacion">
+		<xs:sequence>
+			<xs:element name="NumExpedienteAcometida" type="X20" minOccurs="0"/>
+			<xs:element name="FechaIncidente" type="xs:date" minOccurs="0"/>
+			<xs:element name="NumFacturaATR" type="X26" minOccurs="0"/>
+			<xs:element name="TipoConceptoFacturado" type="TipoConceptoFacturado" minOccurs="0"/>
+			<xs:element name="FechaLectura" type="xs:date" minOccurs="0"/>
+			<xs:element name="CodigoDH" type="TipoDH" minOccurs="0"/>
+			<xs:element name="LecturasAportadas" type="LecturasAportadas" minOccurs="0"/>
+			<xs:element name="CodigoIncidencia" type="TipoIncidencia" minOccurs="0"/>
+			<xs:element name="CodigoSolicitud" type="CodigoDeSolicitud" minOccurs="0"/>
+			<xs:element name="ParametroContratacion" type="ParametroContratacion" minOccurs="0"/>
+			<xs:element name="ConceptoDisconformidad" type="X120" minOccurs="0"/>
+			<xs:element name="TipoDeAtencionIncorrecta" type="TipoAtencionIncorrecta" minOccurs="0"/>
+			<xs:element name="IBAN" type="X34" minOccurs="0"/>
+			<xs:element name="Contacto" type="ContactoConCorreoE" minOccurs="0"/>
+			<xs:element name="CodigoSolicitudReclamacion" type="CodigoDeSolicitud" minOccurs="0"/>
+			<xs:element name="FechaDesde" type="xs:date" minOccurs="0"/>
+			<xs:element name="FechaHasta" type="xs:date" minOccurs="0"/>
+			<xs:element name="ImporteReclamado" type="DecimalS10V4" minOccurs="0"/>
+			<xs:element name="UbicacionIncidencia" type="X45" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LecturasAportadas">
+		<xs:sequence>
+			<xs:element name="LecturaAportada" maxOccurs="20">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Integrador" type="MagnitudMedida" minOccurs="1"/>
+						<xs:element name="CodigoPeriodoDH" type="TipoCodigoPeriodoDH" minOccurs="1"/>
+						<xs:element name="LecturaPropuesta" type="DecimalS10V2" minOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

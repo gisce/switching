@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://localhost/elegibilidad" xmlns="http://localhost/elegibilidad" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="TiposComplejos.xsd"/>
+	<xs:include schemaLocation="TiposSencillos.xsd"/>
+	<!--
+		Version X.X OCSUM 2014.06.04 Reclamaciones, Incidencias o Peticiones
+			Creación xsd
+		Version 0.0 CNMC 2015.06.10 Se añaden hasta un máximo de 10 ocurrencias a las solicitudes de información adicional.
+	-->
+	<xs:complexType name="InformacionAdicional">
+		<xs:sequence>
+			<xs:element name="DatosInformacion" type="DatosInformacion"/>
+			<xs:element name="InformacionIntermedia" type="InformacionIntermedia" minOccurs="0"/>
+			<xs:element name="Retipificacion" type="Retipificacion" minOccurs="0"/>
+			<xs:element name="SolicitudesInformacionAdicional" type="SolicitudesInformacionAdicional" minOccurs="0"/>
+			<xs:element name="Comentarios" type="X4000"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Tipos secundarios de la transaccion actual -->
+	<xs:complexType name="DatosInformacion">
+		<xs:sequence>
+			<xs:element name="NumExpedienteAcometida" type="X20" minOccurs="0"/>
+			<xs:element name="TipoComunicacion" type="TipoComunicacionReclamacion"/>
+			<xs:element name="CodigoReclamacionDistribuidora" type="X26"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="InformacionIntermedia">
+		<xs:sequence>
+			<xs:element name="DescInformacionIntermedia" type="X255" minOccurs="0"/>
+			<xs:element name="Intervenciones" type="Intervenciones" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Intervenciones">
+		<xs:sequence>
+			<xs:element name="Intervencion" type="Intervencion" maxOccurs="10"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Intervencion">
+		<xs:sequence>
+			<xs:element name="TipoIntervencion" type="TipoIntervencion"/>
+			<xs:element name="Fecha" type="xs:date"/>
+			<xs:element name="HoraDesde" type="xs:time"/>
+			<xs:element name="HoraHasta" type="xs:time"/>
+			<xs:element name="NumeroVisita" type="Decimal2" minOccurs="0"/>
+			<xs:element name="Resultado" type="ResultadoIntervencion"/>
+			<xs:element name="DetalleResultado" type="X255" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SolicitudesInformacionAdicional">
+		<xs:sequence>
+			<xs:element name="SolicitudInformacionAdicional" type="SolicitudInformacionAdicional" maxOccurs="10"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SolicitudInformacionAdicional">
+		<xs:sequence>
+			<xs:element name="TipoInformacionAdicional" type="TipoInformacionAdicional"/>
+			<xs:element name="DescPeticionInformacion" type="X255" minOccurs="0"/>
+			<xs:element name="FechaLimiteEnvio" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
