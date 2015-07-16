@@ -12,10 +12,35 @@
 		<Version>02</Version>
 	</Cabecera>
 	<FechaLectura>2015-02-18</FechaLectura>
-	<CodigoDH>2</CodigoDH>
+	<CodigoDH>6</CodigoDH>
+    <LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>61</CodigoPeriodoDH>
+		<LecturaPropuesta>1162.46</LecturaPropuesta>
+	</LecturaAportada>
 	<LecturaAportada>
 		<Integrador>AE</Integrador>
-		<CodigoPeriodoDH>10</CodigoPeriodoDH>
+		<CodigoPeriodoDH>62</CodigoPeriodoDH>
+		<LecturaPropuesta>3106.00</LecturaPropuesta>
+	</LecturaAportada>
+    <LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>63</CodigoPeriodoDH>
+		<LecturaPropuesta>0.00</LecturaPropuesta>
+	</LecturaAportada>
+	<LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>64</CodigoPeriodoDH>
+		<LecturaPropuesta>1234.00</LecturaPropuesta>
+	</LecturaAportada>
+    <LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>65</CodigoPeriodoDH>
+		<LecturaPropuesta>1234567890.00</LecturaPropuesta>
+	</LecturaAportada>
+	<LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>66</CodigoPeriodoDH>
 		<LecturaPropuesta>0.00</LecturaPropuesta>
 	</LecturaAportada>
 </SolicitudAportacionLectura>

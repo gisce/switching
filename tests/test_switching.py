@@ -106,7 +106,12 @@ class Switching_W1_Test(unittest.TestCase):
         header = sup.getHeader('W1', '01')
         pas01.set_agente('1234')
         lecturas = []
-        for integrador, periodo, medida in [('AE', 10, 0.0)]:
+        for integrador, periodo, medida in [('AE', 61, float(1162.4567)),
+                                            ('AE', 62, int(3106)),
+                                            ('AE', 63, 0.0),
+                                            ('AE', 64, '1234.00'),
+                                            ('AE', 65, 1234567890.00),
+                                            ('AE', 66, False), ]:
             lectura = w1.LecturaAportada()
             lectura.feed(dict(
                 integrador=integrador,
@@ -117,12 +122,12 @@ class Switching_W1_Test(unittest.TestCase):
         pas01.feed({
             'capcalera': header,
             'fecha_lectura': '2015-02-18',
-            'codigodh': 1,
+            'codigodh': 6,
             'lecturas': lecturas,
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_w101.read())
+        self.assertXmlEqual(xml, self.xml_w101_0.read())
 
     def test_create_pas02_accept(self):
         sup = supportClass()

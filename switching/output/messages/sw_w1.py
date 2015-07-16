@@ -5,8 +5,12 @@ from libcomxml.core import XmlModel, XmlField
 from switching.output.messages.base import Cabecera
 
 
-def w1_format_measure(val):
-    return not isinstance(val, basestring) and float(val) or val
+def w1_format_measure(valor):
+    return (
+        valor if isinstance(valor, basestring)
+        else "%.2f" % float(valor) or '0.00'
+    )
+
 
 class DatosAceptacionLectura(XmlModel):
     _sort_order = (
@@ -50,10 +54,11 @@ class LecturaAportada(XmlModel):
         self.lectura_aportada = XmlField('LecturaAportada')
         self.integrador = XmlField('Integrador')
         self.codigo_periodedh = XmlField('CodigoPeriodoDH')
-        self.lectura_propuesta = XmlField('LecturaPropuesta',
-                                          rep=w1_format_measure)
+        self.lectura_propuesta = XmlField(
+            'LecturaPropuesta', rep=w1_format_measure
+        )
         super(LecturaAportada, self).__init__(
-            'LecturaAportada', 'lectura_aportada')
+            'LecturaAportada', 'lectura_aportada', drop_empty=False)
         
 
 #01
