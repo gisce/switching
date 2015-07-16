@@ -66,6 +66,7 @@ class Switching_W1_Test(unittest.TestCase):
 
     def setUp(self):
         self.xml_w101 = open(get_data("w101.xml"), "r")
+        self.xml_w101_0 = open(get_data("w101_0.xml"), "r")
         self.xml_w102_ok = open(get_data("w102-aceptacio.xml"), "r")
         self.xml_w102_ko = open(get_data("w102-rebuig.xml"), "r")
 
@@ -93,6 +94,30 @@ class Switching_W1_Test(unittest.TestCase):
             'capcalera': header,
             'fecha_lectura': '2015-02-18',
             'codigodh': 2,
+            'lecturas': lecturas,
+        })
+        pas01.build_tree()
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_w101.read())
+
+    def test_create_pas01_0_value(self):
+        sup = supportClass()
+        pas01 = w1.SolicitudAportacionLectura()
+        header = sup.getHeader('W1', '01')
+        pas01.set_agente('1234')
+        lecturas = []
+        for integrador, periodo, medida in [('AE', 10, 0.0)]:
+            lectura = w1.LecturaAportada()
+            lectura.feed(dict(
+                integrador=integrador,
+                codigo_periodedh=periodo,
+                lectura_propuesta=medida,
+            ))
+            lecturas.append(lectura)
+        pas01.feed({
+            'capcalera': header,
+            'fecha_lectura': '2015-02-18',
+            'codigodh': 1,
             'lecturas': lecturas,
         })
         pas01.build_tree()
