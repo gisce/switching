@@ -47,7 +47,8 @@ class LecturaAportada(XmlModel):
         self.lectura_aportada = XmlField('LecturaAportada')
         self.integrador = XmlField('Integrador')
         self.codigo_periodedh = XmlField('CodigoPeriodoDH')
-        self.lectura_propuesta = XmlField('LecturaPropuesta')
+        self.lectura_propuesta = XmlField('LecturaPropuesta',
+                                          rep=lambda x: '%.2f' % x)
         super(LecturaAportada, self).__init__(
             'LecturaAportada', 'lectura_aportada')
         
