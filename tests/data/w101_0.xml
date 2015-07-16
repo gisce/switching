@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<SolicitudAportacionLectura xmlns="http://localhost/elegibilidad" AgenteSolicitante="1234">
+	<Cabecera>
+		<CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+		<CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+		<CodigoDelProceso>W1</CodigoDelProceso>
+		<CodigoDePaso>01</CodigoDePaso>
+		<CodigoDeSolicitud>201412111009</CodigoDeSolicitud>
+		<SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+		<Codigo>ES1234000000000001JN0F</Codigo>
+		<FechaSolicitud>2014-04-16T22:13:37</FechaSolicitud>
+		<Version>02</Version>
+	</Cabecera>
+	<FechaLectura>2015-02-18</FechaLectura>
+	<CodigoDH>6</CodigoDH>
+    <LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>61</CodigoPeriodoDH>
+		<LecturaPropuesta>1162.46</LecturaPropuesta>
+	</LecturaAportada>
+	<LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>62</CodigoPeriodoDH>
+		<LecturaPropuesta>3106.00</LecturaPropuesta>
+	</LecturaAportada>
+    <LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>63</CodigoPeriodoDH>
+		<LecturaPropuesta>0.00</LecturaPropuesta>
+	</LecturaAportada>
+	<LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>64</CodigoPeriodoDH>
+		<LecturaPropuesta>1234.00</LecturaPropuesta>
+	</LecturaAportada>
+    <LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>65</CodigoPeriodoDH>
+		<LecturaPropuesta>1234567890.00</LecturaPropuesta>
+	</LecturaAportada>
+	<LecturaAportada>
+		<Integrador>AE</Integrador>
+		<CodigoPeriodoDH>66</CodigoPeriodoDH>
+		<LecturaPropuesta>0.00</LecturaPropuesta>
+	</LecturaAportada>
+</SolicitudAportacionLectura>
