@@ -51,6 +51,11 @@ class W1(Message):
             pass
         return codigo_dh
 
+    @property
+    def contracte(self):
+        """Retorna l'objecte Contracte"""
+        return False
+
 
 class LecturaAportada(object):
     """Classe que implementa la direccio"""
