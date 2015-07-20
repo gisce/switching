@@ -160,7 +160,7 @@ class Switching_W1_Test(unittest.TestCase):
         self.assertXmlEqual(xml, self.xml_w102_ko.read())
 
     def test_read_w101(self):
-        self.w101_xml = W1.W1(self.xml_w101)
+        self.w101_xml = W1(self.xml_w101)
         self.w101_xml.parse_xml()
         date = self.w101_xml.fecha_lectura
         cdh = self.w101_xml.codigo_dh
@@ -176,7 +176,7 @@ class Switching_W1_Test(unittest.TestCase):
         assert lecturas[1] == ('AE', 22, '3106.00')
 
     def test_read_w102_ok(self):
-        self.w102_xml = W1.W1(self.xml_w102_ok)
+        self.w102_xml = W1(self.xml_w102_ok)
         self.w102_xml.parse_xml()
         date = ''
         if self.w102_xml.aceptacion:
@@ -184,7 +184,7 @@ class Switching_W1_Test(unittest.TestCase):
         assert date == '2015-07-02'
 
     def test_read_w102_ko(self):
-        self.w102_xml = W1.W1(self.xml_w102_ko)
+        self.w102_xml = W1(self.xml_w102_ko)
         self.w102_xml.parse_xml()
         date = ''
         reason = ''

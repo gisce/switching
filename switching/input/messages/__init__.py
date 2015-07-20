@@ -9,4 +9,5 @@ from C1 import C1
 from C2 import C2
 from D1 import D1
 from M1 import M1
+from W1 import W1
 import defs
