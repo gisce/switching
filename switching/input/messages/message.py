@@ -159,14 +159,15 @@ class Message(MessageBase):
                         trobat = True
                         break
                 if not trobat:
-                    msg = (_('Tipus de fitxer \'%s\' no suportat') %
-                                                              root.tag)
+                    msg = (_('Tipus de fitxer \'%s\' no suportat') % root.tag)
                     raise except_f1('Error', msg)
             else:
                 fitxer = XSD_DATA[self.tipus][self.pas]
             self._header = fitxer.split(".xsd")[0]
             xsd = switching.get_data(fitxer)
             self.f_xsd = open(xsd, 'r')
+        except except_f1, e:
+            raise e
         except:
             msg = (_('Fitxer \'%s\' corrupte') %
                      switching.get_data(XSD_DATA[self.tipus]))
