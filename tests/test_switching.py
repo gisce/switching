@@ -7,6 +7,7 @@ from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
 from switching.output.messages import sw_m1 as m1
 from switching.output.messages import sw_a3 as a3
+from switching.output.messages import sw_r1 as r1
 from switching.output.messages.base import Cabecera
 from . import unittest
 
@@ -59,6 +60,38 @@ class supportClass(object):
         }
         header.feed(vals)
         return header
+
+    def getCliente(self):
+        #client
+        idclient = c1.IdCliente()
+        idclient.feed({
+            'cifnif': 'DN',
+            'identificador': '11111111H',
+        })
+
+        nomclient = c1.Nombre()
+        nom = {'nombrepila': 'Carla',
+               'apellido1': 'Aramberri',
+               'apellido2': 'Cadenas'}
+        nomclient.feed(nom)
+
+        telefon = c1.Telefono()
+        telf_fields = {
+            'numero': '71407365',
+            'prefijo': 34
+        }
+        telefon.feed(telf_fields)
+
+        client = c1.Cliente()
+        cli_fields = {
+            'idcliente': idclient,
+            'nombre': nomclient,
+            'indicador': 'S',
+            'telefono': telefon,
+        }
+        client.feed(cli_fields)
+
+        return client
 
 
 class Switching_W1_Test(unittest.TestCase):
@@ -706,6 +739,75 @@ class SwitchingM1Test(unittest.TestCase):
         pas01.build_tree()
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_m101_ciepapel.read())
+
+class Switching_R1_Test(unittest.TestCase):
+    """test de W1"""
+
+    def setUp(self):
+        self.xml_r101_minim = open(get_data("r101_minim.xml"), "r")
+        #self.xml_w101_0 = open(get_data("w101_0.xml"), "r")
+        #self.xml_w102_ok = open(get_data("w102-aceptacio.xml"), "r")
+        #self.xml_w102_ko = open(get_data("w102-rebuig.xml"), "r")
+
+    def tearDown(self):
+        self.xml_r101_minim.close()
+        #self.xml_r102_ok.close()
+        #self.xml_1102_ko.close()
+
+    def getHeader(self, process='R1', step='01'):
+        header = r1.CabeceraReclamacion()
+        vals = {
+            'proceso': process,
+            'paso': step,
+            'solicitud': '20141211100908',
+            'secuencia': '01',
+            'cups': 'ES1234000000000001JN0F',
+            'ree_emisora': '1234',
+            'ree_destino': '4321',
+            'fecha': '2014-04-16T22:13:37',
+        }
+        header.feed(vals)
+        return header
+
+    def getDatosSolicitud(self, tipo, subtipo, ref=None):
+        dades = r1.DatosSolicitud()
+        vals = {
+            'tipus': tipo,
+            'subtipus': subtipo,
+        }
+
+        if ref:
+            vals.update({'ref_origen': ref})
+        dades.feed(vals)
+        return dades
+
+    def test_create_pas01_minim(self):
+        sup = supportClass()
+        pas01 = r1.MensajeReclamacionIncidenciaPeticion()
+        header = self.getHeader('R1', '01')
+        pas01.set_agente('1234')
+        dades = self.getDatosSolicitud('03', '16')
+
+        variables = r1.VariablesDetalleReclamacion()
+
+        client = sup.getCliente()
+        solicitud = r1.SolicitudReclamacion()
+        solicitud.feed({
+            'dades': dades,
+            'variables': variables,
+            #'client': client,
+            'tipus_reclamant': '06',
+            'comentaris': u'R1-01 mínimum Test',
+        })
+        pas01.feed({
+            'capcalera': header,
+            'solicitud': solicitud
+        })
+        pas01.build_tree()
+        pas01.pretty_print = True
+        xml = str(pas01)
+        print xml
+        self.assertXmlEqual(xml, self.xml_r101_minim.read())
 
 if __name__ == '__main__':
     unittest.main()
