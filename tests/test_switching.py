@@ -70,24 +70,33 @@ class supportClass(object):
         })
 
         nomclient = c1.Nombre()
-        nom = {'nombrepila': 'Carla',
-               'apellido1': 'Aramberri',
-               'apellido2': 'Cadenas'}
+        nom = {'nombrepila': 'Perico',
+               'apellido1': 'Palote',
+               'apellido2': 'Pérez'}
         nomclient.feed(nom)
 
         telefon = c1.Telefono()
         telf_fields = {
-            'numero': '71407365',
+            'numero': '555123123',
             'prefijo': 34
         }
         telefon.feed(telf_fields)
+
+        fax = c1.Telefono('Fax')
+        fax_fields = {
+            'numero': '555124124',
+            'prefijo': 34
+        }
+        fax.feed(fax_fields)
 
         client = c1.Cliente()
         cli_fields = {
             'idcliente': idclient,
             'nombre': nomclient,
             'indicador': 'S',
+            'fax': fax,
             'telefono': telefon,
+            'correu': 'pericopalote@acme.com',
         }
         client.feed(cli_fields)
 
@@ -232,6 +241,7 @@ class SwitchingC2Test(unittest.TestCase):
     """test de C2"""
 
     def setUp(self):
+        sup = supportClass()
         self.xml_c201 = open(get_data("c201.xml"), "r")
         self.xml_c201_ciepapel = open(get_data("c201_CiePapel.xml"), "r")
 
@@ -279,33 +289,7 @@ class SwitchingC2Test(unittest.TestCase):
         self.contracte.feed(ctr_fields)
 
         #client
-        idclient = c1.IdCliente()
-        idclient.feed({
-            'cifnif': 'DN',
-            'identificador': '11111111H',
-        })
-
-        nomclient = c1.Nombre()
-        nom = {'nombrepila': 'Carla',
-               'apellido1': 'Aramberri',
-               'apellido2': 'Cadenas'}
-        nomclient.feed(nom)
-
-        telefon = c1.Telefono()
-        telf_fields = {
-            'numero': '71407365',
-            'prefijo': 34
-        }
-        telefon.feed(telf_fields)
-
-        self.client = c1.Cliente()
-        cli_fields = {
-            'idcliente': idclient,
-            'nombre': nomclient,
-            'indicador': 'S',
-            'telefono': telefon,
-        }
-        self.client.feed(cli_fields)
+        self.client = sup.getCliente()
 
         #mesura
         self.mesura = c2.Medida()
@@ -405,6 +389,7 @@ class SwitchingA3Test(unittest.TestCase):
     """test de A3"""
 
     def setUp(self):
+        sup = supportClass()
         self.xml_a301 = open(get_data("a301.xml"), "r")
         self.xml_a301_ciepapel = open(get_data("a301_CiePapel.xml"), "r")
 
@@ -453,33 +438,7 @@ class SwitchingA3Test(unittest.TestCase):
         self.contracte.feed(ctr_fields)
 
         #client
-        idclient = c1.IdCliente()
-        idclient.feed({
-            'cifnif': 'DN',
-            'identificador': '11111111H',
-        })
-
-        nomclient = c1.Nombre()
-        nom = {'nombrepila': 'Carla',
-               'apellido1': 'Aramberri',
-               'apellido2': 'Cadenas'}
-        nomclient.feed(nom)
-
-        telefon = c1.Telefono()
-        telf_fields = {
-            'numero': '71407365',
-            'prefijo': 34
-        }
-        telefon.feed(telf_fields)
-
-        self.client = c1.Cliente()
-        cli_fields = {
-            'idcliente': idclient,
-            'nombre': nomclient,
-            'indicador': 'S',
-            'telefono': telefon,
-        }
-        self.client.feed(cli_fields)
+        self.client = sup.getCliente()
 
         #mesura
         self.mesura = c2.Medida()
@@ -573,6 +532,7 @@ class SwitchingM1Test(unittest.TestCase):
     """test de M1"""
 
     def setUp(self):
+        sup = supportClass()
         self.xml_m101 = open(get_data("m101.xml"), "r")
         self.xml_m101_ciepapel = open(get_data("m101_CiePapel.xml"), "r")
 
@@ -619,33 +579,7 @@ class SwitchingM1Test(unittest.TestCase):
         self.contracte.feed(ctr_fields)
 
         #client
-        idclient = c1.IdCliente()
-        idclient.feed({
-            'cifnif': 'DN',
-            'identificador': '11111111H',
-        })
-
-        nomclient = c1.Nombre()
-        nom = {'nombrepila': 'Carla',
-               'apellido1': 'Aramberri',
-               'apellido2': 'Cadenas'}
-        nomclient.feed(nom)
-
-        telefon = c1.Telefono()
-        telf_fields = {
-            'numero': '71407365',
-            'prefijo': 34
-        }
-        telefon.feed(telf_fields)
-
-        self.client = c1.Cliente()
-        cli_fields = {
-            'idcliente': idclient,
-            'nombre': nomclient,
-            'indicador': 'S',
-            'telefono': telefon,
-        }
-        self.client.feed(cli_fields)
+        self.client = sup.getCliente()
 
         #mesura
         self.mesura = c2.Medida()

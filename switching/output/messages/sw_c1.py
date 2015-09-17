@@ -181,16 +181,18 @@ class Nombre(XmlModel):
 class Telefono(XmlModel):
     _sort_order = ('telefono', 'prefijo', 'numero')
         
-    def __init__(self):
-        self.telefono = XmlField('Telefono')
+    def __init__(self, tagname=None):
+        if not tagname:
+            tagname = 'Telefono'
+        self.telefono = XmlField(tagname)
         self.prefijo = XmlField('PrefijoPais')
         self.numero = XmlField('Numero')
-        super(Telefono, self).__init__('Telefono', 'telefono')
+        super(Telefono, self).__init__(tagname, 'telefono')
 
 
 class Cliente(XmlModel):
     _sort_order = ('cliente', 'idcliente', 'nombre', 'titular_pagador',
-                   'telefono', 'indicador', 'direccion', )
+                   'fax', 'telefono', 'correu', 'indicador', 'direccion', )
 
     def __init__(self, tagname=None):
         if not tagname:
@@ -198,7 +200,9 @@ class Cliente(XmlModel):
         self.cliente = XmlField(tagname)
         self.idcliente = IdCliente()
         self.nombre = Nombre()
+        self.fax = Telefono()
         self.telefono = Telefono()
+        self.correu = XmlField('CorreoElectronico')
         self.indicador = XmlField('IndicadorTipoDireccion')
         self.direccion = Direccion()
         self.titular_pagador = XmlField('TitularContratoVsTitularPago')

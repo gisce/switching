@@ -41,14 +41,19 @@
                 <Identificador>11111111H</Identificador>
             </IdCliente>
             <Nombre>
-                <NombreDePila>Carla</NombreDePila>
-                <PrimerApellido>Aramberri</PrimerApellido>
-                <SegundoApellido>Cadenas</SegundoApellido>
+                <NombreDePila>Perico</NombreDePila>
+                <PrimerApellido>Palote</PrimerApellido>
+                <SegundoApellido>Pérez</SegundoApellido>
             </Nombre>
+            <Fax>
+                <PrefijoPais>34</PrefijoPais>
+                <Numero>555124124</Numero>
+            </Fax>
             <Telefono>
                 <PrefijoPais>34</PrefijoPais>
-                <Numero>71407365</Numero>
+                <Numero>555123123</Numero>
             </Telefono>
+            <CorreoElectronico>pericopalote@acme.com</CorreoElectronico>
             <IndicadorTipoDireccion>S</IndicadorTipoDireccion>
         </Cliente>
         <Medida>
