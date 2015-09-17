@@ -691,6 +691,7 @@ class Switching_R1_Test(unittest.TestCase):
         sup = supportClass()
         self.xml_r101_minim = open(get_data("r101_minim.xml"), "r")
         self.xml_r101_reclamant = open(get_data("r101_reclamante.xml"), "r")
+        self.xml_r101_client = open(get_data("r101_cliente.xml"), "r")
 
         self.client = sup.getCliente()
         self.reclamant = self.getReclamante()
@@ -698,6 +699,7 @@ class Switching_R1_Test(unittest.TestCase):
     def tearDown(self):
         self.xml_r101_minim.close()
         self.xml_r101_reclamant.close()
+        self.xml_r101_client.close()
 
     def getReclamante(self):
         sup = supportClass()
@@ -785,8 +787,8 @@ class Switching_R1_Test(unittest.TestCase):
 
         variables = r1.VariablesDetalleReclamacion()
 
-        client = self.client
         reclamant = self.reclamant
+
         solicitud = r1.SolicitudReclamacion()
         solicitud.feed({
             'dades': dades,
@@ -804,6 +806,33 @@ class Switching_R1_Test(unittest.TestCase):
         pas01.pretty_print = True
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_r101_reclamant.read())
+
+    def test_create_pas01_client(self):
+        pas01 = r1.MensajeReclamacionIncidenciaPeticion()
+        header = self.getHeader('R1', '01')
+        pas01.set_agente('1234')
+        dades = self.getDatosSolicitud('03', '16')
+
+        variables = r1.VariablesDetalleReclamacion()
+
+        client = self.client
+
+        solicitud = r1.SolicitudReclamacion()
+        solicitud.feed({
+            'dades': dades,
+            'variables': variables,
+            'client': client,
+            'tipus_reclamant': '06',
+            'comentaris': u'R1-01 mínimum Test',
+        })
+        pas01.feed({
+            'capcalera': header,
+            'solicitud': solicitud
+        })
+        pas01.build_tree()
+        pas01.pretty_print = True
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_r101_client.read())
 
 if __name__ == '__main__':
     unittest.main()
