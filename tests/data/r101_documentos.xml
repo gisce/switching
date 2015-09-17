@@ -18,28 +18,21 @@
         <VariablesDetalleReclamacion>
             <VariableDetalleReclamacion/>
         </VariablesDetalleReclamacion>
-        <Cliente>
-            <IdCliente>
-                <TipoCIFNIF>DN</TipoCIFNIF>
-                <Identificador>11111111H</Identificador>
-            </IdCliente>
-            <Nombre>
-                <NombreDePila>Perico</NombreDePila>
-                <PrimerApellido>Palote</PrimerApellido>
-                <SegundoApellido>Pérez</SegundoApellido>
-            </Nombre>
-            <Fax>
-                <PrefijoPais>34</PrefijoPais>
-                <Numero>555124124</Numero>
-            </Fax>
-            <Telefono>
-                <PrefijoPais>34</PrefijoPais>
-                <Numero>555123123</Numero>
-            </Telefono>
-            <CorreoElectronico>pericopalote@acme.com</CorreoElectronico>
-            <IndicadorTipoDireccion>S</IndicadorTipoDireccion>
-        </Cliente>
         <TipoReclamante>06</TipoReclamante>
-        <Comentarios>R1-01 with Cliente Test</Comentarios>
+        <Comentarios>R1-01 with RegistrosDocumentos Test</Comentarios>
+        <RegistrosDocumento>
+            <RegistroDoc>
+                <TipoDocAportado>01</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/CIE0100001.pdf</DireccionUrl>
+            </RegistroDoc>
+            <RegistroDoc>
+                <TipoDocAportado>06</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/INV201509161234.pdf</DireccionUrl>
+            </RegistroDoc>
+            <RegistroDoc>
+                <TipoDocAportado>08</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/NIF11111111H.pdf</DireccionUrl>
+            </RegistroDoc>
+        </RegistrosDocumento>
 	</SolicitudReclamacion>
 </MensajeReclamacionIncidenciaPeticion>

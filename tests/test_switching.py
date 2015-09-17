@@ -692,6 +692,7 @@ class Switching_R1_Test(unittest.TestCase):
         self.xml_r101_minim = open(get_data("r101_minim.xml"), "r")
         self.xml_r101_reclamant = open(get_data("r101_reclamante.xml"), "r")
         self.xml_r101_client = open(get_data("r101_cliente.xml"), "r")
+        self.xml_r101_documents = open(get_data("r101_documentos.xml"), "r")
 
         self.client = sup.getCliente()
         self.reclamant = self.getReclamante()
@@ -700,6 +701,7 @@ class Switching_R1_Test(unittest.TestCase):
         self.xml_r101_minim.close()
         self.xml_r101_reclamant.close()
         self.xml_r101_client.close()
+        self.xml_r101_documents.close()
 
     def getReclamante(self):
         sup = supportClass()
@@ -768,7 +770,7 @@ class Switching_R1_Test(unittest.TestCase):
             'dades': dades,
             'variables': variables,
             'tipus_reclamant': '06',
-            'comentaris': u'R1-01 mínimum Test',
+            'comentaris': u'R1-01 minimum Test',
         })
         pas01.feed({
             'capcalera': header,
@@ -796,7 +798,7 @@ class Switching_R1_Test(unittest.TestCase):
             #'client': client,
             'tipus_reclamant': '01',
             'reclamant': reclamant,
-            'comentaris': u'R1-01 mínimum Test',
+            'comentaris': u'R1-01 with Reclamante Test',
         })
         pas01.feed({
             'capcalera': header,
@@ -823,7 +825,7 @@ class Switching_R1_Test(unittest.TestCase):
             'variables': variables,
             'client': client,
             'tipus_reclamant': '06',
-            'comentaris': u'R1-01 mínimum Test',
+            'comentaris': u'R1-01 with Cliente Test',
         })
         pas01.feed({
             'capcalera': header,
@@ -833,6 +835,49 @@ class Switching_R1_Test(unittest.TestCase):
         pas01.pretty_print = True
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_r101_client.read())
+
+    def test_create_pas01_documents(self):
+        pas01 = r1.MensajeReclamacionIncidenciaPeticion()
+        header = self.getHeader('R1', '01')
+        pas01.set_agente('1234')
+        dades = self.getDatosSolicitud('03', '16')
+
+        variables = r1.VariablesDetalleReclamacion()
+
+        docs = [
+            ('01', 'http://eneracme.com/docs/CIE0100001.pdf'),
+            ('06', 'http://eneracme.com/docs/INV201509161234.pdf'),
+            ('08', 'http://eneracme.com/docs/NIF11111111H.pdf'),
+        ]
+
+        documents = []
+        for doc in docs:
+            tmp_doc = r1.RegistroDoc()
+            tmp_doc.feed({'tipus_doc': doc[0], 'url': doc[1]})
+            documents.append(tmp_doc)
+
+        reg_documents = r1.RegistrosDocumento()
+        reg_doc_vals = {
+            'documents': documents,
+        }
+        reg_documents.feed(reg_doc_vals)
+
+        solicitud = r1.SolicitudReclamacion()
+        solicitud.feed({
+            'dades': dades,
+            'variables': variables,
+            'tipus_reclamant': '06',
+            'comentaris': u'R1-01 with RegistrosDocumentos Test',
+            'reg_documents': reg_documents,
+        })
+        pas01.feed({
+            'capcalera': header,
+            'solicitud': solicitud
+        })
+        pas01.build_tree()
+        pas01.pretty_print = True
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_r101_documents.read())
 
 if __name__ == '__main__':
     unittest.main()

@@ -91,6 +91,26 @@ class Reclamante(XmlModel):
             'Reclamante', 'reclamant')
 
 
+class RegistroDoc(XmlModel):
+    _sort_order = ('documento', 'tipus_doc', 'url')
+
+    def __init__(self):
+        self.documento = XmlField('RegistroDoc')
+        self.tipus_doc = XmlField('TipoDocAportado')
+        self.url = XmlField('DireccionUrl')
+        super(RegistroDoc, self).__init__('RegistroDoc', 'documento')
+
+
+class RegistrosDocumento(XmlModel):
+    _sort_order = ('registros', 'documents')
+
+    def __init__(self):
+        self.registros = XmlField('RegistrosDocumento')
+        self.documents = []
+        super(RegistrosDocumento, self).__init__(
+            'RegistrosDocumento', 'registros')
+
+
 class SolicitudReclamacion(XmlModel):
     _sort_order = ('solicitud', 'dades', 'variables', 'client',
                    'tipus_reclamant', 'reclamant', 'comentaris',
@@ -104,7 +124,7 @@ class SolicitudReclamacion(XmlModel):
         self.tipus_reclamant = XmlField('TipoReclamante')
         self.reclamant = Reclamante()
         self.comentaris = XmlField('Comentarios')
-        self.reg_documents = XmlField('RegistrosDocumentos')
+        self.reg_documents = RegistrosDocumento()
         super(SolicitudReclamacion, self).__init__('SolicitudReclamacion',
                                                    'solicitud')
 

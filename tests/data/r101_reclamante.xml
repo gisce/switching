@@ -39,6 +39,6 @@
             </Telefono>
             <CorreoElectronico>pericopalote@acme.com</CorreoElectronico>
         </Reclamante>
-        <Comentarios>R1-01 mínimum Test</Comentarios>
+        <Comentarios>R1-01 with Reclamante Test</Comentarios>
 	</SolicitudReclamacion>
 </MensajeReclamacionIncidenciaPeticion>

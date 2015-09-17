@@ -19,6 +19,6 @@
             <VariableDetalleReclamacion/>
         </VariablesDetalleReclamacion>
         <TipoReclamante>06</TipoReclamante>
-        <Comentarios>R1-01 mínimum Test</Comentarios>
+        <Comentarios>R1-01 minimum Test</Comentarios>
 	</SolicitudReclamacion>
 </MensajeReclamacionIncidenciaPeticion>
