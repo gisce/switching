@@ -61,6 +61,31 @@ class supportClass(object):
         header.feed(vals)
         return header
 
+    def getNombre(self):
+        nom = c1.Nombre()
+        nom_vals = {
+            'nombrepila': 'Perico',
+            'apellido1': 'Palote',
+            'apellido2': 'Pérez'
+        }
+        nom.feed(nom_vals)
+        return nom
+
+    def getTelefono(self, tipus='Telefono'):
+        telefon = c1.Telefono(tipus)
+        if tipus == 'Fax':
+            telf_fields = {
+                'numero': '555124124',
+                'prefijo': 34
+            }
+        else:
+            telf_fields = {
+                'numero': '555123123',
+                'prefijo': 34
+            }
+        telefon.feed(telf_fields)
+        return telefon
+
     def getCliente(self):
         #client
         idclient = c1.IdCliente()
@@ -69,25 +94,9 @@ class supportClass(object):
             'identificador': '11111111H',
         })
 
-        nomclient = c1.Nombre()
-        nom = {'nombrepila': 'Perico',
-               'apellido1': 'Palote',
-               'apellido2': 'Pérez'}
-        nomclient.feed(nom)
-
-        telefon = c1.Telefono()
-        telf_fields = {
-            'numero': '555123123',
-            'prefijo': 34
-        }
-        telefon.feed(telf_fields)
-
-        fax = c1.Telefono('Fax')
-        fax_fields = {
-            'numero': '555124124',
-            'prefijo': 34
-        }
-        fax.feed(fax_fields)
+        nomclient = self.getNombre()
+        telefon = self.getTelefono()
+        fax = self.getTelefono('Fax')
 
         client = c1.Cliente()
         cli_fields = {
@@ -674,19 +683,48 @@ class SwitchingM1Test(unittest.TestCase):
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_m101_ciepapel.read())
 
+
 class Switching_R1_Test(unittest.TestCase):
     """test de W1"""
 
     def setUp(self):
+        sup = supportClass()
         self.xml_r101_minim = open(get_data("r101_minim.xml"), "r")
-        #self.xml_w101_0 = open(get_data("w101_0.xml"), "r")
-        #self.xml_w102_ok = open(get_data("w102-aceptacio.xml"), "r")
-        #self.xml_w102_ko = open(get_data("w102-rebuig.xml"), "r")
+        self.xml_r101_reclamant = open(get_data("r101_reclamante.xml"), "r")
+
+        self.client = sup.getCliente()
+        self.reclamant = self.getReclamante()
 
     def tearDown(self):
         self.xml_r101_minim.close()
-        #self.xml_r102_ok.close()
-        #self.xml_1102_ko.close()
+        self.xml_r101_reclamant.close()
+
+    def getReclamante(self):
+        sup = supportClass()
+        id_reclamant = r1.IdReclamante()
+        idrec_vals = {
+            'tipus_cifnif': 'DN',
+            'identificador': '11111111H',
+        }
+        id_reclamant.feed(idrec_vals)
+
+        nom = sup.getNombre()
+        fax = sup.getTelefono('Fax')
+        telefon = sup.getTelefono()
+
+        correu = 'pericopalote@acme.com'
+
+        reclamant = r1.Reclamante()
+        reclamant_vals = {
+            'id_reclamant': id_reclamant,
+            'nom': nom,
+            'fax': fax,
+            'telefon': telefon,
+            'correu': correu,
+        }
+        reclamant.feed(reclamant_vals)
+
+        return reclamant
 
     def getHeader(self, process='R1', step='01'):
         header = r1.CabeceraReclamacion()
@@ -716,7 +754,6 @@ class Switching_R1_Test(unittest.TestCase):
         return dades
 
     def test_create_pas01_minim(self):
-        sup = supportClass()
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
         header = self.getHeader('R1', '01')
         pas01.set_agente('1234')
@@ -724,12 +761,10 @@ class Switching_R1_Test(unittest.TestCase):
 
         variables = r1.VariablesDetalleReclamacion()
 
-        client = sup.getCliente()
         solicitud = r1.SolicitudReclamacion()
         solicitud.feed({
             'dades': dades,
             'variables': variables,
-            #'client': client,
             'tipus_reclamant': '06',
             'comentaris': u'R1-01 mínimum Test',
         })
@@ -740,8 +775,35 @@ class Switching_R1_Test(unittest.TestCase):
         pas01.build_tree()
         pas01.pretty_print = True
         xml = str(pas01)
-        print xml
         self.assertXmlEqual(xml, self.xml_r101_minim.read())
+
+    def test_create_pas01_reclamant(self):
+        pas01 = r1.MensajeReclamacionIncidenciaPeticion()
+        header = self.getHeader('R1', '01')
+        pas01.set_agente('1234')
+        dades = self.getDatosSolicitud('03', '16')
+
+        variables = r1.VariablesDetalleReclamacion()
+
+        client = self.client
+        reclamant = self.reclamant
+        solicitud = r1.SolicitudReclamacion()
+        solicitud.feed({
+            'dades': dades,
+            'variables': variables,
+            #'client': client,
+            'tipus_reclamant': '01',
+            'reclamant': reclamant,
+            'comentaris': u'R1-01 mínimum Test',
+        })
+        pas01.feed({
+            'capcalera': header,
+            'solicitud': solicitud
+        })
+        pas01.build_tree()
+        pas01.pretty_print = True
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_r101_reclamant.read())
 
 if __name__ == '__main__':
     unittest.main()

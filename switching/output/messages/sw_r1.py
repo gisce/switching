@@ -2,7 +2,7 @@
 
 from libcomxml.core import XmlModel, XmlField
 
-from sw_c1 import Cliente
+from sw_c1 import Cliente, Nombre, Telefono
 
 
 class CabeceraReclamacion(XmlModel):
@@ -65,6 +65,32 @@ class VariablesDetalleReclamacion(XmlModel):
             'VariablesDetalleReclamacion', 'variables', drop_empty=False)
 
 
+class IdReclamante(XmlModel):
+    _sort_order = ('id_reclamant', 'tipus_cifnif', 'identificador')
+
+    def __init__(self):
+        self.id_reclamant = XmlField('IdReclamante')
+        self.tipus_cifnif = XmlField('TipoCIFNIF')
+        self.identificador = XmlField('Identificador')
+        super(IdReclamante, self).__init__(
+            'IdReclamante', 'id_reclamant')
+
+
+class Reclamante(XmlModel):
+    _sort_order = ('reclamant', 'id_reclamant', 'nom', 'fax', 'telefon',
+                   'correu')
+
+    def __init__(self):
+        self.reclamant = XmlField('Reclamante')
+        self.id_reclamant = IdReclamante()
+        self.nom = Nombre()
+        self.fax = Telefono()
+        self.telefon = Telefono()
+        self.correu = XmlField('CorreoElectronico')
+        super(Reclamante, self).__init__(
+            'Reclamante', 'reclamant')
+
+
 class SolicitudReclamacion(XmlModel):
     _sort_order = ('solicitud', 'dades', 'variables', 'client',
                    'tipus_reclamant', 'reclamant', 'comentaris',
@@ -76,7 +102,7 @@ class SolicitudReclamacion(XmlModel):
         self.variables = VariablesDetalleReclamacion()
         self.client = Cliente()
         self.tipus_reclamant = XmlField('TipoReclamante')
-        #self.client = Reclamante()
+        self.reclamant = Reclamante()
         self.comentaris = XmlField('Comentarios')
         self.reg_documents = XmlField('RegistrosDocumentos')
         super(SolicitudReclamacion, self).__init__('SolicitudReclamacion',
