@@ -29,7 +29,7 @@ class A3(Message):
     @property
     def acceptacio(self):
         """Retorna l'objecte Acceptacio"""
-        obj = getattr(self.obj, self._header, False)
+        obj = getattr(self.obj, self.header, False)
         if obj and hasattr(obj, 'DatosAceptacion'):
             return C1.Acceptacio(obj.DatosAceptacion)
         return False
@@ -72,7 +72,7 @@ class A3(Message):
     def punts_mesura(self):
         """Retorna una llista de punts de mesura"""
         data = []
-        obj = getattr(self.obj, self._header)
+        obj = getattr(self.obj, self.header)
         for i in obj.PuntosDeMedida.PuntoDeMedida:
             data.append(C1.PuntMesura(i))
         return data
@@ -80,14 +80,14 @@ class A3(Message):
     @property
     def mesura(self):
         """Retorna l'objecte mesura"""
-        obj = getattr(self.obj, self._header)
+        obj = getattr(self.obj, self.header)
         return C2.Mesura(obj.Medida)
 
     @property
     def comentaris(self):
         """Retorna una llista de comentaris"""
         data = []
-        obj = getattr(self.obj, self._header)
+        obj = getattr(self.obj, self.header)
         if (hasattr(obj, 'Comentarios') and
             hasattr(obj.Comentarios, 'Comentario')):
             for i in obj.Comentarios.Comentario:
