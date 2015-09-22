@@ -241,53 +241,6 @@ class Message(MessageBase):
         return ref
 
 
-class MessageTG(MessageBase):
-    """Classe base missatges telegestio"""
-
-    def set_tipus(self):
-        """Setejar el tipus de missatge"""
-        try:
-            obj = objectify.fromstring(self.str_xml)
-            self.tipus = obj.get('IdRpt')
-        except:
-            msg = 'No s\'ha pogut identificar el tipus'
-            raise except_f1('Error', _(msg))
-
-    def set_xsd(self):
-        """Set xsd file. TG XML files do not use xsd :("""
-        pass
-
-    def parse_xml(self):
-        """Import xml content"""
-        try:
-            self.obj = objectify.fromstring(self.str_xml)
-        except:
-            raise except_f1('Error', _('Document invàlid'))
-
-    # Funcions relacionades amb la capçalera del XML
-    @property
-    def version(self):
-        ref = self.obj.get('Version')
-        if not ref:
-            raise except_f1('Error', _('Document sense versió'))
-        return ref
-
-    @property
-    def petition(self):
-        ref = self.obj.get('IdPet')
-        if not ref:
-            raise except_f1('Error', _('Document sense codi de'\
-                                       ' petició'))
-        return ref
-
-    @property
-    def supported(self):
-        if self.tipus in ('S02', 'S04', 'S05', 'S12'):
-            return True
-        else:
-            return False
-
-
 class except_f1(Exception):
     def __init__(self, name, value):
         self.name = name
