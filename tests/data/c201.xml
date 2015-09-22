@@ -54,7 +54,6 @@
                 <PrefijoPais>34</PrefijoPais>
                 <Numero>555123123</Numero>
             </Telefono>
-            <CorreoElectronico>pericopalote@acme.com</CorreoElectronico>
             <IndicadorTipoDireccion>S</IndicadorTipoDireccion>
         </Cliente>
         <Medida>

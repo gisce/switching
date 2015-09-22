@@ -86,7 +86,7 @@ class supportClass(object):
         telefon.feed(telf_fields)
         return telefon
 
-    def getCliente(self):
+    def getCliente(self, mail=False):
         #client
         idclient = c1.IdCliente()
         idclient.feed({
@@ -105,8 +105,10 @@ class supportClass(object):
             'indicador': 'S',
             'fax': fax,
             'telefono': telefon,
-            'correu': 'pericopalote@acme.com',
         }
+        if mail:
+            cli_fields.update({'correu': 'pericopalote@acme.com',})
+
         client.feed(cli_fields)
 
         return client
@@ -694,7 +696,7 @@ class Switching_R1_Test(unittest.TestCase):
         self.xml_r101_client = open(get_data("r101_cliente.xml"), "r")
         self.xml_r101_documents = open(get_data("r101_documentos.xml"), "r")
 
-        self.client = sup.getCliente()
+        self.client = sup.getCliente(True)
         self.reclamant = self.getReclamante()
 
     def tearDown(self):
@@ -878,6 +880,7 @@ class Switching_R1_Test(unittest.TestCase):
         pas01.pretty_print = True
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_r101_documents.read())
+
 
 if __name__ == '__main__':
     unittest.main()
