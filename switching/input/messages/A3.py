@@ -17,7 +17,7 @@ class A3(Message):
     @property
     def contracte(self):
         """Retorna l'objecte Contracte"""
-        obj = getattr(self.obj, self._header)
+        obj = getattr(self.obj, self.header)
         return C1.Contracte(obj.Contrato)
 
     @property
@@ -52,7 +52,10 @@ class A3(Message):
 
     @property
     def header(self):
-        return self._header
+        header = self._header
+        if self._header == 'PasoMRAMLConCambiosRestoTarifas':
+            header = 'PasoMRAMLConCambiosRestoTarifa'
+        return header
 
     @property
     def activacio(self):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from switching.input.messages import F1, message, W1
+from switching.input.messages import F1, message, W1, A3
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
@@ -534,6 +534,22 @@ class SwitchingA3Test(unittest.TestCase):
         pas01.build_tree()
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_a301_ciepapel.read())
+
+    def test_read_a301(self):
+        self.a301_xml = A3(self.xml_a301)
+        self.a301_xml.parse_xml()
+        contract = self.a301_xml.contracte
+        assert contract.codi_contracte == '111111111'
+
+    def test_read_a301_ciepapel(self):
+        self.a301_xml_ciepapel = A3(self.xml_a301_ciepapel)
+        self.a301_xml_ciepapel.parse_xml()
+        contract = self.a301_xml_ciepapel.contracte
+
+        ciepapel = self.a301_xml_ciepapel.obj.PasoMRAMLConCambiosRestoTarifa\
+            .DocTecnica.DatosCie.CIEPapel
+        assert contract.codi_contracte == '111111111'
+        assert ciepapel.CodigoCie.text == '1234567'
 
 
 class SwitchingM1Test(unittest.TestCase):
