@@ -539,7 +539,12 @@ class SwitchingA3Test(unittest.TestCase):
         self.a301_xml = A3(self.xml_a301)
         self.a301_xml.parse_xml()
         contract = self.a301_xml.contracte
+        mesures = self.a301_xml.mesura
+        comentaris = self.a301_xml.comentaris
         assert contract.codi_contracte == '111111111'
+        assert mesures.cp_installacio == 'Y'
+        assert mesures.mesura.TipoEquipoMedida == 'L00'
+        assert isinstance(comentaris, list)
 
     def test_read_a301_ciepapel(self):
         self.a301_xml_ciepapel = A3(self.xml_a301_ciepapel)
