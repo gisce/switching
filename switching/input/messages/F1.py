@@ -7,21 +7,10 @@ from message import Message, except_f1
 
 from Q1 import Q1, Lectura, Comptador
 from switching.helpers.funcions import (
-    CODIS_REG_REFACT, exces_reactiva, aggr_consums
+    CODIS_REG_REFACT, exces_reactiva, aggr_consums, get_rec_attr
 )
 
 _ = gettext.gettext
-
-
-def get_rec_attr(obj, attr, default=None):
-    try:
-        res = reduce(getattr, attr.split('.'), obj)
-    except AttributeError:
-        if not default is None:
-            res = default
-        else:
-            raise
-    return res
 
 
 class Facturas(object):
@@ -539,12 +528,22 @@ class FacturaATR(Facturas):
     @property
     def nom_comptador(self):
         """Retorna el número de comptador"""
-        return self.factura.Medidas.Aparato.NumeroSerie.text
+        return get_rec_attr(
+            self.factura,
+            'Medidas.Aparato.NumeroSerie.text',
+            ''
+        )
 
     @property
     def gir_comptador(self):
-        return (10 ** int(self.factura.Medidas.Aparato.\
-               Integrador.NumeroRuedasEnteras.text))
+        num_ruedas = int(get_rec_attr(
+            self.factura,
+            'Medidas.Aparato.Integrador.NumeroRuedasEnteras.text',
+            0
+        ))
+        if num_ruedas > 0:
+            num_ruedas = 10 ** num_ruedas
+        return num_ruedas
 
 
 class LiniesFactura(object):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from switching.input.messages import F1, message, W1, A3
+from switching.input.messages import F1, message, W1, A3, FacturaATR, Q1
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
@@ -19,6 +19,7 @@ class Switching_F1_Test(unittest.TestCase):
     def setUp(self):
         self.xml = open(get_data("F1_exemple.xml"), "r")
         self.xml_err = open(get_data("F1_exemple_err.xml"), "r")
+        self.xml_no_medidas = open(get_data("F1_no_medidas.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -41,6 +42,21 @@ class Switching_F1_Test(unittest.TestCase):
         self.assertEqual(periode.name, 'P1')
         self.assertEqual(periode.data_inici, '2010-03-01')
         self.assertEqual(periode.data_final, '2010-04-30')
+
+    def test_get_info_activa_no_medidas(self):
+        f1 = F1(self.xml_no_medidas)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        periodes, total = f1_atr.get_info_activa()
+        periode = periodes[0]
+        self.assertEqual(total, 0.0)
+        self.assertEqual(periode.name, 'P1')
+        self.assertEqual(periode.data_inici, '2015-08-05')
+        self.assertEqual(periode.data_final, '2015-09-03')
+        self.assertEqual(f1_atr.gir_comptador, 0)
+        self.assertEqual(f1_atr.nom_comptador, '')
+        self.assertEqual(Q1._get_comptadors(self, f1_atr), [])
 
 
 class supportClass(object):
