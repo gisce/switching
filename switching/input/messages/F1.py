@@ -7,21 +7,10 @@ from message import Message, except_f1
 
 from Q1 import Q1, Lectura, Comptador
 from switching.helpers.funcions import (
-    CODIS_REG_REFACT, exces_reactiva, aggr_consums
+    CODIS_REG_REFACT, exces_reactiva, aggr_consums, get_rec_attr
 )
 
 _ = gettext.gettext
-
-
-def get_rec_attr(obj, attr, default=None):
-    try:
-        res = reduce(getattr, attr.split('.'), obj)
-    except AttributeError:
-        if not default is None:
-            res = default
-        else:
-            raise
-    return res
 
 
 class Facturas(object):
