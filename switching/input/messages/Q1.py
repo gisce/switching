@@ -2,6 +2,7 @@
 from datetime import date, datetime
 
 from message import Message, except_f1
+from switching.helpers.funcions import get_rec_attr
 from defs import *
 
 
@@ -18,7 +19,7 @@ class Q1(Message):
         if obj is None:
             obj = self.obj
         comptadors = []
-        for mesura in obj.Medidas:
+        for mesura in get_rec_attr(obj, 'Medidas', []):
             if mesura.CodUnificadoPuntoSuministro.text[:20] == \
                                                     self.get_codi[:20]:
                 for aparell in mesura.Aparato:

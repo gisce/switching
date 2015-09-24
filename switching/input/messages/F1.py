@@ -528,12 +528,22 @@ class FacturaATR(Facturas):
     @property
     def nom_comptador(self):
         """Retorna el número de comptador"""
-        return self.factura.Medidas.Aparato.NumeroSerie.text
+        return get_rec_attr(
+            self.factura,
+            'Medidas.Aparato.NumeroSerie.text',
+            ''
+        )
 
     @property
     def gir_comptador(self):
-        return (10 ** int(self.factura.Medidas.Aparato.\
-               Integrador.NumeroRuedasEnteras.text))
+        num_ruedas = int(get_rec_attr(
+            self.factura,
+            'Medidas.Aparato.Integrador.NumeroRuedasEnteras.text',
+            0
+        ))
+        if num_ruedas > 0:
+            num_ruedas = 10 ** num_ruedas
+        return num_ruedas
 
 
 class LiniesFactura(object):
