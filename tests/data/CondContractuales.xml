@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CondicionesContractuales>
+    <PeriodicidadFacturacion>01</PeriodicidadFacturacion>
+    <TipodeTelegestion>03</TipodeTelegestion>
+    <PotenciasContratadas>
+        <Potencia Periodo="1">4400</Potencia>
+    </PotenciasContratadas>
+    <ModoControlPotencia>1</ModoControlPotencia>
+</CondicionesContractuales>
