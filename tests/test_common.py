@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from switching.output.messages.sw_c1 import Contacto
+from switching.output.messages.sw_c1 import (
+    Contacto, CondicionesContractuales, PotenciasContratadas
+)
 from switching.output.messages.sw_c2 import CiePapel, DatosCie, DocTecnica
 from . import unittest
 import os
@@ -200,6 +202,36 @@ class test_DocTecnica(unittest.TestCase):
         c.build_tree()
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('DocTecnica_simple.xml'))
+
+
+class test_CondicionesContractuales(unittest.TestCase):
+
+    basic_data = {}
+
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def test_build_tree_simple(self):
+        potencies = PotenciasContratadas()
+
+        pots = {'p1': 4400}
+        potencies.feed(pots)
+
+        c = CondicionesContractuales()
+        c.feed({
+            'tarifaATR': '001',
+            'periodicidad_facturacion': '01',
+            'tipus_telegestio': '03',
+            'control_potencia': '1',
+            'potencies': potencies,
+        })
+
+        c.feed(self.basic_data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('CondContractuales.xml'))
+
 
 if __name__ == '__main__':
     unittest.main()
