@@ -1026,6 +1026,15 @@ class Condicions(object):
         return periodicitat
 
     @property
+    def tipus_telegestio(self):
+        tipus_telegestio = ''
+        try:
+            tipus_telegestio = self.cond.TipodeTelegestion.text
+        except AttributeError:
+            pass
+        return tipus_telegestio
+
+    @property
     def potencies(self):
         pot = []
         for i in self.cond.PotenciasContratadas.Potencia:
