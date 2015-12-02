@@ -20,6 +20,7 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml = open(get_data("F1_exemple.xml"), "r")
         self.xml_err = open(get_data("F1_exemple_err.xml"), "r")
         self.xml_no_medidas = open(get_data("F1_no_medidas.xml"), "r")
+        self.xml_remesa = open(get_data("F1_exemple_remesa.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -57,6 +58,15 @@ class Switching_F1_Test(unittest.TestCase):
         self.assertEqual(f1_atr.gir_comptador, 0)
         self.assertEqual(f1_atr.nom_comptador, '')
         self.assertEqual(Q1._get_comptadors(self, f1_atr), [])
+
+    def test_get_info_activa_no_medidas(self):
+        f1 = F1(self.xml_remesa)
+        f1.parse_xml()
+        self.assertEqual(f1.id_remesa, '20151170176')
+        self.assertEqual(f1.total_importe_remesa, 42649.66)
+        self.assertEqual(f1.total_recibos_remesa, 1015)
+        self.assertEqual(f1.fecha_valor_remesa, '2015-11-21')
+        self.assertEqual(f1.data_limit_pagament, '2015-12-03')
 
 
 class supportClass(object):

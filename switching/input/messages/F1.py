@@ -851,3 +851,19 @@ class F1(Message):
     @property
     def data_limit_pagament(self):
         return self.obj.Facturas.RegistroFin.FechaLimitePago.text
+
+    @property
+    def id_remesa(self):
+        return self.obj.Facturas.RegistroFin.IdRemesa.text
+
+    @property
+    def total_importe_remesa(self):
+        return float(self.obj.Facturas.RegistroFin.ImporteTotal.text)
+
+    @property
+    def total_recibos_remesa(self):
+        return int(self.obj.Facturas.RegistroFin.TotalRecibos.text)
+
+    @property
+    def fecha_valor_remesa(self):
+        return self.obj.Facturas.RegistroFin.FechaValor.text
