@@ -867,3 +867,13 @@ class F1(Message):
     @property
     def fecha_valor_remesa(self):
         return self.obj.Facturas.RegistroFin.FechaValor.text
+
+    def get_remesa(self):
+        vals = {
+           'id_remesa': self.id_remesa,
+           'fecha_valor_remesa': self.fecha_valor_remesa,
+           'data_limit_pagament': self.data_limit_pagament,
+           'total_importe_remesa': self.total_importe_remesa,
+           'total_recibos_remesa': self.total_recibos_remesa,
+        }
+        return vals
