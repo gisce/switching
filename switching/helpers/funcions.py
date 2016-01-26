@@ -17,6 +17,9 @@ CODIS_REG_REFACT = {'RGT42011': '40',
 
 PERIODES_AGRUPATS = [('P1', 'P4'), ('P2', 'P5'), ('P3', 'P6')]
 
+# Tarifes que SEMPRE es facturen amb maxímetre
+TARIFES_MAXIMETRE = ['003', '011', '012', '013', '014', '015', '016', '018']
+
 
 def get_rec_attr(obj, attr, default=None):
     try:

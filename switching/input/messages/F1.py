@@ -7,7 +7,8 @@ from message import Message, except_f1
 
 from Q1 import Q1, Lectura, Comptador
 from switching.helpers.funcions import (
-    CODIS_REG_REFACT, exces_reactiva, aggr_consums, get_rec_attr
+    CODIS_REG_REFACT, exces_reactiva, aggr_consums, get_rec_attr,
+    TARIFES_MAXIMETRE
 )
 
 _ = gettext.gettext
@@ -199,6 +200,19 @@ class FacturaATR(Facturas):
                DatosFacturaATR.CodigoTarifa.text.zfill(3)
 
     @property
+    def mode_control_potencia(self):
+        """Retornar el mode control potència"""
+        has_mcp = hasattr(
+            self.factura.DatosGeneralesFacturaATR.DatosFacturaATR,
+            'ModoControlPotencia'
+        )
+        if has_mcp:
+            return self.factura.DatosGeneralesFacturaATR.DatosFacturaATR.\
+                ModoControlPotencia.text
+        else:
+            return '1'
+
+    @property
     def ind_mesura_baixa(self):
         """Retornar l'indicador de mesura en baixa"""
         return self.factura.DatosGeneralesFacturaATR.\
@@ -221,6 +235,36 @@ class FacturaATR(Facturas):
         """Retornar el nombre de mesos"""
         return float(self.factura.DatosGeneralesFacturaATR.\
                     DatosFacturaATR.Periodo.NumeroMeses.text)
+
+    @property
+    def penalitzacio_no_icp(self):
+        """Retornar si te penalització per no ICP"""
+        if hasattr(self.factura.Potencia, 'PenalizacionNoICP'):
+            return self.factura.Potencia.PenalizacionNoICP.text
+        else:
+            return 'N'
+
+    def info_facturacio_potencia(self):
+        """
+        Retorna el mode de control de potència en funció de la tarifa,
+        el mode control potencia y penalització NO ICP
+        :return:
+          'max': per maxímetre
+          'icp': per icp
+          'recarrec': recàrrec per no ICP
+        """
+        if self.codi_tarifa in TARIFES_MAXIMETRE:
+            return 'max'
+
+        if self.mode_control_potencia == '2':
+            mode = 'max'
+        else:
+            mode = 'icp'
+
+        if self.penalitzacio_no_icp == 'S':
+            return 'recarrec'
+
+        return mode
 
     def info_curva_carga(self):
         """Returns CCH information (curva de carga)"""
