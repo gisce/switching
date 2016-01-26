@@ -21,6 +21,7 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_err = open(get_data("F1_exemple_err.xml"), "r")
         self.xml_no_medidas = open(get_data("F1_no_medidas.xml"), "r")
         self.xml_remesa = open(get_data("F1_exemple_remesa.xml"), "r")
+        self.xml_rnoicp = open(get_data("F1_recarrec_ICP.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -77,6 +78,55 @@ class Switching_F1_Test(unittest.TestCase):
         self.assertEqual(rem_vals['total_recibos_remesa'], 1015)
         self.assertEqual(rem_vals['fecha_valor_remesa'], '2015-11-21')
         self.assertEqual(rem_vals['data_limit_pagament'], '2015-12-03')
+
+    def test_facturacio_potencia_nomodo(self):
+        f1 = F1(self.xml)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        mfp_info = f1_atr.info_facturacio_potencia()
+        pnicp = f1_atr.penalitzacio_no_icp
+        mcp = f1_atr.mode_control_potencia
+        self.assertEqual(mcp, '1')
+        self.assertEqual(pnicp, 'N')
+        self.assertEqual(mfp_info, 'icp')
+
+    def test_facturacio_potencia_modo(self):
+        f1 = F1(self.xml_remesa)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        mfp_info = f1_atr.info_facturacio_potencia()
+        pnicp = f1_atr.penalitzacio_no_icp
+        mcp = f1_atr.mode_control_potencia
+        self.assertEqual(mcp, '1')
+        self.assertEqual(pnicp, 'N')
+        self.assertEqual(mfp_info, 'icp')
+
+    def test_facturacio_recarrec_no_icp(self):
+        f1 = F1(self.xml_rnoicp)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        mfp_info = f1_atr.info_facturacio_potencia()
+        pnicp = f1_atr.penalitzacio_no_icp
+        mcp = f1_atr.mode_control_potencia
+        self.assertEqual(mcp, '1')
+        self.assertEqual(pnicp, 'S')
+        self.assertEqual(mfp_info, 'recarrec')
+
+    def test_facturacio_no_modo_max(self):
+        f1 = F1(self.xml_no_medidas)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        mfp_info = f1_atr.info_facturacio_potencia()
+        pnicp = f1_atr.penalitzacio_no_icp
+        mcp = f1_atr.mode_control_potencia
+        self.assertEqual(mcp, '1')
+        self.assertEqual(pnicp, 'N')
+        self.assertEqual(mfp_info, 'max')
+
 
 class supportClass(object):
     """Funcions de suport"""

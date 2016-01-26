@@ -202,8 +202,15 @@ class FacturaATR(Facturas):
     @property
     def mode_control_potencia(self):
         """Retornar el mode control potència"""
-        return self.factura.DatosGeneralesFacturaATR.\
-            DatosFacturaATR.ModoControlPotencia.text
+        has_mcp = hasattr(
+            self.factura.DatosGeneralesFacturaATR.DatosFacturaATR,
+            'ModoControlPotencia'
+        )
+        if has_mcp:
+            return self.factura.DatosGeneralesFacturaATR.DatosFacturaATR.\
+                ModoControlPotencia.text
+        else:
+            return '1'
 
     @property
     def ind_mesura_baixa(self):
@@ -231,8 +238,11 @@ class FacturaATR(Facturas):
 
     @property
     def penalitzacio_no_icp(self):
-        """Retornar el Si te penalització per no ICP"""
-        return self.factura.Potencia.PenalizacionNoICP.text
+        """Retornar si te penalització per no ICP"""
+        if hasattr(self.factura.Potencia, 'PenalizacionNoICP'):
+            return self.factura.Potencia.PenalizacionNoICP.text
+        else:
+            return 'N'
 
     def info_facturacio_potencia(self):
         """
