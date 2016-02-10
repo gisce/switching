@@ -22,6 +22,8 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_no_medidas = open(get_data("F1_no_medidas.xml"), "r")
         self.xml_remesa = open(get_data("F1_exemple_remesa.xml"), "r")
         self.xml_rnoicp = open(get_data("F1_recarrec_ICP.xml"), "r")
+        self.xml_reactivaok = open(get_data("F1_reactiva_ok.xml"), "r")
+        self.xml_reactiva1 = open(get_data("F1_reactiva_1.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -59,6 +61,40 @@ class Switching_F1_Test(unittest.TestCase):
         self.assertEqual(f1_atr.gir_comptador, 0)
         self.assertEqual(f1_atr.nom_comptador, '')
         self.assertEqual(Q1._get_comptadors(self, f1_atr), [])
+
+    # reactive
+    # nf: invoice_lines
+    # nl: measures
+    def test_get_info_reactive_1f_1l_ok(self):
+        f1 = F1(self.xml_reactivaok)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        periodes, total = f1_atr.get_info_reactiva()
+        self.assertEqual(total, 0.83)
+        self.assertEqual(len(periodes), 1)
+        periode = periodes[0]
+        self.assertEqual(periode.name, 'P2')
+        self.assertEqual(periode.data_inici, '2016-01-11')
+        self.assertEqual(periode.data_final, '2016-02-03')
+        self.assertEqual(float(periode.quantitat), 20.0)
+        self.assertEqual(float(periode.preu_unitat), 0.041554)
+
+    def test_get_info_reactive_1f_2l(self):
+        f1 = F1(self.xml_reactiva1)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        periodes, total = f1_atr.get_info_reactiva()
+        self.assertEqual(total, 0.62)
+        self.assertEqual(len(periodes), 2)
+        self.assertEqual(len(set([p.name for p in periodes])), 2)
+        for periode in periodes:
+            self.assertIn(periode.name, ['P1', 'P2'])
+            self.assertEqual(periode.data_inici, '2015-12-31')
+            self.assertEqual(periode.data_final, '2016-01-31')
+            self.assertEqual(float(periode.quantitat), 15.0)
+            self.assertEqual(float(periode.preu_unitat), 0.041554)
 
     def test_get_info_remesa(self):
         f1 = F1(self.xml_remesa)
