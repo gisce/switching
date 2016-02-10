@@ -444,6 +444,11 @@ class FacturaATR(Facturas):
                     if len(INFO_TARIFA[self.codi_tarifa]['reactiva']) == 1:
                         peri = self.find_unic_terme_periode_reactiva(consums)
                         periodes += peri
+                    else:
+                        # Qualsevol ens serveix, la factura ha d'entrar
+                        periodes += self.find_terme_periode_reactiva(
+                            consums, done, max(consums.values())
+                        )
                     if not periodes:
                         raise Exception(
                             _("No s'ha pogut identificar tots els períodes de "
