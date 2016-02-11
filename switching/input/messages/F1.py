@@ -44,7 +44,8 @@ class Facturas(object):
     @property
     def numero_factura(self):
         """Retornar el número de factura"""
-        return self._dades_generals.DatosGeneralesFactura.NumeroFactura.text
+        return self._dades_generals.DatosGeneralesFactura.NumeroFactura\
+            .text.strip()
 
     @property
     def tipus_factura(self):
@@ -62,7 +63,7 @@ class Facturas(object):
         """Retorna el número de factura rectificada.
         """
         return self._dades_generals.DatosGeneralesFactura\
-            .NumeroFacturaRectificada.text
+            .NumeroFacturaRectificada.text.strip()
 
     @property
     def data_factura(self):
