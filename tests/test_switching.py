@@ -24,6 +24,7 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_rnoicp = open(get_data("F1_recarrec_ICP.xml"), "r")
         self.xml_reactivaok = open(get_data("F1_reactiva_ok.xml"), "r")
         self.xml_reactiva1 = open(get_data("F1_reactiva_1.xml"), "r")
+        self.xml_rectificadora = open(get_data("F1_rectificadora.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -35,6 +36,23 @@ class Switching_F1_Test(unittest.TestCase):
         emisor = f1.get_codi_emisor
         self.assertEqual(tipus, 'F1')
         self.assertEqual(emisor, ch_emisor)
+        f1_atrs = f1.get_factures()['FacturaATR']
+        for f1_atr in f1_atrs:
+            self.assertEqual(f1_atr.numero_factura, '10005604')
+
+    def test_rectificadora(self):
+        f1 = F1(self.xml_rectificadora)
+        tipus = f1.get_tipus_xml()
+        f1.parse_xml()
+        ch_emisor = '0123'
+        emisor = f1.get_codi_emisor
+        self.assertEqual(tipus, 'F1')
+        self.assertEqual(emisor, ch_emisor)
+        f1_atrs = f1.get_factures()['FacturaATR']
+        for f1_atr in f1_atrs:
+            self.assertEqual(f1_atr.numero_factura, '20160122100000024')
+            self.assertEqual(f1_atr.factura_rectificada, '20150918030012928')
+            self.assertEqual(f1_atr.tipus_rectificadora, 'R')
 
     def test_get_info_activa(self):
         f1 = F1(self.xml)
