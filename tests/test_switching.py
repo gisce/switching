@@ -766,6 +766,9 @@ class Switching_R1_Test(unittest.TestCase):
         dades = self.getDatosSolicitud('03', '16')
 
         variables = r1.VariablesDetalleReclamacion()
+        variable = r1.VariableDetalleReclamacion()
+
+        variables.feed({'detalls': [variable]})
 
         solicitud = r1.SolicitudReclamacion()
         solicitud.feed({
@@ -790,6 +793,9 @@ class Switching_R1_Test(unittest.TestCase):
         dades = self.getDatosSolicitud('03', '16')
 
         variables = r1.VariablesDetalleReclamacion()
+        variable = r1.VariableDetalleReclamacion()
+
+        variables.feed({'detalls': [variable]})
 
         reclamant = self.reclamant
 
@@ -818,6 +824,9 @@ class Switching_R1_Test(unittest.TestCase):
         dades = self.getDatosSolicitud('03', '16')
 
         variables = r1.VariablesDetalleReclamacion()
+        variable = r1.VariableDetalleReclamacion()
+
+        variables.feed({'detalls': [variable]})
 
         client = self.client
 
@@ -845,6 +854,9 @@ class Switching_R1_Test(unittest.TestCase):
         dades = self.getDatosSolicitud('03', '16')
 
         variables = r1.VariablesDetalleReclamacion()
+        variable = r1.VariableDetalleReclamacion()
+
+        variables.feed({'detalls': [variable]})
 
         docs = [
             ('01', 'http://eneracme.com/docs/CIE0100001.pdf'),

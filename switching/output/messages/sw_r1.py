@@ -2,8 +2,8 @@
 
 from libcomxml.core import XmlModel, XmlField
 
-from sw_c1 import Cliente, Nombre, Telefono
-
+from sw_c1 import Cliente, Nombre, Telefono, Contacto
+from sw_w1 import LecturaAportada
 
 class CabeceraReclamacion(XmlModel):
     _sort_order = ('cabecera', 'ree_emisora', 'ree_destino', 'proceso', 'paso',
@@ -45,14 +45,48 @@ class DatosSolicitud(XmlModel):
                                              'dades')
 
 
+class LecturasAportadas(XmlModel):
+    _sort_order = ('lecturesaportades', 'lectures')
+
+    def __init__(self):
+        self.lecturesaportades = XmlField('LecturasAportadas')
+        self.lectures = []
+        super(LecturasAportadas, self).__init__(
+            'LecturasAportadas', 'lecturesaportades')
+
 class VariableDetalleReclamacion(XmlModel):
-    _sort_order = ('variable', 'num_expedient')
+    _sort_order = ('variable', 'num_expedient', 'data_incident', 'num_factura'
+                   'tipus_concepte_facturat', 'codi_dh', 'lectures',
+                   'codi_incidencia', 'codi_solicitud',
+                   'parametre_contractacio', 'concepte_disconformitat',
+                   'tipus_atencio_incorrecte', 'iban', 'contacto',
+                   'codi_solicitud_reclamacio', 'fecha_desde', 'fecha_hasta',
+                   'import_reclamat', 'ubicacio_incidencia'
+                   )
 
     def __init__(self):
         self.variable = XmlField('VariableDetalleReclamacion')
-        #self.num_expedient = XmlField('NumExpedienteAcometida')
+        self.num_expedient = XmlField('NumExpedienteAcometida')
+        self.fecha_incidente = XmlField('NumExpedienteAcometida')
+        self.num_factura = XmlField('NumFacturaATR')
+        self.tipus_concepte_facturat = XmlField('TipoConceptoFacturado')
+        self.codigodh = XmlField('CodigoDH')
+        self.lectures = LecturasAportadas()
+        self.codi_incidencia = XmlField('CodigoIncidencia')
+        self.codi_incidencia = XmlField('CodigoSolicitud')
+        self.parametre_contractacio = XmlField('ParametroContractacion')
+        self.concepte_disconformitat = XmlField('ConceptoDisconformidad')
+        self.tipus_atencio_incorrecte = XmlField('TipoDeAtencionIncorrecta')
+        self.iban = XmlField('IBAN')
+        self.contacto = Contacto()
+        self.codi_solicitud_reclamacio = XmlField('CodigoSolicitudReclamacion')
+        self.fecha_desde = XmlField('FechaDesde')
+        self.fecha_hasta = XmlField('FechaHasta')
+        self.import_reclamat = XmlField('ImporteReclamado')
+        self.ubicacio_incidencia = XmlField('UbicacionIncidencia')
+
         super(VariableDetalleReclamacion, self).__init__(
-            'VariableDetalleReclamacion', 'variable', drop_empty=False)
+            'VariableDetalleReclamacion', 'variable')
 
 
 class VariablesDetalleReclamacion(XmlModel):
@@ -60,7 +94,7 @@ class VariablesDetalleReclamacion(XmlModel):
 
     def __init__(self):
         self.variables = XmlField('VariablesDetalleReclamacion')
-        self.detalls = XmlField('VariableDetalleReclamacion')
+        self.detalls = []
         super(VariablesDetalleReclamacion, self).__init__(
             'VariablesDetalleReclamacion', 'variables', drop_empty=False)
 
@@ -129,7 +163,7 @@ class SolicitudReclamacion(XmlModel):
                                                    'solicitud')
 
 
-#01
+# 01
 class MensajeReclamacionIncidenciaPeticion(XmlModel):
     _sort_order = (
         'mensaje',
