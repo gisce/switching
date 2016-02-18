@@ -109,15 +109,17 @@ class CondicionesContractuales(XmlModel):
 
 
 class Contacto(XmlModel):
-    _sort_order = ('nombre', 'telefon')
+    _sort_order = ('nombre', 'telefon', 'correu')
 
     def __init__(self):
         self.contacte = XmlField('Contacto')
         self.nombre = Nombre()
         self.telefon = Telefono()
+        self.correu = XmlField('CorreoElectronico')
         super(Contacto, self).__init__('Contacto', 'contacte')
 
-    def set_data(self, es_persona_juridica, nom, cognom_1, cognom_2, telefon, prefix):
+    def set_data(self, es_persona_juridica, nom, cognom_1, cognom_2, telefon,
+                 prefix, correu=''):
         con_nom = Nombre()
 
         if es_persona_juridica:
@@ -142,6 +144,9 @@ class Contacto(XmlModel):
             }
             con_telefon.feed(telf_fields)
             con_fields.update({'telefon': con_telefon})
+
+        if correu:
+            con_fields.update({'correu': correu})
 
         self.feed(con_fields)
 
