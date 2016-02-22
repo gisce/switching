@@ -19,7 +19,8 @@ class Facturas(object):
     def __init__(self, fact):
         self.factura = fact
         self.mapa_linies_factura = {
-            'ConceptoIVA': [self.get_info_conceptes_iva, 'altres']
+            'ConceptoIVA': [self.get_info_conceptes_iva, 'altres'],
+            'ConceptoIEIVA': [self.get_info_conceptes_ieiva, 'altres']
         }
 
     @property
@@ -140,6 +141,15 @@ class Facturas(object):
             elif c.total:
                 total += c.total
                 conceptes.append(c)
+        return conceptes, total
+
+    def get_info_conceptes_ieiva(self):
+        conceptes = []
+        total = 0
+        for concepte in list(self.factura.ConceptoIEIVA):
+            c = ConcepteIEIVA(concepte)
+            total += c.total
+            conceptes.append(c)
         return conceptes, total
 
 
@@ -839,6 +849,23 @@ class ConcepteIVA(object):
             get_rec_attr(self.concepte_iva, 'ImporteConceptoIVA.text', 0)
         )
 
+
+class ConcepteIEIVA(object):
+    def __init__(self, concepte_ieiva):
+        self.concepte_ieiva = concepte_ieiva
+        self.tipus = 'altres'
+        self.quantitat = 1
+        self.total = self.preu
+
+    @property
+    def codi(self):
+        return get_rec_attr(self.concepte_ieiva, 'Concepto.text')
+
+    @property
+    def preu(self):
+        return float(
+            get_rec_attr(self.concepte_ieiva, 'ImporteConceptoIEIVA.text', 0)
+        )
 
 
 class Concepte(object):
