@@ -58,6 +58,15 @@ Se incluyen modificaciones para PVPC:
 -Se incluye el elemento TipodeTelegestion.
 -Se incluye el elemento IndicativoCurvadeCarga.
 -Se actualiza los tipos enumerados del elemento "MotivoCambioATRDesdeDistribuidora", añadiendo el valor 03.
+		Version 0.1 CNMC 2016.01.11 - Revisión R1
+-Se elimina el valor "89" del tipo sencillo "CodigoMotivoRechazo" (tabla 27) motivo de rechazo del proceso R1 que hace referencia a "No existe mejor curva disponible (no se genera curva)" ya que esto no es un motivo de rechazo si no un detalle de resolución de la reclamación.
+-Se da de alta un nuevo tipo sencillo "Variable" para informar la tabla 76 - Variables Aportación Información Adicional
+-Se elimina el valor "15" del tipo sencillo "TipoConceptoFacturado" (tabla 77).
+-Se modifica el tipo sencillo "TipoInformacionAdicional" para incluir nuevos valores en la tabla 85 ("05 - IBAN" y "06 - Información mínima incoherente".
+-Se modifica la tabla 83 (Tipo Reclamante) para eliminar el valor "05" y redefinir el valor "04" como Administración/ Organismo Público.
+-Se modifica el tipo sencillo "DetalleResultado" (Tabla 73) para incluir nuevas propuestas de los agentes, el valor "080202" que por error no se había incluido y eliminar los valores "XX0401" y "XX0501" para todos los valores puesto que no aportan información adicional al resultado.
+
+
 		</xs:documentation>
 	</xs:annotation>
 	<xs:simpleType name="Decimal1">
@@ -1349,7 +1358,6 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="86"/>
 			<xs:enumeration value="87"/>
 			<xs:enumeration value="88"/>
-			<xs:enumeration value="89"/>
 			<xs:enumeration value="99"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -2582,6 +2590,24 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="49"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:simpleType name="Variable">
+		<xs:annotation>
+			<xs:documentation> Variables aportación información (Tabla 76)
+			01	Nuevo teléfono de contacto
+			02	Nueva persona de contacto
+			03	Nuevo email de contacto
+			04	IBAN
+		</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="TipoConceptoFacturado">
 		<xs:annotation>
 			<xs:documentation>Tipos de Conceptos Facturados(Tabla 77)
@@ -2599,7 +2625,6 @@ Se incluyen modificaciones para PVPC:
 			12	Abono por calidad individual
 			13	Coste de reposición
 			14	Refacturaciones regulatorias
-			15	Término de energia
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -2617,17 +2642,15 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="12"/>
 			<xs:enumeration value="13"/>
 			<xs:enumeration value="14"/>
-			<xs:enumeration value="15"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoReclamante">
 		<xs:annotation>
 			<xs:documentation>Identificador Origen de la Reclamación (Tabla 83)
-			01	Cliente / Titular de PS
+			01	Cliente/ Titular de PS
 			02	Representante Legal
 			03	Aseguradora
-			04	Organismo Oficial
-			05	Organismo Público
+			04	Administración/ Organismo Público
 			06	Comercializador
 			07	Juzgados
 			08	Afectado no titular del PS
@@ -2638,7 +2661,6 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="02"/>
 			<xs:enumeration value="03"/>
 			<xs:enumeration value="04"/>
-			<xs:enumeration value="05"/>
 			<xs:enumeration value="06"/>
 			<xs:enumeration value="07"/>
 			<xs:enumeration value="08"/>
@@ -2709,13 +2731,17 @@ Se incluyen modificaciones para PVPC:
 			02	Nuevos Datos de Contacto
 			03	Documento oficial
 			04	Contacto y documentos
-			</xs:documentation>
+			05	IBAN
+			06	Información mínima incoherente 
+		</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="01"/>
 			<xs:enumeration value="02"/>
 			<xs:enumeration value="03"/>
 			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ResultadoReclamacion">
@@ -2724,7 +2750,7 @@ Se incluyen modificaciones para PVPC:
 			01	Procedente / Favorable
 			02	Improcedente / Desfavorable
 			03	No gestionable
-			04	Mal Tipificada
+			04	Mal tipificada
 			05  	Duplicada
 			</xs:documentation>
 		</xs:annotation>
@@ -2740,28 +2766,28 @@ Se incluyen modificaciones para PVPC:
 		<xs:annotation>
 			<xs:documentation>Detalle de la resolución (Tabla 73)
 			010101	Se piden disculpas
-			010201	Desacuerdo con la reclamación
-			010501	Duplicada	
+			010201	Desacuerdo con la reclamación		
 			020101	Se modifica estado Cliente Robinson/ Cliente
 			020102	Se indemniza al cliente
 			020201	No consta solicitud previa
-			020202	Ajeno a la distribuidora
-			020501	Duplicada	
+			020202	Ajeno a la distribuidora		
 			030101	Equipo incorrecto. Incluye equipo desaparecido
 			030102	Instalación incorrecta. Incluye relación de transformación
 			030103	Lectura errónea
+			030104	Contador parado
+			030105	Error programación EdM
+			030106	ICP inadecuado para la potencia contratada
 			030201	Equipo correcto
 			030202	Instalación correcta
-			030203	Histórico de consumos / lecturas coherente
+			030203	Histórico de consumos/ lecturas coherente
 			030204	Detectada anomalía en visita
 			030205	Expediente por anomalía en curso
+			030206	Elemento externo responsabilidad del cliente
 			030301	No se localiza al cliente
 			030302	No corresponde a distribuidora
 			030303	Cliente no aporta información adicional
 			030304	Acceso denegado
-			030305	Visita anulada por cliente
-			030401	Mal tipificada
-			030501	Duplicada	
+			030305	Visita anulada por cliente	
 			040101	Favorable
 			040201	Desfavorable con explicación de motivos en texto resultado 
 			040202	Sin incidencia
@@ -2773,15 +2799,16 @@ Se incluyen modificaciones para PVPC:
 			040208	Se reitera la respuesta anterior
 			040301	Imposible por documentación pendiente por parte del cliente
 			040302	Imposible llegar a un acuerdo
-			040501	Duplicada	
+			040303	Acceso impedido
+			040304	Cliente ausente		
 			050101	Asignamos correctamente y refacturamos
 			050102  Informamos correctamente el nº contador (no hay que refacturar)
+			050103  Inversión de contadores
+			050104  Corte realizado por distribuidora
 			050201	El contador es correcto
 			050301	No se localiza al cliente
 			050302	Acceso denegado
-			050303	Visita anulada por cliente
-			050401	Mal tipificado
-			050501	Duplicada	
+			050303	Visita anulada por cliente		
 			060101	Error del Sistema                                           
 			060102	Incidencia: datos Concentrador Secundario / Telemedida                             
 			060103	Modificaciones contractuales pendientes (fuera de plazo)          
@@ -2792,18 +2819,13 @@ Se incluyen modificaciones para PVPC:
 			060204	Contrato Facturado                                                   
 			060205	Pendiente trabajo domicilio cliente (sigue pendiente tarea del cliente)                                            	060206	Contrato en baja 
 			060207	Contrato con otra comercializadora
-			060209  CUPS no vigente en periodo de factura
-			060401	Mal tipificada
-			060501	Duplicada	
+			060209  CUPS no vigente en periodo de factura			
 			070101	Se anula factura
-			070201	Facturación correcta (incluir explicación en campo comentarios)
-			070401	Mal tipificada
-			070501	Duplicada	
+			070201	Facturación correcta (incluir explicación en campo comentarios)				
 			080101	Se refactura el concepto reclamado
 			080102	Se refacturan otros conceptos / varios conceptos
 			080201	Conceptos reclamados correctamente facturados (incluir explicación en campo comentarios)
-			080401	Mal tipificada
-			080502	Duplicada	
+			080202	ICP no instalado				
 			090101	Equipo de Medida con acceso y consumo acumulado más de un año se refactura  a un año
 			090102	Se anula estimación                   
 			090103	Error Lectura Montaje / Desmontaje                              
@@ -2812,6 +2834,7 @@ Se incluyen modificaciones para PVPC:
 			090106	Error en Telemedida / Telegestión
 			090107  No conforme aplicación reactiva
 			090108  Error cargo / abono realizado
+			090109  Se refactura lectura reclamada
 			090201	Equipo de Medida sin acceso más de un año, facturación correcta
 			090202	Consumo correcto  (lectura correcta)                                  
 			090203	Estimación correcta                                         
@@ -2822,73 +2845,55 @@ Se incluyen modificaciones para PVPC:
 			090208	Perfil estimado curva de carga en gráfico factur
 			090209  Aplicación reactiva correcta
 			090210  Cargo / abono realizado correcto        
-			090301	Visita fallida                                              
-			090401	Mal tipificada
-			090501	Duplicada	
+			090301	Visita fallida                                         
 			100101	Se refactura
 			100102	Se anula la factura
 			100201	Factura correcta según normativa
 			100202	Expediente en curso                                     
-			100401	Mal tipificada
-			100501	Duplicada	
 			110101	Se abona el duplicado
 			110102	Se refactura
 			110103  Se anula la factura
-			110201	Factura correcta
-			110401	Mal tipificada
-			110501	Duplicada	
+			110201	Factura correcta			
 			120101	Se refactura
 			120201	Factura ya estaba rectificada
 			120202	No procede la refacturación
-			120401	Mal tipificada
-			120501	Duplicada	
-			120101	Procedente
-			120201	Improcedente
-			120501	Duplicada	
+			130101	Corregido cambio de suministrador realizado
+			130201 	Cambio de suministrador realizado correctamente			
 			140101	Se devuelve fianza
 			140102	Se corrige devolución errónea y se reenvía fianza
 			140201	La devolución se efectuó correctamente
 			140202	No procede devolver
-			140501	Duplicada	
 			150101	Corte ejecutado
 			150201	Corte ejecutado en plazo
 			150202	Corte ejecutado con retraso imputable a cliente
 			150301	Imputable a cliente
 			150302	Requerimiento de la administración judicial / legal (incluye esencialidad)
-			150501	Duplicada	
 			160101	Se gestiona la publicación del paso
 			160102	Movimiento realizado fuera de plazos
 			160201	No existe solicitud
 			160202	Movimiento realizado en plazos
-			160501	Duplicada	
 			170101	Se gestiona la publicación del paso
 			170102	Movimiento realizado fuera de plazos
 			170201	No existe solicitud
 			170202	Movimiento realizado en plazos
 			170203	Imputable a cliente
-			170501	Duplicada		
 			180101	Se corrigen criterios económicos en presupuesto
 			180102	Se corrige factura emitida (datos de facturación, importe)
 			180201	Factura correcta
 			180202	Criterios económicos correctos
-			180401	Mal tipificada
-			180501	Duplicada	
 			190101	Se modifican criterios técnicos 
 			190102	Se reparan desperfectos / se indemnizan daños
 			190103	Licencia de obra / permisos particulares de obra no solicitados
 			190104	Ejecución incorrecta de obras
 			190105	Asesoramiento técnico erróneo en contestación
-			190201	Criterios técnicos/ejecución obra correctos
+			190201	Criterios técnicos / ejecución obra correctos
 			190202	Petición de suministro no finalizada
 			190203	Plazo correcto
 			190204	Pendiente de documentación del cliente
-			190401	Mal tipificada
-			190501	Duplicada	
 			200101	Se corrige calidad de onda (tensión, frecuencia, armónicos e interrupciones)
 			200201	Incidencia con origen ajeno a la red de distribución (tercero y/o propio cliente))
 			200202	Calidad de onda correcta  (tensión, frecuencia,  e interrupciones por actuación protecciones)
 			200203	Nos reiteramos respuesta anterior
-			200501	Duplicada	
 			210101	Favorable
 			210201	Desfavorable con explicación de motivos en texto resultado 
 			210202	Sin incidencia
@@ -2901,7 +2906,6 @@ Se incluyen modificaciones para PVPC:
 			210209	Se reitera la respuesta anterior
 			210301	Imposible por documentación pendiente por parte del cliente
 			210302	Imposible llegar a un acuerdo
-			210501	Duplicada	
 			220101	Se corrige situación
 			220201	Desfavorable con explicación de motivos en texto resultado 
 			220202	Sin incidencia
@@ -2910,55 +2914,39 @@ Se incluyen modificaciones para PVPC:
 			220205	Originada por terceros 
 			220206	Se reitera la respuesta anterior
 			220207	No legitimada. Relación extracontractual
-			220501	Duplicada	
 			230101	Favorable
 			230201	Desfavorable con explicación de motivos en texto resultado 
 			230202	No legitimada. Relación extracontractual
-			230501	Duplicada	
 			240101	Favorable. Se corrige o resarcen daños
 			240201	Desfavorable con explicación de motivos en texto resultado 
 			240202	No legitimada. Relación extracontractual
-			240501	Duplicada	
 			250101	Se corrige la situación
 			250201	Instalación correcta
 			250202	No legitimada. Relación extracontractual
 			250203	Instalación ajena a la distribuidora
 			250301	Imposible gestionar por faltar datos
-			250501	Duplicada	
 			260101	Corregimos situación
 			260201	Instalación correcta
 			260202	No legitimada. Relación extracontractual
 			260203	Instalación ajena a la distribuidora
-			260501	Duplicada	
 			270101	Se corrige importe y se traslada al comercializador
-			270201	Cálculo y pago  ICDS correcto
+			270102	Retraso en facturación CIS/CICE. Se genera factura
+			270201	Cálculo y pago ICDS correcto
 			270202	Cálculo correcto. No procede el abono
-			270401	Mal tipificada
-			270501	Duplicada	
 			280101	Se reestablece el suministro
 			280102	Se reestablece el suministro con indemnización
 			280201	Corte correcto por solicitud del comercializador
 			280202	Corte correcto por cualquier motivo reconocido en la normativa vigente
-			280401	Mal tipificada
-			280501	Duplicada	
 			290101	Se indemniza incumplimiento de calidad de atención en próxima factura
 			290201	Reclamación atendida en plazo
-			290401	Mal tipificada
-			290501	Duplicada	
 			300101	Se indemniza incumplimiento de calidad de atención en próxima factura
 			300201	Solicitud de información NNSS atendida en plazo
-			300401	Mal tipificada
-			300501	Duplicada	
 			310101	Se indemniza incumplimiento de calidad de atención en próxima factura
 			310201	Ejecución de NNSS atendido en plazo
-			310401	Mal tipificada
-			310501	Duplicada	
 			320101	Se indemniza incumplimiento de calidad de atención en próxima factura
 			320201	Reconexión atendida en plazo
 			320202	Incumplimiento por causa imputable al cliente  
 			320203	Plazo superado por motivos ajenos a la distribuidora (indicar motivo)
-			320401	Mal tipificada
-			320501	Duplicada	
 			340101	Corregido parámetro 
 			340102  Corregido parámetro potencia
 			340103  Corregido parámetro tensión
@@ -2966,17 +2954,16 @@ Se incluyen modificaciones para PVPC:
 			340105  Corregido parámetro caudal
 			340106  Corregido parámetro fecha activación
 			340107  Corregido parámetro dirección
+			340108  Corregido parámetro titular
 			340201	Contratación realizada según solicitud
-			340501	Duplicada		
 			350101	Problema resuelto, reenviar solicitud
 			350201	Solicitud correctamente rechazada
 			350202  Imposible contactar cliente
 			350203  Deficiencias en la instación
 			350204  Falta documentación (CIE) 
 			350205  Error de formato 
-			350206  Datos ATR/Peaje incoherentes
+			350206  Datos ATR incoherentes
 			350207  Error en el cliente / NIF
-			350501  Duplicada 	
 			360101	Se refactura con lectura aportada
 			360201	Lectura con integradores incorrectos                           
 			360202	Lectura anterior a la última real                                   
@@ -2984,14 +2971,11 @@ Se incluyen modificaciones para PVPC:
 			360204	Periodo ajeno a esa comercializadora
 			360205  Estimación superior a un año
 			360206  Lectura aportada adelantada
-			360206  Lectura aportada errónea
-			360501	Duplicada	
+			360207  Lectura aportada errónea
 			370101	Se republica fichero
 			370201	Fichero correcto
-			370501	Duplicada	
-			380101	Se modifican datos cliente
+			380101	Alta / Baja cliente "Robinson"
 			380201	Cliente no consta en la base de datos
-			380501	Duplicada	
 			390101	Se envía certificado / informe
 			390201	No existe obligación legal de enviar certificado / informe
 			390202  Sin incidencia
@@ -2999,68 +2983,60 @@ Se incluyen modificaciones para PVPC:
 			390204  Avería instalación particular cliente
 			390205  Originada por terceros 
 			390301	No gestionable por falta de datos
-			390501	Duplicada	
 			400101	Se envía duplicado solicitado
 			400201	No es posible enviar duplicado (motivos en texto resultado)
 			400202	Periodo ajeno a esa comercializadora
-			400501	Duplicada	
 			410101	Se corrige la situación
 			410201	Instalación correcta
 			410202	No legitimada. Relación extracontractual
 			410203	Instalación ajena a la distribuidora
 			410301	No gestionable por falta de datos
-			410501	Duplicada	
 			420101	Solicitud descargo aceptada
 			420201	Solicitud descargo rechazada
 			420202	Instalación ajena a la distribuidora
-			420501	Duplicada	
 			430101	Se procede al precintado / desprecintado
 			430201	No se procede al precintado / desprecintado
-			430501	Duplicada	
+			430202	Instalación correcta
+			430301	Acceso impedido
+			430302	Cliente ausente
 			440101	Procede, explicación en campo resultado
 			440201	No procede, explicación en campo resultado
-			440501	Duplicada	
 			450101	Dirección actualizada
 			450201	No procede, explicación en campo resultado
-			450501	Duplicada	
 			460101	Procede
 			460201	No procede, explicación en campo resultado
-			460501	Duplicada
 			470101  Se genera curva
 			470201  No existe mejor curva disponible (no se genera curva)
-			470501  Duplicada
 			480101  Aclaración enviada
 			480201  No existe rechazo
-			480501  Duplicada
 			490101  Enviado fichero
 			490201  No existe fichero
-			490501  Duplicada
-			</xs:documentation>
+		</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="010101"/>
 			<xs:enumeration value="010201"/>
-			<xs:enumeration value="010501"/>
 			<xs:enumeration value="020101"/>
 			<xs:enumeration value="020102"/>
 			<xs:enumeration value="020201"/>
 			<xs:enumeration value="020202"/>
-			<xs:enumeration value="020501"/>
 			<xs:enumeration value="030101"/>
 			<xs:enumeration value="030102"/>
 			<xs:enumeration value="030103"/>
+			<xs:enumeration value="030104"/>
+			<xs:enumeration value="030105"/>
+			<xs:enumeration value="030106"/>
 			<xs:enumeration value="030201"/>
 			<xs:enumeration value="030202"/>
 			<xs:enumeration value="030203"/>
 			<xs:enumeration value="030204"/>
 			<xs:enumeration value="030205"/>
+			<xs:enumeration value="030206"/>
 			<xs:enumeration value="030301"/>
 			<xs:enumeration value="030302"/>
 			<xs:enumeration value="030303"/>
 			<xs:enumeration value="030304"/>
 			<xs:enumeration value="030305"/>
-			<xs:enumeration value="030401"/>
-			<xs:enumeration value="030501"/>
 			<xs:enumeration value="040101"/>
 			<xs:enumeration value="040201"/>
 			<xs:enumeration value="040202"/>
@@ -3072,15 +3048,16 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="040208"/>
 			<xs:enumeration value="040301"/>
 			<xs:enumeration value="040302"/>
-			<xs:enumeration value="040501"/>
+			<xs:enumeration value="040303"/>
+			<xs:enumeration value="040304"/>
 			<xs:enumeration value="050101"/>
 			<xs:enumeration value="050102"/>
+			<xs:enumeration value="050103"/>
+			<xs:enumeration value="050104"/>
 			<xs:enumeration value="050201"/>
 			<xs:enumeration value="050301"/>
 			<xs:enumeration value="050302"/>
 			<xs:enumeration value="050303"/>
-			<xs:enumeration value="050401"/>
-			<xs:enumeration value="050501"/>
 			<xs:enumeration value="060101"/>
 			<xs:enumeration value="060102"/>
 			<xs:enumeration value="060103"/>
@@ -3094,17 +3071,12 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="060206"/>
 			<xs:enumeration value="060207"/>
 			<xs:enumeration value="060209"/>
-			<xs:enumeration value="060401"/>
-			<xs:enumeration value="060501"/>
 			<xs:enumeration value="070101"/>
 			<xs:enumeration value="070201"/>
-			<xs:enumeration value="070401"/>
-			<xs:enumeration value="070501"/>
 			<xs:enumeration value="080101"/>
 			<xs:enumeration value="080102"/>
 			<xs:enumeration value="080201"/>
-			<xs:enumeration value="080401"/>
-			<xs:enumeration value="080502"/>
+			<xs:enumeration value="080202"/>
 			<xs:enumeration value="090101"/>
 			<xs:enumeration value="090102"/>
 			<xs:enumeration value="090103"/>
@@ -3113,6 +3085,7 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="090106"/>
 			<xs:enumeration value="090107"/>
 			<xs:enumeration value="090108"/>
+			<xs:enumeration value="090109"/>
 			<xs:enumeration value="090201"/>
 			<xs:enumeration value="090202"/>
 			<xs:enumeration value="090203"/>
@@ -3124,56 +3097,41 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="090209"/>
 			<xs:enumeration value="090210"/>
 			<xs:enumeration value="090301"/>
-			<xs:enumeration value="090401"/>
-			<xs:enumeration value="090501"/>
 			<xs:enumeration value="100101"/>
 			<xs:enumeration value="100102"/>
 			<xs:enumeration value="100201"/>
 			<xs:enumeration value="100202"/>
-			<xs:enumeration value="100401"/>
-			<xs:enumeration value="100501"/>
 			<xs:enumeration value="110101"/>
 			<xs:enumeration value="110102"/>
 			<xs:enumeration value="110103"/>
 			<xs:enumeration value="110201"/>
-			<xs:enumeration value="110401"/>
-			<xs:enumeration value="110501"/>
 			<xs:enumeration value="120101"/>
 			<xs:enumeration value="120201"/>
 			<xs:enumeration value="120202"/>
-			<xs:enumeration value="120401"/>
-			<xs:enumeration value="120501"/>
 			<xs:enumeration value="130101"/>
 			<xs:enumeration value="130201"/>
-			<xs:enumeration value="130501"/>
 			<xs:enumeration value="140101"/>
 			<xs:enumeration value="140102"/>
 			<xs:enumeration value="140201"/>
 			<xs:enumeration value="140202"/>
-			<xs:enumeration value="140501"/>
 			<xs:enumeration value="150101"/>
 			<xs:enumeration value="150201"/>
 			<xs:enumeration value="150202"/>
 			<xs:enumeration value="150301"/>
 			<xs:enumeration value="150302"/>
-			<xs:enumeration value="150501"/>
 			<xs:enumeration value="160101"/>
 			<xs:enumeration value="160102"/>
 			<xs:enumeration value="160201"/>
 			<xs:enumeration value="160202"/>
-			<xs:enumeration value="160501"/>
 			<xs:enumeration value="170101"/>
 			<xs:enumeration value="170102"/>
 			<xs:enumeration value="170201"/>
 			<xs:enumeration value="170202"/>
 			<xs:enumeration value="170203"/>
-			<xs:enumeration value="170501"/>
 			<xs:enumeration value="180101"/>
 			<xs:enumeration value="180102"/>
 			<xs:enumeration value="180201"/>
 			<xs:enumeration value="180202"/>
-			<xs:enumeration value="180401"/>
-			<xs:enumeration value="180501"/>
 			<xs:enumeration value="190101"/>
 			<xs:enumeration value="190102"/>
 			<xs:enumeration value="190103"/>
@@ -3183,13 +3141,10 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="190202"/>
 			<xs:enumeration value="190203"/>
 			<xs:enumeration value="190204"/>
-			<xs:enumeration value="190401"/>
-			<xs:enumeration value="190501"/>
 			<xs:enumeration value="200101"/>
 			<xs:enumeration value="200201"/>
 			<xs:enumeration value="200202"/>
 			<xs:enumeration value="200203"/>
-			<xs:enumeration value="200501"/>
 			<xs:enumeration value="210101"/>
 			<xs:enumeration value="210201"/>
 			<xs:enumeration value="210202"/>
@@ -3202,7 +3157,6 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="210209"/>
 			<xs:enumeration value="210301"/>
 			<xs:enumeration value="210302"/>
-			<xs:enumeration value="210501"/>
 			<xs:enumeration value="220101"/>
 			<xs:enumeration value="220201"/>
 			<xs:enumeration value="220202"/>
@@ -3211,55 +3165,39 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="220205"/>
 			<xs:enumeration value="220206"/>
 			<xs:enumeration value="220207"/>
-			<xs:enumeration value="220501"/>
 			<xs:enumeration value="230101"/>
 			<xs:enumeration value="230201"/>
 			<xs:enumeration value="230202"/>
-			<xs:enumeration value="230501"/>
 			<xs:enumeration value="240101"/>
 			<xs:enumeration value="240201"/>
 			<xs:enumeration value="240202"/>
-			<xs:enumeration value="240501"/>
 			<xs:enumeration value="250101"/>
 			<xs:enumeration value="250201"/>
 			<xs:enumeration value="250202"/>
 			<xs:enumeration value="250203"/>
 			<xs:enumeration value="250301"/>
-			<xs:enumeration value="250501"/>
 			<xs:enumeration value="260101"/>
 			<xs:enumeration value="260201"/>
 			<xs:enumeration value="260202"/>
 			<xs:enumeration value="260203"/>
-			<xs:enumeration value="260501"/>
 			<xs:enumeration value="270101"/>
+			<xs:enumeration value="270102"/>
 			<xs:enumeration value="270201"/>
 			<xs:enumeration value="270202"/>
-			<xs:enumeration value="270401"/>
-			<xs:enumeration value="270501"/>
 			<xs:enumeration value="280101"/>
 			<xs:enumeration value="280102"/>
 			<xs:enumeration value="280201"/>
 			<xs:enumeration value="280202"/>
-			<xs:enumeration value="280401"/>
-			<xs:enumeration value="280501"/>
 			<xs:enumeration value="290101"/>
 			<xs:enumeration value="290201"/>
-			<xs:enumeration value="290401"/>
-			<xs:enumeration value="290501"/>
 			<xs:enumeration value="300101"/>
 			<xs:enumeration value="300201"/>
-			<xs:enumeration value="300401"/>
-			<xs:enumeration value="300501"/>
 			<xs:enumeration value="310101"/>
-			<xs:enumeration value="310201"/>
-			<xs:enumeration value="310401"/>
-			<xs:enumeration value="310501"/>
+			<xs:enumeration value="310201"/>		
 			<xs:enumeration value="320101"/>
 			<xs:enumeration value="320201"/>
 			<xs:enumeration value="320202"/>
-			<xs:enumeration value="320203"/>
-			<xs:enumeration value="320401"/>
-			<xs:enumeration value="320501"/>
+			<xs:enumeration value="320203"/>			
 			<xs:enumeration value="340101"/>
 			<xs:enumeration value="340102"/>
 			<xs:enumeration value="340103"/>
@@ -3267,8 +3205,8 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="340105"/>
 			<xs:enumeration value="340106"/>
 			<xs:enumeration value="340107"/>
-			<xs:enumeration value="340201"/>
-			<xs:enumeration value="340501"/>
+			<xs:enumeration value="340108"/>
+			<xs:enumeration value="340201"/>		
 			<xs:enumeration value="350101"/>
 			<xs:enumeration value="350201"/>
 			<xs:enumeration value="350202"/>
@@ -3276,8 +3214,7 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="350204"/>
 			<xs:enumeration value="350205"/>
 			<xs:enumeration value="350206"/>
-			<xs:enumeration value="350207"/>
-			<xs:enumeration value="350501"/>
+			<xs:enumeration value="350207"/>	
 			<xs:enumeration value="360101"/>
 			<xs:enumeration value="360201"/>
 			<xs:enumeration value="360202"/>
@@ -3285,57 +3222,46 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="360204"/>
 			<xs:enumeration value="360205"/>
 			<xs:enumeration value="360206"/>
-			<xs:enumeration value="360207"/>
-			<xs:enumeration value="360501"/>
+			<xs:enumeration value="360207"/>		
 			<xs:enumeration value="370101"/>
-			<xs:enumeration value="370201"/>
-			<xs:enumeration value="370501"/>
+			<xs:enumeration value="370201"/>			
 			<xs:enumeration value="380101"/>
-			<xs:enumeration value="380201"/>
-			<xs:enumeration value="380501"/>
+			<xs:enumeration value="380201"/>		
 			<xs:enumeration value="390101"/>
 			<xs:enumeration value="390201"/>
 			<xs:enumeration value="390202"/>
 			<xs:enumeration value="390203"/>
 			<xs:enumeration value="390204"/>
 			<xs:enumeration value="390205"/>
-			<xs:enumeration value="390301"/>
-			<xs:enumeration value="390501"/>
+			<xs:enumeration value="390301"/>		
 			<xs:enumeration value="400101"/>
 			<xs:enumeration value="400201"/>
-			<xs:enumeration value="400202"/>
-			<xs:enumeration value="400501"/>
+			<xs:enumeration value="400202"/>		
 			<xs:enumeration value="410101"/>
 			<xs:enumeration value="410201"/>
 			<xs:enumeration value="410202"/>
 			<xs:enumeration value="410203"/>
-			<xs:enumeration value="410301"/>
-			<xs:enumeration value="410501"/>
+			<xs:enumeration value="410301"/>		
 			<xs:enumeration value="420101"/>
 			<xs:enumeration value="420201"/>
-			<xs:enumeration value="420202"/>
-			<xs:enumeration value="420501"/>
+			<xs:enumeration value="420202"/>		
 			<xs:enumeration value="430101"/>
 			<xs:enumeration value="430201"/>
-			<xs:enumeration value="430501"/>
+			<xs:enumeration value="430202"/>
+			<xs:enumeration value="430301"/>
+			<xs:enumeration value="430302"/>		
 			<xs:enumeration value="440101"/>
-			<xs:enumeration value="440201"/>
-			<xs:enumeration value="440501"/>
+			<xs:enumeration value="440201"/>		
 			<xs:enumeration value="450101"/>
-			<xs:enumeration value="450201"/>
-			<xs:enumeration value="450501"/>
+			<xs:enumeration value="450201"/>		
 			<xs:enumeration value="460101"/>
-			<xs:enumeration value="460201"/>
-			<xs:enumeration value="460501"/>
+			<xs:enumeration value="460201"/>			
 			<xs:enumeration value="470101"/>
-			<xs:enumeration value="470201"/>
-			<xs:enumeration value="470501"/>
+			<xs:enumeration value="470201"/>			
 			<xs:enumeration value="480101"/>
-			<xs:enumeration value="480201"/>
-			<xs:enumeration value="480501"/>
+			<xs:enumeration value="480201"/>		
 			<xs:enumeration value="490101"/>
 			<xs:enumeration value="490201"/>
-			<xs:enumeration value="490501"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ParametroContratacion">
