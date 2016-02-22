@@ -25,6 +25,7 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_reactivaok = open(get_data("F1_reactiva_ok.xml"), "r")
         self.xml_reactiva1 = open(get_data("F1_reactiva_1.xml"), "r")
         self.xml_rectificadora = open(get_data("F1_rectificadora.xml"), "r")
+        self.xml_conceptoieiva = open(get_data("F1_conceptoieiva.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -181,6 +182,18 @@ class Switching_F1_Test(unittest.TestCase):
         self.assertEqual(pnicp, 'N')
         self.assertEqual(mfp_info, 'max')
 
+    def test_facturacio_conceptoieiva(self):
+        f1 = F1(self.xml_conceptoieiva)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        conceptes = f1_atr.get_info_conceptes_ieiva()
+        assert conceptes[1] == -30.05
+        assert len(conceptes[0]) == 1
+        concepte = conceptes[0][0]
+        assert concepte.tipus == 'altres'
+        assert concepte.codi == '18'
+        assert concepte.total == -30.05
 
 class supportClass(object):
     """Funcions de suport"""
