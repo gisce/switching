@@ -136,6 +136,8 @@ class Facturas(object):
             # només pot ser negatiu.
             # Es comprova ja que hi ha empreses que envien la refacturació
             # i també el ConceptoIVA i s'importaria dues vegades.
+            if c.codi is None:
+                continue
             if c.codi in CODIS_REG_REFACT.values() and c.total >= 0:
                 continue
             elif c.total:
@@ -148,6 +150,8 @@ class Facturas(object):
         total = 0
         for concepte in list(self.factura.ConceptoIEIVA):
             c = ConcepteIEIVA(concepte)
+            if c.codi is None:
+                continue
             total += c.total
             conceptes.append(c)
         return conceptes, total
@@ -841,7 +845,10 @@ class ConcepteIVA(object):
 
     @property
     def codi(self):
-        return get_rec_attr(self.concepte_iva, 'Concepto.text')
+        codi = get_rec_attr(self.concepte_iva, 'Concepto.text', 0)
+        if not codi:
+            return None
+        return codi
 
     @property
     def preu(self):
@@ -859,7 +866,10 @@ class ConcepteIEIVA(object):
 
     @property
     def codi(self):
-        return get_rec_attr(self.concepte_ieiva, 'Concepto.text')
+        codi = get_rec_attr(self.concepte_ieiva, 'Concepto.text', 0)
+        if not codi:
+            return None
+        return codi
 
     @property
     def preu(self):
