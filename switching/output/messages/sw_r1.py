@@ -163,6 +163,61 @@ class SolicitudReclamacion(XmlModel):
                                                    'solicitud')
 
 
+class DatosAceptacion(XmlModel):
+    _sort_order = (
+        'dades_acceptacio',
+        'data_acceptacio',
+        'codi_reclamacio'
+    )
+
+    def __init__(self):
+        self.dades_acceptacio = XmlField('DatosAceptacion')
+        self.data_acceptacio = XmlField('FechaAceptacion')
+        self.codi_reclamacio = XmlField('CodigoReclamacionDistribuidora')
+        super(DatosAceptacion, self).__init__(
+            'DatosAceptacion', 'dades_acceptacio'
+        )
+
+
+class AceptacionReclamacion(XmlModel):
+    _sort_order = (
+        'acceptacio_reclamacio',
+        'dades_acceptacio',
+    )
+
+    def __init__(self):
+        self.acceptacio_reclamacio = XmlField('AceptacionReclamacion')
+        self.dades_acceptacio = DatosAceptacion()
+
+        super(AceptacionReclamacion, self).__init__(
+            'AceptacionReclamacion', 'acceptacio_reclamacio'
+        )
+
+
+class RechazoReclamacion(XmlModel):
+    _sort_order = ('rechazo', 'secuencial', 'motiu', 'comentaris')
+
+    def __init__(self, tagname=None):
+        if not tagname:
+            tagname = 'Rechazo'
+        self.rechazo = XmlField(tagname)
+        self.secuencial = XmlField('Secuencial')
+        self.motiu = XmlField('CodigoMotivo', rep=lambda x: x.rjust(2, '0'))
+        self.comentaris = XmlField('Comentarios')
+        super(RechazoReclamacion, self).__init__(tagname, 'rechazo')
+
+
+class RechazosReclamacion(XmlModel):
+    _sort_order = ('rebuigs_reclamacio', 'rebuigs')
+
+    def __init__(self):
+        self.rebuigs_reclamacio = XmlField('Rechazos')
+        self.rebuigs = []
+        super(RechazosReclamacion, self).__init__(
+            'Rechazos', 'rebuigs_reclamacio'
+        )
+
+
 # 01
 class MensajeReclamacionIncidenciaPeticion(XmlModel):
     _sort_order = (
@@ -183,6 +238,60 @@ class MensajeReclamacionIncidenciaPeticion(XmlModel):
         self.solicitud = SolicitudReclamacion()
         super(MensajeReclamacionIncidenciaPeticion, self).__init__(
             'MensajeReclamacionIncidenciaPeticion', 'mensaje')
+
+    def set_agente(self, agente):
+        self.mensaje.attributes.update({'AgenteSolicitante': agente})
+        self.doc_root = self.root.element()
+
+
+# 02_ok
+class MensajeAceptacionReclamacion(XmlModel):
+    _sort_order = (
+        'mensaje',
+        'capcalera',
+        'acceptacio',
+    )
+
+    def __init__(self):
+        self.doc_root = None
+        self.mensaje = XmlField(
+            'MensajeAceptacionReclamacion',
+            attributes={
+                'xmlns': 'http://localhost/elegibilidad',
+            }
+        )
+        self.capcalera = CabeceraReclamacion()
+        self.acceptacio = AceptacionReclamacion()
+        super(MensajeAceptacionReclamacion, self).__init__(
+            'MensajeAceptacionReclamacion', 'mensaje')
+
+    def set_agente(self, agente):
+        self.mensaje.attributes.update({'AgenteSolicitante': agente})
+        self.doc_root = self.root.element()
+
+
+# 02_ko
+class MensajeRechazoReclamacion(XmlModel):
+    _sort_order = (
+        'mensaje',
+        'capcalera',
+        'data',
+        'rebuigs',
+    )
+
+    def __init__(self):
+        self.doc_root = None
+        self.mensaje = XmlField(
+            'MensajeRechazoReclamacion',
+            attributes={
+                'xmlns': 'http://localhost/elegibilidad',
+            }
+        )
+        self.capcalera = CabeceraReclamacion()
+        self.data = XmlField('Fecha')
+        self.rebuigs = RechazosReclamacion()
+        super(MensajeRechazoReclamacion, self).__init__(
+            'MensajeRechazoReclamacion', 'mensaje')
 
     def set_agente(self, agente):
         self.mensaje.attributes.update({'AgenteSolicitante': agente})

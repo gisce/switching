@@ -687,7 +687,7 @@ class SwitchingM1Test(unittest.TestCase):
 
 
 class Switching_R1_Test(unittest.TestCase):
-    """test de W1"""
+    """test de R1"""
 
     def setUp(self):
         sup = supportClass()
@@ -695,6 +695,9 @@ class Switching_R1_Test(unittest.TestCase):
         self.xml_r101_reclamant = open(get_data("r101_reclamante.xml"), "r")
         self.xml_r101_client = open(get_data("r101_cliente.xml"), "r")
         self.xml_r101_documents = open(get_data("r101_documentos.xml"), "r")
+        # r1-02
+        self.xml_r102_ok = open(get_data("r102_aceptacion.xml"), "r")
+        self.xml_r102_ko = open(get_data("r102_rechazo.xml"), "r")
 
         self.client = sup.getCliente(True)
         self.reclamant = self.getReclamante()
@@ -732,12 +735,12 @@ class Switching_R1_Test(unittest.TestCase):
 
         return reclamant
 
-    def getHeader(self, process='R1', step='01'):
+    def getHeader(self, process='R1', step='01', codsolicitud='20141211100908'):
         header = r1.CabeceraReclamacion()
         vals = {
             'proceso': process,
             'paso': step,
-            'solicitud': '20141211100908',
+            'solicitud': codsolicitud,
             'secuencia': '01',
             'cups': 'ES1234000000000001JN0F',
             'ree_emisora': '1234',
@@ -892,6 +895,93 @@ class Switching_R1_Test(unittest.TestCase):
         pas01.pretty_print = True
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_r101_documents.read())
+
+    def test_create_pas02_ok(self):
+        pas02 = r1.MensajeAceptacionReclamacion()
+        header = self.getHeader('R1', '02', '201602231255')
+        pas02.set_agente('1234')
+
+        dades_acceptacio = r1.DatosAceptacion()
+        dades_acceptacio.feed({
+            'data_acceptacio': '2016-02-23',
+            'codi_reclamacio': '3265349'
+        })
+
+        acceptacio = r1.AceptacionReclamacion()
+        acceptacio.feed({
+            'dades_acceptacio': dades_acceptacio
+        })
+
+        pas02.feed({
+            'capcalera': header,
+            'acceptacio': acceptacio
+        })
+        pas02.build_tree()
+        pas02.pretty_print = True
+        xml = str(pas02)
+        self.assertXmlEqual(xml, self.xml_r102_ok.read())
+
+    def test_create_pas02_ko(self):
+        pas02 = r1.MensajeRechazoReclamacion()
+        header = self.getHeader('R1', '02', '201602231255')
+        pas02.set_agente('1234')
+
+        dades_acceptacio = r1.DatosAceptacion()
+        dades_acceptacio.feed({
+            'data_acceptacio': '2016-02-23',
+            'codi_reclamacio': '3265349'
+        })
+
+        acceptacio = r1.RechazoReclamacion()
+        acceptacio.feed({
+            'fecha': '2016-02-23'
+        })
+
+        rebuigs_data = [
+            (1.01, '01', 'Motiu de rebuig 01: No existe Punto de '
+                          'Suministro asociado al CUPS'
+             ),
+            (2.03, '03', 'Cuando el CIF-NIF no coincide con el que figura en '
+                          'la base de datos del Distribuidor'
+             ),
+            (3.11, '11', 'Cuando un comercializador pide cambios de '
+                          'comercializador en suministros ya comercializados '
+                          'por él o bajas y modificaciones en suministros ya '
+                          'no comercializados por él.'
+             ),
+            (4.36, '36', 'Cuando el CIF-NIF no tiene un formato adecuado '
+                          '(algoritmo erróneo o numeración ininteligible)'
+             ),
+            (5.36, '84', 'Una reclamación duplicada es una reclamación '
+                          'exactamente igual a otra pero con distinto número '
+                          'de solicitud'
+             ),
+        ]
+
+        rebuigs = []
+        for r in rebuigs_data:
+            rebuig = r1.RechazoReclamacion()
+            rebuig.feed({
+                'secuencial': r[0],
+                'motiu': r[1],
+                'comentaris': r[2]
+            })
+            rebuigs.append(rebuig)
+
+        rebuigsreclamacions = r1.RechazosReclamacion()
+        rebuigsreclamacions.feed({
+            'rebuigs': rebuigs
+        })
+
+        pas02.feed({
+            'capcalera': header,
+            'data': '2016-02-23',
+            'rebuigs': rebuigsreclamacions
+        })
+        pas02.build_tree()
+        pas02.pretty_print = True
+        xml = str(pas02)
+        self.assertXmlEqual(xml, self.xml_r102_ko.read())
 
 
 if __name__ == '__main__':
