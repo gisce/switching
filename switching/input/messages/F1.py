@@ -7,7 +7,7 @@ from message import Message, except_f1
 
 from Q1 import Q1, Lectura, Comptador
 from switching.helpers.funcions import (
-    CODIS_REG_REFACT, exces_reactiva, aggr_consums, get_rec_attr,
+    CODIS_REG_REFACT, exces_reactiva, aggr_consums, aggr_ajusts, get_rec_attr,
     TARIFES_MAXIMETRE
 )
 
@@ -587,6 +587,19 @@ class FacturaATR(Facturas):
                     select[lect.periode] += lect.consum
                 else:
                     select.update({lect.periode: lect.consum})
+        return select
+
+    def select_ajusts_from_lectures(self, lectures, tipus):
+        """Retorna els ajusts de lectures d'energia del tipus indicat
+           En el cas d'haver-hi múltiples lectures del mateix tipus i
+           periode, n'acomula els ajustos"""
+        select = {}
+        for lect in lectures:
+            if lect.tipus in tipus:
+                if lect.periode in select:
+                    select[lect.periode] += lect.ajust
+                else:
+                    select.update({lect.periode: lect.ajust})
         return select
 
     @property

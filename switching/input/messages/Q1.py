@@ -145,6 +145,30 @@ class Lectura(object):
     def gir_comptador(self):
         return (10 ** int(self.lectura.NumeroRuedasEnteras.text))
 
+    @property
+    def te_ajust(self):
+        res = get_rec_attr(self.lectura, 'Ajuste', default={})
+        return len(res) > 0
+
+    @property
+    def motiu_ajust(self):
+        if self.te_ajust:
+            return self.lectura.Ajuste.CodigoMotivoAjuste.text
+
+    @property
+    def ajust(self):
+        if self.te_ajust:
+            return int(self.lectura.Ajuste.AjustePorIntegrador.text)
+
+    def get_info_ajust(self):
+        res = None
+        if self.te_ajust:
+            res = {
+                'motivo': self.motiu_ajust,
+                'ajuste': self.ajust
+            }
+        return res
+
 
 class Comptador(object):
     """Classe que implementa el Comptador"""
