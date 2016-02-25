@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from switching.input.messages import F1, message, W1
+from switching.input.messages import F1, message, W1, R1
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
@@ -686,15 +686,17 @@ class SwitchingM1Test(unittest.TestCase):
         self.assertXmlEqual(xml, self.xml_m101_ciepapel.read())
 
 
-class Switching_R1_Test(unittest.TestCase):
+class SwitchingR1_Test(unittest.TestCase):
     """test de R1"""
 
     def setUp(self):
         sup = supportClass()
+        # r1-01
         self.xml_r101_minim = open(get_data("r101_minim.xml"), "r")
         self.xml_r101_reclamant = open(get_data("r101_reclamante.xml"), "r")
         self.xml_r101_client = open(get_data("r101_cliente.xml"), "r")
         self.xml_r101_documents = open(get_data("r101_documentos.xml"), "r")
+        self.xml_r101_0539 = open(get_data("r101_05_39.xml"), "r")
         # r1-02
         self.xml_r102_ok = open(get_data("r102_aceptacion.xml"), "r")
         self.xml_r102_ko = open(get_data("r102_rechazo.xml"), "r")
@@ -703,10 +705,15 @@ class Switching_R1_Test(unittest.TestCase):
         self.reclamant = self.getReclamante()
 
     def tearDown(self):
+        # r1-01
         self.xml_r101_minim.close()
         self.xml_r101_reclamant.close()
         self.xml_r101_client.close()
         self.xml_r101_documents.close()
+        self.xml_r101_0539.close()
+        # r1-02
+        self.xml_r102_ok.close()
+        self.xml_r102_ko.close()
 
     def getReclamante(self):
         sup = supportClass()
@@ -982,6 +989,46 @@ class Switching_R1_Test(unittest.TestCase):
         pas02.pretty_print = True
         xml = str(pas02)
         self.assertXmlEqual(xml, self.xml_r102_ko.read())
+
+    def test_read_r101_minim(self):
+        self.r101_xml = R1(self.xml_r101_minim)
+        self.r101_xml.parse_xml()
+        sollicitud = self.r101_xml.sollicitud
+        tipus_reclamant = self.r101_xml.tipus_reclamant
+        client = self.r101_xml.client
+        comentaris = self.r101_xml.comentaris
+
+        assert sollicitud.tipus == '03'
+        assert sollicitud.subtipus == '16'
+        assert tipus_reclamant == '06'
+        assert client is None
+        assert comentaris == 'R1-01 minimum Test'
+
+    def test_read_r101_0539(self):
+        self.r101_xml = R1(self.xml_r101_0539)
+        self.r101_xml.parse_xml()
+        sollicitud = self.r101_xml.sollicitud
+        tipus_reclamant = self.r101_xml.tipus_reclamant
+        client = self.r101_xml.client
+        comentaris = self.r101_xml.comentaris
+
+        assert sollicitud.tipus == '05'
+        assert sollicitud.subtipus == '39'
+        assert tipus_reclamant == '06'
+        assert client is not None
+        assert 100 < len(comentaris) < 4000
+
+
+        # lecturas = []
+        # for lect in self.r101_xml.lecturas:
+        #     lecturas.append(
+        #         (lect.integrador,
+        #          int(lect.codigo_periodo_dh),
+        #          '%.2f' % float(lect.lectura_propuesta))
+        #     )
+        # assert len(lecturas) == 2
+        # assert lecturas[0] == ('AE', 21, '1162.00')
+        # assert lecturas[1] == ('AE', 22, '3106.00')
 
 
 if __name__ == '__main__':
