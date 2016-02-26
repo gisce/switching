@@ -864,27 +864,27 @@ class Contracte(object):
 class Client(object):
     """Classe Client"""
 
-    def __init__(self, data):
+    def __init__(self, data, idfield='IdCliente'):
         self.client = data
+        self.idfield = idfield
 
     @property
     def tipus_identificacio(self):
-        return self.client.IdCliente.TipoCIFNIF.text
+        obj = getattr(self.client, self.idfield)
+        return obj.TipoCIFNIF.text
 
     @property
     def codi_identificacio(self):
-        return self.client.IdCliente.Identificador.text
+        obj = getattr(self.client, self.idfield)
+        return obj.Identificador.text
 
     @property
     def nom(self):
         nom = ''
-        try:
+        if self.es_persona_juridica:
+            nom = self.client.Nombre.RazonSocial.text
+        else:
             nom = self.client.Nombre.NombreDePila.text
-        except AttributeError:
-            try:
-                nom = self.client.Nombre.RazonSocial.text
-            except AttributeError:
-                pass
         return nom
 
     @property
@@ -903,6 +903,33 @@ class Client(object):
             nom = self.client.Nombre.SegundoApellido.text
         except AttributeError:
             pass
+        return nom
+
+    @property
+    def es_persona_juridica(self):
+        res = True
+        try:
+            nom = self.client.Nombre.NombreDePila.text
+            res = False
+        except AttributeError:
+            try:
+                nom = self.client.Nombre.RazonSocial.text
+                res = True
+            except AttributeError:
+                pass
+        return res
+
+    def get_nom_complet(self):
+        ''' returns full name as in ERP 'cognom1 cognom2, nom'
+        :return: full_name
+        '''
+        if not self.es_persona_juridica:
+            nom = '{0}, {1}'.format(
+                (' '.join([self.cognom_1, self.cognom_2])).strip(),
+                self.nom
+            )
+        else:
+            nom = self.nom
         return nom
 
     @property
@@ -953,6 +980,16 @@ class Client(object):
         value = ''
         try:
             value = self.client.TitularContratoVsTitularPago.text
+        except AttributeError:
+            pass
+        return value
+
+    @property
+    def correu(self):
+        '''Correu electrònic'''
+        value = ''
+        try:
+            value = self.client.CorreoElectronico.text
         except AttributeError:
             pass
         return value
@@ -1270,3 +1307,90 @@ class Direccio(object):
         except AttributeError:
             pass
         return aclarador
+
+
+class Contacto(object):
+    def __init__(self, data):
+        self.contacte = data
+
+    @property
+    def nom(self):
+        nom = ''
+        if self.es_persona_juridica:
+            nom = self.contacte.Nombre.RazonSocial.text
+        else:
+            nom = self.contacte.Nombre.NombreDePila.text
+        return nom
+
+    @property
+    def cognom_1(self):
+        nom = ''
+        try:
+            nom = self.contacte.Nombre.PrimerApellido.text
+        except AttributeError:
+            pass
+        return nom
+
+    @property
+    def cognom_2(self):
+        nom = ''
+        try:
+            nom = self.contacte.Nombre.SegundoApellido.text
+        except AttributeError:
+            pass
+        return nom
+
+    @property
+    def es_persona_juridica(self):
+        res = True
+        try:
+            nom = self.contacte.Nombre.NombreDePila.text
+            res = False
+        except AttributeError:
+            try:
+                nom = self.contacte.Nombre.RazonSocial.text
+                res = True
+            except AttributeError:
+                pass
+        return res
+
+    def get_nom_complet(self):
+        ''' returns full name as in ERP 'cognom1 cognom2, nom'
+        :return: full_name
+        '''
+        if not self.es_persona_juridica:
+            nom = '{0}, {1}'.format(
+                (' '.join([self.cognom_1, self.cognom_2])).strip(),
+                self.nom
+            )
+        else:
+            nom = self.nom
+        return nom
+
+    @property
+    def telf_num(self):
+        num = ''
+        try:
+            num = self.contacte.Telefono.Numero.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def telf_prefix(self):
+        prefix = ''
+        try:
+            prefix = self.contacte.Telefono.PrefijoPais.text
+        except AttributeError:
+            pass
+        return prefix
+
+    @property
+    def correu(self):
+        '''Correu electrònic'''
+        value = ''
+        try:
+            value = self.contacte.CorreoElectronico.text
+        except AttributeError:
+            pass
+        return value

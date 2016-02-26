@@ -20,12 +20,22 @@ class R1(Message):
         """Retorna l'objecte Sollicitud"""
         return DatosPasoSollicitud(self.obj.SolicitudReclamacion.DatosSolicitud)
 
-    # @property
-    # def reclamacions(self):
-    #     """Retorna l'objecte Sollicitud"""
-    #     return Reclamacions(
-    #         self.obj.SolicitudReclamacion.VariablesDetalleReclamacion
-    #     )
+    @property
+    def reclamacions(self):
+        """Retorna una llista de Reclamacions"""
+        data = []
+        try:
+            vars = self.obj.SolicitudReclamacion.VariablesDetalleReclamacion
+            for var in vars:
+                if len(var.VariableDetalleReclamacion.getchildren()):
+                    data.append(
+                        VariableDetalleReclamacion(
+                            var.VariableDetalleReclamacion
+                        )
+                    )
+        except:
+            pass
+        return data
 
     @property
     def client(self):
@@ -39,12 +49,12 @@ class R1(Message):
         """Retorna l'objecte Tipo Reclamante"""
         return self.obj.SolicitudReclamacion.TipoReclamante.text
 
-    # @property
-    # def reclamant(self):
-    #     """Retorna l'objecte Client"""
-    #     obj = getattr(self.obj, self._header)
-    #     if getattr('Reclamante', obj.SolicitudReclamacion.Reclamante, False):
-    #         return Reclamant(self.obj.SolicitudReclamacion.Reclamante)
+    @property
+    def reclamant(self):
+        """Retorna l'objecte Client"""
+        obj = getattr(self.obj, self._header)
+        if len(getattr(obj, 'Reclamante', [])):
+            return C1.Client(obj.Reclamante, 'IdReclamante')
 
     @property
     def comentaris(self):
@@ -142,3 +152,29 @@ class DatosPasoSollicitud(object):
         except AttributeError:
             pass
         return ref
+
+class VariableDetalleReclamacion(object):
+    """Classe que implementa la sol·licitud"""
+
+    def __init__(self, data):
+        self.variable = data
+
+    @property
+    def numexpediente(self):
+        """ Número de expediente """
+        ref = None
+        try:
+            return self.variable.NumExpedienteAcomentida.text
+        except AttributeError:
+            pass
+        return ref
+
+    @property
+    def contacto(self):
+        """ Número de expediente """
+        contacto = None
+        try:
+            contacto = C1.Contacto(self.variable.Contacto)
+        except AttributeError:
+            pass
+        return contacto

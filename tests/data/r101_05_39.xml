@@ -44,7 +44,7 @@
         <Cliente>
             <IdCliente>
                 <TipoCIFNIF>NI</TipoCIFNIF>
-                <Identificador>01083894L</Identificador>
+                <Identificador>11111111H</Identificador>
             </IdCliente>
             <Nombre>
                 <NombreDePila>Road</NombreDePila>
@@ -62,10 +62,10 @@
         <Reclamante>
             <IdReclamante>
                 <TipoCIFNIF>CI</TipoCIFNIF>
-                <Identificador>XXXX</Identificador>
+                <Identificador>22222222H</Identificador>
             </IdReclamante>
             <Nombre>
-                <RazonSocial>XXXX</RazonSocial>
+                <RazonSocial>ACME Corporation</RazonSocial>
             </Nombre>
             <Telefono>
                 <PrefijoPais>34</PrefijoPais>

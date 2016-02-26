@@ -995,27 +995,50 @@ class SwitchingR1_Test(unittest.TestCase):
         self.r101_xml.parse_xml()
         sollicitud = self.r101_xml.sollicitud
         tipus_reclamant = self.r101_xml.tipus_reclamant
+        reclamant = self.r101_xml.reclamant
+        reclamacions = self.r101_xml.reclamacions
         client = self.r101_xml.client
         comentaris = self.r101_xml.comentaris
 
         assert sollicitud.tipus == '03'
         assert sollicitud.subtipus == '16'
         assert tipus_reclamant == '06'
+        assert reclamacions == []
         assert client is None
+        assert reclamant is None
         assert comentaris == 'R1-01 minimum Test'
 
     def test_read_r101_0539(self):
         self.r101_xml = R1(self.xml_r101_0539)
         self.r101_xml.parse_xml()
         sollicitud = self.r101_xml.sollicitud
+        reclamacions = self.r101_xml.reclamacions
         tipus_reclamant = self.r101_xml.tipus_reclamant
+        reclamant = self.r101_xml.reclamant
         client = self.r101_xml.client
         comentaris = self.r101_xml.comentaris
 
         assert sollicitud.tipus == '05'
         assert sollicitud.subtipus == '39'
         assert tipus_reclamant == '06'
+
+        assert len(reclamacions) == 1
+        reclamacio = reclamacions[0]
+
+        assert reclamacio.contacto is not None
+        assert reclamacio.contacto.correu == 'perico@acme.com'
+        assert reclamacio.contacto.get_nom_complet() == 'Palotes, Perico'
+
         assert client is not None
+        assert client.codi_identificacio == '11111111H'
+        assert client.correu == 'rrunner@acme.com'
+        assert client.get_nom_complet() == 'Runner Speed, Road'
+
+        assert reclamant is not None
+        assert reclamant.codi_identificacio == '22222222H'
+        assert reclamant.correu == 'reclamaatr@acme.es'
+        assert reclamant.get_nom_complet() == 'ACME Corporation'
+
         assert 100 < len(comentaris) < 4000
 
 
