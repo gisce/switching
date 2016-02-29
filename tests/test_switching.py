@@ -712,7 +712,9 @@ class SwitchingR1_Test(unittest.TestCase):
         self.xml_r101_reclamant.close()
         self.xml_r101_client.close()
         self.xml_r101_documents.close()
+        self.xml_r101_lectures.close()
         self.xml_r101_0539.close()
+        self.xml_r101_0203.close()
         # r1-02
         self.xml_r102_ok.close()
         self.xml_r102_ko.close()
@@ -859,6 +861,89 @@ class SwitchingR1_Test(unittest.TestCase):
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_r101_client.read())
 
+    def test_create_pas01_lectures(self):
+        pas01 = r1.MensajeReclamacionIncidenciaPeticion()
+        header = self.getHeader('R1', '01')
+        pas01.set_agente('1234')
+        dades = self.getDatosSolicitud('02', '36')
+
+        variables = r1.VariablesDetalleReclamacion()
+
+        lectures = []
+        for integrador, periodo, medida in [('AE', 21, '0000001162.00'),
+                                            ('AE', 22, '0000003106.00'), ]:
+            lectura = w1.LecturaAportada()
+            lectura.feed(dict(
+                integrador=integrador,
+                codigo_periodedh=periodo,
+                lectura_propuesta=medida,
+            ))
+            lectures.append(lectura)
+
+        lect_aportades = r1.LecturasAportadas()
+        lect_aportades.feed({
+            'lectures': lectures
+        })
+        variable = r1.VariableDetalleReclamacion()
+        variable.feed({
+            'num_factura_atr': '243615',
+            'data_lectura': '2016-01-20',
+            'codidh': '2',
+            'lectures': lect_aportades
+        })
+
+        variables.feed({'detalls': [variable]})
+
+        # Client
+        idclient = c1.IdCliente()
+        idclient.feed({
+            'cifnif': 'NI',
+            'identificador': '11111111H',
+        })
+
+        nomclient = c1.Nombre()
+        nom_vals = {
+            'nombrepila': 'Perico',
+            'apellido1': 'Palotes',
+            'apellido2': 'Largos'
+        }
+        nomclient.feed(nom_vals)
+
+        telefon = c1.Telefono()
+        telf_fields = {
+            'numero': '66612345',
+            'prefijo': 34
+        }
+        telefon.feed(telf_fields)
+
+        client = c1.Cliente()
+        cli_fields = {
+            'idcliente': idclient,
+            'nombre': nomclient,
+            'indicador': 'S',
+            'telefono': telefon,
+        }
+        cli_fields.update({'correu': 'perico@acme.com'})
+
+        client.feed(cli_fields)
+
+        solicitud = r1.SolicitudReclamacion()
+        solicitud.feed({
+            'dades': dades,
+            'variables': variables,
+            'client': client,
+            'tipus_reclamant': '06',
+            'comentaris': u'R1-01 lectures',
+        })
+        pas01.feed({
+            'capcalera': header,
+            'solicitud': solicitud
+        })
+        pas01.build_tree()
+        pas01.pretty_print = True
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_r101_lectures.read())
+
     def test_create_pas01_documents(self):
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
         header = self.getHeader('R1', '01')
@@ -904,6 +989,157 @@ class SwitchingR1_Test(unittest.TestCase):
         pas01.pretty_print = True
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_r101_documents.read())
+
+    def test_create_pas01_05_39(self):
+        pas01 = r1.MensajeReclamacionIncidenciaPeticion()
+        header = r1.CabeceraReclamacion()
+        header.feed({
+            'proceso': 'R1',
+            'paso': '01',
+            'solicitud': '201602231255',
+            'secuencia': '01',
+            'cups': 'ES1234000000000001JN0F',
+            'ree_emisora': '0321',
+            'ree_destino': '0123',
+            'fecha': '2016-02-23T12:54:00',
+        })
+        pas01.set_agente('0123')
+        dades = self.getDatosSolicitud('05', '39', '30968')
+
+        telcon = r1.Telefono()
+        telcon.feed({
+            'prefijo': '34',
+            'numero': '55512345',
+        })
+
+        nomcon = r1.Nombre()
+        nomcon.feed({
+            'nombrepila': 'Perico',
+            'apellido1': 'Palotes',
+        })
+
+        contacte = r1.Contacto()
+        contacte.feed({
+            'nombre': nomcon,
+            'telefon': telcon,
+            'correu': 'perico@acme.com'
+        })
+
+        variable = r1.VariableDetalleReclamacion()
+        variable.feed({
+            'data_incident': '2016-02-08',
+            'codidh': '0',
+            'codi_incidencia': '02',
+            'codi_sollicitud': '201602231236',
+            'contacto': contacte,
+            'codi_sollicitud_reclamacio': '201602231236',
+            'data_inici': '2016-01-01',
+            'data_fins': '2016-02-09',
+            'import_reclamat': 204.49,
+            'ubicacio': 'Cuadro ICP',
+        })
+
+        variables = r1.VariablesDetalleReclamacion()
+        variables.feed({'detalls': [variable]})
+
+        # Client
+        idclient = c1.IdCliente()
+        idclient.feed({
+            'cifnif': 'NI',
+            'identificador': '11111111H',
+        })
+
+        nomclient = c1.Nombre()
+        nom_vals = {
+            'nombrepila': 'Road',
+            'apellido1': 'Runner',
+            'apellido2': 'Speed'
+        }
+        nomclient.feed(nom_vals)
+
+        telclient = c1.Telefono()
+        telclient.feed({
+            'numero': '55512345',
+            'prefijo': 34
+        })
+
+        client = c1.Cliente()
+        cli_fields = {
+            'idcliente': idclient,
+            'nombre': nomclient,
+            'indicador': 'S',
+            'correu': 'rrunner@acme.com',
+            'telefono': telclient,
+        }
+
+        client.feed(cli_fields)
+
+        # Reclamant
+        idrec = r1.IdReclamante()
+        idrec.feed({
+            'tipus_cifnif': 'CI',
+            'identificador': '22222222H',
+        })
+
+        nomrec = c1.Nombre()
+        nomrec.feed({
+            'razon': 'ACME Corporation',
+        })
+
+        telrec = c1.Telefono()
+        telrec.feed({
+            'numero': '555987654',
+            'prefijo': 34
+        })
+
+        reclamant = r1.Reclamante()
+        reclamant.feed({
+            'id_reclamant': idrec,
+            'nom': nomrec,
+            'correu': 'reclamaatr@acme.es',
+            'telefon': telrec,
+        })
+
+        docs = [(
+            '06',
+            'https://www.dropbox.com/s/q40impgt3tn0vtj/Reclama_%20da%C3%'
+            'B1os_%20Montero%20Simon%2C%20Eduardo%20Tarsicio.pdf?dl=0'
+        )]
+
+        documents = []
+        for doc in docs:
+            tmp_doc = r1.RegistroDoc()
+            tmp_doc.feed({'tipus_doc': doc[0], 'url': doc[1]})
+            documents.append(tmp_doc)
+
+        reg_documents = r1.RegistrosDocumento()
+        reg_doc_vals = {
+            'documents': documents,
+        }
+        reg_documents.feed(reg_doc_vals)
+
+        solicitud = r1.SolicitudReclamacion()
+        solicitud.feed({
+            'dades': dades,
+            'variables': variables,
+            'client': client,
+            'tipus_reclamant': '06',
+            'reclamant': reclamant,
+            'comentaris': (
+                u'su diferencial del cuadro de control se ha quemado, se\n'
+                u'            reclama número de incidencia de red exterior para'
+                u' tramitación de\n            siniestro'),
+            'reg_documents': reg_documents,
+        })
+
+        pas01.feed({
+            'capcalera': header,
+            'solicitud': solicitud
+        })
+        pas01.build_tree()
+        pas01.pretty_print = True
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_r101_0539.read())
 
     def test_create_pas02_ok(self):
         pas02 = r1.MensajeAceptacionReclamacion()
@@ -1016,7 +1252,6 @@ class SwitchingR1_Test(unittest.TestCase):
         sollicitud = self.r101_xml.sollicitud
         reclamacions = self.r101_xml.reclamacions
         tipus_reclamant = self.r101_xml.tipus_reclamant
-        reclamant = self.r101_xml.reclamant
         client = self.r101_xml.client
         comentaris = self.r101_xml.comentaris
 
@@ -1032,7 +1267,7 @@ class SwitchingR1_Test(unittest.TestCase):
         assert reclamacio.data_lectura == '2016-01-20'
         assert reclamacio.codidh == 2
         lecturas = []
-        for lect in reclamacio.lecturas:
+        for lect in reclamacio.lectures:
             lecturas.append(
                 (lect.integrador,
                  int(lect.codigo_periodo_dh),

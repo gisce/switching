@@ -222,7 +222,7 @@ class VariableDetalleReclamacion(object):
         return codi
 
     @property
-    def lecturas(self):
+    def lectures(self):
         """Retorna una llista de lectures"""
         data = []
         for i in self.variable.LecturasAportadas.LecturaAportada:
