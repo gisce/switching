@@ -696,7 +696,9 @@ class SwitchingR1_Test(unittest.TestCase):
         self.xml_r101_reclamant = open(get_data("r101_reclamante.xml"), "r")
         self.xml_r101_client = open(get_data("r101_cliente.xml"), "r")
         self.xml_r101_documents = open(get_data("r101_documentos.xml"), "r")
+        self.xml_r101_lectures = open(get_data("r101_lectures.xml"), "r")
         self.xml_r101_0539 = open(get_data("r101_05_39.xml"), "r")
+        self.xml_r101_0203 = open(get_data("r101_02_03.xml"), "r")
         # r1-02
         self.xml_r102_ok = open(get_data("r102_aceptacion.xml"), "r")
         self.xml_r102_ko = open(get_data("r102_rechazo.xml"), "r")
@@ -1008,6 +1010,47 @@ class SwitchingR1_Test(unittest.TestCase):
         assert reclamant is None
         assert comentaris == 'R1-01 minimum Test'
 
+    def test_read_lectures(self):
+        self.r101_xml = R1(self.xml_r101_lectures)
+        self.r101_xml.parse_xml()
+        sollicitud = self.r101_xml.sollicitud
+        reclamacions = self.r101_xml.reclamacions
+        tipus_reclamant = self.r101_xml.tipus_reclamant
+        reclamant = self.r101_xml.reclamant
+        client = self.r101_xml.client
+        comentaris = self.r101_xml.comentaris
+
+        assert sollicitud.tipus == '02'
+        assert sollicitud.subtipus == '36'
+        assert tipus_reclamant == '06'
+
+        assert len(reclamacions) == 1
+        reclamacio = reclamacions[0]
+
+        assert reclamacio.contacto is None
+        assert reclamacio.num_factura_atr == '243615'
+        assert reclamacio.data_lectura == '2016-01-20'
+        assert reclamacio.codidh == 2
+        lecturas = []
+        for lect in reclamacio.lecturas:
+            lecturas.append(
+                (lect.integrador,
+                 int(lect.codigo_periodo_dh),
+                 '%.2f' % float(lect.lectura_propuesta))
+            )
+        assert len(lecturas) == 2
+        assert lecturas[0] == ('AE', 21, '1162.00')
+        assert lecturas[1] == ('AE', 22, '3106.00')
+
+        assert client is not None
+        assert client.codi_identificacio == '11111111H'
+        assert client.correu == 'perico@acme.com'
+        assert client.telf_prefix == '34'
+        assert client.telf_num == '66612345'
+        assert client.get_nom_complet() == 'Palotes Largos, Perico'
+
+        assert comentaris == 'R1-01 lectures'
+
     def test_read_r101_0539(self):
         self.r101_xml = R1(self.xml_r101_0539)
         self.r101_xml.parse_xml()
@@ -1026,8 +1069,18 @@ class SwitchingR1_Test(unittest.TestCase):
         reclamacio = reclamacions[0]
 
         assert reclamacio.contacto is not None
+        assert reclamacio.data_incident == '2016-02-08'
+        assert reclamacio.data_lectura is None
+        assert reclamacio.codidh == 0
+        assert reclamacio.codi_incidencia == '02'
+        assert reclamacio.codi_sollicitud == '201602231236'
         assert reclamacio.contacto.correu == 'perico@acme.com'
         assert reclamacio.contacto.get_nom_complet() == 'Palotes, Perico'
+        assert reclamacio.codi_sollicitud_reclamacio == '201602231236'
+        assert reclamacio.data_inici == '2016-01-01'
+        assert reclamacio.data_fins == '2016-02-09'
+        assert reclamacio.import_reclamat == 204.49
+        assert reclamacio.ubicacio == 'Cuadro ICP'
 
         assert client is not None
         assert client.codi_identificacio == '11111111H'
@@ -1041,17 +1094,52 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert 100 < len(comentaris) < 4000
 
+    def test_read_r101_0203(self):
+        self.r101_xml = R1(self.xml_r101_0203)
+        self.r101_xml.parse_xml()
+        sollicitud = self.r101_xml.sollicitud
+        reclamacions = self.r101_xml.reclamacions
+        tipus_reclamant = self.r101_xml.tipus_reclamant
+        reclamant = self.r101_xml.reclamant
+        client = self.r101_xml.client
+        comentaris = self.r101_xml.comentaris
 
-        # lecturas = []
-        # for lect in self.r101_xml.lecturas:
-        #     lecturas.append(
-        #         (lect.integrador,
-        #          int(lect.codigo_periodo_dh),
-        #          '%.2f' % float(lect.lectura_propuesta))
-        #     )
-        # assert len(lecturas) == 2
-        # assert lecturas[0] == ('AE', 21, '1162.00')
-        # assert lecturas[1] == ('AE', 22, '3106.00')
+        assert sollicitud.tipus == '02'
+        assert sollicitud.subtipus == '03'
+        assert tipus_reclamant == '01'
+
+        assert len(reclamacions) == 1
+        reclamacio = reclamacions[0]
+
+        assert reclamacio.contacto is not None
+        assert reclamacio.num_factura_atr == '243615'
+        assert reclamacio.data_incident is None
+        assert reclamacio.data_lectura == '2016-01-20'
+        assert reclamacio.codidh == 1
+        assert reclamacio.codi_incidencia == '01'
+        assert reclamacio.codi_sollicitud is None
+        assert reclamacio.contacto.correu == 'perico@acme.com'
+        assert reclamacio.contacto.get_nom_complet() == 'Palotes Largos, Perico'
+        assert reclamacio.contacto.telf_num == '55512345'
+        assert reclamacio.codi_sollicitud_reclamacio is None
+        assert reclamacio.data_inici is None
+        assert reclamacio.data_fins is None
+        assert reclamacio.import_reclamat is None
+        assert reclamacio.ubicacio is None
+
+        assert client is not None
+        assert client.codi_identificacio == '11111111H'
+        assert client.correu == 'perico@acme.com'
+        assert client.get_nom_complet() == 'Palotes Largos, Perico'
+
+        assert reclamant is not None
+        assert reclamant.codi_identificacio == '11111111H'
+        assert reclamant.correu == ''
+        assert reclamant.telf_prefix == '34'
+        assert reclamant.telf_num == '66612345'
+        assert reclamant.get_nom_complet() == 'Palotes Largos, Perico'
+
+        assert 100 < len(comentaris) < 4000
 
 
 if __name__ == '__main__':

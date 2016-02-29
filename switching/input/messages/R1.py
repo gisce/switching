@@ -2,6 +2,7 @@
 
 from message import Message
 import C1
+import W1
 
 
 class R1(Message):
@@ -25,15 +26,15 @@ class R1(Message):
         """Retorna una llista de Reclamacions"""
         data = []
         try:
-            vars = self.obj.SolicitudReclamacion.VariablesDetalleReclamacion
-            for var in vars:
+            varis = self.obj.SolicitudReclamacion.VariablesDetalleReclamacion
+            for var in varis:
                 if len(var.VariableDetalleReclamacion.getchildren()):
                     data.append(
                         VariableDetalleReclamacion(
                             var.VariableDetalleReclamacion
                         )
                     )
-        except:
+        except AttributeError:
             pass
         return data
 
@@ -153,6 +154,7 @@ class DatosPasoSollicitud(object):
             pass
         return ref
 
+
 class VariableDetalleReclamacion(object):
     """Classe que implementa la sol·licitud"""
 
@@ -160,7 +162,7 @@ class VariableDetalleReclamacion(object):
         self.variable = data
 
     @property
-    def numexpediente(self):
+    def numexpedient(self):
         """ Número de expediente """
         ref = None
         try:
@@ -168,6 +170,114 @@ class VariableDetalleReclamacion(object):
         except AttributeError:
             pass
         return ref
+
+    @property
+    def data_incident(self):
+        """ Data incident """
+        data = None
+        try:
+            return self.variable.FechaIncidente.text
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def num_factura_atr(self):
+        """ Num factura ATR """
+        num = None
+        try:
+            return self.variable.NumFacturaATR.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def tipus_concepte_facturat(self):
+        """ Tipus Concepte """
+        tipus = None
+        try:
+            return self.variable.TipoConceptoFacturado.text
+        except AttributeError:
+            pass
+        return tipus
+
+    @property
+    def data_lectura(self):
+        """ Data lectura """
+        data = None
+        try:
+            return self.variable.FechaLectura.text
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def codidh(self):
+        """ Codi DH """
+        codi = None
+        try:
+            return int(self.variable.CodigoDH.text)
+        except AttributeError:
+            pass
+        return codi
+
+    @property
+    def lecturas(self):
+        """Retorna una llista de lectures"""
+        data = []
+        for i in self.variable.LecturasAportadas.LecturaAportada:
+            data.append(W1.LecturaAportada(i))
+        return data
+
+    @property
+    def codi_incidencia(self):
+        """ Data incidencia """
+        codi = None
+        try:
+            return self.variable.CodigoIncidencia.text
+        except AttributeError:
+            pass
+        return codi
+
+    @property
+    def codi_sollicitud(self):
+        """ Data solicitud """
+        codi = None
+        try:
+            return self.variable.CodigoSolicitud.text
+        except AttributeError:
+            pass
+        return codi
+
+    @property
+    def param_contractacio(self):
+        """ Paràmetre de contractació """
+        param = None
+        try:
+            return self.variable.ParametroContratacion.text
+        except AttributeError:
+            pass
+        return param
+
+    @property
+    def concepte_disconformitat(self):
+        """ Concepte de disconformitat """
+        con = None
+        try:
+            return self.variable.ConceptoDisconformidad.text
+        except AttributeError:
+            pass
+        return con
+
+    @property
+    def tipus_atencio_incorrecte(self):
+        """ Tipus atenció incorrete """
+        tipus = None
+        try:
+            return self.variable.TipoDeAtencionIncorrecta.text
+        except AttributeError:
+            pass
+        return tipus
 
     @property
     def contacto(self):
@@ -178,3 +288,63 @@ class VariableDetalleReclamacion(object):
         except AttributeError:
             pass
         return contacto
+
+    @property
+    def iban(self):
+        """ IBAN """
+        iban = None
+        try:
+            return self.variable.IBAN.text
+        except AttributeError:
+            pass
+        return iban
+
+    @property
+    def codi_sollicitud_reclamacio(self):
+        """ Codi solicitud de reclamació """
+        codi = None
+        try:
+            return self.variable.CodigoSolicitudReclamacion.text
+        except AttributeError:
+            pass
+        return codi
+
+    @property
+    def data_inici(self):
+        """ Data inici """
+        data = None
+        try:
+            return self.variable.FechaDesde.text
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def data_fins(self):
+        """ Data fi """
+        data = None
+        try:
+            return self.variable.FechaHasta.text
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def import_reclamat(self):
+        """ Import Reclamat """
+        imp = None
+        try:
+            return float(self.variable.ImporteReclamado.text)
+        except AttributeError:
+            pass
+        return imp
+
+    @property
+    def ubicacio(self):
+        """ Import Reclamat """
+        ubi = None
+        try:
+            return self.variable.UbicacionIncidencia.text
+        except AttributeError:
+            pass
+        return ubi
