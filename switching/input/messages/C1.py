@@ -1394,3 +1394,40 @@ class Contacto(object):
         except AttributeError:
             pass
         return value
+
+
+class RegistrosDocumento(object):
+    """Document Registry present on many formats"""
+    def __init__(self, data):
+        self.docs = data
+        self.documents = []
+
+    def get_documents(self):
+        if getattr(self.docs, 'RegistroDoc', None) is not None:
+            for doc in self.docs.RegistroDoc:
+                self.documents.append(RegistroDoc(doc))
+        return self.documents
+
+
+class RegistroDoc(object):
+    """Document Registry on many formats"""
+    def __init__(self, data):
+        self.doc = data
+
+    @property
+    def doc_type(self):
+        value = ''
+        try:
+            value = self.doc.TipoDocAportado.text
+        except AttributeError:
+            pass
+        return value
+
+    @property
+    def url(self):
+        value = ''
+        try:
+            value = self.doc.DireccionUrl.text
+        except AttributeError:
+            pass
+        return value

@@ -61,10 +61,20 @@ class R1(Message):
     def comentaris(self):
         """Retorna els comentaris (si hi son)"""
         obj = getattr(self.obj, self._header)
-        if len(getattr(obj, 'Comentarios', False)):
+        if len(getattr(obj, 'Comentarios', [])):
             return obj.Comentarios.text
         else:
             return ''
+
+    @property
+    def documents(self):
+        """Return docuemnts if availables"""
+        obj = getattr(self.obj, self._header)
+        if len(getattr(obj, 'RegistrosDocumento', [])):
+            doc_registry = C1.RegistrosDocumento(obj.RegistrosDocumento)
+            return doc_registry.get_documents()
+        else:
+            return None
 
     # @property
     # def acceptacio(self):

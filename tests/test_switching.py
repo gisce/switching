@@ -1254,6 +1254,7 @@ class SwitchingR1_Test(unittest.TestCase):
         tipus_reclamant = self.r101_xml.tipus_reclamant
         client = self.r101_xml.client
         comentaris = self.r101_xml.comentaris
+        documents = self.r101_xml.documents
 
         assert sollicitud.tipus == '02'
         assert sollicitud.subtipus == '36'
@@ -1286,6 +1287,37 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert comentaris == 'R1-01 lectures'
 
+        assert documents is None
+
+    def test_read_r101_documents(self):
+        self.r101_xml = R1(self.xml_r101_documents)
+        self.r101_xml.parse_xml()
+        sollicitud = self.r101_xml.sollicitud
+        tipus_reclamant = self.r101_xml.tipus_reclamant
+        reclamant = self.r101_xml.reclamant
+        reclamacions = self.r101_xml.reclamacions
+        client = self.r101_xml.client
+        comentaris = self.r101_xml.comentaris
+        documents = self.r101_xml.documents
+
+        assert sollicitud.tipus == '03'
+        assert sollicitud.subtipus == '16'
+        assert tipus_reclamant == '06'
+        assert reclamacions == []
+        assert client is None
+        assert reclamant is None
+        assert comentaris == 'R1-01 with RegistrosDocumentos Test'
+
+        assert len(documents) == 3
+        assert documents[0].doc_type == '01'
+        assert documents[0].url == 'http://eneracme.com/docs/CIE0100001.pdf'
+        assert documents[1].doc_type == '06'
+        assert documents[1].url == (
+            'http://eneracme.com/docs/INV201509161234.pdf'
+        )
+        assert documents[2].doc_type == '08'
+        assert documents[2].url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+
     def test_read_r101_0539(self):
         self.r101_xml = R1(self.xml_r101_0539)
         self.r101_xml.parse_xml()
@@ -1295,6 +1327,7 @@ class SwitchingR1_Test(unittest.TestCase):
         reclamant = self.r101_xml.reclamant
         client = self.r101_xml.client
         comentaris = self.r101_xml.comentaris
+        documents = self.r101_xml.documents
 
         assert sollicitud.tipus == '05'
         assert sollicitud.subtipus == '39'
@@ -1329,6 +1362,13 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert 100 < len(comentaris) < 4000
 
+        assert len(documents) == 1
+        assert documents[0].doc_type == '06'
+        assert documents[0].url == (
+            u'https://www.dropbox.com/s/q40impgt3tn0vtj/Reclama_%20da%C3%B1os_'
+            u'%20Montero%20Simon%2C%20Eduardo%20Tarsicio.pdf?dl=0'
+        )
+
     def test_read_r101_0203(self):
         self.r101_xml = R1(self.xml_r101_0203)
         self.r101_xml.parse_xml()
@@ -1338,6 +1378,7 @@ class SwitchingR1_Test(unittest.TestCase):
         reclamant = self.r101_xml.reclamant
         client = self.r101_xml.client
         comentaris = self.r101_xml.comentaris
+        documents = self.r101_xml.documents
 
         assert sollicitud.tipus == '02'
         assert sollicitud.subtipus == '03'
@@ -1376,6 +1417,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert 100 < len(comentaris) < 4000
 
+        assert len(documents) == 0
 
 if __name__ == '__main__':
     unittest.main()
