@@ -10,7 +10,10 @@ class R1(Message):
 
     def set_xsd(self):
         super(R1, self).set_xsd()
-        self._header = 'SolicitudReclamacion'
+        if self._header == 'ReclamacionPeticion':
+            self._header = 'SolicitudReclamacion'
+        else:
+            pass
 
     @property
     def header(self):
@@ -76,14 +79,35 @@ class R1(Message):
         else:
             return None
 
-    # @property
-    # def acceptacio(self):
-    #     """Retorna l'objecte Acceptacio"""
-    #     obj = getattr(self.obj, self._header, False)
-    #     if obj and hasattr(obj, 'DatosAceptacion'):
-    #         return C1.Acceptacio(obj.DatosAceptacion)
-    #     return False
-    #
+    # 02 KO
+    @property
+    def data(self):
+        """ Data Rebuig """
+        data = None
+        try:
+            return self.obj.Fecha.text
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def rebuig(self):
+        """Retorna una llista de Rebuig"""
+        data = []
+        for i in self.obj.Rechazos.Rechazo:
+            data.append(C1.Rebuig(i))
+        return data
+
+    # 02 OK
+    @property
+    def acceptacio(self):
+        """Retorna l'objecte Acceptacio"""
+        try:
+            obj = getattr(self.obj, self._header, False)
+            return C1.Acceptacio(obj.DatosAceptacion)
+        except AttributeError:
+            return False
+
     # @property
     # def activacio(self):
     #     """Retorna l'objecte Activacio"""
@@ -94,13 +118,6 @@ class R1(Message):
     #     """Retorna l'object Anullacio"""
     #     return C1.Anullacio(self.obj.AnulacionSolicitud)
     #
-    # @property
-    # def rebuig(self):
-    #     """Retorna una llista de Rebuig"""
-    #     data = []
-    #     for i in self.obj.RechazoATRDistribuidoras.Rechazo:
-    #         data.append(C1.Rebuig(i))
-    #     return data
     #
     # @property
     # def rebuig_anullacio(self):
@@ -129,7 +146,6 @@ class R1(Message):
     #     except AttributeError:
     #         pass
     #     return direccio
-
     # @property
     # def punts_mesura(self):
     #     """Retorna una llista de punts de mesura"""

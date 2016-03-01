@@ -1037,6 +1037,16 @@ class Acceptacio(object):
             pass
         return data
 
+    # R1-02
+    @property
+    def codi_reclamacio_distri(self):
+        data = ''
+        try:
+            data = self.acc.CodigoReclamacionDistribuidora.text
+        except AttributeError:
+            pass
+        return data
+
 
 class Condicions(object):
     """Classe Condicions"""

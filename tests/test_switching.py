@@ -1419,5 +1419,21 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert len(documents) == 0
 
+    def test_read_r102_ok(self):
+        self.r102_xml = R1(self.xml_r102_ok)
+        self.r102_xml.parse_xml()
+        acceptacio = self.r102_xml.acceptacio
+
+        assert acceptacio.data_acceptacio == '2016-02-23'
+        assert acceptacio.codi_reclamacio_distri == '3265349'
+
+    def test_read_r102_ko(self):
+        self.r102_xml = R1(self.xml_r102_ko)
+        self.r102_xml.parse_xml()
+        rebuig = self.r102_xml.rebuig
+
+        assert self.r102_xml.data == '2016-02-23'
+        assert len(rebuig) == 5
+
 if __name__ == '__main__':
     unittest.main()
