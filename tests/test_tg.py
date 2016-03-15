@@ -53,3 +53,20 @@ class TestS05(unittest.TestCase):
         assert len(ctrs.keys()) == 2
         assert ctrs['1'] == 14
         assert ctrs['2'] == 14
+
+
+class TestS12(unittest.TestCase):
+
+    def setUp(self):
+        self.xml = open(get_data('S12'),'r')
+        self.tg_xml = message.MessageTG(self.xml)
+        self.tg_xml.parse_xml()
+
+    def tearDown(self):
+        self.xml.close()
+
+    def test_get_S12(self):
+        for concentrator_xml in self.tg_xml.obj.Cnc:
+            concentrator_tg = TG.Concentrator(concentrator_xml)
+            values = TG.Values(concentrator_tg,'S12',self.tg_xml.version)
+            values.get()

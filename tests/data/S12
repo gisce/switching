@@ -1,0 +1,38 @@
+<Report IdRpt="S12" IdPet="0" Version="3.1.c">
+<Cnc Id="ZIV0004338053">
+	<S12 Fh="20160309235001000W" Mod="4CCT-EA6-334126BF" Af="2013" Te="concentrator" Vf="4WF01610001" VfComm="4WF01610001" Pro="ISDIP-3.0-2010/09" Com="PLC" Bat="N/A" ipCom="192.168.137.11" PortWS="8080" ipMask="255.255.255.0" ipGtw="auto" ipDhcp="N" Macplc="40:40:22:01:DE:D5" Pse="115200" Priority="Y" IPstg="0.0.0.0" IPNTP="192.168.127.10" NTPMaxDeviation="30" IPftp="192.168.127.12" FTPUserReport="ftpuserreport" IPftpDCUpg="192.168.127.12" UserftpDCUpg="userftpdcupg" IPftpMeterUpg="192.168.127.12" UserftpMeterUpg="userftpmeterupg" RetryFtp="10" TimeBetwFtp="300" TimeDev="30" TimeDevOver="3660" ResetMsg="N" NumMeters="100" TimeSendReq="3600" TimeDisconMeter="86400" RetryDisconMeter="20" TimeRetryInterval="1800" IPftpCycles="192.168.127.12" UserftpCycles="userftpcycles" DestDirCycles="CT011" MeterRegData="010000600100ff02010000600101ff02010000600102ff02" TimeOutMeterFwU="36000" ValuesCheckDelay="3" MaxOrderOutdate="86400" TimeDelayRestart="60" ReportFormat="0" Slave1="224.0.0.125" Slave2="" Slave3="" ipLoc="100.0.0.1" ipMaskLoc="255.255.255.0" AccInacTimeout="15" AccSimulMax="3" SyncMeter="N" S26Content="L1v;Pimp;AIa" >
+		<TP TpTar="cdc_diari" TpPrio="1" TpHi="20110101010000000W" TpPer="00000001000000" TpMet="" TpCompl="N" >
+			<TpPro TpReq="S02" TpSend="Y" TpStore="Y" >
+				<TpAttr/>
+			</TpPro>
+		</TP>
+		<TP TpTar="tancament_mensual" TpPrio="2" TpHi="20110101010000000W" TpPer="00000100000000" TpMet="" TpCompl="N" >
+			<TpPro TpReq="S04" TpSend="Y" TpStore="Y" >
+				<TpAttr/>
+			</TpPro>
+		</TP>
+		<TP TpTar="tancament_diari" TpPrio="3" TpHi="20110101010000000W" TpPer="00000001000000" TpMet="" TpCompl="N" >
+			<TpPro TpReq="S05" TpSend="Y" TpStore="Y" >
+				<TpAttr/>
+			</TpPro>
+		</TP>
+		<TP TpTar="events_S09" TpPrio="3" TpHi="20110101030000000W" TpPer="00000001000000" TpMet="" TpCompl="N" >
+			<TpPro TpReq="S09" TpSend="Y" TpStore="Y" >
+				<TpAttr/>
+			</TpPro>
+		</TP>
+		<TP TpTar="Kill_tasks" TpPrio="2" TpHi="20110101233000000W" TpPer="00000001000000" TpMet="" TpCompl="N" >
+		</TP>
+		<TP TpTar="Reboot" TpPrio="1" TpHi="20150115230000000W" TpPer="00000007000000" TpMet="" TpCompl="N" >
+			<TpPro TpReq="T01" TpSend="Y" TpStore="Y" >
+				<TpAttr/>
+			</TpPro>
+		</TP>
+		<TP TpTar="S12_GISCE" TpPrio="2" TpHi="20160309235000000W" TpPer="00000100000000" TpMet="" TpCompl="N" >
+			<TpPro TpReq="S12" TpSend="Y" TpStore="Y" >
+				<TpAttr/>
+			</TpPro>
+		</TP>
+	</S12>
+</Cnc>
+</Report>
