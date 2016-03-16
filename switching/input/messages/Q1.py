@@ -143,6 +143,8 @@ class Lectura(object):
 
     @property
     def gir_comptador(self):
+        if self.lectura.NumeroRuedasEnteras.text == '99':
+            return 10
         return (10 ** int(self.lectura.NumeroRuedasEnteras.text))
 
 
@@ -174,6 +176,8 @@ class Comptador(object):
 
     @property
     def gir_comptador(self):
+        if self.obj.Integrador.NumeroRuedasEnteras.text == '99':
+            return 10
         return (10 ** int(self.obj.Integrador.NumeroRuedasEnteras.text))
 
     @property

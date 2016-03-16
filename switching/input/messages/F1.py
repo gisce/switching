@@ -606,7 +606,11 @@ class FacturaATR(Facturas):
             0
         ))
         if num_ruedas > 0:
-            num_ruedas = 10 ** num_ruedas
+            if num_ruedas == 99:
+                num_ruedas = 10
+            else:
+                num_ruedas = 10 ** num_ruedas
+
         return num_ruedas
 
 
