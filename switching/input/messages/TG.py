@@ -266,14 +266,15 @@ class Values(object):
                     'meters': task.get('TpMet'),
                     }
                 task_data_values = []
-                for task_data in task.TpPro:
-                    task_data_value = {
-                        'request': task_data.get('TpReq'),
-                        'stg_send': self.get_boolean(task_data, 'TpSend'),
-                        'store': self.get_boolean(task_data, 'TpStore'),
-                        'attributes': task_data.get('TpAttr'),
-                        }
-                    task_data_values.append(task_data_value)
+                if getattr(task, 'TpPro', None):
+                    for task_data in task.TpPro:
+                        task_data_value = {
+                            'request': task_data.get('TpReq'),
+                            'stg_send': self.get_boolean(task_data, 'TpSend'),
+                            'store': self.get_boolean(task_data, 'TpStore'),
+                            'attributes': task_data.get('TpAttr'),
+                            }
+                        task_data_values.append(task_data_value)
                 task_values['task_data'] = task_data_values
                 tasks.append(task_values)
             vals['tasks'] = tasks
