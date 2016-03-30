@@ -110,15 +110,17 @@ class CondicionesContractuales(XmlModel):
 
 
 class Contacto(XmlModel):
-    _sort_order = ('nombre', 'telefon')
+    _sort_order = ('nombre', 'telefon', 'correu')
 
     def __init__(self):
         self.contacte = XmlField('Contacto')
         self.nombre = Nombre()
         self.telefon = Telefono()
+        self.correu = XmlField('CorreoElectronico')
         super(Contacto, self).__init__('Contacto', 'contacte')
 
-    def set_data(self, es_persona_juridica, nom, cognom_1, cognom_2, telefon, prefix):
+    def set_data(self, es_persona_juridica, nom, cognom_1, cognom_2, telefon,
+                 prefix, correu=''):
         con_nom = Nombre()
 
         if es_persona_juridica:
@@ -143,6 +145,9 @@ class Contacto(XmlModel):
             }
             con_telefon.feed(telf_fields)
             con_fields.update({'telefon': con_telefon})
+
+        if correu:
+            con_fields.update({'correu': correu})
 
         self.feed(con_fields)
 
@@ -182,16 +187,18 @@ class Nombre(XmlModel):
 class Telefono(XmlModel):
     _sort_order = ('telefono', 'prefijo', 'numero')
         
-    def __init__(self):
-        self.telefono = XmlField('Telefono')
+    def __init__(self, tagname=None):
+        if not tagname:
+            tagname = 'Telefono'
+        self.telefono = XmlField(tagname)
         self.prefijo = XmlField('PrefijoPais')
         self.numero = XmlField('Numero')
-        super(Telefono, self).__init__('Telefono', 'telefono')
+        super(Telefono, self).__init__(tagname, 'telefono')
 
 
 class Cliente(XmlModel):
     _sort_order = ('cliente', 'idcliente', 'nombre', 'titular_pagador',
-                   'telefono', 'indicador', 'direccion', )
+                   'fax', 'telefono', 'correu', 'indicador', 'direccion', )
 
     def __init__(self, tagname=None):
         if not tagname:
@@ -199,7 +206,9 @@ class Cliente(XmlModel):
         self.cliente = XmlField(tagname)
         self.idcliente = IdCliente()
         self.nombre = Nombre()
+        self.fax = Telefono()
         self.telefono = Telefono()
+        self.correu = XmlField('CorreoElectronico')
         self.indicador = XmlField('IndicadorTipoDireccion')
         self.direccion = Direccion()
         self.titular_pagador = XmlField('TitularContratoVsTitularPago')

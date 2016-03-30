@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<MensajeReclamacionIncidenciaPeticion xmlns="http://localhost/elegibilidad" AgenteSolicitante="1234">
+	<CabeceraReclamacion>
+		<CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+		<CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+		<CodigoDelProceso>R1</CodigoDelProceso>
+		<CodigoDePaso>01</CodigoDePaso>
+		<CodigoDeSolicitud>201412111009</CodigoDeSolicitud>
+		<SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+		<FechaSolicitud>2014-04-16T22:13:37</FechaSolicitud>
+		<CUPS>ES1234000000000001JN0F</CUPS>
+	</CabeceraReclamacion>
+	<SolicitudReclamacion>
+        <DatosSolicitud>
+            <Tipo>03</Tipo>
+            <Subtipo>16</Subtipo>
+        </DatosSolicitud>
+        <VariablesDetalleReclamacion>
+            <VariableDetalleReclamacion/>
+        </VariablesDetalleReclamacion>
+        <TipoReclamante>06</TipoReclamante>
+        <Comentarios>R1-01 with RegistrosDocumentos Test</Comentarios>
+        <RegistrosDocumento>
+            <RegistroDoc>
+                <TipoDocAportado>01</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/CIE0100001.pdf</DireccionUrl>
+            </RegistroDoc>
+            <RegistroDoc>
+                <TipoDocAportado>06</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/INV201509161234.pdf</DireccionUrl>
+            </RegistroDoc>
+            <RegistroDoc>
+                <TipoDocAportado>08</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/NIF11111111H.pdf</DireccionUrl>
+            </RegistroDoc>
+        </RegistrosDocumento>
+	</SolicitudReclamacion>
+</MensajeReclamacionIncidenciaPeticion>

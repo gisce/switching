@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<MensajeRechazoReclamacion AgenteSolicitante="1234" xmlns="http://localhost/elegibilidad">
+  <CabeceraReclamacion>
+    <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+    <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+    <CodigoDelProceso>R1</CodigoDelProceso>
+    <CodigoDePaso>02</CodigoDePaso>
+    <CodigoDeSolicitud>201602231255</CodigoDeSolicitud>
+    <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+    <FechaSolicitud>2014-04-16T22:13:37</FechaSolicitud>
+    <CUPS>ES1234000000000001JN0F</CUPS>
+  </CabeceraReclamacion>
+  <Fecha>2016-02-23</Fecha>
+  <Rechazos>
+    <Rechazo>
+      <Secuencial>1.01</Secuencial>
+      <CodigoMotivo>01</CodigoMotivo>
+      <Comentarios>Motiu de rebuig 01: No existe Punto de Suministro asociado al CUPS</Comentarios>
+    </Rechazo>
+    <Rechazo>
+      <Secuencial>2.03</Secuencial>
+      <CodigoMotivo>03</CodigoMotivo>
+      <Comentarios>Cuando el CIF-NIF no coincide con el que figura en la base de datos del Distribuidor</Comentarios>
+    </Rechazo>
+    <Rechazo>
+      <Secuencial>3.11</Secuencial>
+      <CodigoMotivo>11</CodigoMotivo>
+      <Comentarios>Cuando un comercializador pide cambios de comercializador en suministros ya comercializados por él o bajas y modificaciones en suministros ya no comercializados por él.</Comentarios>
+    </Rechazo>
+    <Rechazo>
+      <Secuencial>4.36</Secuencial>
+      <CodigoMotivo>36</CodigoMotivo>
+      <Comentarios>Cuando el CIF-NIF no tiene un formato adecuado (algoritmo erróneo o numeración ininteligible)</Comentarios>
+    </Rechazo>
+    <Rechazo>
+      <Secuencial>5.36</Secuencial>
+      <CodigoMotivo>84</CodigoMotivo>
+      <Comentarios>Una reclamación duplicada es una reclamación exactamente igual a otra pero con distinto número de solicitud</Comentarios>
+    </Rechazo>
+  </Rechazos>
+</MensajeRechazoReclamacion>

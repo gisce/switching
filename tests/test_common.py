@@ -78,6 +78,21 @@ class test_Contacto(unittest.TestCase):
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('Contacto_withprefix.xml'))
 
+    def test_build_tree_with_email(self):
+        c = Contacto()
+        c.set_data(
+            es_persona_juridica=False,
+            nom="Perico",
+            cognom_1="Palote",
+            cognom_2=u"Pérez",
+            telefon='555123123',
+            prefix='01',
+            correu='ppalote@acme.com'
+        )
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('Contacto_withemail.xml'))
+
 
 class test_CiePapel(unittest.TestCase):
 
