@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<MensajeReclamacionIncidenciaPeticion xmlns="http://localhost/elegibilidad" AgenteSolicitante="1234">
+	<CabeceraReclamacion>
+		<CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+		<CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+		<CodigoDelProceso>R1</CodigoDelProceso>
+		<CodigoDePaso>01</CodigoDePaso>
+		<CodigoDeSolicitud>201412111009</CodigoDeSolicitud>
+		<SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+		<FechaSolicitud>2014-04-16T22:13:37</FechaSolicitud>
+		<CUPS>ES1234000000000001JN0F</CUPS>
+	</CabeceraReclamacion>
+	<SolicitudReclamacion>
+        <DatosSolicitud>
+            <Tipo>02</Tipo>
+            <Subtipo>36</Subtipo>
+        </DatosSolicitud>
+        <VariablesDetalleReclamacion>
+            <VariableDetalleReclamacion>
+                <NumFacturaATR>243615</NumFacturaATR>
+                <FechaLectura>2016-01-20</FechaLectura>
+				<CodigoDH>2</CodigoDH>
+				<LecturasAportadas>
+					<LecturaAportada>
+						<Integrador>AE</Integrador>
+						<CodigoPeriodoDH>21</CodigoPeriodoDH>
+						<LecturaPropuesta>0000001162.00</LecturaPropuesta>
+					</LecturaAportada>
+					<LecturaAportada>
+						<Integrador>AE</Integrador>
+						<CodigoPeriodoDH>22</CodigoPeriodoDH>
+						<LecturaPropuesta>0000003106.00</LecturaPropuesta>
+					</LecturaAportada>
+				</LecturasAportadas>
+			</VariableDetalleReclamacion>
+        </VariablesDetalleReclamacion>
+        <Cliente>
+            <IdCliente>
+                <TipoCIFNIF>NI</TipoCIFNIF>
+                <Identificador>11111111H</Identificador>
+            </IdCliente>
+            <Nombre>
+                <NombreDePila>Perico</NombreDePila>
+                <PrimerApellido>Palotes</PrimerApellido>
+                <SegundoApellido>Largos</SegundoApellido>
+            </Nombre>
+            <Telefono>
+                <PrefijoPais>34</PrefijoPais>
+                <Numero>66612345</Numero>
+            </Telefono>
+            <CorreoElectronico>perico@acme.com</CorreoElectronico>
+            <IndicadorTipoDireccion>S</IndicadorTipoDireccion>
+        </Cliente>
+        <TipoReclamante>06</TipoReclamante>
+        <Comentarios>R1-01 lectures</Comentarios>
+	</SolicitudReclamacion>
+</MensajeReclamacionIncidenciaPeticion>

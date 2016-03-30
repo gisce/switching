@@ -62,6 +62,13 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
                    '07': ('AceptacionAnulacion.xsd',
                           'RechazoAnulacion.xsd'),
                    },
+            'R1': {'01': 'ReclamacionPeticion.xsd',
+                   '02': ('AceptacionReclamacion.xsd',
+                          'RechazoReclamacion.xsd'),
+                   '03': 'PeticionInformacionAdicionalReclamacion.xsd',
+                   '04': 'EnvioInformacionReclamacion.xsd',
+                   '05': 'CierreReclamacion.xsd',
+                   },
             'W1': {'01': 'MensajeAportacionLectura.xsd',
                    '02': ('AceptacionAportacionLectura.xsd',
                           'RechazoAportacionLectura.xsd'),
@@ -138,9 +145,13 @@ class Message(MessageBase):
             self.tipus = obj.Cabecera.CodigoDelProceso.text
             self.pas = obj.Cabecera.CodigoDePaso.text
         except:
-            msg = _('No s\'ha pogut identificar el codi de proces o '\
-                    'codi de pas')
-            raise except_f1('Error', msg)
+            try:
+                self.tipus = obj.CabeceraReclamacion.CodigoDelProceso.text
+                self.pas = obj.CabeceraReclamacion.CodigoDePaso.text
+            except:
+                msg = _('No s\'ha pogut identificar el codi de proces o '\
+                        'codi de pas')
+                raise except_f1('Error', msg)
 
     def set_xsd(self):
         """Setejar el fitxer xsd"""

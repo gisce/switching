@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Contacto>
+    <Nombre>
+        <NombreDePila>Perico</NombreDePila>
+        <PrimerApellido>Palote</PrimerApellido>
+        <SegundoApellido>Pérez</SegundoApellido>
+    </Nombre>
+    <Telefono>
+        <PrefijoPais>01</PrefijoPais>
+        <Numero>555123123</Numero>
+    </Telefono>
+    <CorreoElectronico>ppalote@acme.com</CorreoElectronico>
+</Contacto>
