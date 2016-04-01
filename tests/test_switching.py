@@ -25,6 +25,7 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_rnoicp = open(get_data("F1_recarrec_ICP.xml"), "r")
         self.xml_reactivaok = open(get_data("F1_reactiva_ok.xml"), "r")
         self.xml_reactiva1 = open(get_data("F1_reactiva_1.xml"), "r")
+        self.xml_reactiva2 = open(get_data("F1_reactiva_2.xml"), "r")
         self.xml_rectificadora = open(get_data("F1_rectificadora.xml"), "r")
         self.xml_conceptoieiva = open(get_data("F1_conceptoieiva.xml"), "r")
         self.xml_conceptoieiva_iva_empty = open(get_data("F1_conceptoieiva_iva_empty.xml"), "r")
@@ -115,6 +116,23 @@ class Switching_F1_Test(unittest.TestCase):
             self.assertEqual(periode.data_inici, '2015-12-31')
             self.assertEqual(periode.data_final, '2016-01-31')
             self.assertEqual(float(periode.quantitat), 15.0)
+            self.assertEqual(float(periode.preu_unitat), 0.041554)
+
+    def test_get_info_reactive_1f_1l_2c(self):
+        # Active meter and reactive meter
+        f1 = F1(self.xml_reactiva2)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        periodes, total = f1_atr.get_info_reactiva()
+        self.assertEqual(total, 6.83)
+        self.assertEqual(len(periodes), 1)
+        self.assertEqual(len(set([p.name for p in periodes])), 1)
+        for periode in periodes:
+            self.assertIn(periode.name, ['P1'])
+            self.assertEqual(periode.data_inici, '2015-12-02')
+            self.assertEqual(periode.data_final, '2016-02-01')
+            self.assertEqual(float(periode.quantitat), 164.5)
             self.assertEqual(float(periode.preu_unitat), 0.041554)
 
     def test_get_info_remesa(self):
