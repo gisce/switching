@@ -441,7 +441,8 @@ class FacturaATR(Facturas):
                     continue
                 else:
                     meter_dict[activa_ok and 'A' or 'R'].append(meter)
-            if meter_dict['A'] == meter_dict['R'] and meter_dict['A'] == 1:
+            if (len(meter_dict['A']) == len(meter_dict['R'])
+                    and len(meter_dict['A']) == 1):
                 l_a = meter_dict['A'][0].get_lectures()
                 l_r = meter_dict['R'][0].get_lectures()
                 consums_r_no_aggr = self.select_consum_from_lectures(l_r, 'R')
