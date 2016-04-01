@@ -341,9 +341,14 @@ class FacturaATR(Facturas):
     def get_periodes_reactiva(self, lectures):
         """Retorna una llista de noms de periode que tenen excés de reactiva
         """
-        agrupat = INFO_TARIFA[self.codi_tarifa]['agrupat']
         lect_activa = self.select_consum_from_lectures(lectures, 'A')
         lect_reactiva = self.select_consum_from_lectures(lectures, 'R')
+        return self._get_periodes_reactiva(lect_activa, lect_reactiva)
+
+    def _get_periodes_reactiva(self, lect_activa, lect_reactiva):
+        """Retorna una llista de noms de periode que tenen excés de reactiva
+        """
+        agrupat = INFO_TARIFA[self.codi_tarifa]['agrupat']
         if len(lect_activa) < len(lect_reactiva):
             msg = _('Menor nombre de periodes en les lectures d\'activa '\
                     'que en reactiva. No és possible calcular els excessos '\
@@ -415,23 +420,66 @@ class FacturaATR(Facturas):
         nom_periodes_uniq = []
         done = []
         consums = {}
-        for i in comptadors:
-            lectures = i.get_lectures()
-            # Fem un diccionari pels consums ja que UNION FENOSA no posene
-            # l'excés de reactiva en el valor del terme sino que hi posen
-            # el consum. Per detectar quin període és primer ho fem segons
-            # l'excés i si no el troba ho buscarem pel consum
-            consums_no_agg = self.select_consum_from_lectures(lectures, 'R')
-            for p, c in aggr_consums(consums_no_agg).items():
-                consums.setdefault(p, 0)
-                consums[p] += c
+        # 2 meters: 1 active measures and other reactive measures
+        # whe make a "Fusiooooo" like Dragon Ball Z
+        reactive_only_meter=False
+        if len(comptadors) == 2:
+            meter_dict = {'A': [], 'R': []}
+            for meter in comptadors:
+                activa_ok = False
+                reactiva_ok = False
+                lectures = meter.get_lectures()
+                consums_r = self.select_consum_from_lectures(lectures, 'R')
+                consums_a = self.select_consum_from_lectures(lectures, 'A')
+                if len(consums_r) and not len(consums_a):
+                    # Comptador reactiva
+                    reactiva_ok = True
+                if len(consums_a) and not len(consums_r):
+                    # comptador activa
+                    activa_ok = True
+                if activa_ok and reactiva_ok:
+                    continue
+                else:
+                    meter_dict[activa_ok and 'A' or 'R'].append(meter)
+            if (len(meter_dict['A']) == len(meter_dict['R'])
+                    and len(meter_dict['A']) == 1):
+                l_a = meter_dict['A'][0].get_lectures()
+                l_r = meter_dict['R'][0].get_lectures()
+                consums_r_no_aggr = self.select_consum_from_lectures(l_r, 'R')
+                consums_a_no_aggr = self.select_consum_from_lectures(l_a, 'A')
+                for p, c in aggr_consums(consums_r_no_aggr).items():
+                    consums.setdefault(p, 0)
+                    consums[p] += c
 
-            nom_periodes = self.get_periodes_reactiva(lectures)
-            if nom_periodes_uniq:
-                nom_periodes_uniq = list(set(nom_periodes_uniq
-                                             + nom_periodes.keys()))
-            else:
-                nom_periodes_uniq = list(nom_periodes.keys())
+                nom_periodes = self._get_periodes_reactiva(
+                    consums_a_no_aggr, consums_r_no_aggr
+                )
+                if nom_periodes_uniq:
+                    nom_periodes_uniq = list(set(nom_periodes_uniq
+                                                 + nom_periodes.keys()))
+                else:
+                    nom_periodes_uniq = list(nom_periodes.keys())
+
+                reactive_only_meter = True
+
+        if not reactive_only_meter:
+            for i in comptadors:
+                lectures = i.get_lectures()
+                # Fem un diccionari pels consums ja que UNION FENOSA no posene
+                # l'excés de reactiva en el valor del terme sino que hi posen
+                # el consum. Per detectar quin període és primer ho fem segons
+                # l'excés i si no el troba ho buscarem pel consum
+                consums_no_agg = self.select_consum_from_lectures(lectures, 'R')
+                for p, c in aggr_consums(consums_no_agg).items():
+                    consums.setdefault(p, 0)
+                    consums[p] += c
+
+                nom_periodes = self.get_periodes_reactiva(lectures)
+                if nom_periodes_uniq:
+                    nom_periodes_uniq = list(set(nom_periodes_uniq
+                                                 + nom_periodes.keys()))
+                else:
+                    nom_periodes_uniq = list(nom_periodes.keys())
         nom_periodes_uniq.sort()
         if not nom_periodes_uniq:
             return None, None
