@@ -457,13 +457,13 @@ class FacturaATR(Facturas):
                     nom_periodes_uniq = list(set(nom_periodes_uniq
                                                  + nom_periodes.keys()))
                 else:
-                    nom_periodes_uniq = list(nom_periodes.keys())
+                    nom_periodes_uniq = nom_periodes.keys()
 
                 reactive_only_meter = True
 
         if not reactive_only_meter:
-            for i in comptadors:
-                lectures = i.get_lectures()
+            for meter in comptadors:
+                lectures = meter.get_lectures()
                 # Fem un diccionari pels consums ja que UNION FENOSA no posene
                 # l'excés de reactiva en el valor del terme sino que hi posen
                 # el consum. Per detectar quin període és primer ho fem segons
@@ -478,7 +478,7 @@ class FacturaATR(Facturas):
                     nom_periodes_uniq = list(set(nom_periodes_uniq
                                                  + nom_periodes.keys()))
                 else:
-                    nom_periodes_uniq = list(nom_periodes.keys())
+                    nom_periodes_uniq = nom_periodes.keys()
         nom_periodes_uniq.sort()
         if not nom_periodes_uniq:
             return None, None
