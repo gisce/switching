@@ -422,7 +422,7 @@ class FacturaATR(Facturas):
         consums = {}
         # 2 meters: 1 active measures and other reactive measures
         # whe make a "Fusiooooo" like Dragon Ball Z
-        reactive_only_meter=False
+        reactive_only_meter = False
         if len(comptadors) == 2:
             meter_dict = {'A': [], 'R': []}
             for meter in comptadors:
@@ -431,18 +431,17 @@ class FacturaATR(Facturas):
                 lectures = meter.get_lectures()
                 consums_r = self.select_consum_from_lectures(lectures, 'R')
                 consums_a = self.select_consum_from_lectures(lectures, 'A')
-                if len(consums_r) and not len(consums_a):
+                if consums_r and not consums_a:
                     # Comptador reactiva
                     reactiva_ok = True
-                if len(consums_a) and not len(consums_r):
+                if consums_a and not consums_r:
                     # comptador activa
                     activa_ok = True
                 if activa_ok and reactiva_ok:
                     continue
                 else:
                     meter_dict[activa_ok and 'A' or 'R'].append(meter)
-            if (len(meter_dict['A']) == len(meter_dict['R'])
-                    and len(meter_dict['A']) == 1):
+            if meter_dict['A'] == meter_dict['R'] and meter_dict['A'] == 1:
                 l_a = meter_dict['A'][0].get_lectures()
                 l_r = meter_dict['R'][0].get_lectures()
                 consums_r_no_aggr = self.select_consum_from_lectures(l_r, 'R')
