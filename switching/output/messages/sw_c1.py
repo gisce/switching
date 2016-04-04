@@ -105,6 +105,9 @@ class CondicionesContractuales(XmlModel):
         self.tipus_telegestio = XmlField('TipodeTelegestion')
         self.potencies = PotenciasContratadas()
         self.control_potencia = XmlField('ModoControlPotencia')
+        self.marca_mesura_bt_perdues = XmlField('MarcaMedidaBTConPerdidas')
+        self.kvas_trafo = XmlField('KVAsTrafo')
+        self.perc_perd_pactades = XmlField('PorcentajePerdidasPactadas')
         super(CondicionesContractuales, self).\
                              __init__('CondicionesContractuales', 'condicions')
 
