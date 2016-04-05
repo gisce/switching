@@ -1127,7 +1127,7 @@ class Condicions(object):
     def get_31lb_info(self):
         ''' returns processed 31A LB info'''
         kvas_trafo = self.kvas_trafo and float(self.kvas_trafo) or 0.0
-        if kvas_trafo > 15000.0:
+        if kvas_trafo > 1500.0:
             kvas_trafo = kvas_trafo / 1000.0
         try:
             perc_perd = (
