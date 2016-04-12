@@ -590,6 +590,7 @@ class SwitchingA3Test(unittest.TestCase):
         sup = supportClass()
         self.xml_a301 = open(get_data("a301.xml"), "r")
         self.xml_a301_ciepapel = open(get_data("a301_CiePapel.xml"), "r")
+        self.xml_a301_autoconsumo = open(get_data("a301_Autoconsumo.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
@@ -634,6 +635,18 @@ class SwitchingA3Test(unittest.TestCase):
             'direccion': dir_corresp,
         }
         self.contracte.feed(ctr_fields)
+
+        # contracte_autoconsum
+        self.contracte_autoconsum = c1.Contrato()
+        ctr_fields = {
+            'tipo_autoconsumo': '2A',
+            'tipo': '01',
+            'duracion': 12,
+            'idcontrato': idcontracte,
+            'condiciones': condicions,
+            'direccion': dir_corresp,
+        }
+        self.contracte_autoconsum.feed(ctr_fields)
 
         #client
         self.client = sup.getCliente()
@@ -725,6 +738,35 @@ class SwitchingA3Test(unittest.TestCase):
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_a301_ciepapel.read())
 
+    def test_create_pas01_tipoautoconsumo(self):
+        sup = supportClass()
+        pas01 = a3.MensajePasoMRAMLConCambiosRestoTarifas()
+        capcalera = sup.getHeader('A3', '01')
+        pas01.set_agente('1234')
+
+        sollicitud = self.sollicitud
+        contracte = self.contracte_autoconsum
+        client = self.client
+        mesura = self.mesura
+
+        #sol·licitud de canvi
+        canvi = a3.PasoMRAMLConCambiosRestoTarifas()
+        canvi_vals = {
+            'solicitud': sollicitud,
+            'contrato': contracte,
+            'cliente': client,
+            'medida': mesura,
+        }
+        canvi.feed(canvi_vals)
+
+        pas01.feed({
+            'cabecera': capcalera,
+            'cambio': canvi
+        })
+        pas01.build_tree()
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_a301_autoconsumo.read())
+
     def test_read_a301(self):
         self.a301_xml = A3(self.xml_a301)
         self.a301_xml.parse_xml()
@@ -732,6 +774,7 @@ class SwitchingA3Test(unittest.TestCase):
         mesures = self.a301_xml.mesura
         comentaris = self.a301_xml.comentaris
         assert contract.codi_contracte == '111111111'
+        assert contract.tipus_autoconsum == '00'
         assert mesures.cp_installacio == 'Y'
         assert mesures.mesura.TipoEquipoMedida == 'L00'
         assert isinstance(comentaris, list)
@@ -744,7 +787,16 @@ class SwitchingA3Test(unittest.TestCase):
         ciepapel = self.a301_xml_ciepapel.obj.PasoMRAMLConCambiosRestoTarifa\
             .DocTecnica.DatosCie.CIEPapel
         assert contract.codi_contracte == '111111111'
+        assert contract.tipus_autoconsum == '00'
         assert ciepapel.CodigoCie.text == '1234567'
+
+    def test_read_a301_autoconsumo(self):
+        self.a301_xml_autoconsumo = A3(self.xml_a301_autoconsumo)
+        self.a301_xml_autoconsumo.parse_xml()
+        contract = self.a301_xml_autoconsumo.contracte
+
+        assert contract.codi_contracte == '111111111'
+        assert contract.tipus_autoconsum == '2A'
 
 
 class SwitchingM1Test(unittest.TestCase):
