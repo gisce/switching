@@ -451,6 +451,7 @@ class SwitchingC1Test(unittest.TestCase):
 
     def test_read_c105(self):
         self.c105_xml = C1(self.xml_c105_31alb)
+        self.c105_xml.set_xsd()
         self.c105_xml.parse_xml()
         contract = self.c105_xml.contracte
         condicions = contract.condicions
@@ -461,6 +462,7 @@ class SwitchingC1Test(unittest.TestCase):
 
     def test_read_c105_31lb_kva(self):
         self.c105_xml = C1(self.xml_c105_31alb_mbt_kva)
+        self.c105_xml.set_xsd()
         self.c105_xml.parse_xml()
         contract = self.c105_xml.contracte
         condicions = contract.condicions
@@ -472,6 +474,7 @@ class SwitchingC1Test(unittest.TestCase):
 
     def test_read_c105_31lb_va(self):
         self.c105_xml = C1(self.xml_c105_31alb_mbt_va)
+        self.c105_xml.set_xsd()
         self.c105_xml.parse_xml()
         contract = self.c105_xml.contracte
         condicions = contract.condicions
