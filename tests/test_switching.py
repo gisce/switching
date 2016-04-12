@@ -34,6 +34,7 @@ class Switching_F1_Test(unittest.TestCase):
     @unittest.skip("Not implemented yet")
     def test_F1(self):
         f1 = F1(self.xml_con)
+        f1.set_xsd()
         tipus = f1.get_tipus_xml()
         f1.parse_xml()
         ch_emisor = '0316'
@@ -46,6 +47,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_rectificadora(self):
         f1 = F1(self.xml_rectificadora)
+        f1.set_xsd()
         tipus = f1.get_tipus_xml()
         f1.parse_xml()
         ch_emisor = '0123'
@@ -60,6 +62,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_get_info_activa(self):
         f1 = F1(self.xml)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         periodes, total = f1_atr.get_info_activa()
@@ -71,6 +74,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_get_info_activa_no_medidas(self):
         f1 = F1(self.xml_no_medidas)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -89,6 +93,7 @@ class Switching_F1_Test(unittest.TestCase):
     # nl: measures
     def test_get_info_reactive_1f_1l_ok(self):
         f1 = F1(self.xml_reactivaok)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -104,6 +109,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_get_info_reactive_1f_2l(self):
         f1 = F1(self.xml_reactiva1)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -121,6 +127,7 @@ class Switching_F1_Test(unittest.TestCase):
     def test_get_info_reactive_1f_1l_2c(self):
         # Active meter and reactive meter
         f1 = F1(self.xml_reactiva2)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -137,6 +144,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_get_info_remesa(self):
         f1 = F1(self.xml_remesa)
+        f1.set_xsd()
         f1.parse_xml()
         self.assertEqual(f1.id_remesa, '20151170176')
         self.assertEqual(f1.total_importe_remesa, 42649.66)
@@ -146,6 +154,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_get_remesa(self):
         f1 = F1(self.xml_remesa)
+        f1.set_xsd()
         f1.parse_xml()
         rem_vals = f1.get_remesa()
         self.assertEqual(rem_vals['id_remesa'], '20151170176')
@@ -156,6 +165,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_facturacio_potencia_nomodo(self):
         f1 = F1(self.xml)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -168,6 +178,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_facturacio_potencia_modo(self):
         f1 = F1(self.xml_remesa)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -180,6 +191,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_facturacio_recarrec_no_icp(self):
         f1 = F1(self.xml_rnoicp)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -192,6 +204,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_facturacio_no_modo_max(self):
         f1 = F1(self.xml_no_medidas)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -204,6 +217,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_facturacio_conceptoieiva(self):
         f1 = F1(self.xml_conceptoieiva)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -217,6 +231,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_facturacio_conceptoieiva_empty(self):
         f1 = F1(self.xml_conceptoieiva_iva_empty)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -225,6 +240,7 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_facturacio_conceptoiva_empty(self):
         f1 = F1(self.xml_conceptoieiva_iva_empty)
+        f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
         assert isinstance(f1_atr, FacturaATR)
@@ -417,6 +433,7 @@ class Switching_W1_Test(unittest.TestCase):
 
     def test_read_w102_ok(self):
         self.w102_xml = W1(self.xml_w102_ok)
+        self.w102_xml.set_xsd()
         self.w102_xml.parse_xml()
         date = ''
         if self.w102_xml.aceptacion:
@@ -425,6 +442,7 @@ class Switching_W1_Test(unittest.TestCase):
 
     def test_read_w102_ko(self):
         self.w102_xml = W1(self.xml_w102_ko)
+        self.w102_xml.set_xsd()
         self.w102_xml.parse_xml()
         date = ''
         reason = ''
@@ -590,6 +608,7 @@ class SwitchingA3Test(unittest.TestCase):
         sup = supportClass()
         self.xml_a301 = open(get_data("a301.xml"), "r")
         self.xml_a301_ciepapel = open(get_data("a301_CiePapel.xml"), "r")
+        self.xml_a301_autoconsumo = open(get_data("a301_Autoconsumo.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
@@ -634,6 +653,18 @@ class SwitchingA3Test(unittest.TestCase):
             'direccion': dir_corresp,
         }
         self.contracte.feed(ctr_fields)
+
+        # contracte_autoconsum
+        self.contracte_autoconsum = c1.Contrato()
+        ctr_fields = {
+            'tipo_autoconsumo': '2A',
+            'tipo': '01',
+            'duracion': 12,
+            'idcontrato': idcontracte,
+            'condiciones': condicions,
+            'direccion': dir_corresp,
+        }
+        self.contracte_autoconsum.feed(ctr_fields)
 
         #client
         self.client = sup.getCliente()
@@ -725,26 +756,68 @@ class SwitchingA3Test(unittest.TestCase):
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_a301_ciepapel.read())
 
+    def test_create_pas01_tipoautoconsumo(self):
+        sup = supportClass()
+        pas01 = a3.MensajePasoMRAMLConCambiosRestoTarifas()
+        capcalera = sup.getHeader('A3', '01')
+        pas01.set_agente('1234')
+
+        sollicitud = self.sollicitud
+        contracte = self.contracte_autoconsum
+        client = self.client
+        mesura = self.mesura
+
+        #sol·licitud de canvi
+        canvi = a3.PasoMRAMLConCambiosRestoTarifas()
+        canvi_vals = {
+            'solicitud': sollicitud,
+            'contrato': contracte,
+            'cliente': client,
+            'medida': mesura,
+        }
+        canvi.feed(canvi_vals)
+
+        pas01.feed({
+            'cabecera': capcalera,
+            'cambio': canvi
+        })
+        pas01.build_tree()
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_a301_autoconsumo.read())
+
     def test_read_a301(self):
         self.a301_xml = A3(self.xml_a301)
+        self.a301_xml.set_xsd()
         self.a301_xml.parse_xml()
         contract = self.a301_xml.contracte
         mesures = self.a301_xml.mesura
         comentaris = self.a301_xml.comentaris
         assert contract.codi_contracte == '111111111'
+        assert contract.tipus_autoconsum == '00'
         assert mesures.cp_installacio == 'Y'
         assert mesures.mesura.TipoEquipoMedida == 'L00'
         assert isinstance(comentaris, list)
 
     def test_read_a301_ciepapel(self):
         self.a301_xml_ciepapel = A3(self.xml_a301_ciepapel)
+        self.a301_xml_ciepapel.set_xsd()
         self.a301_xml_ciepapel.parse_xml()
         contract = self.a301_xml_ciepapel.contracte
 
         ciepapel = self.a301_xml_ciepapel.obj.PasoMRAMLConCambiosRestoTarifa\
             .DocTecnica.DatosCie.CIEPapel
         assert contract.codi_contracte == '111111111'
+        assert contract.tipus_autoconsum == '00'
         assert ciepapel.CodigoCie.text == '1234567'
+
+    def test_read_a301_autoconsumo(self):
+        self.a301_xml_autoconsumo = A3(self.xml_a301_autoconsumo)
+        self.a301_xml_autoconsumo.set_xsd()
+        self.a301_xml_autoconsumo.parse_xml()
+        contract = self.a301_xml_autoconsumo.contracte
+
+        assert contract.codi_contracte == '111111111'
+        assert contract.tipus_autoconsum == '2A'
 
 
 class SwitchingM1Test(unittest.TestCase):
@@ -1438,6 +1511,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
     def test_read_r101_minim(self):
         self.r101_xml = R1(self.xml_r101_minim)
+        self.r101_xml.set_xsd()
         self.r101_xml.parse_xml()
         sollicitud = self.r101_xml.sollicitud
         tipus_reclamant = self.r101_xml.tipus_reclamant
@@ -1456,6 +1530,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
     def test_read_lectures(self):
         self.r101_xml = R1(self.xml_r101_lectures)
+        self.r101_xml.set_xsd()
         self.r101_xml.parse_xml()
         sollicitud = self.r101_xml.sollicitud
         reclamacions = self.r101_xml.reclamacions
@@ -1499,6 +1574,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
     def test_read_r101_documents(self):
         self.r101_xml = R1(self.xml_r101_documents)
+        self.r101_xml.set_xsd()
         self.r101_xml.parse_xml()
         sollicitud = self.r101_xml.sollicitud
         tipus_reclamant = self.r101_xml.tipus_reclamant
@@ -1528,6 +1604,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
     def test_read_r101_0539(self):
         self.r101_xml = R1(self.xml_r101_0539)
+        self.r101_xml.set_xsd()
         self.r101_xml.parse_xml()
         sollicitud = self.r101_xml.sollicitud
         reclamacions = self.r101_xml.reclamacions
@@ -1579,6 +1656,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
     def test_read_r101_0203(self):
         self.r101_xml = R1(self.xml_r101_0203)
+        self.r101_xml.set_xsd()
         self.r101_xml.parse_xml()
         sollicitud = self.r101_xml.sollicitud
         reclamacions = self.r101_xml.reclamacions
@@ -1629,6 +1707,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
     def test_read_r102_ok(self):
         self.r102_xml = R1(self.xml_r102_ok)
+        self.r102_xml.set_xsd()
         self.r102_xml.parse_xml()
         acceptacio = self.r102_xml.acceptacio
 
@@ -1637,6 +1716,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
     def test_read_r102_ko(self):
         self.r102_xml = R1(self.xml_r102_ko)
+        self.r102_xml.set_xsd()
         self.r102_xml.parse_xml()
         rebuig = self.r102_xml.rebuig
 

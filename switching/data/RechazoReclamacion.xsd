@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<xs:schema targetNamespace="http://localhost/elegibilidad"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://localhost/elegibilidad"
-	elementFormDefault="qualified"
+<xs:schema targetNamespace="http://localhost/elegibilidad" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns="http://localhost/elegibilidad" 
+	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
 
 
@@ -12,7 +12,7 @@
 	<!--
 		Version X.X OCSUM 2014.04.03 Reclamaciones, Incidencias o Peticiones
 			Creación xsd
-		Version 0.0 CNMC 2015.06.10 Reclamaciones o Peticiones.
+		Version 0.0 CNMC 2015.06.10 Reclamaciones o Peticiones. 
 		Version 0.1 CNMC 2016.01.11 - Revisión R1
 -Se incluye la fecha del rechazo (una única fecha independientemente del número de motivos de rechazos) en el nodo "MensajeRechazoReclamacion.
 	-->
@@ -20,7 +20,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="CabeceraReclamacion" type="Cabecera"/>
-				<xs:element name="Fecha" type="xs:date"/>
+				<xs:element name="Fecha" type="xs:date"/>				
 				<xs:element name="Rechazos" type="DatosRechazoReclamacion"/>
 			</xs:sequence>
 			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>

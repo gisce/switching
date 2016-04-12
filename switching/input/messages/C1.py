@@ -782,13 +782,23 @@ class Contracte(object):
         return mesos
 
     @property
+    def tipus_autoconsum(self):
+        """tipus autoconsum segons taula 103"""
+        tipus = '00'
+        try:
+            tipus = self.contracte.TipoAutoconsumo.text
+        except AttributeError as e:
+            pass
+        return tipus
+
+    @property
     def data_finalitzacio(self):
         """Retorna la data de finalització en el cas que la durada del
            contracte sigui inferior a 12 mesos"""
         data = ''
         try:
             data = self.contracte.FechaFinalizacion.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return data
 
@@ -1096,6 +1106,51 @@ class Condicions(object):
         except AttributeError:
             pass
         return control_potencia
+
+    @property
+    def marca_mesura_bt_perdues(self):
+        marca_mesura_bt_perdues = ''
+        try:
+            marca_mesura_bt_perdues = self.cond.MarcaMedidaBTConPerdidas.text
+        except AttributeError as e:
+            pass
+        return marca_mesura_bt_perdues
+
+    @property
+    def kvas_trafo(self):
+        kvas_trafo = ''
+        try:
+            kvas_trafo = self.cond.KVAsTrafo.text
+        except AttributeError as e:
+            pass
+        return kvas_trafo
+
+    @property
+    def perc_perd_pactades(self):
+        perc_perd_pactades = ''
+        try:
+            perc_perd_pactades = self.cond.PorcentajePerdidasPactadas.text
+        except AttributeError as e:
+            pass
+        return perc_perd_pactades
+
+    def get_31lb_info(self):
+        ''' returns processed 31A LB info'''
+        kvas_trafo = self.kvas_trafo and float(self.kvas_trafo) or 0.0
+        if kvas_trafo > 1500.0:
+            kvas_trafo = kvas_trafo / 1000.0
+        try:
+            perc_perd = (
+                self.perc_perd_pactades and int(self.perc_perd_pactades)
+            )
+        except ValueError:
+            perc_perd = 4
+        res = {
+            'marca_mesura_bt_perdues': self.marca_mesura_bt_perdues == 'S',
+            'kvas_trafo': kvas_trafo,
+            'perc_perd_pactades': perc_perd or 4,
+        }
+        return res
 
 
 class Rebuig(object):

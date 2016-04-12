@@ -105,6 +105,9 @@ class CondicionesContractuales(XmlModel):
         self.tipus_telegestio = XmlField('TipodeTelegestion')
         self.potencies = PotenciasContratadas()
         self.control_potencia = XmlField('ModoControlPotencia')
+        self.marca_mesura_bt_perdues = XmlField('MarcaMedidaBTConPerdidas')
+        self.kvas_trafo = XmlField('KVAsTrafo')
+        self.perc_perd_pactades = XmlField('PorcentajePerdidasPactadas')
         super(CondicionesContractuales, self).\
                              __init__('CondicionesContractuales', 'condicions')
 
@@ -153,14 +156,16 @@ class Contacto(XmlModel):
 
 
 class Contrato(XmlModel):
-    _sort_order = ('contrato', 'idcontrato', 'duracion', 'fechafin',
-                   'tipo', 'condiciones', 'consumoanual', 'contacto',
-                   'direccion', 'tipoactivacion', 'fechaactivacion',)
+    _sort_order = ('contrato', 'idcontrato', 'fechafin', 'duracion',
+                   'tipo_autoconsumo', 'tipo', 'condiciones', 'consumoanual',
+                   'contacto', 'direccion', 'tipoactivacion',
+                   'fechaactivacion',)
 
     def __init__(self, tag_tipo='TipoContratoATR'):
         self.contrato = XmlField('Contrato')
         self.idcontrato = IdContrato()
         self.duracion = XmlField('Duracion')
+        self.tipo_autoconsumo = XmlField('TipoAutoconsumo')
         self.fechafin = XmlField('FechaFinalizacion')
         self.tipo = XmlField(tag_tipo)
         self.direccion = DireccionCorrespondencia()
