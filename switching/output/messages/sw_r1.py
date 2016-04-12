@@ -77,7 +77,7 @@ class VariableDetalleReclamacion(XmlModel):
         self.lectures = LecturasAportadas()
         self.codi_incidencia = XmlField('CodigoIncidencia')
         self.codi_sollicitud = XmlField('CodigoSolicitud')
-        self.param_contractacio = XmlField('ParametroContractacion')
+        self.param_contractacio = XmlField('ParametroContratacion')
         self.concepte_disconformitat = XmlField('ConceptoDisconformidad')
         self.tipus_atencio_incorrecte = XmlField('TipoDeAtencionIncorrecta')
         self.iban = XmlField('IBAN')
