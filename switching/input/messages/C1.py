@@ -787,7 +787,7 @@ class Contracte(object):
         tipus = '00'
         try:
             tipus = self.contracte.TipoAutoconsumo.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return tipus
 
@@ -798,7 +798,7 @@ class Contracte(object):
         data = ''
         try:
             data = self.contracte.FechaFinalizacion.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return data
 
@@ -1112,7 +1112,7 @@ class Condicions(object):
         marca_mesura_bt_perdues = ''
         try:
             marca_mesura_bt_perdues = self.cond.MarcaMedidaBTConPerdidas.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return marca_mesura_bt_perdues
 
@@ -1121,7 +1121,7 @@ class Condicions(object):
         kvas_trafo = ''
         try:
             kvas_trafo = self.cond.KVAsTrafo.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return kvas_trafo
 
@@ -1130,7 +1130,7 @@ class Condicions(object):
         perc_perd_pactades = ''
         try:
             perc_perd_pactades = self.cond.PorcentajePerdidasPactadas.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return perc_perd_pactades
 
