@@ -42,16 +42,18 @@ Reclamaciones o Peticiones
 				Se modifica el comentario de los campos EnvioInformacionReclamacion/CierreReclamacion para pasarlo a un X4000 -paso 04/05 de reclamaciones-
 
 Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en el tipo complejo "CondicionesContractualesC", hace referencia a los movimientos de Activación (M1, C1, C2, A3).
-			Version 0.1 CNMC 2016.01.11 - Revisión R1
+			Version 0.1 CNMC 2015.12.23 - Revisión R1
 -En el tipo complejo "VariableAportacionInformacion", se modifica el carácter del campo variable a opcional y tipo variable y se modifica el carácter del campo valor a tipo opcional
 -Se modifica el tipo complejo "VariableAportacionInformacion" alterando el nombre de los campos que contiene
 -Se incluye la definición del elemento "VariableDetalleReclamacion"  del tipo "VariableDetalleReclamacion" (previamente eliminado del TipoMensajeR.xsd
 -Se modifica el tipo complejo "DatoRechazoReclamacion" para modificar el campo de comentarios y eliminar la fecha de cada motivo de rechazo.
-				
 			Version X.X GISCE 2014.08.07
                           S'afegeix un altre cop CuentaBancaria amb un choice amb IBAN
 			Version X.X GISCE 2015.05.22
                           Afegim tag inventat Iberdrola TipodeTelegestión opcional
+			Version 0.2 CNMC 2016.04.01
+Se incluye un nuevo campo "TipoAutoconsumo" en el tipo complejo "ContratoConModificacion" y en el tipo complejo "contrato"
+				
 		</xs:documentation>
 	</xs:annotation>
 	<xs:complexType name="IdContrato">
@@ -366,6 +368,7 @@ Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en e
 				<xs:element name="FechaFinalizacion" type="xs:date"/>
 				<xs:element name="Duracion" type="Decimal2"/>
 			</xs:choice>
+			<xs:element name="TipoAutoconsumo" type="TipoAutoconsumo" minOccurs="0"/>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractuales"/>
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
@@ -384,6 +387,7 @@ Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en e
 				<xs:element name="FechaFinalizacion" type="xs:date"/>
 				<xs:element name="Duracion" type="Decimal2"/>
 			</xs:choice>
+			<xs:element name="TipoAutoconsumo" type="TipoAutoconsumo" minOccurs="0"/>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractuales"/>
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
