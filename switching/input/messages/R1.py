@@ -532,3 +532,4 @@ class Retificacio(object):
         except AttributeError, e:
             pass
         return ref
+

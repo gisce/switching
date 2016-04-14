@@ -1554,6 +1554,61 @@ class SwitchingR1_Test(unittest.TestCase):
         xml = str(pas02)
         self.assertXmlEqual(xml, self.xml_r102_ko.read())
 
+    def test_create_pas05(self):
+        pas05 = r1.MensajeCierreReclamacion()
+        header = self.getHeader('R1', '05', '201604111738')
+        pas05.set_agente('1234')
+
+        dades_tancament = r1.DatosCierre()
+        dades_tancament.feed({
+            'data': '2016-04-12',
+            'hora': '16:02:25',
+            'tipus': '03',
+            'subtipus': '13',
+            'codi_reclamacio_distri': '3291970',
+            'resultat_reclamacio': '02',
+            'observacions': u'Les informamos, que si se recibe solicitud de '
+                            u'otra comercializadora sobre el punto de '
+                            u'suministro, en los formatos establecidos y la '
+                            u'misma se acepta, el comercializador es custodia '
+                            u'de la documentación que acredita esa '
+                            u'contratación. No obstante nuestra recomendación '
+                            u'es que sea el cliente quién contacte con la '
+                            u'Comercializadora entrante y les requiera la '
+                            u'anulación de dicha solicitud. Les comunicamos a',
+            'indemnitzacio_abonada': '0.0',
+            'data_moviment': '2016-04-12',
+            'codi_sollicitud': '201604111738',
+        })
+
+        tancament = r1.CierreReclamacion()
+        tancament.feed({
+            'dades': dades_tancament,
+            'cod_contracte': '383922379',
+            'comentaris': u'Les informamos, que si se recibe solicitud de otra '
+                          u'comercializadora sobre el punto de suministro, en '
+                          u'los formatos establecidos y la misma se acepta, el '
+                          u'comercializador es custodia de la documentación '
+                          u'que acredita esa contratación. No obstante nuestra '
+                          u'recomendación es que sea el cliente quién contacte '
+                          u'con la Comercializadora entrante y les requiera '
+                          u'la anulación de dicha solicitud. Les comunicamos '
+                          u'a su vez, que lo que están solicitando '
+                          u'consideramos, no es una reclamación, es una '
+                          u'petición, debiendo gestionarla como tal en '
+                          u'lo sucesivo.'
+        })
+
+        pas05.feed({
+            'capcalera': header,
+            'tancament': tancament,
+        })
+
+        pas05.build_tree()
+        pas05.pretty_print = True
+        xml = str(pas05)
+        self.assertXmlEqual(xml, self.xml_r105.read())
+
     def test_read_r101_minim(self):
         self.r101_xml = R1(self.xml_r101_minim)
         self.r101_xml.set_xsd()

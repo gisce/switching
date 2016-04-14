@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<MensajeCierreReclamacion xmlns="http://localhost/elegibilidad" AgenteSolicitante="0021">
+<MensajeCierreReclamacion xmlns="http://localhost/elegibilidad" AgenteSolicitante="1234">
     <CabeceraReclamacion>
         <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
         <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
@@ -7,7 +7,7 @@
         <CodigoDePaso>05</CodigoDePaso>
         <CodigoDeSolicitud>201604111738</CodigoDeSolicitud>
         <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
-        <FechaSolicitud>2016-04-12T16:02:25</FechaSolicitud>
+        <FechaSolicitud>2014-04-16T22:13:37</FechaSolicitud>
         <CUPS>ES1234000000000001JN0F</CUPS>
     </CabeceraReclamacion>
     <CierreReclamacion>
