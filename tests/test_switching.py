@@ -1024,6 +1024,8 @@ class SwitchingR1_Test(unittest.TestCase):
         # r1-02
         self.xml_r102_ok = open(get_data("r102_aceptacion.xml"), "r")
         self.xml_r102_ko = open(get_data("r102_rechazo.xml"), "r")
+        # r1-05
+        self.xml_r105 = open(get_data("r105.xml"), "r")
 
         self.client = sup.getCliente(True)
         self.reclamant = self.getReclamante()
@@ -1040,6 +1042,8 @@ class SwitchingR1_Test(unittest.TestCase):
         # r1-02
         self.xml_r102_ok.close()
         self.xml_r102_ko.close()
+        # r1-05
+        self.xml_r105.close()
 
     def getReclamante(self):
         sup = supportClass()
@@ -1763,6 +1767,30 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert self.r102_xml.data == '2016-02-23'
         assert len(rebuig) == 5
+
+    def test_read_r105(self):
+        self.r105_xml = R1(self.xml_r105)
+        self.r105_xml.set_xsd()
+        self.r105_xml.parse_xml()
+
+        tancament = self.r105_xml.tancament
+        dades_tancament = tancament.dades_tancament
+
+        assert tancament.codi_contracte == '383922379'
+        assert len(tancament.comentaris) > 10
+
+        assert dades_tancament.data == '2016-04-12'
+        assert dades_tancament.hora == '16:02:25'
+        assert dades_tancament.tipus == '03'
+        assert dades_tancament.subtipus == '13'
+        assert dades_tancament.codi_reclamacio_distri == '3291970'
+        assert dades_tancament.resultat_reclamacio == '02'
+        assert dades_tancament.detall_resultat == ''
+        assert len(dades_tancament.observacions) > 10
+        assert dades_tancament.indemnitzaco_abonada == 0.0
+        assert dades_tancament.num_expedient_anomalia_frau == ''
+        assert dades_tancament.data_moviment == '2016-04-12'
+        assert dades_tancament.codi_sollicitud == '201604111738'
 
 if __name__ == '__main__':
     unittest.main()

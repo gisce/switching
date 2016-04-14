@@ -108,11 +108,12 @@ class R1(Message):
         except AttributeError:
             return False
 
-    # @property
-    # def activacio(self):
-    #     """Retorna l'objecte Activacio"""
-    #     return C1.Activacio(self.obj.NotificacionBajaEnergia)
-    #
+    # 05
+    @property
+    def tancament(self):
+        """Retorna l'objecte Activacio"""
+        return Cierre(self.obj.CierreReclamacion)
+
     # @property
     # def anullacio(self):
     #     """Retorna l'object Anullacio"""
@@ -374,3 +375,160 @@ class VariableDetalleReclamacion(object):
         except AttributeError:
             pass
         return ubi
+
+
+class Cierre(object):
+    """Classe que implementa el tancament"""
+
+    def __init__(self, data):
+        self.cierre = data
+
+    @property
+    def dades_tancament(self):
+        """Retorna l'objecte Dades de tancament"""
+        try:
+            return DatosCierre(self.cierre.DatosCierre)
+        except AttributeError, e:
+            return None
+
+    @property
+    def retificacio(self):
+        """Retorna l'objecte Retificacio"""
+        try:
+            return Cierre(self.cierre.Retipificacion)
+        except AttributeError, e:
+            return None
+
+    @property
+    def codi_contracte(self):
+        try:
+            return self.cierre.CodContrato.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def comentaris(self):
+        try:
+            return self.cierre.Comentarios.text
+        except AttributeError, e:
+            return ''
+
+
+class DatosCierre(object):
+    """Classe que implementa les dades del tancament"""
+
+    def __init__(self, data):
+        self.dadescierre = data
+
+    @property
+    def num_expediente_acometida(self):
+        try:
+            return self.dadescierre.NumExpedienteAcometida.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def data(self):
+        try:
+            return self.dadescierre.Fecha.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def hora(self):
+        try:
+            return self.dadescierre.Hora.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def tipus(self):
+        try:
+            return self.dadescierre.Tipo.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def subtipus(self):
+        try:
+            return self.dadescierre.Subtipo.text
+        except AttributeError, e:
+            return ''
+    @property
+    def codi_reclamacio_distri(self):
+        try:
+            return self.dadescierre.CodigoReclamacionDistribuidora.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def resultat_reclamacio(self):
+        try:
+            return self.dadescierre.ResultadoReclamacion.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def detall_resultat(self):
+        try:
+            return self.dadescierre.DetalleResultado.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def observacions(self):
+        try:
+            return self.dadescierre.Observaciones.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def indemnitzaco_abonada(self):
+        try:
+            return float(self.dadescierre.IndemnizacionAbonada.text)
+        except AttributeError, e:
+            return 0.0
+
+    @property
+    def num_expedient_anomalia_frau(self):
+        try:
+            return self.dadescierre.NumExpedienteAnomaliaFraude.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def data_moviment(self):
+        try:
+            return self.dadescierre.FechaMovimiento.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def codi_sollicitud(self):
+        try:
+            return self.dadescierre.CodigoSolicitud.text
+        except AttributeError, e:
+            return ''
+
+
+class Retificacio(object):
+    def __init__(self, data):
+        self.retificacio = data
+
+    @property
+    def tipus(self):
+        return self.retificacio.Tipo.text
+
+    @property
+    def subtipus(self):
+        return self.retificacio.Subtipo.text
+
+    @property
+    def descripcio_retificacio(self):
+        """Referència orígen"""
+        ref = None
+        try:
+            ref = self.retificacio.DescRetificacion.text
+        except AttributeError, e:
+            pass
+        return ref
