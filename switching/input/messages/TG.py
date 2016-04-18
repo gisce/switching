@@ -76,7 +76,10 @@ class Values(object):
             date_value = element.get(value)
         # Ugly fix for SAGECOM which puts this timestamp when the period doesn't
         # affect the contracted tariff
-        if date_value.upper() == 'FFFFFFFFFFFFFFW':
+        if \
+                date_value.upper() == 'FFFFFFFFFFFFFFW' \
+                or \
+                date_value == '00000000000000W':
             date_value = '19000101000000W'
         return datetime.strftime(datetime.\
                         strptime(date_value[:-1],
