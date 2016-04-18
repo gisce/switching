@@ -266,7 +266,7 @@ class Values(object):
                     'meters': task.get('TpMet'),
                     }
                 task_data_values = []
-                if getattr(task, 'TpPro', None):
+                if getattr(task, 'TpPro', None) is not None:
                     for task_data in task.TpPro:
                         task_data_value = {
                             'request': task_data.get('TpReq'),
