@@ -1842,7 +1842,7 @@ class SwitchingR1_Test(unittest.TestCase):
         assert dades_tancament.resultat_reclamacio == '02'
         assert dades_tancament.detall_resultat == ''
         assert len(dades_tancament.observacions) > 10
-        assert dades_tancament.indemnitzaco_abonada == 0.0
+        assert dades_tancament.indemnitzacio_abonada == 0.0
         assert dades_tancament.num_expedient_anomalia_frau == ''
         assert dades_tancament.data_moviment == '2016-04-12'
         assert dades_tancament.codi_sollicitud == '201604111738'

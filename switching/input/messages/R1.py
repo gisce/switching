@@ -392,10 +392,10 @@ class Cierre(object):
             return None
 
     @property
-    def retificacio(self):
+    def retipificacio(self):
         """Retorna l'objecte Retificacio"""
         try:
-            return Cierre(self.cierre.Retipificacion)
+            return Retipificacio(self.cierre.Retipificacion)
         except AttributeError, e:
             return None
 
@@ -483,7 +483,7 @@ class DatosCierre(object):
             return ''
 
     @property
-    def indemnitzaco_abonada(self):
+    def indemnitzacio_abonada(self):
         try:
             return float(self.dadescierre.IndemnizacionAbonada.text)
         except AttributeError, e:
@@ -511,24 +511,24 @@ class DatosCierre(object):
             return ''
 
 
-class Retificacio(object):
+class Retipificacio(object):
     def __init__(self, data):
-        self.retificacio = data
+        self.retipificacio = data
 
     @property
     def tipus(self):
-        return self.retificacio.Tipo.text
+        return self.retipificacio.Tipo.text
 
     @property
     def subtipus(self):
-        return self.retificacio.Subtipo.text
+        return self.retipificacio.Subtipo.text
 
     @property
-    def descripcio_retificacio(self):
+    def descripcio_retipificacio(self):
         """Referència orígen"""
         ref = None
         try:
-            ref = self.retificacio.DescRetificacion.text
+            ref = self.retipificacio.DescRetipificacion.text
         except AttributeError, e:
             pass
         return ref
