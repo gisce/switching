@@ -138,20 +138,26 @@ class MessageBase(object):
 class Message(MessageBase):
     """Classe base intercanvi informacio comer-distri"""
 
-    def set_tipus(self):
-        """Setejar el tipus de missatge"""
+    @property
+    def get_cabecera_model(self):
+        """ Gets header model """
         try:
             obj = objectify.fromstring(self.str_xml)
-            self.tipus = obj.Cabecera.CodigoDelProceso.text
-            self.pas = obj.Cabecera.CodigoDePaso.text
+            return obj.Cabecera
+        except Exception, e:
+            return obj.CabeceraReclamacion
+
+    def set_tipus(self):
+        """Setejar el tipus de missatge"""
+        head = self.get_cabecera_model
+        try:
+            obj = objectify.fromstring(self.str_xml)
+            self.tipus = head.CodigoDelProceso.text
+            self.pas = head.CodigoDePaso.text
         except:
-            try:
-                self.tipus = obj.CabeceraReclamacion.CodigoDelProceso.text
-                self.pas = obj.CabeceraReclamacion.CodigoDePaso.text
-            except:
-                msg = _('No s\'ha pogut identificar el codi de proces o '\
-                        'codi de pas')
-                raise except_f1('Error', msg)
+            msg = _('No s\'ha pogut identificar el codi de proces o '\
+                    'codi de pas')
+            raise except_f1('Error', msg)
 
     def set_xsd(self):
         """Setejar el fitxer xsd"""
@@ -201,28 +207,38 @@ class Message(MessageBase):
     # Funcions relacionades amb la capçalera del XML
     @property
     def get_codi_emisor(self):
-        ref = self.obj.Cabecera.CodigoREEEmpresaEmisora.text
+        head = self.get_cabecera_model
+        ref = head.CodigoREEEmpresaEmisora.text
         if not ref:
             raise except_f1('Error', _('Document sense emisor'))
         return ref
 
     @property
     def get_codi_destinatari(self):
-        ref = self.obj.Cabecera.CodigoREEEmpresaDestino.text
+        head = self.get_cabecera_model
+        ref = head.CodigoREEEmpresaDestino.text
         if not ref:
             raise except_f1('Error', _('Document sense destinatari'))
         return ref
 
     @property
     def get_codi(self):
-        ref = self.obj.Cabecera.Codigo.text.strip()
+        try:
+            ref = self.obj.Cabecera.Codigo.text.strip()
+        except Exception, e:
+            ref = self.obj.CabeceraReclamacion.CUPS.text.strip()
         if not ref:
             raise except_f1('Error', _('Document sense codi'))
         return ref
 
     @property
+    def cups(self):
+        return self.get_codi
+
+    @property
     def codi_sollicitud(self):
-        ref = self.obj.Cabecera.CodigoDeSolicitud.text
+        head = self.get_cabecera_model
+        ref = head.CodigoDeSolicitud.text
         if not ref:
             raise except_f1('Error', _('Document sense codi de'\
                                        ' sol·licitud'))
@@ -230,7 +246,8 @@ class Message(MessageBase):
 
     @property
     def seq_sollicitud(self):
-        ref = self.obj.Cabecera.SecuencialDeSolicitud.text
+        head = self.get_cabecera_model
+        ref = head.SecuencialDeSolicitud.text
         if not ref:
             raise except_f1('Error', _('Document sense codi de'\
                                        ' seqüencial de sol·licitud'))
@@ -238,7 +255,8 @@ class Message(MessageBase):
 
     @property
     def data_sollicitud(self):
-        ref = self.obj.Cabecera.FechaSolicitud.text
+        head = self.get_cabecera_model
+        ref = head.FechaSolicitud.text
         if not ref:
             raise except_f1('Error', _('Document sense data de'\
                                        ' sol·licitud'))
@@ -246,7 +264,11 @@ class Message(MessageBase):
 
     @property
     def versio(self):
-        ref = self.obj.Cabecera.Version.text
+        head = self.get_cabecera_model
+        try:
+            ref = head.Version.text
+        except:
+            raise except_f1('Error', _('Document sense versio'))
         if not ref:
             raise except_f1('Error', _('Document sense versio'))
         return ref

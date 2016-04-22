@@ -1179,12 +1179,25 @@ class Rebuig(object):
 
     @property
     def descripcio(self):
-        motiu = ''
+        """
+        :return: Descripció o Comentaris (R1) de rebuig""
+        """
         try:
-            motiu = self.rebuig.Texto.text
-        except AttributeError:
-            pass
-        return motiu
+            desc = self.rebuig.Texto.text
+        except AttributeError, e:
+            try:
+                # R1 rebuig
+                desc = self.rebuig.Comentarios.text
+            except AttributeError, e:
+                desc = ''
+        return desc
+
+    @property
+    def comentaris(self):
+        """
+        :return: Descripció o Comentaris (R1) de rebuig""
+        """
+        return self.descripcio
 
     @property
     def data(self):
