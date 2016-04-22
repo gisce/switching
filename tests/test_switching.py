@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from switching.input.messages import F1, message, R1, W1, A3, FacturaATR, Q1
+from switching.input.messages import C2
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
@@ -19,6 +20,14 @@ class test_Message_Base(unittest.TestCase):
     def setUp(self):
         self.xml_a301_cabecera = open(get_data("a301.xml"), "r")
         self.xml_r101_reclamacion = open(get_data("r101_minim.xml"), "r")
+        self.xml_c201_date_timezone = open(
+            get_data("c201_date_timezone.xml"), "r"
+        )
+
+    def tearDown(self):
+        self.xml_a301_cabecera.close()
+        self.xml_r101_reclamacion.close()
+        self.xml_c201_date_timezone.close()
 
     def test_cabecera_model(self):
         c = A3(self.xml_a301_cabecera)
@@ -54,6 +63,23 @@ class test_Message_Base(unittest.TestCase):
         self.assertEqual(c.data_sollicitud, '2014-04-16 22:13:37')
         with self.assertRaises(message.except_f1) as e:
             c.versio
+
+    def test_cabecera_date_with_timezone(self):
+        c = C2(self.xml_c201_date_timezone)
+        c.set_xsd()
+        c.parse_xml()
+        c.set_tipus()
+        self.assertEqual(c.tipus, 'C2')
+        self.assertEqual(c.pas, '01')
+        self.assertEqual(c.get_pas_xml(), '01')
+        self.assertEqual(c.get_codi_emisor, '1234')
+        self.assertEqual(c.get_codi_destinatari, '4321')
+        self.assertEqual(c.get_codi, 'ES1234000000000001JN0F')
+        self.assertEqual(c.cups, 'ES1234000000000001JN0F')
+        self.assertEqual(c.codi_sollicitud, '201604180065')
+        self.assertEqual(c.seq_sollicitud, '01')
+        self.assertEqual(c.data_sollicitud, '2016-04-18 00:00:00+01:00')
+
 
 #@unittest.skip('uncommited data')
 class Switching_F1_Test(unittest.TestCase):
