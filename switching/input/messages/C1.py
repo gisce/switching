@@ -291,8 +291,8 @@ class PuntMesura(object):
     def comentarios(self):
         """Retorna una llista de comentaris"""
         data = []
-        if hasattr(self.pm, 'ComentariosPM'):
-            for i in self.pm.ComentariosPM.ComentarioPM:
+        if getattr(self.pm, 'ComentariosPM', []):
+            for i in getattr(self.pm.ComentariosPM, 'ComentarioPM', []):
                 data.append(i.ComentarioPM.Texto.text)
         return data
 
