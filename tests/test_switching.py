@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from switching.input.messages import C1
 from switching.input.messages import F1, message, R1, W1, A3, FacturaATR, Q1
 from switching.input.messages import C2
 from switching.output.messages import sw_w1 as w1
@@ -518,6 +519,55 @@ class Switching_W1_Test(unittest.TestCase):
             reason = self.w102_xml.rechazo.motivo_rechazo
         assert date == '2015-07-02'
         assert reason == '01'
+
+
+class SwitchingC1Test(unittest.TestCase):
+    """test de C1"""
+
+    def setUp(self):
+        sup = supportClass()
+        self.xml_c105_31alb = open(get_data("c105_31ALB.xml"), "r")
+        self.xml_c105_31alb_mbt_kva = open(
+            get_data("c105_31ALB_MarcaMedidaBT.xml"), "r"
+        )
+        self.xml_c105_31alb_mbt_va = open(
+            get_data("c105_31ALB_MarcaMedidaBT_VA.xml"), "r"
+        )
+
+    def test_read_c105(self):
+        self.c105_xml = C1(self.xml_c105_31alb)
+        self.c105_xml.set_xsd()
+        self.c105_xml.parse_xml()
+        contract = self.c105_xml.contracte
+        condicions = contract.condicions
+        t31a_lb_info = condicions.get_31lb_info()
+        assert contract.codi_contracte == '000393610950'
+        assert condicions.tarifa == '011'
+        assert not t31a_lb_info['marca_mesura_bt_perdues']
+
+    def test_read_c105_31lb_kva(self):
+        self.c105_xml = C1(self.xml_c105_31alb_mbt_kva)
+        self.c105_xml.set_xsd()
+        self.c105_xml.parse_xml()
+        contract = self.c105_xml.contracte
+        condicions = contract.condicions
+        t31a_lb_info = condicions.get_31lb_info()
+        assert contract.codi_contracte == '97120053381'
+        assert condicions.tarifa == '011'
+        assert t31a_lb_info['marca_mesura_bt_perdues']
+        assert t31a_lb_info['kvas_trafo'] == 50.0
+
+    def test_read_c105_31lb_va(self):
+        self.c105_xml = C1(self.xml_c105_31alb_mbt_va)
+        self.c105_xml.set_xsd()
+        self.c105_xml.parse_xml()
+        contract = self.c105_xml.contracte
+        condicions = contract.condicions
+        t31a_lb_info = condicions.get_31lb_info()
+        assert contract.codi_contracte == '000135927341'
+        assert condicions.tarifa == '011'
+        assert t31a_lb_info['marca_mesura_bt_perdues']
+        assert t31a_lb_info['kvas_trafo'] == 33.3
 
 
 class SwitchingC2Test(unittest.TestCase):
