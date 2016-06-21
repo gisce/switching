@@ -58,14 +58,14 @@ Se incluyen modificaciones para PVPC:
 -Se incluye el elemento TipodeTelegestion.
 -Se incluye el elemento IndicativoCurvadeCarga.
 -Se actualiza los tipos enumerados del elemento "MotivoCambioATRDesdeDistribuidora", añadiendo el valor 03.
-		Version 0.1 CNMC 2016.01.11 - Revisión R1
+		Version 0.1 CNMC 2015.12.23 - Revisión R1
 -Se elimina el valor "89" del tipo sencillo "CodigoMotivoRechazo" (tabla 27) motivo de rechazo del proceso R1 que hace referencia a "No existe mejor curva disponible (no se genera curva)" ya que esto no es un motivo de rechazo si no un detalle de resolución de la reclamación.
 -Se da de alta un nuevo tipo sencillo "Variable" para informar la tabla 76 - Variables Aportación Información Adicional
 -Se elimina el valor "15" del tipo sencillo "TipoConceptoFacturado" (tabla 77).
 -Se modifica el tipo sencillo "TipoInformacionAdicional" para incluir nuevos valores en la tabla 85 ("05 - IBAN" y "06 - Información mínima incoherente".
 -Se modifica la tabla 83 (Tipo Reclamante) para eliminar el valor "05" y redefinir el valor "04" como Administración/ Organismo Público.
 -Se modifica el tipo sencillo "DetalleResultado" (Tabla 73) para incluir nuevas propuestas de los agentes, el valor "080202" que por error no se había incluido y eliminar los valores "XX0401" y "XX0501" para todos los valores puesto que no aportan información adicional al resultado.
-
+		Version 0.2 CNMC 2016.04.01 - Se incluye un nuevo tipo sencillo Tipo Autoconsumo, 4 nuevos valores (43, 44, 45 y 46) en la tabla tipo Concepto (tabla 103) para informar los cargos del régimen económico transitorio del Autoconsumo (RD 900/2015), nuevos motivos de rechazo en la tabla maestra 27 (motivos del 90-98) y dos nuevos valores en la tabla 82 (subtipo 55 y 56).
 
 		</xs:documentation>
 	</xs:annotation>
@@ -1358,6 +1358,15 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="86"/>
 			<xs:enumeration value="87"/>
 			<xs:enumeration value="88"/>
+			<xs:enumeration value="90"/>
+			<xs:enumeration value="91"/>
+			<xs:enumeration value="92"/>
+			<xs:enumeration value="93"/>
+			<xs:enumeration value="94"/>
+			<xs:enumeration value="95"/>
+			<xs:enumeration value="96"/>
+			<xs:enumeration value="97"/>
+			<xs:enumeration value="98"/>
 			<xs:enumeration value="99"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -1580,7 +1589,11 @@ Se incluyen modificaciones para PVPC:
 			40	Recargo fraccionado por refacturación (Orden IET/843/2012) del cuarto trimestre de 2011
 			41	Recargo fraccionado por refacturación (Orden IET/843/2012) del primer trimestre de 2012
 			42	Recargo fraccionado por refacturación (Orden IET/843/2012) de abril de 2012
-			</xs:documentation>
+			43	Cargo fijo autoconsumo
+			44 	Cargo variable autoconsumo
+			45 	Exención cargo fijo autoconsumo
+			46 	Exención cargo variable autoconsumo
+</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="01"/>
@@ -1608,6 +1621,10 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="40"/>
 			<xs:enumeration value="41"/>
 			<xs:enumeration value="42"/>
+			<xs:enumeration value="43"/>
+			<xs:enumeration value="44"/>
+			<xs:enumeration value="45"/>
+			<xs:enumeration value="46"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TipoCodigoPeriodoDH">
@@ -2535,8 +2552,10 @@ Se incluyen modificaciones para PVPC:
 			45	ACTUALIZACIÓN  DE DIRECCIÓN  DEL PUNTO DE SUMINISTRO
 			46	CERTIFICADO DE LECTURA
 			47	SOLICITUD RECALCULO CCH SIN MODIFICACION CIERRE ATR	FASE 1 PVPC
-			48  Petición Información adicional rechazo 
+			48  	Petición Información adicional rechazo 
 			49	Falta fichero medida
+			55	DISCONFORMIDAD SOBRE IMPORTE FACTURADO AUTOCONSUMO
+			56	PETICIÓN DESGLOSE IMPORTE A FACTURAR AUTOCONSUMO
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -2588,6 +2607,8 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="47"/>
 			<xs:enumeration value="48"/>
 			<xs:enumeration value="49"/>
+			<xs:enumeration value="55"/>
+			<xs:enumeration value="56"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -3326,6 +3347,25 @@ Se incluyen modificaciones para PVPC:
 			<xs:enumeration value="04"/>
 			<xs:enumeration value="05"/>
 			<xs:enumeration value="06"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+<xs:simpleType name="TipoAutoconsumo">
+		<xs:annotation>
+			<xs:documentation>Tipo de autoconsumo (Tabla 113)
+			00	Sin autoconsumo
+			01	Autoconsumo tipo 1
+			2A	Autoconsumo tipo 2 según el Art. 13.2.a) del RD 900/2015
+			2B	Autoconsumo tipo 2 según el Art. 13.2.b) del RD 900/2015
+			2G	Servicios auxiliares ligados a un autoconsumo tipo 2
+		</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="00"/>
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="2A"/>
+			<xs:enumeration value="2B"/>
+			<xs:enumeration value="2G"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

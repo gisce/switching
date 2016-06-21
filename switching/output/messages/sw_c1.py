@@ -156,14 +156,16 @@ class Contacto(XmlModel):
 
 
 class Contrato(XmlModel):
-    _sort_order = ('contrato', 'idcontrato', 'duracion', 'fechafin',
-                   'tipo', 'condiciones', 'consumoanual', 'contacto',
-                   'direccion', 'tipoactivacion', 'fechaactivacion',)
+    _sort_order = ('contrato', 'idcontrato', 'fechafin', 'duracion',
+                   'tipo_autoconsumo', 'tipo', 'condiciones', 'consumoanual',
+                   'contacto', 'direccion', 'tipoactivacion',
+                   'fechaactivacion',)
 
     def __init__(self, tag_tipo='TipoContratoATR'):
         self.contrato = XmlField('Contrato')
         self.idcontrato = IdContrato()
         self.duracion = XmlField('Duracion')
+        self.tipo_autoconsumo = XmlField('TipoAutoconsumo')
         self.fechafin = XmlField('FechaFinalizacion')
         self.tipo = XmlField(tag_tipo)
         self.direccion = DireccionCorrespondencia()

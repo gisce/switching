@@ -291,8 +291,8 @@ class PuntMesura(object):
     def comentarios(self):
         """Retorna una llista de comentaris"""
         data = []
-        if hasattr(self.pm, 'ComentariosPM'):
-            for i in self.pm.ComentariosPM.ComentarioPM:
+        if getattr(self.pm, 'ComentariosPM', []):
+            for i in getattr(self.pm.ComentariosPM, 'ComentarioPM', []):
                 data.append(i.ComentarioPM.Texto.text)
         return data
 
@@ -782,13 +782,23 @@ class Contracte(object):
         return mesos
 
     @property
+    def tipus_autoconsum(self):
+        """tipus autoconsum segons taula 103"""
+        tipus = '00'
+        try:
+            tipus = self.contracte.TipoAutoconsumo.text
+        except AttributeError as e:
+            pass
+        return tipus
+
+    @property
     def data_finalitzacio(self):
         """Retorna la data de finalització en el cas que la durada del
            contracte sigui inferior a 12 mesos"""
         data = ''
         try:
             data = self.contracte.FechaFinalizacion.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return data
 
@@ -1102,7 +1112,7 @@ class Condicions(object):
         marca_mesura_bt_perdues = ''
         try:
             marca_mesura_bt_perdues = self.cond.MarcaMedidaBTConPerdidas.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return marca_mesura_bt_perdues
 
@@ -1111,7 +1121,7 @@ class Condicions(object):
         kvas_trafo = ''
         try:
             kvas_trafo = self.cond.KVAsTrafo.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return kvas_trafo
 
@@ -1120,7 +1130,7 @@ class Condicions(object):
         perc_perd_pactades = ''
         try:
             perc_perd_pactades = self.cond.PorcentajePerdidasPactadas.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return perc_perd_pactades
 
@@ -1169,12 +1179,25 @@ class Rebuig(object):
 
     @property
     def descripcio(self):
-        motiu = ''
+        """
+        :return: Descripció o Comentaris (R1) de rebuig""
+        """
         try:
-            motiu = self.rebuig.Texto.text
-        except AttributeError:
-            pass
-        return motiu
+            desc = self.rebuig.Texto.text
+        except AttributeError, e:
+            try:
+                # R1 rebuig
+                desc = self.rebuig.Comentarios.text
+            except AttributeError, e:
+                desc = ''
+        return desc
+
+    @property
+    def comentaris(self):
+        """
+        :return: Descripció o Comentaris (R1) de rebuig""
+        """
+        return self.descripcio
 
     @property
     def data(self):

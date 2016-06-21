@@ -77,7 +77,7 @@ class VariableDetalleReclamacion(XmlModel):
         self.lectures = LecturasAportadas()
         self.codi_incidencia = XmlField('CodigoIncidencia')
         self.codi_sollicitud = XmlField('CodigoSolicitud')
-        self.param_contractacio = XmlField('ParametroContractacion')
+        self.param_contractacio = XmlField('ParametroContratacion')
         self.concepte_disconformitat = XmlField('ConceptoDisconformidad')
         self.tipus_atencio_incorrecte = XmlField('TipoDeAtencionIncorrecta')
         self.iban = XmlField('IBAN')
@@ -295,6 +295,92 @@ class MensajeRechazoReclamacion(XmlModel):
         self.rebuigs = RechazosReclamacion()
         super(MensajeRechazoReclamacion, self).__init__(
             'MensajeRechazoReclamacion', 'mensaje')
+
+    def set_agente(self, agente):
+        self.mensaje.attributes.update({'AgenteSolicitante': agente})
+        self.doc_root = self.root.element()
+
+
+
+class DatosCierre(XmlModel):
+    _sort_order = ('dades','num_expediente_acometida','data','hora','tipus',
+    'subtipus','codi_reclamacio_distri','resultat_reclamacio',
+    'detall_resultat','observacions','indemnitzacio_abonada',
+    'num_expedient_anomalia_frau','data_moviment','codi_sollicitud'
+    )
+
+    def __init__(self):
+        self.dades = XmlField('DatosCierre')
+        self.num_expediente_acometida = XmlField('NumExpedienteAcometida')
+        self.data = XmlField('Fecha')
+        self.hora = XmlField('Hora')
+        self.tipus = XmlField('Tipo')
+        self.subtipus = XmlField('Subtipo')
+        self.codi_reclamacio_distri = XmlField(
+            'CodigoReclamacionDistribuidora'
+        )
+        self.resultat_reclamacio = XmlField('ResultadoReclamacion')
+        self.detall_resultat = XmlField('DetalleResultado')
+        self.observacions = XmlField('Observaciones')
+        self.indemnitzacio_abonada = XmlField('IndemnizacionAbonada')
+        self.num_expedient_anomalia_frau = XmlField(
+            'NumExpedienteAnomaliaFraude'
+        )
+        self.data_moviment = XmlField('FechaMovimiento')
+        self.codi_sollicitud = XmlField('CodigoSolicitud')
+        super(DatosCierre, self).__init__('DatosCierre','dades')
+
+
+class Retificacion(XmlModel):
+    """ Retificacion Model """
+    _sort_order = ('retificacio', 'tipus', 'subtipus',
+                   'descripcio_retificacio')
+
+    def __init__(self):
+        self.retificacio = XmlField('Retificacion')
+        self.tipus = XmlField('Tipo')
+        self.subtipus = XmlField('Subtipo')
+        self.descripcio_retificacio = XmlField('DescRetificacion')
+        super(Retificacion, self).__init__('Retificacion','retificacio')
+
+
+class CierreReclamacion(XmlModel):
+    _sort_order = ('tancament', 'dades', 'retificacio', 'cod_contracte',
+                   'comentaris',)
+
+    def __init__(self):
+        self.tancament = XmlField('CierreReclamacion')
+        self.dades = DatosCierre()
+        self.retificacio = Retificacion()
+        self.cod_contracte = XmlField('CodContrato')
+        self.comentaris = XmlField('Comentarios')
+        self.reg_documents = RegistrosDocumento()
+        super(CierreReclamacion, self).__init__('CierreReclamacion',
+                                                'tancament')
+
+
+# 05
+class MensajeCierreReclamacion(XmlModel):
+    """ R1-05 Root class
+    """
+    _sort_order = (
+        'mensaje',
+        'capcalera',
+        'tancament',
+    )
+
+    def __init__(self):
+        self.doc_root = None
+        self.mensaje = XmlField(
+            'MensajeCierreReclamacion',
+            attributes={
+                'xmlns': 'http://localhost/elegibilidad',
+            }
+        )
+        self.capcalera = CabeceraReclamacion()
+        self.tancament = CierreReclamacion()
+        super(MensajeCierreReclamacion,
+              self).__init__('MensajeCierreReclamacion', 'mensaje')
 
     def set_agente(self, agente):
         self.mensaje.attributes.update({'AgenteSolicitante': agente})

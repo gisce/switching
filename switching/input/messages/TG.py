@@ -76,7 +76,10 @@ class Values(object):
             date_value = element.get(value)
         # Ugly fix for SAGECOM which puts this timestamp when the period doesn't
         # affect the contracted tariff
-        if date_value.upper() == 'FFFFFFFFFFFFFFW':
+        if \
+                date_value.upper() == 'FFFFFFFFFFFFFFW' \
+                or \
+                date_value == '00000000000000W':
             date_value = '19000101000000W'
         return datetime.strftime(datetime.\
                         strptime(date_value[:-1],
@@ -266,7 +269,7 @@ class Values(object):
                     'meters': task.get('TpMet'),
                     }
                 task_data_values = []
-                if getattr(task, 'TpPro', None):
+                if getattr(task, 'TpPro', None) is not None:
                     for task_data in task.TpPro:
                         task_data_value = {
                             'request': task_data.get('TpReq'),

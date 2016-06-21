@@ -4,6 +4,7 @@
 	<xs:include schemaLocation="TiposSencillos.xsd"/>
 	<!--
 	Version 0.0 OCSUM 2011.01.31
+	Versión 0.2 CNMC 2016.04.01 se incluye un nuevo campo "TipoAutoconsumo" en el nodo "ContratoActivacionCambiodeComercializadoraSinCambiosCC1"
 	-->
 	<xs:complexType name="ActivacionCambiodeComercializadoraSinCambiosCC1">
 		<xs:sequence>
@@ -22,6 +23,7 @@
 	<xs:complexType name="ContratoActivacionCambiodeComercializadoraSinCambiosCC1">
 		<xs:sequence>
 			<xs:element name="IdContrato" type="IdContrato"/>
+			<xs:element name="TipoAutoconsumo" type="TipoAutoconsumo" minOccurs="0"/>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractualesC"/>
 		</xs:sequence>
