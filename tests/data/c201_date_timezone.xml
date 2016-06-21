@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<MensajeCambiodeComercializadoraConCambios AgenteSolicitante="1234" xmlns="http://localhost/elegibilidad">
+   <Cabecera>
+      <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+      <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+      <CodigoDelProceso>C2</CodigoDelProceso>
+      <CodigoDePaso>01</CodigoDePaso>
+      <CodigoDeSolicitud>201604180065</CodigoDeSolicitud>
+      <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+      <Codigo>ES1234000000000001JN0F</Codigo>
+      <FechaSolicitud>2016-04-18T00:00:00+01:00</FechaSolicitud>
+      <Version>02</Version>
+   </Cabecera>
+   <CambiodeComercializadoraConCambios>
+      <DatosSolicitud>
+         <LineaNegocioElectrica>01</LineaNegocioElectrica>
+         <SolicitudAdmContractual>N</SolicitudAdmContractual>
+         <IndActivacionLectura>S</IndActivacionLectura>
+         <IndSustitutoMandatario>S</IndSustitutoMandatario>
+      </DatosSolicitud>
+      <Contrato>
+         <IdContrato>
+            <CodContrato>000000000000</CodContrato>
+         </IdContrato>
+         <Duracion>12</Duracion>
+         <TipoContratoATR>01</TipoContratoATR>
+         <CondicionesContractuales>
+            <TarifaATR>003</TarifaATR>
+            <PotenciasContratadas>
+               <Potencia Periodo="1">14000</Potencia>
+               <Potencia Periodo="2">15001</Potencia>
+               <Potencia Periodo="3">2070</Potencia>
+            </PotenciasContratadas>
+         </CondicionesContractuales>
+         <Contacto>
+            <Nombre>
+               <RazonSocial>ACME Corporation</RazonSocial>
+            </Nombre>
+            <Telefono>
+               <PrefijoPais>34</PrefijoPais>
+               <Numero>555124124</Numero>
+            </Telefono>
+         </Contacto>
+         <DireccionCorrespondencia>
+            <Indicador>S</Indicador>
+         </DireccionCorrespondencia>
+      </Contrato>
+      <Cliente>
+         <IdCliente>
+            <TipoCIFNIF>CI</TipoCIFNIF>
+            <Identificador>1111111H</Identificador>
+         </IdCliente>
+         <Nombre>
+            <RazonSocial>ACME Corporation</RazonSocial>
+         </Nombre>
+         <IndicadorTipoDireccion>S</IndicadorTipoDireccion>
+      </Cliente>
+      <Medida>
+         <ControlPotenciaPropiedad>N</ControlPotenciaPropiedad>
+         <ControlPotenciaInstalacion>D</ControlPotenciaInstalacion>
+         <EquipoAportadoCliente>N</EquipoAportadoCliente>
+         <EquipoInstaladoCliente>D</EquipoInstaladoCliente>
+         <TipoEquipoMedida>L00</TipoEquipoMedida>
+         <ModelosAparato></ModelosAparato>
+      </Medida>
+      <Comentarios/>
+   </CambiodeComercializadoraConCambios>
+</MensajeCambiodeComercializadoraConCambios>
