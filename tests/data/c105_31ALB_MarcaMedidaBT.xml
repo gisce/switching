@@ -1,0 +1,238 @@
+<MensajeActivacionCambiodeComercializadoraSinCambios
+        xmlns="http://localhost/elegibilidad" AgenteSolicitante="1234">
+    <Cabecera>
+        <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+        <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+        <CodigoDelProceso>C1</CodigoDelProceso>
+        <CodigoDePaso>05</CodigoDePaso>
+        <CodigoDeSolicitud>201505256218</CodigoDeSolicitud>
+        <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+        <Codigo>ES1234000000000001JN0F</Codigo>
+        <FechaSolicitud>2015-06-23T01:07:35</FechaSolicitud>
+        <Version>02</Version>
+    </Cabecera>
+    <ActivacionCambiodeComercializadoraSinCambios>
+        <DatosActivacion>
+            <Fecha>2015-06-19</Fecha>
+            <Hora>01:07:00</Hora>
+        </DatosActivacion>
+        <Contrato>
+            <IdContrato>
+                <CodContrato>97120053381</CodContrato>
+            </IdContrato>
+            <TipoContratoATR>01</TipoContratoATR>
+            <CondicionesContractuales>
+                <TarifaATR>011</TarifaATR>
+                <PeriodicidadFacturacion>01</PeriodicidadFacturacion>
+                <PotenciasContratadas>
+                    <Potencia Periodo="0">9860</Potencia>
+                    <Potencia Periodo="1">9860</Potencia>
+                    <Potencia Periodo="2">9860</Potencia>
+                    <Potencia Periodo="3">0</Potencia>
+                    <Potencia Periodo="4">0</Potencia>
+                    <Potencia Periodo="5">0</Potencia>
+                    <Potencia Periodo="6">0</Potencia>
+                    <Potencia Periodo="7">0</Potencia>
+                    <Potencia Periodo="8">0</Potencia>
+                    <Potencia Periodo="9">0</Potencia>
+                </PotenciasContratadas>
+                <PotenciasMaximas>
+                    <Potencia Periodo="0">0</Potencia>
+                    <Potencia Periodo="1">0</Potencia>
+                    <Potencia Periodo="2">0</Potencia>
+                    <Potencia Periodo="3">0</Potencia>
+                    <Potencia Periodo="4">0</Potencia>
+                    <Potencia Periodo="5">0</Potencia>
+                    <Potencia Periodo="6">0</Potencia>
+                    <Potencia Periodo="7">0</Potencia>
+                    <Potencia Periodo="8">0</Potencia>
+                    <Potencia Periodo="9">0</Potencia>
+                </PotenciasMaximas>
+                <MarcaMedidaBTConPerdidas>S</MarcaMedidaBTConPerdidas>
+                <KVAsTrafo>50</KVAsTrafo>
+                <PorcentajePerdidasPactadas>,000</PorcentajePerdidasPactadas>
+            </CondicionesContractuales>
+        </Contrato>
+        <PuntosDeMedida>
+            <PuntoDeMedida>
+                <CodPM>ES1234000000000001JN0F</CodPM>
+                <TipoMovimiento>M</TipoMovimiento>
+                <CUPS>ES1234000000000001JN0F</CUPS>
+                <TipoPM>04</TipoPM>
+                <ModoLectura>1</ModoLectura>
+                <EstadoPM>1</EstadoPM>
+                <Funcion>P</Funcion>
+                <FechaVigor>2015-06-19</FechaVigor>
+                <FechaAlta>2009-03-24</FechaAlta>
+                <Aparatos>
+                    <Aparato>
+                        <Modelo>
+                            <Tipo>CA</Tipo>
+                            <Marca>132</Marca>
+                            <ModeloMarca>5CTD-E1C-061402U</ModeloMarca>
+                        </Modelo>
+                        <TipoMovimiento>CX</TipoMovimiento>
+                        <TipoEquipoMedida>L05</TipoEquipoMedida>
+                        <TipoPropiedadAparato>1</TipoPropiedadAparato>
+                        <ExtraccionLecturas>S</ExtraccionLecturas>
+                        <DiscriminacionHorariaActiva>6</DiscriminacionHorariaActiva>
+                        <DiscriminacionHorariaMaximas>4</DiscriminacionHorariaMaximas>
+                        <CodPrecinto>00523</CodPrecinto>
+                        <DatosAparatoNoICP>
+                            <PeriodoFabricacion>2008</PeriodoFabricacion>
+                            <NumeroSerie>002168034</NumeroSerie>
+                            <FuncionAparato>M</FuncionAparato>
+                            <NumIntegradores>20</NumIntegradores>
+                            <ConstanteEnergia>1</ConstanteEnergia>
+                            <ConstanteMaximetro>1</ConstanteMaximetro>
+                            <RuedasEnteras>7</RuedasEnteras>
+                            <RuedasDecimales>0</RuedasDecimales>
+                        </DatosAparatoNoICP>
+                        <Medidas>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>62</Periodo>
+                                <MagnitudMedida>AE</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>17950</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>63</Periodo>
+                                <MagnitudMedida>AE</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>9710</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>61</Periodo>
+                                <MagnitudMedida>AE</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>10611</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>61</Periodo>
+                                <MagnitudMedida>R1</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>1167</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>62</Periodo>
+                                <MagnitudMedida>PM</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>8000</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>63</Periodo>
+                                <MagnitudMedida>PM</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>8000</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>61</Periodo>
+                                <MagnitudMedida>PM</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>8000</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>62</Periodo>
+                                <MagnitudMedida>R1</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>2273</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>63</Periodo>
+                                <MagnitudMedida>R1</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>776</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>64</Periodo>
+                                <MagnitudMedida>AE</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>510</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>65</Periodo>
+                                <MagnitudMedida>AE</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>5837</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>66</Periodo>
+                                <MagnitudMedida>AE</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>11247</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>64</Periodo>
+                                <MagnitudMedida>R1</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>200</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>65</Periodo>
+                                <MagnitudMedida>R1</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>783</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>66</Periodo>
+                                <MagnitudMedida>R1</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>891</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>64</Periodo>
+                                <MagnitudMedida>PM</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>0</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>65</Periodo>
+                                <MagnitudMedida>PM</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>8000</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>66</Periodo>
+                                <MagnitudMedida>PM</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>8000</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>60</Periodo>
+                                <MagnitudMedida>AE</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>55872</LecturaAnterior>
+                            </Medida>
+                            <Medida>
+                                <TipoDH>6</TipoDH>
+                                <Periodo>60</Periodo>
+                                <MagnitudMedida>R1</MagnitudMedida>
+                                <Procedencia>30</Procedencia>
+                                <LecturaAnterior>6094</LecturaAnterior>
+                            </Medida>
+                        </Medidas>
+                    </Aparato>
+                </Aparatos>
+            </PuntoDeMedida>
+        </PuntosDeMedida>
+    </ActivacionCambiodeComercializadoraSinCambios>
+</MensajeActivacionCambiodeComercializadoraSinCambios>
