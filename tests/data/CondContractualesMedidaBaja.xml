@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CondicionesContractuales>
+    <PeriodicidadFacturacion>01</PeriodicidadFacturacion>
+    <TipodeTelegestion>03</TipodeTelegestion>
+    <PotenciasContratadas>
+        <Potencia Periodo="1">44000</Potencia>
+        <Potencia Periodo="2">44000</Potencia>
+        <Potencia Periodo="3">44000</Potencia>
+    </PotenciasContratadas>
+    <ModoControlPotencia>1</ModoControlPotencia>
+    <MarcaMedidaBTConPerdidas>S</MarcaMedidaBTConPerdidas>
+    <KVAsTrafo>50</KVAsTrafo>
+    <PorcentajePerdidasPactadas>5</PorcentajePerdidasPactadas>
+</CondicionesContractuales>
