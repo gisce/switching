@@ -96,7 +96,9 @@ class PotenciasContratadas(XmlModel):
 
 class CondicionesContractuales(XmlModel):
     _sort_order = ('condicions', 'tarifa', 'periodicidad_facturacion',
-                   'tipus_telegestio', 'potencies', 'control_potencia')
+                   'tipus_telegestio', 'potencies', 'control_potencia',
+                   'marca_mesura_bt_perdues', 'kvas_trafo',
+                   'perc_perd_pactades')
 
     def __init__(self):
         self.condicions = XmlField('CondicionesContractuales')

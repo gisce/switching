@@ -248,5 +248,30 @@ class test_CondicionesContractuales(unittest.TestCase):
         self.assertXmlEqual(xml, self.loadFile('CondContractuales.xml'))
 
 
+    def test_build_tree_medida_baja(self):
+        potencies = PotenciasContratadas()
+
+        pots = {'p1': 44000, 'p2': 44000, 'p3': 44000}
+        potencies.feed(pots)
+
+        c = CondicionesContractuales()
+        c.feed({
+            'tarifaATR': '011',
+            'periodicidad_facturacion': '01',
+            'tipus_telegestio': '03',
+            'control_potencia': '1',
+            'potencies': potencies,
+            'marca_mesura_bt_perdues': 'S',
+            'kvas_trafo': 50,
+            'perc_perd_pactades': 5,
+        })
+
+        c.feed(self.basic_data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(
+            xml, self.loadFile('CondContractualesMedidaBaja.xml')
+        )
+
 if __name__ == '__main__':
     unittest.main()
