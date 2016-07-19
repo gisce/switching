@@ -577,6 +577,7 @@ class SwitchingC2Test(unittest.TestCase):
         sup = supportClass()
         self.xml_c201 = open(get_data("c201.xml"), "r")
         self.xml_c201_ciepapel = open(get_data("c201_CiePapel.xml"), "r")
+        self.xml_c201_DocSample = open(get_data("c201_DocSample.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
@@ -716,6 +717,34 @@ class SwitchingC2Test(unittest.TestCase):
         pas01.build_tree()
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_c201_ciepapel.read())
+
+    def test_create_pas01_documents_xml(self):
+        # Generate with code
+        dades = [
+            ('01', 'http://eneracme.com/docs/CIE0100001.pdf'),
+            ('06', 'http://eneracme.com/docs/INV201509161234.pdf'),
+            ('08', 'http://eneracme.com/docs/NIF11111111H.pdf'),
+        ]
+
+        registro_documentos = c2.RegistrosDocumento()
+        docs = []
+        for i in range(len(dades)):
+            doc = c2.RegistroDoc()
+            doc.feed({
+                'tipo': dades[i][0],
+                'url': dades[i][1],
+            })
+            docs.append(doc)
+
+        registro_documentos.feed({'registro': docs})
+        # Generate the xml tree before comparing with sample
+
+        registro_documentos.build_tree()
+        xml = str(registro_documentos)
+
+        # Compare code-generated xml tree with sample from file
+
+        self.assertXmlEqual(xml, self.xml_c201_DocSample.read())
 
 
 class SwitchingA3Test(unittest.TestCase):
