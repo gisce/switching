@@ -87,7 +87,7 @@ class Medida(XmlModel):
                                      drop_empty=False)
 
 
-class RegistroDocumento(XmlModel):
+class RegistroDoc(XmlModel):
 
     _sort_order = ('registro', 'tipo', 'url')
 
@@ -95,7 +95,7 @@ class RegistroDocumento(XmlModel):
         self.registro = XmlField('RegistroDoc')
         self.tipo = XmlField('TipoDocAportado')
         self.url = XmlField('DireccionUrl')
-        super(RegistroDocumento, self).__init__('RegistroDocumento',
+        super(RegistroDoc, self).__init__('RegistroDoc',
                                                 'registro')
 
 class RegistrosDocumento(XmlModel):
