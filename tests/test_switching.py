@@ -577,7 +577,7 @@ class SwitchingC2Test(unittest.TestCase):
         sup = supportClass()
         self.xml_c201 = open(get_data("c201.xml"), "r")
         self.xml_c201_ciepapel = open(get_data("c201_CiePapel.xml"), "r")
-        self.xml_c201_DocSample = open(get_data("c201_DocSample.xml"), "r")
+        self.xml_c201_regdocs = open(get_data("c201_regdocs.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
@@ -719,32 +719,55 @@ class SwitchingC2Test(unittest.TestCase):
         self.assertXmlEqual(xml, self.xml_c201_ciepapel.read())
 
     def test_create_pas01_documents_xml(self):
-        # Generate with code
-        dades = [
+        sup = supportClass()
+        pas01 = c2.MensajeCambiodeComercializadoraConCambios()
+        capcalera = sup.getHeader('C2', '01')
+        pas01.set_agente('1234')
+
+        sollicitud = self.sollicitud
+        contracte = self.contracte
+        client = self.client
+        mesura = self.mesura
+
+        dades_documents = [
             ('01', 'http://eneracme.com/docs/CIE0100001.pdf'),
             ('06', 'http://eneracme.com/docs/INV201509161234.pdf'),
             ('08', 'http://eneracme.com/docs/NIF11111111H.pdf'),
         ]
 
-        registro_documentos = c2.RegistrosDocumento()
         docs = []
-        for i in range(len(dades)):
+        for i in range(len(dades_documents)):
             doc = c2.RegistroDoc()
             doc.feed({
-                'tipo': dades[i][0],
-                'url': dades[i][1],
+                'tipo': dades_documents[i][0],
+                'url': dades_documents[i][1],
             })
             docs.append(doc)
 
+        registro_documentos = c2.RegistrosDocumento()
         registro_documentos.feed({'registro': docs})
-        # Generate the xml tree before comparing with sample
 
-        registro_documentos.build_tree()
-        xml = str(registro_documentos)
+        # sol·licitud de canvi
+        canvi = c2.CambiodeComercializadoraConCambios()
+        canvi_vals = {
+            'solicitud': sollicitud,
+            'contrato': contracte,
+            'cliente': client,
+            'medida': mesura,
+            'registro': registro_documentos,
+            'cnae': '9820',
+            'vivenda': 'S',
+            'tipuscanvititular': 'S',
+        }
+        canvi.feed(canvi_vals)
 
-        # Compare code-generated xml tree with sample from file
-
-        self.assertXmlEqual(xml, self.xml_c201_DocSample.read())
+        pas01.feed({
+            'cabecera': capcalera,
+            'cambio': canvi
+        })
+        pas01.build_tree()
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_c201_regdocs.read())
 
 
 class SwitchingA3Test(unittest.TestCase):
