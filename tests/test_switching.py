@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from switching.input.messages import C1
-from switching.input.messages import F1, message, R1, W1, A3, FacturaATR, Q1
+from switching.input.messages import F1, message, R1, W1, A3, M1, FacturaATR, Q1
 from switching.input.messages import C2
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
@@ -996,6 +996,7 @@ class SwitchingM1Test(unittest.TestCase):
         sup = supportClass()
         self.xml_m101 = open(get_data("m101.xml"), "r")
         self.xml_m101_ciepapel = open(get_data("m101_CiePapel.xml"), "r")
+        self.xml_m101_DT = open(get_data("m101_DocTecnica.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
@@ -1134,6 +1135,27 @@ class SwitchingM1Test(unittest.TestCase):
         pas01.build_tree()
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_m101_ciepapel.read())
+
+
+
+    def test_read_m101(self):
+        self.m101_dt_xml = M1(self.xml_m101_DT)
+        self.m101_dt_xml.set_xsd()
+        self.m101_dt_xml.parse_xml()
+        doc_tecnica = self.m101_dt_xml.documentacio_tecnica
+        assert doc_tecnica.es_Cie_electronic == 'N'
+        assert doc_tecnica.codi_CIE == '1234567'
+        assert doc_tecnica.potencia_instalada_BT == '3500'
+        assert doc_tecnica.data_emissio_CIE == '2015-06-04'
+        assert doc_tecnica.data_fi_CIE == '2015-06-05'
+        assert doc_tecnica.nif_intalador == '12345678Z'
+        assert doc_tecnica.nom_instalador == 'Acme'
+        assert doc_tecnica.tensio_suministrada == '10'
+        assert doc_tecnica.intensitat_diferencial == '8'
+        assert doc_tecnica.sensibilitat_diferencial == '9'
+        assert doc_tecnica.seccio_cable == '2'
+        assert doc_tecnica.tipus_suministre == 'VI'
+
 
 
 class SwitchingR1_Test(unittest.TestCase):
