@@ -215,3 +215,9 @@ class Mesura(object):
         except AttributeError:
             pass
         return value
+
+    @property
+    def documentacio_tecnica(self):
+        """Retorna l'objecte documentacio tecnica"""
+        obj = getattr(self.obj, self._header)
+        return C1.DocumentacioTecnica(obj.DocTecnica)
