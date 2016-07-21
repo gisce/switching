@@ -124,6 +124,17 @@ class C2(Message):
         return value
 
     @property
+    def documents(self):
+        """Retorna una llista de documents adjunts"""
+        data = []
+        obj = getattr(self.obj, self._header)
+        if (hasattr(obj, 'RegistrosDocumento') and
+                hasattr(obj.RegistrosDocumento, 'RegistroDoc')):
+            for d in obj.RegistrosDocumento.RegistroDoc:
+                data.append(C1.RegistroDoc(d))
+        return data
+
+    @property
     def canvi_titular(self):
         value = ''
         try:
