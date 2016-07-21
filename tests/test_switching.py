@@ -533,6 +533,9 @@ class SwitchingC1Test(unittest.TestCase):
         self.xml_c105_31alb_mbt_va = open(
             get_data("c105_31ALB_MarcaMedidaBT_VA.xml"), "r"
         )
+        self.xml_c101_regdoc = open(
+            get_data("c101_RegistroDoc.xml"), "r"
+        )
 
     def test_read_c105(self):
         self.c105_xml = C1(self.xml_c105_31alb)
@@ -568,6 +571,15 @@ class SwitchingC1Test(unittest.TestCase):
         assert condicions.tarifa == '011'
         assert t31a_lb_info['marca_mesura_bt_perdues']
         assert t31a_lb_info['kvas_trafo'] == 33.3
+
+    def test_read_c101_regdoc(self):
+        c101_xml = C1(self.xml_c101_regdoc)
+        c101_xml.set_xsd()
+        c101_xml.parse_xml()
+        documents = c101_xml.documents
+        doc = documents[0]
+        assert doc.doc_type == '08'
+        assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
 
 
 class SwitchingC2Test(unittest.TestCase):
