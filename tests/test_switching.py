@@ -572,6 +572,15 @@ class SwitchingC1Test(unittest.TestCase):
         assert t31a_lb_info['marca_mesura_bt_perdues']
         assert t31a_lb_info['kvas_trafo'] == 33.3
 
+    def test_read_c101_regdoc(self):
+        c101_xml = C1(self.xml_c101_regdoc)
+        c101_xml.set_xsd()
+        c101_xml.parse_xml()
+        documents = c101_xml.documents
+        doc = documents[0]
+        assert doc.doc_type == '08'
+        assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+
 
 class SwitchingC2Test(unittest.TestCase):
     """test de C2"""
