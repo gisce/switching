@@ -77,6 +77,17 @@ class C1(Message):
             data.append(PuntMesura(i))
         return data
 
+    @property
+    def documents(self):
+        """Retorna una llista de documents adjunts"""
+        data = []
+        obj = getattr(self.obj, self._header)
+        if (hasattr(obj, 'RegistrosDocumento') and
+                hasattr(obj.RegistrosDocumento, 'RegistroDoc')):
+            for d in obj.RegistrosDocumento.RegistroDoc:
+                data.append(RegistroDoc(d))
+        return data
+
 
 class PuntMesura(object):
     """Classe que implementa el punt de mesura
