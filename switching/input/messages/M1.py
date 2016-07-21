@@ -102,3 +102,9 @@ class M1(Message):
         for i in self.obj.IncidenciasATRDistribuidoras.Incidencia:
             data.append(C1.Rebuig(i))
         return data
+
+    @property
+    def documentacio_tecnica(self):
+        """Retorna l'objecte documentacio tecnica"""
+        obj = getattr(self.obj, self._header)
+        return C1.DocumentacioTecnica(obj.DocTecnica)
