@@ -1,0 +1,14 @@
+<RegistrosDocumento>
+    <RegistroDoc>
+        <TipoDocAportado>01</TipoDocAportado>
+        <DireccionUrl>http://eneracme.com/docs/CIE0100001.pdf</DireccionUrl>
+    </RegistroDoc>
+    <RegistroDoc>
+        <TipoDocAportado>06</TipoDocAportado>
+        <DireccionUrl>http://eneracme.com/docs/INV201509161234.pdf</DireccionUrl>
+    </RegistroDoc>
+    <RegistroDoc>
+        <TipoDocAportado>08</TipoDocAportado>
+        <DireccionUrl>http://eneracme.com/docs/NIF11111111H.pdf</DireccionUrl>
+    </RegistroDoc>
+</RegistrosDocumento>

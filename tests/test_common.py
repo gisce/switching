@@ -4,7 +4,8 @@
 from switching.output.messages.sw_c1 import (
     Contacto, CondicionesContractuales, PotenciasContratadas
 )
-from switching.output.messages.sw_c2 import CiePapel, DatosCie, DocTecnica
+from switching.output.messages.sw_c2 import CiePapel, DatosCie, DocTecnica,\
+    RegistroDoc, RegistrosDocumento
 from . import unittest
 import os
 import decimal
@@ -217,6 +218,41 @@ class test_DocTecnica(unittest.TestCase):
         c.build_tree()
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('DocTecnica_simple.xml'))
+
+
+class test_registro_documento:
+
+    basic_data = {}
+
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        dades = [
+            ('01', 'http://eneracme.com/docs/CIE0100001.pdf'),
+            ('06', 'http://eneracme.com/docs/INV201509161234.pdf'),
+            ('08', 'http://eneracme.com/docs/NIF11111111H.pdf'),
+        ]
+
+        registro_documentos = RegistrosDocumento()
+        docs = []
+        for i in range(len(dades)):
+            doc = RegistroDoc()
+            doc.feed({
+                'tipo': dades[i][0],
+                'url': dades[i][1],
+            })
+            docs.append(doc)
+
+        self.basic_data = {'registro': docs}
+
+    def test_build_tree_simple(self):
+        documentos = RegistrosDocumento()
+        documentos.feed(self.basic_data)
+        documentos.build_tree()
+        xml = str(documentos)
+        self.assertXmlEqual(xml, self.loadFile('RegistroDocumento_simple.xml'))
 
 
 class test_CondicionesContractuales(unittest.TestCase):
