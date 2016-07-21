@@ -533,6 +533,9 @@ class SwitchingC1Test(unittest.TestCase):
         self.xml_c105_31alb_mbt_va = open(
             get_data("c105_31ALB_MarcaMedidaBT_VA.xml"), "r"
         )
+        self.xml_c101_regdoc = open(
+            get_data("c101_RegistroDoc.xml"), "r"
+        )
 
     def test_read_c105(self):
         self.c105_xml = C1(self.xml_c105_31alb)
