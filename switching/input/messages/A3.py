@@ -98,7 +98,7 @@ class A3(Message):
     def documents(self):
         """Retorna una llista de documents adjunts"""
         data = []
-        obj = getattr(self.obj, self._header)
+        obj = getattr(self.obj, self.header)
         if (hasattr(obj, 'RegistrosDocumento') and
                 hasattr(obj.RegistrosDocumento, 'RegistroDoc')):
             for d in obj.RegistrosDocumento.RegistroDoc:
