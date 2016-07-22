@@ -533,9 +533,8 @@ class SwitchingC1Test(unittest.TestCase):
         self.xml_c105_31alb_mbt_va = open(
             get_data("c105_31ALB_MarcaMedidaBT_VA.xml"), "r"
         )
-        self.xml_c101_regdoc = open(
-            get_data("c101_RegistroDoc.xml"), "r"
-        )
+        self.xml_c101_regdoc = open(get_data("c101_RegistroDoc.xml"), "r")
+        self.xml_c101 = open(get_data("c101.xml"), "r")
 
     def test_read_c105(self):
         self.c105_xml = C1(self.xml_c105_31alb)
@@ -580,6 +579,11 @@ class SwitchingC1Test(unittest.TestCase):
         doc = documents[0]
         assert doc.doc_type == '08'
         assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        c101_xml = C1(self.xml_c101)
+        c101_xml.set_xsd()
+        c101_xml.parse_xml()
+        documents = c101_xml.documents
+        assert not documents
 
 
 class SwitchingC2Test(unittest.TestCase):
