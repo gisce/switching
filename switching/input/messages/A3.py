@@ -106,4 +106,7 @@ class A3(Message):
     def documentacio_tecnica(self):
         """Retorna l'objecte documentacio tecnica"""
         obj = getattr(self.obj, self._header)
-        return C1.DocumentacioTecnica(obj.DocTecnica)
+        if hasattr(obj, 'DocTecnica'):
+            return C1.DocumentacioTecnica(obj.DocTecnica)
+        else:
+            return None
