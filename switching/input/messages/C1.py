@@ -1590,6 +1590,15 @@ class DocumentacioTecnica(object):
         return num
 
     @property
+    def codi_instalador(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.CodigoInstalador.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
     def nom_instalador(self):
         num = ''
         try:

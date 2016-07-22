@@ -1009,6 +1009,7 @@ class SwitchingM1Test(unittest.TestCase):
         self.xml_m101 = open(get_data("m101.xml"), "r")
         self.xml_m101_ciepapel = open(get_data("m101_CiePapel.xml"), "r")
         self.xml_m101_DT = open(get_data("m101_DocTecnica.xml"), "r")
+        self.xml_m101_DT2 = open(get_data("m101_DocTecnica2.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
@@ -1150,7 +1151,7 @@ class SwitchingM1Test(unittest.TestCase):
 
 
 
-    def test_read_m101(self):
+    def test_read_m101_docTec(self):
         self.m101_dt_xml = M1(self.xml_m101_DT)
         self.m101_dt_xml.set_xsd()
         self.m101_dt_xml.parse_xml()
@@ -1167,6 +1168,13 @@ class SwitchingM1Test(unittest.TestCase):
         assert doc_tecnica.sensibilitat_diferencial == '9'
         assert doc_tecnica.seccio_cable == '2'
         assert doc_tecnica.tipus_suministre == 'VI'
+
+        self.m101_dt_xml = M1(self.xml_m101_DT2)
+        self.m101_dt_xml.set_xsd()
+        self.m101_dt_xml.parse_xml()
+        doc_tecnica = self.m101_dt_xml.documentacio_tecnica
+        assert doc_tecnica.codi_instalador == '12345678Z'
+
 
 
 
