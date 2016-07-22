@@ -219,7 +219,7 @@ class Mesura(object):
     @property
     def documentacio_tecnica(self):
         """Retorna l'objecte documentacio tecnica"""
-        obj = getattr(self.obj, self._header)
+        obj = getattr(self.obj, self.header)
         if hasattr(obj, 'DocTecnica'):
             return C1.DocumentacioTecnica(obj.DocTecnica)
         else:
