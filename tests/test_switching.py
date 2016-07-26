@@ -1168,12 +1168,17 @@ class SwitchingM1Test(unittest.TestCase):
         assert doc_tecnica.sensibilitat_diferencial == '9'
         assert doc_tecnica.seccio_cable == '2'
         assert doc_tecnica.tipus_suministre == 'VI'
-
         self.m101_dt_xml = M1(self.xml_m101_DT2)
         self.m101_dt_xml.set_xsd()
         self.m101_dt_xml.parse_xml()
         doc_tecnica = self.m101_dt_xml.documentacio_tecnica
         assert doc_tecnica.codi_instalador == '12345678Z'
+
+        self.m101_dt_xml = M1(self.xml_m101)
+        self.m101_dt_xml.set_xsd()
+        self.m101_dt_xml.parse_xml()
+        doc_tecnica = self.m101_dt_xml.documentacio_tecnica
+        assert not doc_tecnica
 
 
 
