@@ -337,11 +337,11 @@ class Retificacion(XmlModel):
                    'descripcio_retificacio')
 
     def __init__(self):
-        self.retificacio = XmlField('Retificacion')
+        self.retificacio = XmlField('Retipificacion')
         self.tipus = XmlField('Tipo')
         self.subtipus = XmlField('Subtipo')
-        self.descripcio_retificacio = XmlField('DescRetificacion')
-        super(Retificacion, self).__init__('Retificacion','retificacio')
+        self.descripcio_retificacio = XmlField('DescRetipificacion')
+        super(Retificacion, self).__init__('Retipificacion', 'retificacio')
 
 
 class CierreReclamacion(XmlModel):
