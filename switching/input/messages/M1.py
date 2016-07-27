@@ -113,3 +113,12 @@ class M1(Message):
             for d in obj.RegistrosDocumento.RegistroDoc:
                 data.append(C1.RegistroDoc(d))
         return data
+
+    @property
+    def documentacio_tecnica(self):
+        """Retorna l'objecte documentacio tecnica"""
+        obj = getattr(self.obj, self.header)
+        if hasattr(obj, 'DocTecnica'):
+            return C1.DocumentacioTecnica(obj.DocTecnica)
+        else:
+            return None
