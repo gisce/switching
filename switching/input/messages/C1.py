@@ -1529,3 +1529,125 @@ class RegistroDoc(object):
         except AttributeError:
             pass
         return value
+
+
+class DocumentacioTecnica(object):
+    def __init__(self, data):
+        self.doc_tec = data
+
+    @property
+    def es_Cie_electronic(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CieElectronico.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def codi_CIE(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.CodigoCie.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def potencia_instalada_BT(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.PotenciaInstBT.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def data_emissio_CIE(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.FechaEmisionCie.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def data_fi_CIE(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.FechaCaducidadCie.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def nif_intalador(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.NifInstalador.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def codi_instalador(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.CodigoInstalador.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def nom_instalador(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.NombreInstalador.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def tensio_suministrada(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.TensionSuministroCIE.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def intensitat_diferencial(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.IntensidadDif.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def sensibilitat_diferencial(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.SensibilidadDif.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def seccio_cable(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.SeccionCable.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def tipus_suministre(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.TipoSuministro.text
+        except AttributeError:
+            pass
+        return num
