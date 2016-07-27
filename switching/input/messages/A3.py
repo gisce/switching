@@ -95,6 +95,17 @@ class A3(Message):
         return data
 
     @property
+    def documents(self):
+        """Retorna una llista de documents adjunts"""
+        data = []
+        obj = getattr(self.obj, self.header)
+        if (hasattr(obj, 'RegistrosDocumento') and
+                hasattr(obj.RegistrosDocumento, 'RegistroDoc')):
+            for d in obj.RegistrosDocumento.RegistroDoc:
+                data.append(C1.RegistroDoc(d))
+        return data
+
+    @property
     def incidencies(self):
         """Retorna una llista de incidencies"""
         data = []
