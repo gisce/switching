@@ -196,7 +196,7 @@ class VariableDetalleReclamacion(object):
         """ Número de expediente """
         ref = None
         try:
-            return self.variable.NumExpedienteAcomentida.text
+            return self.variable.NumExpedienteAcometida.text
         except AttributeError:
             pass
         return ref
