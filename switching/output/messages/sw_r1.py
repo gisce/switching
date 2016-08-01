@@ -346,7 +346,7 @@ class Retificacion(XmlModel):
 
 class CierreReclamacion(XmlModel):
     _sort_order = ('tancament', 'dades', 'retificacio', 'cod_contracte',
-                   'comentaris',)
+                   'comentaris', 'reg_documents', )
 
     def __init__(self):
         self.tancament = XmlField('CierreReclamacion')
