@@ -1205,6 +1205,7 @@ class SwitchingR1_Test(unittest.TestCase):
         self.xml_r102_ko = open(get_data("r102_rechazo.xml"), "r")
         # r1-05
         self.xml_r105 = open(get_data("r105.xml"), "r")
+        self.xml_r105_retipificacio = open(get_data("r105_retipificacio.xml"), "r")
 
         self.client = sup.getCliente(True)
         self.reclamant = self.getReclamante()
@@ -1223,6 +1224,7 @@ class SwitchingR1_Test(unittest.TestCase):
         self.xml_r102_ko.close()
         # r1-05
         self.xml_r105.close()
+        self.xml_r105_retipificacio.close()
 
     def getReclamante(self):
         sup = supportClass()
@@ -1788,6 +1790,67 @@ class SwitchingR1_Test(unittest.TestCase):
         xml = str(pas05)
         self.assertXmlEqual(xml, self.xml_r105.read())
 
+    def test_create_pas05_retipificacio(self):
+        pas05 = r1.MensajeCierreReclamacion()
+        header = self.getHeader('R1', '05', '201604111738')
+        pas05.set_agente('1234')
+
+        dades_tancament = r1.DatosCierre()
+        dades_tancament.feed({
+            'data': '2016-04-12',
+            'hora': '16:02:25',
+            'tipus': '03',
+            'subtipus': '13',
+            'codi_reclamacio_distri': '3291970',
+            'resultat_reclamacio': '02',
+            'observacions': u'Les informamos, que si se recibe solicitud de '
+                            u'otra comercializadora sobre el punto de '
+                            u'suministro, en los formatos establecidos y la '
+                            u'misma se acepta, el comercializador es custodia '
+                            u'de la documentación que acredita esa '
+                            u'contratación. No obstante nuestra recomendación '
+                            u'es que sea el cliente quién contacte con la '
+                            u'Comercializadora entrante y les requiera la '
+                            u'anulación de dicha solicitud. Les comunicamos a',
+            'indemnitzacio_abonada': '0.0',
+            'data_moviment': '2016-04-12',
+            'codi_sollicitud': '201604111738',
+        })
+        dades_retipificacio = r1.Retificacion()
+        dades_retipificacio.feed({
+            'tipus': '02',
+            'subtipus': '03',
+            'descripcio_retificacio': 'descripcio de la retipificacio.'
+        })
+        tancament = r1.CierreReclamacion()
+        tancament.feed({
+            'dades': dades_tancament,
+            'retificacio': dades_retipificacio,
+            'cod_contracte': '383922379',
+            'comentaris': u'Les informamos, que si se recibe solicitud de otra '
+                          u'comercializadora sobre el punto de suministro, en '
+                          u'los formatos establecidos y la misma se acepta, el '
+                          u'comercializador es custodia de la documentación '
+                          u'que acredita esa contratación. No obstante nuestra '
+                          u'recomendación es que sea el cliente quién contacte '
+                          u'con la Comercializadora entrante y les requiera '
+                          u'la anulación de dicha solicitud. Les comunicamos '
+                          u'a su vez, que lo que están solicitando '
+                          u'consideramos, no es una reclamación, es una '
+                          u'petición, debiendo gestionarla como tal en '
+                          u'lo sucesivo.'
+        })
+
+        pas05.feed({
+            'capcalera': header,
+            'tancament': tancament,
+        })
+
+        pas05.build_tree()
+        pas05.pretty_print = True
+        xml = str(pas05)
+        self.assertXmlEqual(xml, self.xml_r105_retipificacio.read())
+
     def test_read_r101_minim(self):
         self.r101_xml = R1(self.xml_r101_minim)
         self.r101_xml.set_xsd()
@@ -2025,6 +2088,34 @@ class SwitchingR1_Test(unittest.TestCase):
         assert dades_tancament.num_expedient_anomalia_frau == ''
         assert dades_tancament.data_moviment == '2016-04-12'
         assert dades_tancament.codi_sollicitud == '201604111738'
+
+    def test_read_r105_retipificacio(self):
+        self.r105_xml_retipificacio = R1(self.xml_r105_retipificacio)
+        self.r105_xml_retipificacio.set_xsd()
+        self.r105_xml_retipificacio.parse_xml()
+
+        tancament = self.r105_xml_retipificacio.tancament
+        dades_tancament = tancament.dades_tancament
+        dades_retipificacio = tancament.retipificacio
+
+        assert tancament.codi_contracte == '383922379'
+        assert len(tancament.comentaris) > 10
+
+        assert dades_tancament.data == '2016-04-12'
+        assert dades_tancament.hora == '16:02:25'
+        assert dades_tancament.tipus == '03'
+        assert dades_tancament.subtipus == '13'
+        assert dades_tancament.codi_reclamacio_distri == '3291970'
+        assert dades_tancament.resultat_reclamacio == '02'
+        assert dades_tancament.detall_resultat == ''
+        assert len(dades_tancament.observacions) > 10
+        assert dades_tancament.indemnitzacio_abonada == 0.0
+        assert dades_tancament.num_expedient_anomalia_frau == ''
+        assert dades_tancament.data_moviment == '2016-04-12'
+        assert dades_tancament.codi_sollicitud == '201604111738'
+        assert dades_retipificacio.tipus == '02'
+        assert dades_retipificacio.subtipus == '03'
+        assert dades_retipificacio.descripcio_retipificacio == 'descripcio de la retipificacio.'
 
 if __name__ == '__main__':
     unittest.main()

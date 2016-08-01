@@ -128,16 +128,19 @@ class R1(Message):
     #         data.append(C1.Rebuig(i))
     #     return data
     #
-    # @property
-    # def contracte(self):
-    #     """Retorna l'objecte Contracte"""
-    #     obj = getattr(self.obj, self._header)
-    #     try:
-    #         idcontrato = C1.Contracte(obj.IdContrato)
-    #     except AttributeError:
-    #         # Step 04 Acceptacio has the classic structure
-    #         idcontrato = C1.Contracte(obj.Contrato)
-    #     return idcontrato
+    @property
+    def contracte(self):
+        """Retorna l'objecte Contracte"""
+        obj = getattr(self.obj, self.header)
+        if hasattr(obj, 'Contrato'):
+            try:
+                idcontrato = C1.Contracte(obj.IdContrato)
+            except AttributeError:
+                # Step 04 Acceptacio has the classic structure
+                idcontrato = C1.Contracte(obj.Contrato)
+            return idcontrato
+        else:
+            return None
     #
     # @property
     # def direccio_correspondecia(self):
@@ -193,7 +196,7 @@ class VariableDetalleReclamacion(object):
         """ Número de expediente """
         ref = None
         try:
-            return self.variable.NumExpedienteAcomentida.text
+            return self.variable.NumExpedienteAcometida.text
         except AttributeError:
             pass
         return ref
