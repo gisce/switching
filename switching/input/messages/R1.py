@@ -108,6 +108,13 @@ class R1(Message):
         except AttributeError:
             return False
 
+    # 03
+    @property
+    def informacio_adicional(self):
+        """Retorna l'objecte InformacionAdicional"""
+        return InformacionAdicional(self.obj.InformacionAdicional)
+
+
     # 05
     @property
     def tancament(self):
@@ -532,6 +539,175 @@ class Retipificacio(object):
         ref = None
         try:
             ref = self.retipificacio.DescRetipificacion.text
+        except AttributeError, e:
+            pass
+        return ref
+
+
+class InformacionAdicional(object):
+    """Classe que implementa la informacio addicional"""
+
+    def __init__(self, data):
+        self.info = data
+
+    @property
+    def dades_informacio(self):
+        """Retorna l'objecte Dades de informacio"""
+        try:
+            return DatosInformacion(self.info.DatosInformacion)
+        except AttributeError, e:
+            return None
+
+    @property
+    def informacio_intermitja(self):
+        """Retorna l'objecte Informacio Intermitja"""
+        try:
+            return InformacionIntermedia(self.info.InformacionIntermedia)
+        except AttributeError, e:
+            return None
+
+    @property
+    def retipificacio(self):
+        """Retorna l'objecte Retificacio"""
+        try:
+            return Retipificacio(self.info.Retipificacion)
+        except AttributeError, e:
+            return None
+
+    @property
+    def sollicituds_info_addicional(self):
+        """Retorna una llista de Solicituds de informacio adicional"""
+        data = []
+        try:
+            varis = self.info.SolicitudesInformacionAdicional
+            for var in varis:
+                if len(var.SolicitudInformacionAdicional.getchildren()):
+                    data.append(
+                        SolicitudInformacionAdicional(
+                            var.SolicitudInformacionAdicional
+                        )
+                    )
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def comentaris(self):
+        try:
+            return self.info.Comentarios.text
+        except AttributeError, e:
+            return ''
+
+
+class DatosInformacion(object):
+    def __init__(self, data):
+        self.dades_info = data
+
+    @property
+    def num_expedient_acometida(self):
+        ref = None
+        try:
+            ref = self.dades_info.NumExpedienteAcometida.text
+        except AttributeError, e:
+            pass
+        return ref
+
+    @property
+    def tipus_comunicacio(self):
+        return self.dades_info.TipoComunicacion.text
+
+    @property
+    def codi_reclamacio_distri(self):
+            return self.dades_info.CodigoReclamacionDistribuidora.text
+
+
+class InformacionIntermedia(object):
+    def __init__(self, data):
+        self.info_intermitja = data
+
+    @property
+    def descripcio_info_intermitja(self):
+        ref = None
+        try:
+            ref = self.info_intermitja.DescInformacionIntermedia.text
+        except AttributeError, e:
+            pass
+        return ref
+
+    @property
+    def intervencions(self):
+        """Retorna una llista de intervencions"""
+        data = []
+        try:
+            varis = self.info_intermitja.Intervenciones
+            for var in varis:
+                if len(var.Intervencion.getchildren()):
+                    data.append(Intervencion(var.Intervencion))
+        except AttributeError:
+            pass
+        return data
+
+
+class SolicitudInformacionAdicional(object):
+    def __init__(self, data):
+        self.solicitud_info = data
+
+    @property
+    def tipus_info_adicional(self):
+        return self.solicitud_info.TipoInformacionAdicional.text
+
+    @property
+    def descripcio_peticio_informacio(self):
+        ref = None
+        try:
+            ref = self.solicitud_info.DescPeticionInformacion.text
+        except AttributeError, e:
+            pass
+        return ref
+
+    @property
+    def data_limit(self):
+        return self.solicitud_info.FechaLimiteEnvio.text
+
+
+class Intervencion(object):
+    def __init__(self, data):
+        self.intervencio = data
+
+    @property
+    def tipus_intervencio(self):
+        return self.intervencio.TipoIntervencion.text
+
+    @property
+    def data(self):
+        return self.intervencio.Fecha.text
+
+    @property
+    def hora_desde(self):
+        return self.intervencio.HoraDesde.text
+
+    @property
+    def hora_fins(self):
+        return self.intervencio.HoraHasta.text
+
+    @property
+    def numero_visita(self):
+        ref = None
+        try:
+            ref = self.intervencio.NumeroVisita.text
+        except AttributeError, e:
+            pass
+        return ref
+
+    @property
+    def resultat(self):
+        return self.intervencio.Resultado.text
+
+    @property
+    def detall_resultat(self):
+        ref = None
+        try:
+            ref = self.intervencio.DetalleResultado.text
         except AttributeError, e:
             pass
         return ref
