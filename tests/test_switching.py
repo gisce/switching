@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from switching.input.messages import C1
-from switching.input.messages import F1, message, R1, W1, A3, FacturaATR, Q1
+from switching.input.messages import F1, message, R1, W1, A3, M1, FacturaATR, Q1
 from switching.input.messages import C2
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
@@ -533,9 +533,8 @@ class SwitchingC1Test(unittest.TestCase):
         self.xml_c105_31alb_mbt_va = open(
             get_data("c105_31ALB_MarcaMedidaBT_VA.xml"), "r"
         )
-        self.xml_c101_regdoc = open(
-            get_data("c101_RegistroDoc.xml"), "r"
-        )
+        self.xml_c101_regdoc = open(get_data("c101_RegistroDoc.xml"), "r")
+        self.xml_c101 = open(get_data("c101.xml"), "r")
 
     def test_read_c105(self):
         self.c105_xml = C1(self.xml_c105_31alb)
@@ -580,6 +579,11 @@ class SwitchingC1Test(unittest.TestCase):
         doc = documents[0]
         assert doc.doc_type == '08'
         assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        c101_xml = C1(self.xml_c101)
+        c101_xml.set_xsd()
+        c101_xml.parse_xml()
+        documents = c101_xml.documents
+        assert not documents
 
 
 class SwitchingC2Test(unittest.TestCase):
@@ -1008,6 +1012,8 @@ class SwitchingM1Test(unittest.TestCase):
         sup = supportClass()
         self.xml_m101 = open(get_data("m101.xml"), "r")
         self.xml_m101_ciepapel = open(get_data("m101_CiePapel.xml"), "r")
+        self.xml_m101_DT = open(get_data("m101_DocTecnica.xml"), "r")
+        self.xml_m101_DT2 = open(get_data("m101_DocTecnica2.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
@@ -1146,6 +1152,39 @@ class SwitchingM1Test(unittest.TestCase):
         pas01.build_tree()
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_m101_ciepapel.read())
+
+
+
+    def test_read_m101_docTec(self):
+        self.m101_dt_xml = M1(self.xml_m101_DT)
+        self.m101_dt_xml.set_xsd()
+        self.m101_dt_xml.parse_xml()
+        doc_tecnica = self.m101_dt_xml.documentacio_tecnica
+        assert doc_tecnica.es_Cie_electronic == 'N'
+        assert doc_tecnica.codi_CIE == '1234567'
+        assert doc_tecnica.potencia_instalada_BT == '3500'
+        assert doc_tecnica.data_emissio_CIE == '2015-06-04'
+        assert doc_tecnica.data_fi_CIE == '2015-06-05'
+        assert doc_tecnica.nif_intalador == '12345678Z'
+        assert doc_tecnica.nom_instalador == 'Acme'
+        assert doc_tecnica.tensio_suministrada == '10'
+        assert doc_tecnica.intensitat_diferencial == '8'
+        assert doc_tecnica.sensibilitat_diferencial == '9'
+        assert doc_tecnica.seccio_cable == '2'
+        assert doc_tecnica.tipus_suministre == 'VI'
+        self.m101_dt_xml = M1(self.xml_m101_DT2)
+        self.m101_dt_xml.set_xsd()
+        self.m101_dt_xml.parse_xml()
+        doc_tecnica = self.m101_dt_xml.documentacio_tecnica
+        assert doc_tecnica.codi_instalador == '12345678Z'
+
+        self.m101_dt_xml = M1(self.xml_m101)
+        self.m101_dt_xml.set_xsd()
+        self.m101_dt_xml.parse_xml()
+        doc_tecnica = self.m101_dt_xml.documentacio_tecnica
+        assert not doc_tecnica
+
+
 
 
 class SwitchingR1_Test(unittest.TestCase):
