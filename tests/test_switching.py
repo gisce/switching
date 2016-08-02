@@ -1203,6 +1203,12 @@ class SwitchingR1_Test(unittest.TestCase):
         # r1-02
         self.xml_r102_ok = open(get_data("r102_aceptacion.xml"), "r")
         self.xml_r102_ko = open(get_data("r102_rechazo.xml"), "r")
+        # r1-03
+        self.xml_r103_minim = open(get_data("r103_minim.xml"), "r")
+        self.xml_r103_desc = open(get_data("r103_desc_inter.xml"), "r")
+        self.xml_r103_inter = open(get_data("r103_intervenciones.xml"), "r")
+        self.xml_r103_retip = open(get_data("r103_retipificacion.xml"), "r")
+        self.xml_r103_solicitudes = open(get_data("r103_solicitudes.xml"), "r")
         # r1-05
         self.xml_r105 = open(get_data("r105.xml"), "r")
         self.xml_r105_retipificacio = open(get_data("r105_retipificacio.xml"), "r")
@@ -1222,6 +1228,12 @@ class SwitchingR1_Test(unittest.TestCase):
         # r1-02
         self.xml_r102_ok.close()
         self.xml_r102_ko.close()
+        # r1-03
+        self.xml_r103_minim.close()
+        self.xml_r103_desc.close()
+        self.xml_r103_inter.close()
+        self.xml_r103_retip.close()
+        self.xml_r103_solicitudes.close()
         # r1-05
         self.xml_r105.close()
         self.xml_r105_retipificacio.close()
@@ -1277,6 +1289,18 @@ class SwitchingR1_Test(unittest.TestCase):
 
         if ref:
             vals.update({'ref_origen': ref})
+        dades.feed(vals)
+        return dades
+
+    def getDatosInformacion(self, tipo, codigo_reclamante, numExp=None):
+        dades = r1.DatosInformacion()
+        vals = {
+            'tipus_comunicacio': tipo,
+            'codi_reclamant_distri': codigo_reclamante,
+        }
+
+        if numExp:
+            vals.update({'num_expedient': numExp})
         dades.feed(vals)
         return dades
 
@@ -1734,6 +1758,161 @@ class SwitchingR1_Test(unittest.TestCase):
         pas02.pretty_print = True
         xml = str(pas02)
         self.assertXmlEqual(xml, self.xml_r102_ko.read())
+
+    def test_create_pas03_minim(self):
+        pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
+        header = self.getHeader('R1', '03', '201412111009')
+        header.feed({'fecha': '2016-06-10T08:50:43'})
+        pas03.set_agente('1234')
+        dades = self.getDatosInformacion('01', '12345678')
+
+        info_adicional = r1.InformacionAdicional()
+        info_adicional.feed({
+            'dades_informacio': dades,
+            'comentaris': u'R103 minimum test.',
+        })
+        pas03.feed({
+            'capcalera': header,
+            'informacio_adicional': info_adicional
+        })
+        pas03.build_tree()
+        pas03.pretty_print = True
+        xml = str(pas03)
+        self.assertXmlEqual(xml, self.xml_r103_minim.read())
+
+    def test_create_pas03_desc_inter(self):
+        pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
+        header = self.getHeader('R1', '03', '201412111009')
+        header.feed({'fecha': '2016-06-10T08:50:43'})
+        pas03.set_agente('1234')
+
+        dades = self.getDatosInformacion('01', '12345678')
+
+        info_intermitja = r1.InformacionIntermedia()
+        info_intermitja.feed({
+            'desc_info_intermitja': u'Descripcion de la informacion intermedia aportada.',
+        })
+
+        info_adicional = r1.InformacionAdicional()
+        info_adicional.feed({
+            'dades_informacio': dades,
+            'info_intermitja': info_intermitja,
+            'comentaris': u"R1 03 with 'InformacionIntermedia'.",
+        })
+        pas03.feed({
+            'capcalera': header,
+            'informacio_adicional': info_adicional
+        })
+        pas03.build_tree()
+        pas03.pretty_print = True
+        xml = str(pas03)
+        self.assertXmlEqual(xml, self.xml_r103_desc.read())
+
+    def test_create_pas03_intervenciones(self):
+        pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
+        header = self.getHeader('R1', '03', '201412111009')
+        header.feed({'fecha': '2016-06-10T08:50:43'})
+        pas03.set_agente('1234')
+
+        dades = self.getDatosInformacion('01', '12345678')
+
+        info_intermitja = r1.InformacionIntermedia()
+        intervencions = r1.Intervenciones()
+        intervencio = r1.Intervencion()
+        intervencio.feed({
+            'tipus_intervencio': '05',
+            'data': '2016-06-10',
+            'hora_desde': '18:00',
+            'hora_fins': '19:00',
+            'num_visita': '10',
+            'resultat': '001',
+            'detalls_resultat': u'Descripcion de los resultados obtenidos.',
+        })
+        intervencions.feed({
+            'detalls': [intervencio]
+        })
+        info_intermitja.feed({
+            'intervencions': intervencions,
+        })
+
+        info_adicional = r1.InformacionAdicional()
+        info_adicional.feed({
+            'dades_informacio': dades,
+            'info_intermitja': info_intermitja,
+            'comentaris': u"R1 03 with 'InformacionIntermedia'.",
+        })
+        pas03.feed({
+            'capcalera': header,
+            'informacio_adicional': info_adicional
+        })
+        pas03.build_tree()
+        pas03.pretty_print = True
+        xml = str(pas03)
+        self.assertXmlEqual(xml, self.xml_r103_inter.read())
+
+    def test_create_pas03_retipificacion(self):
+        pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
+        header = self.getHeader('R1', '03', '201412111009')
+        header.feed({'fecha': '2016-06-10T08:50:43'})
+        pas03.set_agente('1234')
+
+        dades = self.getDatosInformacion('01', '12345678')
+
+        dades_retipificacio = r1.Retificacion()
+        dades_retipificacio.feed({
+            'tipus': '02',
+            'subtipus': '03',
+            'descripcio_retificacio': 'descripcio de la retipificacio.'
+        })
+
+        info_adicional = r1.InformacionAdicional()
+        info_adicional.feed({
+            'dades_informacio': dades,
+            'retificacio': dades_retipificacio,
+            'comentaris': u"R1 03 with 'Retipificacion'.",
+        })
+        pas03.feed({
+            'capcalera': header,
+            'informacio_adicional': info_adicional
+        })
+        pas03.build_tree()
+        pas03.pretty_print = True
+        xml = str(pas03)
+        self.assertXmlEqual(xml, self.xml_r103_retip.read())
+
+    def test_create_pas03_solicitudes(self):
+        pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
+        header = self.getHeader('R1', '03', '201412111009')
+        header.feed({'fecha': '2016-06-10T08:50:43'})
+        pas03.set_agente('1234')
+
+        dades = self.getDatosInformacion('01', '12345678')
+
+        solicituds = r1.SolicitudesInformacionAdicional()
+        solicitud = r1.SolicitudInformacionAdicional()
+        solicitud.feed({
+            'tipus_info': '01',
+            'desc_peticio_info': u'Descripcion de la peticion.',
+            'data_limit': '2016-07-10'
+        })
+        solicituds.feed({
+            'detalls': [solicitud]
+        })
+
+        info_adicional = r1.InformacionAdicional()
+        info_adicional.feed({
+            'dades_informacio': dades,
+            'sollicituds_info_adicional' : solicituds,
+            'comentaris': u"R1 03 with 'SolicitudesInformacionAdicional'.",
+        })
+        pas03.feed({
+            'capcalera': header,
+            'informacio_adicional': info_adicional
+        })
+        pas03.build_tree()
+        pas03.pretty_print = True
+        xml = str(pas03)
+        self.assertXmlEqual(xml, self.xml_r103_solicitudes.read())
 
     def test_create_pas05(self):
         pas05 = r1.MensajeCierreReclamacion()
