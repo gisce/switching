@@ -1822,8 +1822,8 @@ class SwitchingR1_Test(unittest.TestCase):
         intervencio.feed({
             'tipus_intervencio': '01',
             'data': '2016-06-10',
-            'hora_desde': '18:00',
-            'hora_fins': '19:00',
+            'hora_desde': '08:00:00',
+            'hora_fins': '09:00:00',
             'num_visita': '10',
             'resultat': '001',
             'detalls_resultat': u'Descripcion de los resultados obtenidos.',
@@ -2243,6 +2243,69 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert self.r102_xml.data == '2016-02-23'
         assert len(rebuig) == 5
+
+    def test_read_r103(self):
+        self.r103_xml = R1(self.xml_r103_minim)
+        self.r103_xml.set_xsd()
+        self.r103_xml.parse_xml()
+
+        self.r103_desc = R1(self.xml_r103_desc)
+        self.r103_desc.set_xsd()
+        self.r103_desc.parse_xml()
+
+        self.r103_inter = R1(self.xml_r103_inter)
+        self.r103_inter.set_xsd()
+        self.r103_inter.parse_xml()
+
+        self.r103_retip = R1(self.xml_r103_retip)
+        self.r103_retip.set_xsd()
+        self.r103_retip.parse_xml()
+
+        self.r103_solicitudes = R1(self.xml_r103_solicitudes)
+        self.r103_solicitudes.set_xsd()
+        self.r103_solicitudes.parse_xml()
+
+        dades_informacio = self.r103_xml.informacio_adicional.dades_informacio
+        informacio_intermitja_desc = self.r103_desc.informacio_adicional.informacio_intermitja
+        informacio_intermitja_inter = self.r103_inter.informacio_adicional.informacio_intermitja
+        retipificacio = self.r103_retip.informacio_adicional.retipificacio
+        sollicituds_info_addicional = self.r103_solicitudes.informacio_adicional.sollicituds_info_addicional
+        comentaris = self.r103_xml.informacio_adicional.comentaris
+
+        assert dades_informacio.tipus_comunicacio == '01'
+        assert dades_informacio.codi_reclamacio_distri == '12345678'
+
+        if informacio_intermitja_desc:
+            assert not informacio_intermitja_desc.intervencions
+            assert informacio_intermitja_desc.descripcio_info_intermitja == \
+                'Descripcion de la informacion intermedia aportada.'
+
+        if informacio_intermitja_inter:
+            assert not informacio_intermitja_inter.descripcio_info_intermitja
+            assert len(informacio_intermitja_inter.intervencions) < 10
+            intervencio = informacio_intermitja_inter.intervencions[0]
+            assert intervencio.tipus_intervencio == '01'
+            assert intervencio.data == '2016-06-10'
+            assert intervencio.hora_desde == '08:00:00'
+            assert intervencio.hora_fins == '09:00:00'
+            assert intervencio.numero_visita == '10'
+            assert intervencio.resultat == '001'
+            assert intervencio.detall_resultat == \
+                'Descripcion de los resultados obtenidos.'
+
+        if retipificacio:
+            assert retipificacio.tipus == '02'
+            assert retipificacio.subtipus == '03'
+            assert retipificacio.descripcio_retipificacio == \
+                'descripcio de la retipificacio.'
+
+        if sollicituds_info_addicional:
+            solicitud = sollicituds_info_addicional[0]
+            assert solicitud.tipus_info_adicional == '01'
+            assert solicitud.descripcio_peticio_informacio == 'Descripcion de la peticion.'
+            assert solicitud.data_limit == '2016-07-10'
+
+        assert len(comentaris) > 10
 
     def test_read_r105(self):
         self.r105_xml = R1(self.xml_r105)

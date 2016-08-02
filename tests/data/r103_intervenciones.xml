@@ -20,8 +20,8 @@
                 <Intervencion>
                     <TipoIntervencion>01</TipoIntervencion>
                     <Fecha>2016-06-10</Fecha>
-                    <HoraDesde>18:00</HoraDesde>
-                    <HoraHasta>19:00</HoraHasta>
+                    <HoraDesde>08:00:00</HoraDesde>
+                    <HoraHasta>09:00:00</HoraHasta>
                     <NumeroVisita>10</NumeroVisita>
                     <Resultado>001</Resultado>
                     <DetalleResultado>Descripcion de los resultados obtenidos.</DetalleResultado>
