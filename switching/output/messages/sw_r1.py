@@ -419,7 +419,7 @@ class InformacionAdicional(XmlModel):
     def __init__(self):
         self.info_adicional = XmlField('InformacionAdicional')
         self.dades_informacio = DatosInformacion()
-        self.info_intermitja =  InformacionIntermedia()
+        self.info_intermitja = InformacionIntermedia()
         self.retificacio = Retificacion()
         self.sollicituds_info_adicional = SolicitudesInformacionAdicional()
         self.comentaris = XmlField('Comentarios')
@@ -448,7 +448,7 @@ class InformacionIntermedia(XmlModel):
         self.desc_info_intermitja = XmlField('DescInformacionIntermedia')
         self.intervencions = Intervenciones()
         super(InformacionIntermedia, self).__init__('InformacionIntermedia',
-                                                    'dades_informacio')
+                                                    'info_intermitja')
 
 class Intervencion(XmlModel):
     _sort_order = ('intervencio', 'tipus_intervencio', 'data', 'hora_desde',
@@ -474,7 +474,7 @@ class Intervenciones(XmlModel):
         self.intervencions = XmlField('Intervenciones')
         self.detalls = []
         super(Intervenciones, self).__init__(
-            'Intervenciones', 'intervencions', drop_empty=False)
+            'Intervenciones', 'intervencions')
 
 
 class SolicitudInformacionAdicional(XmlModel):
@@ -487,7 +487,7 @@ class SolicitudInformacionAdicional(XmlModel):
         self.desc_peticio_info = XmlField('DescPeticionInformacion')
         self.data_limit = XmlField('FechaLimiteEnvio')
 
-        super(Intervencion, self).__init__('SolicitudInformacionAdicional',
+        super(SolicitudInformacionAdicional, self).__init__('SolicitudInformacionAdicional',
                                            'sollicitud_info')
 
 
@@ -498,4 +498,4 @@ class SolicitudesInformacionAdicional(XmlModel):
         self.sollicituds_info = XmlField('SolicitudesInformacionAdicional')
         self.detalls = []
         super(SolicitudesInformacionAdicional, self).__init__(
-            'SolicitudesInformacionAdicional', 'sollicituds_info', drop_empty=False)
+            'SolicitudesInformacionAdicional', 'sollicituds_info')
