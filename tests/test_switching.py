@@ -1820,7 +1820,7 @@ class SwitchingR1_Test(unittest.TestCase):
         intervencions = r1.Intervenciones()
         intervencio = r1.Intervencion()
         intervencio.feed({
-            'tipus_intervencio': '05',
+            'tipus_intervencio': '01',
             'data': '2016-06-10',
             'hora_desde': '18:00',
             'hora_fins': '19:00',
