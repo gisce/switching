@@ -579,14 +579,9 @@ class InformacionAdicional(object):
         """Retorna una llista de Solicituds de informacio adicional"""
         data = []
         try:
-            varis = self.info.SolicitudesInformacionAdicional
-            for var in varis:
-                if len(var.SolicitudInformacionAdicional.getchildren()):
-                    data.append(
-                        SolicitudInformacionAdicional(
-                            var.SolicitudInformacionAdicional
-                        )
-                    )
+            for i in self.info.SolicitudesInformacionAdicional.SolicitudInformacionAdicional:
+                if len(i.getchildren()):
+                    data.append(SolicitudInformacionAdicional(i))
         except AttributeError:
             pass
         return data
@@ -639,10 +634,9 @@ class InformacionIntermedia(object):
         """Retorna una llista de intervencions"""
         data = []
         try:
-            varis = self.info_intermitja.Intervenciones
-            for var in varis:
-                if len(var.Intervencion.getchildren()):
-                    data.append(Intervencion(var.Intervencion))
+            for i in self.info_intermitja.Intervenciones.Intervencion:
+                if len(i.getchildren()):
+                    data.append(Intervencion(i))
         except AttributeError:
             pass
         return data
