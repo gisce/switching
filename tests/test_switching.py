@@ -1829,8 +1829,18 @@ class SwitchingR1_Test(unittest.TestCase):
             'resultat': '001',
             'detalls_resultat': u'Descripcion de los resultados obtenidos.',
         })
+        intervencio2 = r1.Intervencion()
+        intervencio2.feed({
+            'tipus_intervencio': '02',
+            'data': '2016-06-10',
+            'hora_desde': '08:00:00',
+            'hora_fins': '09:00:00',
+            'num_visita': '10',
+            'resultat': '001',
+            'detalls_resultat': u'Descripcion de los resultados obtenidos.',
+        })
         intervencions.feed({
-            'detalls': [intervencio]
+            'detalls': [intervencio,intervencio2]
         })
         info_intermitja.feed({
             'intervencions': intervencions,
@@ -2352,6 +2362,15 @@ class SwitchingR1_Test(unittest.TestCase):
             assert intervencio.resultat == '001'
             assert intervencio.detall_resultat == \
                 'Descripcion de los resultados obtenidos.'
+            intervencio2 = informacio_intermitja_inter.intervencions[1]
+            assert intervencio2.tipus_intervencio == '02'
+            assert intervencio2.data == '2016-06-10'
+            assert intervencio2.hora_desde == '08:00:00'
+            assert intervencio2.hora_fins == '09:00:00'
+            assert intervencio2.numero_visita == '10'
+            assert intervencio2.resultat == '001'
+            assert intervencio2.detall_resultat == \
+                   'Descripcion de los resultados obtenidos.'
 
         if retipificacio:
             assert retipificacio.tipus == '02'
