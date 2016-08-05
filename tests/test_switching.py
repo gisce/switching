@@ -1896,8 +1896,14 @@ class SwitchingR1_Test(unittest.TestCase):
             'desc_peticio_info': u'Descripcion de la peticion.',
             'data_limit': '2016-07-10'
         })
+        solicitud2 = r1.SolicitudInformacionAdicional()
+        solicitud2.feed({
+            'tipus_info': '02',
+            'desc_peticio_info': u'Descripcion de la peticion.',
+            'data_limit': '2016-07-10'
+        })
         solicituds.feed({
-            'detalls': [solicitud]
+            'detalls': [solicitud, solicitud2]
         })
 
         info_adicional = r1.InformacionAdicional()
@@ -2358,6 +2364,10 @@ class SwitchingR1_Test(unittest.TestCase):
             assert solicitud.tipus_info_adicional == '01'
             assert solicitud.descripcio_peticio_informacio == 'Descripcion de la peticion.'
             assert solicitud.data_limit == '2016-07-10'
+            solicitud2 = sollicituds_info_addicional[1]
+            assert solicitud2.tipus_info_adicional == '02'
+            assert solicitud2.descripcio_peticio_informacio == 'Descripcion de la peticion.'
+            assert solicitud2.data_limit == '2016-07-10'
 
         assert len(comentaris) > 10
 

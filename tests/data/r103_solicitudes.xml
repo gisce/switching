@@ -21,6 +21,11 @@
                 <DescPeticionInformacion>Descripcion de la peticion.</DescPeticionInformacion>
                 <FechaLimiteEnvio>2016-07-10</FechaLimiteEnvio>
             </SolicitudInformacionAdicional>
+            <SolicitudInformacionAdicional>
+                <TipoInformacionAdicional>02</TipoInformacionAdicional>
+                <DescPeticionInformacion>Descripcion de la peticion.</DescPeticionInformacion>
+                <FechaLimiteEnvio>2016-07-10</FechaLimiteEnvio>
+            </SolicitudInformacionAdicional>
         </SolicitudesInformacionAdicional>
         <Comentarios>R1 03 with 'SolicitudesInformacionAdicional'.
         </Comentarios>
