@@ -30,11 +30,11 @@ class R1(Message):
         data = []
         try:
             varis = self.obj.SolicitudReclamacion.VariablesDetalleReclamacion
-            for var in varis:
-                if len(var.VariableDetalleReclamacion.getchildren()):
+            for var in varis.VariableDetalleReclamacion:
+                if len(var.getchildren()):
                     data.append(
                         VariableDetalleReclamacion(
-                            var.VariableDetalleReclamacion
+                            var
                         )
                     )
         except AttributeError:
