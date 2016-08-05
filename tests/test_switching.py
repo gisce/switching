@@ -1200,6 +1200,7 @@ class SwitchingR1_Test(unittest.TestCase):
         self.xml_r101_lectures = open(get_data("r101_lectures.xml"), "r")
         self.xml_r101_0539 = open(get_data("r101_05_39.xml"), "r")
         self.xml_r101_0203 = open(get_data("r101_02_03.xml"), "r")
+        self.xml_r101_multivar = open(get_data("r101_multivar.xml"), "r")
         # r1-02
         self.xml_r102_ok = open(get_data("r102_aceptacion.xml"), "r")
         self.xml_r102_ko = open(get_data("r102_rechazo.xml"), "r")
@@ -2209,6 +2210,59 @@ class SwitchingR1_Test(unittest.TestCase):
         assert reclamacio.data_fins is None
         assert reclamacio.import_reclamat is None
         assert reclamacio.ubicacio is None
+
+        assert client is not None
+        assert client.codi_identificacio == '11111111H'
+        assert client.correu == 'perico@acme.com'
+        assert client.get_nom_complet() == 'Palotes Largos, Perico'
+
+        assert reclamant is not None
+        assert reclamant.codi_identificacio == '11111111H'
+        assert reclamant.correu == ''
+        assert reclamant.telf_prefix == '34'
+        assert reclamant.telf_num == '66612345'
+        assert reclamant.get_nom_complet() == 'Palotes Largos, Perico'
+
+        assert 100 < len(comentaris) < 4000
+
+        assert len(documents) == 0
+
+    def test_read_r101_multi(self):
+        self.r101_xml = R1(self.xml_r101_multivar)
+        self.r101_xml.set_xsd()
+        self.r101_xml.parse_xml()
+        sollicitud = self.r101_xml.sollicitud
+        reclamacions = self.r101_xml.reclamacions
+        tipus_reclamant = self.r101_xml.tipus_reclamant
+        reclamant = self.r101_xml.reclamant
+        client = self.r101_xml.client
+        comentaris = self.r101_xml.comentaris
+        documents = self.r101_xml.documents
+
+        assert sollicitud.tipus == '02'
+        assert sollicitud.subtipus == '03'
+        assert tipus_reclamant == '01'
+
+        assert len(reclamacions) == 2
+        reclamacio = reclamacions[0]
+
+        assert reclamacio.contacto is not None
+        assert reclamacio.num_factura_atr == '243615'
+        assert reclamacio.data_incident is None
+        assert reclamacio.data_lectura == '2016-01-20'
+        assert reclamacio.codidh == 1
+        assert reclamacio.codi_incidencia == '01'
+        assert reclamacio.codi_sollicitud is None
+        assert reclamacio.contacto.correu == 'perico@acme.com'
+        assert reclamacio.contacto.get_nom_complet() == 'Palotes Largos, Perico'
+        assert reclamacio.contacto.telf_num == '55512345'
+        assert reclamacio.codi_sollicitud_reclamacio is None
+        assert reclamacio.data_inici is None
+        assert reclamacio.data_fins is None
+        assert reclamacio.import_reclamat is None
+        assert reclamacio.ubicacio is None
+
+        assert reclamacions[1].contacto.get_nom_complet() == 'Palotes2 Largos2, Perico2'
 
         assert client is not None
         assert client.codi_identificacio == '11111111H'
