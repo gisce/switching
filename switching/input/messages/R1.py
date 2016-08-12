@@ -262,8 +262,17 @@ class VariableDetalleReclamacion(object):
     def lectures(self):
         """Retorna una llista de lectures"""
         data = []
-        for i in self.variable.LecturasAportadas.LecturaAportada:
-            data.append(W1.LecturaAportada(i))
+        try:
+            varis = self.variable.LecturasAportadas
+            for var in varis.LecturaAportada:
+                if len(var.getchildren()):
+                    data.append(
+                        W1.LecturaAportada(
+                            var
+                        )
+                    )
+        except AttributeError:
+            pass
         return data
 
     @property
