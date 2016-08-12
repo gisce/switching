@@ -186,7 +186,7 @@ class DatosPasoSollicitud(object):
         """Referència orígen"""
         ref = None
         try:
-            ref = self.sollicitud.RefernciaOrigen.text
+            ref = self.sollicitud.ReferenciaOrigen.text
         except AttributeError:
             pass
         return ref
