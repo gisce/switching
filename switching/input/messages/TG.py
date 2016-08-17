@@ -97,6 +97,7 @@ class Values(object):
         for value in self.meter.meter.S02:
             timestamp = self.get_timestamp(value, 'Fh')
             ret_values.append({'name': meter_name,
+                               'cnc_name': self.meter.cnc_name,
                                'timestamp': timestamp, 
                                'season':value.get('Fh')[-1:],
                                'magn': magn,
