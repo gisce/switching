@@ -2442,5 +2442,53 @@ class SwitchingR1_Test(unittest.TestCase):
         assert dades_retipificacio.subtipus == '03'
         assert dades_retipificacio.descripcio_retipificacio == 'descripcio de la retipificacio.'
 
+
+class SwitchingParseValidate(unittest.TestCase):
+
+    def test_parse_with_validation(self):
+        tipo_cont_atr = '            <TipoContratoATR>01</TipoContratoATR>\n'
+        valid_xml = open(get_data("a301.xml"), "r")
+        valid_xml_text = valid_xml.read()
+        invalid_xml = A3(valid_xml_text.replace(tipo_cont_atr, ''))
+        invalid_xml.set_xsd()
+
+        callable_obj = (lambda: invalid_xml.parse_xml(validate=True))
+        self.assertRaises(message.except_f1, callableObj=callable_obj)
+
+    def test_parse_without_validation(self):
+        tipo_cont_atr = '            <TipoContratoATR>01</TipoContratoATR>\n'
+        valid_xml = open(get_data("a301.xml"), "r")
+        valid_xml_text = valid_xml.read()
+        invalid_xml = A3(valid_xml_text.replace(tipo_cont_atr, ''))
+
+        invalid_xml.set_xsd()
+        invalid_xml.parse_xml(validate=False)
+        invalid_xml.set_tipus()
+
+        # Various checks to make sure the XML is correctly imported
+        self.assertEqual(invalid_xml.tipus, 'A3')
+        self.assertEqual(invalid_xml.pas, '01')
+        self.assertEqual(invalid_xml.get_pas_xml(), '01')
+        self.assertEqual(invalid_xml.get_codi_emisor, '1234')
+        self.assertEqual(invalid_xml.get_codi_destinatari, '4321')
+        self.assertEqual(invalid_xml.get_codi, 'ES1234000000000001JN0F')
+        self.assertEqual(invalid_xml.cups, 'ES1234000000000001JN0F')
+        self.assertEqual(invalid_xml.codi_sollicitud, '201412111009')
+        self.assertEqual(invalid_xml.seq_sollicitud, '01')
+        self.assertEqual(invalid_xml.data_sollicitud, '2014-04-16 22:13:37')
+        self.assertEqual(invalid_xml.versio, '02')
+
+        self.assertEqual(invalid_xml.sollicitud.linia_negoci, '01')
+        self.assertEqual(invalid_xml.sollicitud.cnae, '9820')
+        self.assertEqual(invalid_xml.contracte.condicions.tarifa, '001')
+        self.assertEqual(invalid_xml.client.nom, 'Perico')
+        self.assertEqual(invalid_xml.client.cognom_1, 'Palote')
+        self.assertEqual(invalid_xml.client.cognom_2, u'Pérez')
+        self.assertEqual(invalid_xml.mesura.equip_aportat_client, 'N')
+        self.assertEqual(invalid_xml.mesura.tipus_equip_mesura, 'L00')
+
+        # We also check that the field we deleted is empty
+        self.assertEqual(invalid_xml.contracte.tipus_contracte, '')
+
 if __name__ == '__main__':
     unittest.main()
