@@ -7,6 +7,10 @@ Library to manage XML data for electrical sector in Spain
 .. image:: https://travis-ci.org/gisce/switching.svg?branch=master
     :target: https://travis-ci.org/gisce/switching
 
+.. image:: https://coveralls.io/repos/github/gisce/switching/badge.svg
+    :target: https://coveralls.io/github/gisce/switching
+
+
 Chat with us
 ------------
 
