@@ -194,10 +194,12 @@ class Message(MessageBase):
         """Obtenir el pas del missatge"""
         return self.pas
 
-    def parse_xml(self):
+    def parse_xml(self, validate=True):
         """Importar el contingut de l'xml"""
         self.check_fpos(self.f_xsd)
-        schema = etree.XMLSchema(file=self.f_xsd)
+        schema = None
+        if validate:
+            schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)

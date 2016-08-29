@@ -385,3 +385,117 @@ class MensajeCierreReclamacion(XmlModel):
     def set_agente(self, agente):
         self.mensaje.attributes.update({'AgenteSolicitante': agente})
         self.doc_root = self.root.element()
+
+# 03
+class MensajePeticionInformacionAdicionalReclamacion(XmlModel):
+    _sort_order = (
+        'mensaje',
+        'capcalera',
+        'informacio_adicional',
+    )
+
+    def __init__(self):
+        self.doc_root = None
+        self.mensaje = XmlField(
+            'MensajePeticionInformacionAdicionalReclamacion',
+            attributes={
+                'xmlns': 'http://localhost/elegibilidad',
+            }
+        )
+        self.capcalera = CabeceraReclamacion()
+        self.informacio_adicional = InformacionAdicional()
+        super(MensajePeticionInformacionAdicionalReclamacion, self).__init__(
+            'MensajePeticionInformacionAdicionalReclamacion', 'mensaje')
+
+    def set_agente(self, agente):
+        self.mensaje.attributes.update({'AgenteSolicitante': agente})
+        self.doc_root = self.root.element()
+
+
+class InformacionAdicional(XmlModel):
+    _sort_order = ('info_adicional', 'dades_informacio', 'info_intermitja',
+                   'retificacio', 'sollicituds_info_adicional', 'comentaris', )
+
+    def __init__(self):
+        self.info_adicional = XmlField('InformacionAdicional')
+        self.dades_informacio = DatosInformacion()
+        self.info_intermitja = InformacionIntermedia()
+        self.retificacio = Retificacion()
+        self.sollicituds_info_adicional = SolicitudesInformacionAdicional()
+        self.comentaris = XmlField('Comentarios')
+        super(InformacionAdicional, self).__init__('InformacionAdicional',
+                                                    'info_adicional')
+
+
+class DatosInformacion(XmlModel):
+    _sort_order = ('dades_informacio', 'num_expedient', 'tipus_comunicacio',
+                   'codi_reclamant_distri')
+
+    def __init__(self):
+        self.dades_informacio = XmlField('DatosInformacion')
+        self.num_expedient = XmlField('NumExpedienteAcometida')
+        self.tipus_comunicacio = XmlField('TipoComunicacion')
+        self.codi_reclamant_distri = XmlField('CodigoReclamacionDistribuidora')
+        super(DatosInformacion, self).__init__('DatosInformacion',
+                                               'dades_informacio')
+
+
+class InformacionIntermedia(XmlModel):
+    _sort_order = ('info_intermitja', 'desc_info_intermitja', 'intervencions', )
+
+    def __init__(self):
+        self.info_intermitja = XmlField('InformacionIntermedia')
+        self.desc_info_intermitja = XmlField('DescInformacionIntermedia')
+        self.intervencions = Intervenciones()
+        super(InformacionIntermedia, self).__init__('InformacionIntermedia',
+                                                    'info_intermitja')
+
+class Intervencion(XmlModel):
+    _sort_order = ('intervencio', 'tipus_intervencio', 'data', 'hora_desde',
+                   'hora_fins', 'num_visita', 'resultat', 'detalls_resultat', )
+
+    def __init__(self):
+        self.intervencio = XmlField('Intervencion')
+        self.tipus_intervencio = XmlField('TipoIntervencion')
+        self.data = XmlField('Fecha')
+        self.hora_desde = XmlField('HoraDesde')
+        self.hora_fins = XmlField('HoraHasta')
+        self.num_visita = XmlField('NumeroVisita')
+        self.resultat = XmlField('Resultado')
+        self.detalls_resultat = XmlField('DetalleResultado')
+
+        super(Intervencion, self).__init__('Intervencion', 'intervencio')
+
+
+class Intervenciones(XmlModel):
+    _sort_order = ('intervencions', 'detalls')
+
+    def __init__(self):
+        self.intervencions = XmlField('Intervenciones')
+        self.detalls = []
+        super(Intervenciones, self).__init__(
+            'Intervenciones', 'intervencions')
+
+
+class SolicitudInformacionAdicional(XmlModel):
+    _sort_order = ('sollicitud_info', 'tipus_info', 'desc_peticio_info',
+                   'data_limit', )
+
+    def __init__(self):
+        self.sollicitud_info = XmlField('SolicitudInformacionAdicional')
+        self.tipus_info = XmlField('TipoInformacionAdicional')
+        self.desc_peticio_info = XmlField('DescPeticionInformacion')
+        self.data_limit = XmlField('FechaLimiteEnvio')
+
+        super(SolicitudInformacionAdicional, self).__init__('SolicitudInformacionAdicional',
+                                           'sollicitud_info')
+
+
+class SolicitudesInformacionAdicional(XmlModel):
+    _sort_order = ('sollicituds_info', 'detalls')
+
+    def __init__(self):
+        self.sollicituds_info = XmlField('SolicitudesInformacionAdicional')
+        self.detalls = []
+        super(SolicitudesInformacionAdicional, self).__init__(
+            'SolicitudesInformacionAdicional', 'sollicituds_info')
