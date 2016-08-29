@@ -60,7 +60,7 @@ class NoICP(XmlModel):
         self.periode_fabricacio = XmlField('PeriodoFabricacion')
         self.num_serie = XmlField('NumeroSerie')
         self.funcio = XmlField('FuncionAparato')
-        self.num_integradors = XmlField('NumIntegradores')
+        self.num_integradors = XmlField('NumIntegradores', rep=lambda x: '%i' % x)
         self.constant_energia = XmlField('ConstanteEnergia', rep=lambda x: '%.3f' % x)
         self.constant_max = XmlField('ConstanteMaximetro', rep=lambda x: '%.3f' % x)
         self.enters = XmlField('RuedasEnteras', rep=lambda x: '%i' % x)
@@ -80,11 +80,11 @@ class ICP(XmlModel):
         self.num_serie = XmlField('NumeroSerie',
                                   rep=lambda x: x[:10])
         self.funcio = XmlField('FuncionAparato')
-        self.num_integradors = XmlField('NumIntegradores')
+        self.num_integradors = XmlField('NumIntegradores', rep=lambda x: '%i' % x)
         self.constant_energia = XmlField('ConstanteEnergia', rep=lambda x: '%.3f' % x)
         self.constant_max = XmlField('ConstanteMaximetro', rep=lambda x: '%.3f' % x)
-        self.enters = XmlField('RuedasEnteras')
-        self.decimals = XmlField('RuedasDecimales')
+        self.enters = XmlField('RuedasEnteras', rep=lambda x: '%i' % x)
+        self.decimals = XmlField('RuedasDecimales', rep=lambda x: '%i' % x)
         super(ICP, self).__init__('DatosAparatoICP', 'icp')
 
 
