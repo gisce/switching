@@ -113,7 +113,7 @@ class MessageBase(object):
 
     @property
     def valid(self):
-        if self.error is None:
+        if self.obj is None:
             return None
         else:
             return not bool(self.error)
@@ -210,7 +210,6 @@ class Message(MessageBase):
         parser = objectify.makeparser(schema=schema)
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)
-            self.error = ''
         except Exception as e:
             self.error = e.message
             if validate:
