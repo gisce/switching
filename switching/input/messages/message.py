@@ -87,6 +87,8 @@ class MessageBase(object):
     """Classe base"""
     def __init__(self, xml, force_tipus=None):
         """Construeix un missatge base."""
+        self.obj = None
+        self.error = None
         if isinstance(xml, file):
             self.check_fpos(xml)
             xml = xml.read()
@@ -108,6 +110,13 @@ class MessageBase(object):
             msg = 'L\'XML no es correspon al tipus %s' % force_tipus
             raise except_f1('Error', _(msg))
         self.set_xsd()
+
+    @property
+    def valid(self):
+        if self.error is None:
+            return None
+        else:
+            return not bool(self.error)
 
     def set_tipus(self):
         """Set type of message. To implement in child classes"""
@@ -197,14 +206,18 @@ class Message(MessageBase):
     def parse_xml(self, validate=True):
         """Importar el contingut de l'xml"""
         self.check_fpos(self.f_xsd)
-        schema = None
-        if validate:
-            schema = etree.XMLSchema(file=self.f_xsd)
+        schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)
-        except Exception, e:
-            raise except_f1('Error', _(u'Document invàlid: {0}').format(e))
+            self.error = ''
+        except Exception as e:
+            self.error = e.message
+            if validate:
+                raise except_f1('Error', _(u'Document invàlid: {0}').format(e))
+            else:
+                parser = objectify.makeparser(schema=None)
+                self.obj = objectify.fromstring(self.str_xml, parser)
 
     # Funcions relacionades amb la capçalera del XML
     @property

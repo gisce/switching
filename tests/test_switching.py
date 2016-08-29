@@ -2445,6 +2445,17 @@ class SwitchingR1_Test(unittest.TestCase):
 
 class SwitchingParseValidate(unittest.TestCase):
 
+    def test_parse_with_valid_xml(self):
+        valid_xml = open(get_data("a301.xml"), "r")
+        valid_xml_text = valid_xml.read()
+        valid_xml = A3(valid_xml_text)
+        valid_xml.set_xsd()
+        self.assertIsNone(valid_xml.valid)
+        self.assertIsNone(valid_xml.error)
+        valid_xml.parse_xml(validate=True)
+        self.assertTrue(valid_xml.valid)
+        self.assertFalse(valid_xml.error)
+
     def test_parse_with_validation(self):
         tipo_cont_atr = '            <TipoContratoATR>01</TipoContratoATR>\n'
         valid_xml = open(get_data("a301.xml"), "r")
@@ -2454,6 +2465,15 @@ class SwitchingParseValidate(unittest.TestCase):
 
         callable_obj = (lambda: invalid_xml.parse_xml(validate=True))
         self.assertRaises(message.except_f1, callableObj=callable_obj)
+        self.assertIsNone(invalid_xml.obj)
+        self.assertFalse(invalid_xml.valid)
+        self.maxDiff = None
+        self.assertEqual(
+            invalid_xml.error,
+            u"Element '{http://localhost/elegibilidad}CondicionesContractuales'"
+            u": This element is not expected. Expected is one of ( "
+            u"{http://localhost/elegibilidad}TipoAutoconsumo, "
+            u"{http://localhost/elegibilidad}TipoContratoATR ).")
 
     def test_parse_without_validation(self):
         tipo_cont_atr = '            <TipoContratoATR>01</TipoContratoATR>\n'
@@ -2463,6 +2483,13 @@ class SwitchingParseValidate(unittest.TestCase):
 
         invalid_xml.set_xsd()
         invalid_xml.parse_xml(validate=False)
+        self.assertFalse(invalid_xml.valid)
+        self.assertEqual(
+            invalid_xml.error,
+            u"Element '{http://localhost/elegibilidad}CondicionesContractuales'"
+            u": This element is not expected. Expected is one of ( "
+            u"{http://localhost/elegibilidad}TipoAutoconsumo, "
+            u"{http://localhost/elegibilidad}TipoContratoATR ).")
         invalid_xml.set_tipus()
 
         # Various checks to make sure the XML is correctly imported
