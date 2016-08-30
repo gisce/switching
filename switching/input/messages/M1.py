@@ -1,5 +1,6 @@
 
 # -*- coding: utf-8 -*-
+from switching.helpers.funcions import get_rec_attr
 
 from message import Message, except_f1
 import C1, C2
@@ -11,19 +12,32 @@ class M1(Message):
     @property
     def sollicitud(self):
         """Retorna l'objecte Sollicitud"""
-        return C1.Sollicitud(self.obj.ModificacionDeATR.\
-                          DatosSolicitud)
+        tree = 'ModificacionDeATR.DatosSolicitud'
+        sol = get_rec_attr(self.obj, tree, False)
+        if sol:
+            return C1.Sollicitud(sol)
+        else:
+            return False
 
     @property
     def contracte(self):
         """Retorna l'objecte Contracte"""
-        obj = getattr(self.obj, self._header)
-        return C1.Contracte(obj.Contrato)
+        tree = '{0}.Contrato'.format(self.header)
+        cont = get_rec_attr(self.obj, tree, False)
+        if cont:
+            return C1.Contracte(cont)
+        else:
+            return False
 
     @property
     def client(self):
         """Retorna l'objecte Client"""
-        return C1.Client(self.obj.ModificacionDeATR.Cliente)
+        tree = 'ModificacionDeATR.Cliente'
+        cli = get_rec_attr(self.obj, tree, False)
+        if cli:
+            return C1.Client(cli)
+        else:
+            return False
 
     @property
     def client_sortint(self):
