@@ -6,7 +6,7 @@ from switching.output.messages.sw_c1 import (
 )
 from switching.output.messages.sw_c2 import CiePapel, DatosCie, DocTecnica,\
     RegistroDoc, RegistrosDocumento
-from switching.output.messages.mesures import NoICP, ICP
+from switching.output.messages.mesures import NoICP, ICP, DatosAparato
 
 from . import unittest
 import os
@@ -354,6 +354,51 @@ class test_NoICP(unittest.TestCase):
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile(
             'DatosAparatoNoICPConIntegradores.xml'
+        ))
+
+
+class test_DatosAparato(unittest.TestCase):
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        pass
+
+    def test_build_NoIntegradores(self):
+        c = DatosAparato()
+        c.feed({
+            'periode_fabricacio': 2015,
+            'num_serie': '753855',
+            'funcio': 'M',
+            'num_integradors': 0,
+            'constant_energia': 1.0,
+            'constant_max': 1.0,
+            'enters': 1,
+            'decimals': 0,
+        })
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile(
+            'DatosAparatoSinIntegradores.xml'
+        ))
+
+    def test_build_Integradores(self):
+        c = DatosAparato()
+        c.feed({
+            'periode_fabricacio': 2015,
+            'num_serie': '753855',
+            'funcio': 'M',
+            'num_integradors': 20,
+            'constant_energia': 1.0,
+            'constant_max': 1.0,
+            'enters': 1,
+            'decimals': 0,
+        })
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile(
+            'DatosAparatoConIntegradores.xml'
         ))
 
 
