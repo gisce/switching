@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from switching.helpers.funcions import aggr_consums, aggr_ajusts
 from switching.input.messages import C1
 from switching.input.messages import F1, message, R1, W1, A3, M1, FacturaATR, Q1
 from switching.input.messages import C2
@@ -14,6 +15,24 @@ from switching.output.messages.base import Cabecera
 from . import unittest
 
 from .test_helpers import get_data
+
+
+class Switching_Helpers_Test(unittest.TestCase):
+    """test de switching"""
+    def setUp(self):
+        self.consums = {'P1': 1, 'P2': 2, 'P3': 4, 'P4': 8, 'P5': 16, 'P6': 32}
+        self.consums_aggr = {'P1': 9, 'P2': 18, 'P3': 36}
+        self.consums_3p = dict(
+            [(k, v) for k, v in self.consums.items() if k in ['P1', 'P2', 'P3']]
+        )
+
+    def test_aggr_consums(self):
+        self.assertDictEqual(aggr_consums(self.consums), self.consums_aggr)
+        self.assertDictEqual(aggr_consums(self.consums_3p), self.consums_3p)
+
+    def test_aggr_ajusts(self):
+        self.assertDictEqual(aggr_consums(self.consums), self.consums_aggr)
+        self.assertDictEqual(aggr_consums(self.consums_3p), self.consums_3p)
 
 
 class test_Message_Base(unittest.TestCase):
@@ -97,6 +116,7 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_rectificadora = open(get_data("F1_rectificadora.xml"), "r")
         self.xml_conceptoieiva = open(get_data("F1_conceptoieiva.xml"), "r")
         self.xml_conceptoieiva_iva_empty = open(get_data("F1_conceptoieiva_iva_empty.xml"), "r")
+        self.xml_ajuste = open(get_data("F1_ajuste.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -139,6 +159,14 @@ class Switching_F1_Test(unittest.TestCase):
         self.assertEqual(periode.name, 'P1')
         self.assertEqual(periode.data_inici, '2010-03-01')
         self.assertEqual(periode.data_final, '2010-04-30')
+        comptadors = f1_atr.get_comptadors()
+        assert len(comptadors) == 1
+        for comptador in comptadors:
+            lectures = comptador.get_lectures()
+            # sense ajusts
+            for lect in lectures:
+                ajust = lect.get_info_ajust()
+                assert ajust is None
 
     def test_get_info_activa_no_medidas(self):
         f1 = F1(self.xml_no_medidas)
@@ -314,6 +342,52 @@ class Switching_F1_Test(unittest.TestCase):
         assert isinstance(f1_atr, FacturaATR)
         conceptes, total = f1_atr.get_info_conceptes_iva()
         assert len(conceptes) == 0
+
+    def test_facturacio_ajustes_1(self):
+        f1 = F1(self.xml_reactiva1)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        comptadors = f1_atr.get_comptadors()
+        assert len(comptadors) == 1
+        comptador = comptadors[0]
+        lectures = comptador.get_lectures()
+        res_dict = {
+            'PM': {'P1': 215, 'P2': 614, 'P3': 467},
+            'AE': {'P1': 215, 'P2': 467, 'P3': 614},
+            'R1': {'P1': 11, 'P2': 16, 'P3': 15},
+        }
+        for lect in lectures:
+            ajust = lect.get_info_ajust()
+            assert ajust['motivo'] == '08'
+            assert ajust['ajuste'] == res_dict[lect.magnitud][lect.periode]
+        # suport methods tests
+        self.assertDictEqual(
+            f1_atr.select_ajusts_from_lectures(lectures, 'A'), res_dict['AE']
+        )
+        self.assertDictEqual(
+            f1_atr.select_ajusts_from_lectures(lectures, 'R'), res_dict['R1']
+        )
+        self.assertDictEqual(
+            f1_atr.select_ajusts_from_lectures(lectures, 'M'), res_dict['PM']
+        )
+
+    def test_facturacio_ajustes_2(self):
+        f1 = F1(self.xml_ajuste)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        comptadors = f1_atr.get_comptadors()
+        assert len(comptadors) == 1
+        comptador = comptadors[0]
+        lectures = comptador.get_lectures()
+        res_dict = {
+            'AE': {'P1': -678, 'P2': 678},
+        }
+        for lect in lectures:
+            ajust = lect.get_info_ajust()
+            assert ajust['motivo'] == '99'
+            assert ajust['ajuste'] == res_dict[lect.magnitud][lect.periode]
 
 class supportClass(object):
     """Funcions de suport"""
