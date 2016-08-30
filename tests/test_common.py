@@ -16,6 +16,19 @@ import sys
 from .test_helpers import get_data
 from copy import copy, deepcopy
 
+from switching.defs import *
+
+
+class test_Defs(unittest.TestCase):
+
+    def test_tables(self):
+        assert TIPUS_ACTIVACIO[0][0] == 'L'
+        assert TIPUS_ACTIVACIO[0][1] == 'En ciclo de lectura'
+        assert ESTAT_TEL_PM[0][0] == '1'
+        assert ESTAT_TEL_PM[0][1] == 'Correcto'
+        assert TABLA_111[0][0] == '01'
+        assert TABLA_111[0][1] == u'Telegestión Operativa con Curva de Carga Horaria'
+
 
 class test_Contacto(unittest.TestCase):
     def loadFile(self, filename):
