@@ -4,7 +4,10 @@
 from switching.output.messages.sw_c1 import (
     Contacto, CondicionesContractuales, PotenciasContratadas
 )
-from switching.output.messages.sw_c2 import CiePapel, DatosCie, DocTecnica
+from switching.output.messages.sw_c2 import CiePapel, DatosCie, DocTecnica,\
+    RegistroDoc, RegistrosDocumento
+from switching.output.messages.mesures import NoICP, ICP, DatosAparato
+
 from . import unittest
 import os
 import decimal
@@ -77,6 +80,21 @@ class test_Contacto(unittest.TestCase):
         c.build_tree()
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('Contacto_withprefix.xml'))
+
+    def test_build_tree_with_email(self):
+        c = Contacto()
+        c.set_data(
+            es_persona_juridica=False,
+            nom="Perico",
+            cognom_1="Palote",
+            cognom_2=u"Pérez",
+            telefon='555123123',
+            prefix='01',
+            correu='ppalote@acme.com'
+        )
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile('Contacto_withemail.xml'))
 
 
 class test_CiePapel(unittest.TestCase):
@@ -204,6 +222,41 @@ class test_DocTecnica(unittest.TestCase):
         self.assertXmlEqual(xml, self.loadFile('DocTecnica_simple.xml'))
 
 
+class test_registro_documento:
+
+    basic_data = {}
+
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        dades = [
+            ('01', 'http://eneracme.com/docs/CIE0100001.pdf'),
+            ('06', 'http://eneracme.com/docs/INV201509161234.pdf'),
+            ('08', 'http://eneracme.com/docs/NIF11111111H.pdf'),
+        ]
+
+        registro_documentos = RegistrosDocumento()
+        docs = []
+        for i in range(len(dades)):
+            doc = RegistroDoc()
+            doc.feed({
+                'tipo': dades[i][0],
+                'url': dades[i][1],
+            })
+            docs.append(doc)
+
+        self.basic_data = {'registro': docs}
+
+    def test_build_tree_simple(self):
+        documentos = RegistrosDocumento()
+        documentos.feed(self.basic_data)
+        documentos.build_tree()
+        xml = str(documentos)
+        self.assertXmlEqual(xml, self.loadFile('RegistroDocumento_simple.xml'))
+
+
 class test_CondicionesContractuales(unittest.TestCase):
 
     basic_data = {}
@@ -231,6 +284,167 @@ class test_CondicionesContractuales(unittest.TestCase):
         c.build_tree()
         xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CondContractuales.xml'))
+
+
+    def test_build_tree_medida_baja(self):
+        potencies = PotenciasContratadas()
+
+        pots = {'p1': 44000, 'p2': 44000, 'p3': 44000}
+        potencies.feed(pots)
+
+        c = CondicionesContractuales()
+        c.feed({
+            'tarifaATR': '011',
+            'periodicidad_facturacion': '01',
+            'tipus_telegestio': '03',
+            'control_potencia': '1',
+            'potencies': potencies,
+            'marca_mesura_bt_perdues': 'S',
+            'kvas_trafo': 50,
+            'perc_perd_pactades': 5,
+        })
+
+        c.feed(self.basic_data)
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(
+            xml, self.loadFile('CondContractualesMedidaBaja.xml')
+        )
+
+
+class test_NoICP(unittest.TestCase):
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        pass
+
+    def test_build_NoIntegradores(self):
+        c = NoICP()
+        c.feed({
+            'periode_fabricacio': 2015,
+            'num_serie': '753855',
+            'funcio': 'M',
+            'num_integradors': 0,
+            'constant_energia': 1.0,
+            'constant_max': 1.0,
+            'enters': 1,
+            'decimals': 0,
+        })
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile(
+            'DatosAparatoNoICPSinIntegradores.xml'
+        ))
+
+    def test_build_Integradores(self):
+        c = NoICP()
+        c.feed({
+            'periode_fabricacio': 2015,
+            'num_serie': '753855',
+            'funcio': 'M',
+            'num_integradors': 20,
+            'constant_energia': 1.0,
+            'constant_max': 1.0,
+            'enters': 1,
+            'decimals': 0,
+        })
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile(
+            'DatosAparatoNoICPConIntegradores.xml'
+        ))
+
+
+class test_DatosAparato(unittest.TestCase):
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        pass
+
+    def test_build_NoIntegradores(self):
+        c = DatosAparato()
+        c.feed({
+            'periode_fabricacio': 2015,
+            'num_serie': '753855',
+            'funcio': 'M',
+            'num_integradors': 0,
+            'constant_energia': 1.0,
+            'constant_max': 1.0,
+            'enters': 1,
+            'decimals': 0,
+        })
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile(
+            'DatosAparatoSinIntegradores.xml'
+        ))
+
+    def test_build_Integradores(self):
+        c = DatosAparato()
+        c.feed({
+            'periode_fabricacio': 2015,
+            'num_serie': '753855',
+            'funcio': 'M',
+            'num_integradors': 20,
+            'constant_energia': 1.0,
+            'constant_max': 1.0,
+            'enters': 1,
+            'decimals': 0,
+        })
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile(
+            'DatosAparatoConIntegradores.xml'
+        ))
+
+
+class test_ICP(unittest.TestCase):
+    def loadFile(self, filename):
+        with open(get_data(filename), "r") as f:
+            return f.read()
+
+    def setUp(self):
+        pass
+
+    def test_build_NoIntegradores(self):
+        c = ICP()
+        c.feed({
+            'periode_fabricacio': 2015,
+            'num_serie': '753855',
+            'funcio': 'M',
+            'num_integradors': 0,
+            'constant_energia': 1.0,
+            'constant_max': 1.0,
+            'enters': 1,
+            'decimals': 0,
+        })
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile(
+            'DatosAparatoICPSinIntegradores.xml'
+        ))
+
+    def test_build_Integradores(self):
+        c = ICP()
+        c.feed({
+            'periode_fabricacio': 2015,
+            'num_serie': '753855',
+            'funcio': 'M',
+            'num_integradors': 20,
+            'constant_energia': 1.0,
+            'constant_max': 1.0,
+            'enters': 1,
+            'decimals': 0,
+        })
+        c.build_tree()
+        xml = str(c)
+        self.assertXmlEqual(xml, self.loadFile(
+            'DatosAparatoICPConIntegradores.xml'
+        ))
 
 
 if __name__ == '__main__':

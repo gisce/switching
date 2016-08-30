@@ -124,6 +124,17 @@ class C2(Message):
         return value
 
     @property
+    def documents(self):
+        """Retorna una llista de documents adjunts"""
+        data = []
+        obj = getattr(self.obj, self.header)
+        if (hasattr(obj, 'RegistrosDocumento') and
+                hasattr(obj.RegistrosDocumento, 'RegistroDoc')):
+            for d in obj.RegistrosDocumento.RegistroDoc:
+                data.append(C1.RegistroDoc(d))
+        return data
+
+    @property
     def canvi_titular(self):
         value = ''
         try:
@@ -132,6 +143,15 @@ class C2(Message):
         except AttributeError:
             pass
         return value
+
+    @property
+    def documentacio_tecnica(self):
+        """Retorna l'objecte documentacio tecnica"""
+        obj = getattr(self.obj, self.header)
+        if hasattr(obj, 'DocTecnica'):
+            return C1.DocumentacioTecnica(obj.DocTecnica)
+        else:
+            return None
 
 
 class Comentari(object):
@@ -215,3 +235,4 @@ class Mesura(object):
         except AttributeError:
             pass
         return value
+

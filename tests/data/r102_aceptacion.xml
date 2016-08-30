@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<MensajeAceptacionReclamacion xmlns="http://localhost/elegibilidad"
+                              AgenteSolicitante="1234">
+    <CabeceraReclamacion>
+        <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+        <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+        <CodigoDelProceso>R1</CodigoDelProceso>
+        <CodigoDePaso>02</CodigoDePaso>
+        <CodigoDeSolicitud>201602231255</CodigoDeSolicitud>
+        <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+        <FechaSolicitud>2014-04-16T22:13:37</FechaSolicitud>
+        <CUPS>ES1234000000000001JN0F</CUPS>
+    </CabeceraReclamacion>
+    <AceptacionReclamacion>
+        <DatosAceptacion>
+            <FechaAceptacion>2016-02-23</FechaAceptacion>
+            <CodigoReclamacionDistribuidora>3265349</CodigoReclamacionDistribuidora>
+        </DatosAceptacion>
+    </AceptacionReclamacion>
+</MensajeAceptacionReclamacion>

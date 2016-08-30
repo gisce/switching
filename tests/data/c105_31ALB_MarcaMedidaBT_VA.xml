@@ -1,0 +1,215 @@
+<MensajeActivacionCambiodeComercializadoraSinCambios xmlns="http://localhost/elegibilidad" AgenteSolicitante="1234">
+  <Cabecera>
+    <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+    <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+    <CodigoDelProceso>C1</CodigoDelProceso>
+    <CodigoDePaso>05</CodigoDePaso>
+    <CodigoDeSolicitud>201411037517</CodigoDeSolicitud>
+    <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+    <Codigo>ES1234000000000001JN0F</Codigo>
+    <FechaSolicitud>2014-12-02T23:59:32</FechaSolicitud>
+    <Version>02</Version>
+  </Cabecera>
+  <ActivacionCambiodeComercializadoraSinCambios>
+    <DatosActivacion>
+      <Fecha>2014-12-01</Fecha>
+      <Hora>23:59:00</Hora>
+    </DatosActivacion>
+    <Contrato>
+      <IdContrato>
+        <CodContrato>000135927341</CodContrato>
+      </IdContrato>
+      <TipoContratoATR>01</TipoContratoATR>
+      <CondicionesContractuales>
+        <TarifaATR>011</TarifaATR>
+        <PeriodicidadFacturacion>01</PeriodicidadFacturacion>
+        <PotenciasContratadas>
+          <Potencia Periodo="1">000003300</Potencia>
+          <Potencia Periodo="2">000003300</Potencia>
+          <Potencia Periodo="3">000003300</Potencia>
+          <Potencia Periodo="4">000000000</Potencia>
+          <Potencia Periodo="5">000000000</Potencia>
+          <Potencia Periodo="6">000000000</Potencia>
+          <Potencia Periodo="7">000000000</Potencia>
+          <Potencia Periodo="8">000000000</Potencia>
+          <Potencia Periodo="9">000000000</Potencia>
+          <Potencia Periodo="10">000000000</Potencia>
+        </PotenciasContratadas>
+        <MarcaMedidaBTConPerdidas>S</MarcaMedidaBTConPerdidas>
+        <KVAsTrafo>00000033300</KVAsTrafo>
+      </CondicionesContractuales>
+    </Contrato>
+    <PuntosDeMedida>
+      <PuntoDeMedida>
+        <CodPM>ES1234000000000001JN0F</CodPM>
+        <TipoMovimiento>A</TipoMovimiento>
+        <CUPS>ES1234000000000001JN0F</CUPS>
+        <TipoPM>05</TipoPM>
+        <ModoLectura>1</ModoLectura>
+        <EstadoPM>1</EstadoPM>
+        <Funcion>P</Funcion>
+        <DireccionEnlace>8406</DireccionEnlace>
+        <DireccionPuntoMedida>000000001</DireccionPuntoMedida>
+        <EstadoTelefono>1</EstadoTelefono>
+        <ClaveAcceso>0000000007</ClaveAcceso>
+        <TensionPM>0</TensionPM>
+        <FechaVigor>2003-01-01</FechaVigor>
+        <FechaAlta>2003-01-01</FechaAlta>
+        <Aparatos>
+          <Aparato>
+            <Modelo>
+              <Tipo>CG</Tipo>
+              <Marca>060</Marca>
+              <ModeloMarca>001</ModeloMarca>
+            </Modelo>
+            <TipoMovimiento>CX</TipoMovimiento>
+            <TipoEquipoMedida>L05</TipoEquipoMedida>
+            <TipoPropiedadAparato>1</TipoPropiedadAparato>
+            <ExtraccionLecturas>N</ExtraccionLecturas>
+            <DiscriminacionHorariaActiva>6</DiscriminacionHorariaActiva>
+            <LecturaDirecta>N</LecturaDirecta>
+            <CodPrecinto/>
+            <DatosAparatoNoICP>
+              <PeriodoFabricacion>2009</PeriodoFabricacion>
+              <NumeroSerie>0035658406</NumeroSerie>
+              <FuncionAparato>M</FuncionAparato>
+              <NumIntegradores>18</NumIntegradores>
+              <ConstanteEnergia>     1.000</ConstanteEnergia>
+              <ConstanteMaximetro>     1.000</ConstanteMaximetro>
+              <RuedasEnteras>09</RuedasEnteras>
+              <RuedasDecimales>02</RuedasDecimales>
+            </DatosAparatoNoICP>
+            <Medidas>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>61</Periodo>
+                <MagnitudMedida>AE</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       367.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>62</Periodo>
+                <MagnitudMedida>AE</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>      1039.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>63</Periodo>
+                <MagnitudMedida>AE</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       737.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>64</Periodo>
+                <MagnitudMedida>AE</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       148.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>65</Periodo>
+                <MagnitudMedida>AE</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       446.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>66</Periodo>
+                <MagnitudMedida>AE</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       324.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>61</Periodo>
+                <MagnitudMedida>R1</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       195.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>62</Periodo>
+                <MagnitudMedida>R1</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       550.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>63</Periodo>
+                <MagnitudMedida>R1</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       390.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>64</Periodo>
+                <MagnitudMedida>R1</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>        78.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>65</Periodo>
+                <MagnitudMedida>R1</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       237.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>66</Periodo>
+                <MagnitudMedida>R1</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>       158.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>61</Periodo>
+                <MagnitudMedida>PM</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>         1.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>62</Periodo>
+                <MagnitudMedida>PM</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>         1.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>63</Periodo>
+                <MagnitudMedida>PM</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>         1.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>64</Periodo>
+                <MagnitudMedida>PM</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>         0.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>65</Periodo>
+                <MagnitudMedida>PM</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>         1.00</LecturaAnterior>
+              </Medida>
+              <Medida>
+                <TipoDH>6</TipoDH>
+                <Periodo>66</Periodo>
+                <MagnitudMedida>PM</MagnitudMedida>
+                <Procedencia>30</Procedencia>
+                <LecturaAnterior>         1.00</LecturaAnterior>
+              </Medida>
+            </Medidas>
+          </Aparato>
+        </Aparatos>
+      </PuntoDeMedida>
+    </PuntosDeMedida>
+  </ActivacionCambiodeComercializadoraSinCambios>
+</MensajeActivacionCambiodeComercializadoraSinCambios>

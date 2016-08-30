@@ -42,12 +42,18 @@ Reclamaciones o Peticiones
 				Se modifica el comentario de los campos EnvioInformacionReclamacion/CierreReclamacion para pasarlo a un X4000 -paso 04/05 de reclamaciones-
 
 Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en el tipo complejo "CondicionesContractualesC", hace referencia a los movimientos de Activación (M1, C1, C2, A3).
-			
-				
+			Version 0.1 CNMC 2015.12.23 - Revisión R1
+-En el tipo complejo "VariableAportacionInformacion", se modifica el carácter del campo variable a opcional y tipo variable y se modifica el carácter del campo valor a tipo opcional
+-Se modifica el tipo complejo "VariableAportacionInformacion" alterando el nombre de los campos que contiene
+-Se incluye la definición del elemento "VariableDetalleReclamacion"  del tipo "VariableDetalleReclamacion" (previamente eliminado del TipoMensajeR.xsd
+-Se modifica el tipo complejo "DatoRechazoReclamacion" para modificar el campo de comentarios y eliminar la fecha de cada motivo de rechazo.
 			Version X.X GISCE 2014.08.07
                           S'afegeix un altre cop CuentaBancaria amb un choice amb IBAN
 			Version X.X GISCE 2015.05.22
                           Afegim tag inventat Iberdrola TipodeTelegestión opcional
+			Version 0.2 CNMC 2016.04.01
+Se incluye un nuevo campo "TipoAutoconsumo" en el tipo complejo "ContratoConModificacion" y en el tipo complejo "contrato"
+				
 		</xs:documentation>
 	</xs:annotation>
 	<xs:complexType name="IdContrato">
@@ -362,6 +368,7 @@ Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en e
 				<xs:element name="FechaFinalizacion" type="xs:date"/>
 				<xs:element name="Duracion" type="Decimal2"/>
 			</xs:choice>
+			<xs:element name="TipoAutoconsumo" type="TipoAutoconsumo" minOccurs="0"/>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractuales"/>
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
@@ -380,6 +387,7 @@ Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en e
 				<xs:element name="FechaFinalizacion" type="xs:date"/>
 				<xs:element name="Duracion" type="Decimal2"/>
 			</xs:choice>
+			<xs:element name="TipoAutoconsumo" type="TipoAutoconsumo" minOccurs="0"/>
 			<xs:element name="TipoContratoATR" type="TipoContrato"/>
 			<xs:element name="CondicionesContractuales" type="CondicionesContractuales"/>
 			<xs:element name="ConsumoAnualEstimado" type="Decimal13" minOccurs="0"/>
@@ -863,8 +871,8 @@ Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en e
 		<xs:sequence>
 			<xs:element name="Secuencial" type="DecimalS9V2"/>
 			<xs:element name="CodigoMotivo" type="CodigoMotivoRechazo"/>
-			<xs:element name="Texto" type="X120" minOccurs="0"/>
-			<xs:element name="Fecha" type="xs:date"/>
+			<xs:element name="Comentarios" type="X4000" minOccurs="0"/>
+			
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EnvioInformacionReclamacion">
@@ -887,11 +895,47 @@ Modificaciones para PVPC: Se incluye el elemento opcional TipodeTelegestion en e
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="VariableAportacionInformacion">
-		<xs:sequence>
-			<xs:element name="Variable" type="X20"/>
-			<xs:element name="Valor" type="X45"/>
+		<xs:sequence> 
 			<xs:element name="TipoInformacion" type="TipoInformacionAdicional"/>
 			<xs:element name="DescPeticionInformacion" type="X255" minOccurs="0"/>
+			<xs:element name="Variable" type="Variable" minOccurs="0"/>
+			<xs:element name="Valor" type="X45" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VariableDetalleReclamacion">
+		<xs:sequence>
+			<xs:element name="NumExpedienteAcometida" type="X20" minOccurs="0"/>
+			<xs:element name="FechaIncidente" type="xs:date" minOccurs="0"/>
+			<xs:element name="NumFacturaATR" type="X26" minOccurs="0"/>
+			<xs:element name="TipoConceptoFacturado" type="TipoConceptoFacturado" minOccurs="0"/>
+			<xs:element name="FechaLectura" type="xs:date" minOccurs="0"/>
+			<xs:element name="CodigoDH" type="TipoDH" minOccurs="0"/>
+			<xs:element name="LecturasAportadas" type="LecturasAportadas" minOccurs="0"/>
+			<xs:element name="CodigoIncidencia" type="TipoIncidencia" minOccurs="0"/>
+			<xs:element name="CodigoSolicitud" type="CodigoDeSolicitud" minOccurs="0"/>
+			<xs:element name="ParametroContratacion" type="ParametroContratacion" minOccurs="0"/>
+			<xs:element name="ConceptoDisconformidad" type="X120" minOccurs="0"/>
+			<xs:element name="TipoDeAtencionIncorrecta" type="TipoAtencionIncorrecta" minOccurs="0"/>
+			<xs:element name="IBAN" type="X34" minOccurs="0"/>
+			<xs:element name="Contacto" type="ContactoConCorreoE" minOccurs="0"/>
+			<xs:element name="CodigoSolicitudReclamacion" type="CodigoDeSolicitud" minOccurs="0"/>
+			<xs:element name="FechaDesde" type="xs:date" minOccurs="0"/>
+			<xs:element name="FechaHasta" type="xs:date" minOccurs="0"/>
+			<xs:element name="ImporteReclamado" type="DecimalS10V4" minOccurs="0"/>
+			<xs:element name="UbicacionIncidencia" type="X45" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LecturasAportadas">
+		<xs:sequence>
+			<xs:element name="LecturaAportada" maxOccurs="20">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Integrador" type="MagnitudMedida" minOccurs="1"/>
+						<xs:element name="CodigoPeriodoDH" type="TipoCodigoPeriodoDH" minOccurs="1"/>
+						<xs:element name="LecturaPropuesta" type="DecimalS10V2" minOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CierreReclamacion">

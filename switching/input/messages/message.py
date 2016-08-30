@@ -62,6 +62,13 @@ XSD_DATA = {'F1': {'01': 'Facturacion.xsd'},
                    '07': ('AceptacionAnulacion.xsd',
                           'RechazoAnulacion.xsd'),
                    },
+            'R1': {'01': 'ReclamacionPeticion.xsd',
+                   '02': ('AceptacionReclamacion.xsd',
+                          'RechazoReclamacion.xsd'),
+                   '03': 'PeticionInformacionAdicionalReclamacion.xsd',
+                   '04': 'EnvioInformacionReclamacion.xsd',
+                   '05': 'CierreReclamacion.xsd',
+                   },
             'W1': {'01': 'MensajeAportacionLectura.xsd',
                    '02': ('AceptacionAportacionLectura.xsd',
                           'RechazoAportacionLectura.xsd'),
@@ -80,6 +87,8 @@ class MessageBase(object):
     """Classe base"""
     def __init__(self, xml, force_tipus=None):
         """Construeix un missatge base."""
+        self.obj = None
+        self.error = None
         if isinstance(xml, file):
             self.check_fpos(xml)
             xml = xml.read()
@@ -101,6 +110,13 @@ class MessageBase(object):
             msg = 'L\'XML no es correspon al tipus %s' % force_tipus
             raise except_f1('Error', _(msg))
         self.set_xsd()
+
+    @property
+    def valid(self):
+        if self.obj is None:
+            return None
+        else:
+            return not bool(self.error)
 
     def set_tipus(self):
         """Set type of message. To implement in child classes"""
@@ -131,12 +147,22 @@ class MessageBase(object):
 class Message(MessageBase):
     """Classe base intercanvi informacio comer-distri"""
 
-    def set_tipus(self):
-        """Setejar el tipus de missatge"""
+    @property
+    def get_cabecera_model(self):
+        """ Gets header model """
         try:
             obj = objectify.fromstring(self.str_xml)
-            self.tipus = obj.Cabecera.CodigoDelProceso.text
-            self.pas = obj.Cabecera.CodigoDePaso.text
+            return obj.Cabecera
+        except Exception, e:
+            return obj.CabeceraReclamacion
+
+    def set_tipus(self):
+        """Setejar el tipus de missatge"""
+        head = self.get_cabecera_model
+        try:
+            obj = objectify.fromstring(self.str_xml)
+            self.tipus = head.CodigoDelProceso.text
+            self.pas = head.CodigoDePaso.text
         except:
             msg = _('No s\'ha pogut identificar el codi de proces o '\
                     'codi de pas')
@@ -177,41 +203,56 @@ class Message(MessageBase):
         """Obtenir el pas del missatge"""
         return self.pas
 
-    def parse_xml(self):
+    def parse_xml(self, validate=True):
         """Importar el contingut de l'xml"""
         self.check_fpos(self.f_xsd)
         schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)
-        except Exception, e:
-            raise except_f1('Error', _(u'Document invàlid: {0}').format(e))
+        except Exception as e:
+            self.error = e.message
+            if validate:
+                raise except_f1('Error', _(u'Document invàlid: {0}').format(e))
+            else:
+                parser = objectify.makeparser(schema=None)
+                self.obj = objectify.fromstring(self.str_xml, parser)
 
     # Funcions relacionades amb la capçalera del XML
     @property
     def get_codi_emisor(self):
-        ref = self.obj.Cabecera.CodigoREEEmpresaEmisora.text
+        head = self.get_cabecera_model
+        ref = head.CodigoREEEmpresaEmisora.text
         if not ref:
             raise except_f1('Error', _('Document sense emisor'))
         return ref
 
     @property
     def get_codi_destinatari(self):
-        ref = self.obj.Cabecera.CodigoREEEmpresaDestino.text
+        head = self.get_cabecera_model
+        ref = head.CodigoREEEmpresaDestino.text
         if not ref:
             raise except_f1('Error', _('Document sense destinatari'))
         return ref
 
     @property
     def get_codi(self):
-        ref = self.obj.Cabecera.Codigo.text.strip()
+        try:
+            ref = self.obj.Cabecera.Codigo.text.strip()
+        except Exception, e:
+            ref = self.obj.CabeceraReclamacion.CUPS.text.strip()
         if not ref:
             raise except_f1('Error', _('Document sense codi'))
         return ref
 
     @property
+    def cups(self):
+        return self.get_codi
+
+    @property
     def codi_sollicitud(self):
-        ref = self.obj.Cabecera.CodigoDeSolicitud.text
+        head = self.get_cabecera_model
+        ref = head.CodigoDeSolicitud.text
         if not ref:
             raise except_f1('Error', _('Document sense codi de'\
                                        ' sol·licitud'))
@@ -219,7 +260,8 @@ class Message(MessageBase):
 
     @property
     def seq_sollicitud(self):
-        ref = self.obj.Cabecera.SecuencialDeSolicitud.text
+        head = self.get_cabecera_model
+        ref = head.SecuencialDeSolicitud.text
         if not ref:
             raise except_f1('Error', _('Document sense codi de'\
                                        ' seqüencial de sol·licitud'))
@@ -227,7 +269,8 @@ class Message(MessageBase):
 
     @property
     def data_sollicitud(self):
-        ref = self.obj.Cabecera.FechaSolicitud.text
+        head = self.get_cabecera_model
+        ref = head.FechaSolicitud.text
         if not ref:
             raise except_f1('Error', _('Document sense data de'\
                                        ' sol·licitud'))
@@ -235,7 +278,11 @@ class Message(MessageBase):
 
     @property
     def versio(self):
-        ref = self.obj.Cabecera.Version.text
+        head = self.get_cabecera_model
+        try:
+            ref = head.Version.text
+        except:
+            raise except_f1('Error', _('Document sense versio'))
         if not ref:
             raise except_f1('Error', _('Document sense versio'))
         return ref
@@ -282,7 +329,8 @@ class MessageTG(MessageBase):
 
     @property
     def supported(self):
-        if self.tipus in ('S02', 'S04', 'S05', 'S12'):
+        if self.tipus in ('S02', 'S04', 'S05', 'S12',
+                          'S09', 'S13', 'S17', 'S15'):
             return True
         else:
             return False

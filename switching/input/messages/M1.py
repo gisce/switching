@@ -102,3 +102,23 @@ class M1(Message):
         for i in self.obj.IncidenciasATRDistribuidoras.Incidencia:
             data.append(C1.Rebuig(i))
         return data
+
+    @property
+    def documents(self):
+        """Retorna una llista de documents adjunts"""
+        data = []
+        obj = getattr(self.obj, self.header)
+        if (hasattr(obj, 'RegistrosDocumento') and
+            hasattr(obj.RegistrosDocumento, 'RegistroDoc')):
+            for d in obj.RegistrosDocumento.RegistroDoc:
+                data.append(C1.RegistroDoc(d))
+        return data
+
+    @property
+    def documentacio_tecnica(self):
+        """Retorna l'objecte documentacio tecnica"""
+        obj = getattr(self.obj, self.header)
+        if hasattr(obj, 'DocTecnica'):
+            return C1.DocumentacioTecnica(obj.DocTecnica)
+        else:
+            return None

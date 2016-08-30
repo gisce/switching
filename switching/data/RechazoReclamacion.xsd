@@ -13,13 +13,15 @@
 		Version X.X OCSUM 2014.04.03 Reclamaciones, Incidencias o Peticiones
 			Creación xsd
 		Version 0.0 CNMC 2015.06.10 Reclamaciones o Peticiones. 
-			
+		Version 0.1 CNMC 2016.01.11 - Revisión R1
+-Se incluye la fecha del rechazo (una única fecha independientemente del número de motivos de rechazos) en el nodo "MensajeRechazoReclamacion.
 	-->
 	<xs:element name="MensajeRechazoReclamacion">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="CabeceraReclamacion" 					type="Cabecera"/>
-				<xs:element name="Rechazos" 	type="DatosRechazoReclamacion"/>
+				<xs:element name="CabeceraReclamacion" type="Cabecera"/>
+				<xs:element name="Fecha" type="xs:date"/>				
+				<xs:element name="Rechazos" type="DatosRechazoReclamacion"/>
 			</xs:sequence>
 			<xs:attribute name="AgenteSolicitante" type="Agente" use="required"/>
 		</xs:complexType>

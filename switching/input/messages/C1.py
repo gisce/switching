@@ -77,6 +77,17 @@ class C1(Message):
             data.append(PuntMesura(i))
         return data
 
+    @property
+    def documents(self):
+        """Retorna una llista de documents adjunts"""
+        data = []
+        obj = getattr(self.obj, self._header)
+        if (hasattr(obj, 'RegistrosDocumento') and
+                hasattr(obj.RegistrosDocumento, 'RegistroDoc')):
+            for d in obj.RegistrosDocumento.RegistroDoc:
+                data.append(RegistroDoc(d))
+        return data
+
 
 class PuntMesura(object):
     """Classe que implementa el punt de mesura
@@ -291,8 +302,8 @@ class PuntMesura(object):
     def comentarios(self):
         """Retorna una llista de comentaris"""
         data = []
-        if hasattr(self.pm, 'ComentariosPM'):
-            for i in self.pm.ComentariosPM.ComentarioPM:
+        if getattr(self.pm, 'ComentariosPM', []):
+            for i in getattr(self.pm.ComentariosPM, 'ComentarioPM', []):
                 data.append(i.ComentarioPM.Texto.text)
         return data
 
@@ -782,13 +793,23 @@ class Contracte(object):
         return mesos
 
     @property
+    def tipus_autoconsum(self):
+        """tipus autoconsum segons taula 103"""
+        tipus = '00'
+        try:
+            tipus = self.contracte.TipoAutoconsumo.text
+        except AttributeError as e:
+            pass
+        return tipus
+
+    @property
     def data_finalitzacio(self):
         """Retorna la data de finalització en el cas que la durada del
            contracte sigui inferior a 12 mesos"""
         data = ''
         try:
             data = self.contracte.FechaFinalizacion.text
-        except AttributeError:
+        except AttributeError as e:
             pass
         return data
 
@@ -864,27 +885,27 @@ class Contracte(object):
 class Client(object):
     """Classe Client"""
 
-    def __init__(self, data):
+    def __init__(self, data, idfield='IdCliente'):
         self.client = data
+        self.idfield = idfield
 
     @property
     def tipus_identificacio(self):
-        return self.client.IdCliente.TipoCIFNIF.text
+        obj = getattr(self.client, self.idfield)
+        return obj.TipoCIFNIF.text
 
     @property
     def codi_identificacio(self):
-        return self.client.IdCliente.Identificador.text
+        obj = getattr(self.client, self.idfield)
+        return obj.Identificador.text
 
     @property
     def nom(self):
         nom = ''
-        try:
+        if self.es_persona_juridica:
+            nom = self.client.Nombre.RazonSocial.text
+        else:
             nom = self.client.Nombre.NombreDePila.text
-        except AttributeError:
-            try:
-                nom = self.client.Nombre.RazonSocial.text
-            except AttributeError:
-                pass
         return nom
 
     @property
@@ -903,6 +924,33 @@ class Client(object):
             nom = self.client.Nombre.SegundoApellido.text
         except AttributeError:
             pass
+        return nom
+
+    @property
+    def es_persona_juridica(self):
+        res = True
+        try:
+            nom = self.client.Nombre.NombreDePila.text
+            res = False
+        except AttributeError:
+            try:
+                nom = self.client.Nombre.RazonSocial.text
+                res = True
+            except AttributeError:
+                pass
+        return res
+
+    def get_nom_complet(self):
+        ''' returns full name as in ERP 'cognom1 cognom2, nom'
+        :return: full_name
+        '''
+        if not self.es_persona_juridica:
+            nom = '{0}, {1}'.format(
+                (' '.join([self.cognom_1, self.cognom_2])).strip(),
+                self.nom
+            )
+        else:
+            nom = self.nom
         return nom
 
     @property
@@ -957,6 +1005,16 @@ class Client(object):
             pass
         return value
 
+    @property
+    def correu(self):
+        '''Correu electrònic'''
+        value = ''
+        try:
+            value = self.client.CorreoElectronico.text
+        except AttributeError:
+            pass
+        return value
+
 
 class Acceptacio(object):
     """Classe Acceptacio"""
@@ -996,6 +1054,16 @@ class Acceptacio(object):
         data = ''
         try:
             data = self.acc.FechaUltimaLectura.text
+        except AttributeError:
+            pass
+        return data
+
+    # R1-02
+    @property
+    def codi_reclamacio_distri(self):
+        data = ''
+        try:
+            data = self.acc.CodigoReclamacionDistribuidora.text
         except AttributeError:
             pass
         return data
@@ -1050,6 +1118,51 @@ class Condicions(object):
             pass
         return control_potencia
 
+    @property
+    def marca_mesura_bt_perdues(self):
+        marca_mesura_bt_perdues = ''
+        try:
+            marca_mesura_bt_perdues = self.cond.MarcaMedidaBTConPerdidas.text
+        except AttributeError as e:
+            pass
+        return marca_mesura_bt_perdues
+
+    @property
+    def kvas_trafo(self):
+        kvas_trafo = ''
+        try:
+            kvas_trafo = self.cond.KVAsTrafo.text
+        except AttributeError as e:
+            pass
+        return kvas_trafo
+
+    @property
+    def perc_perd_pactades(self):
+        perc_perd_pactades = ''
+        try:
+            perc_perd_pactades = self.cond.PorcentajePerdidasPactadas.text
+        except AttributeError as e:
+            pass
+        return perc_perd_pactades
+
+    def get_31lb_info(self):
+        ''' returns processed 31A LB info'''
+        kvas_trafo = self.kvas_trafo and float(self.kvas_trafo) or 0.0
+        if kvas_trafo > 1500.0:
+            kvas_trafo = kvas_trafo / 1000.0
+        try:
+            perc_perd = (
+                self.perc_perd_pactades and int(self.perc_perd_pactades)
+            )
+        except ValueError:
+            perc_perd = 4
+        res = {
+            'marca_mesura_bt_perdues': self.marca_mesura_bt_perdues == 'S',
+            'kvas_trafo': kvas_trafo,
+            'perc_perd_pactades': perc_perd or 4,
+        }
+        return res
+
 
 class Rebuig(object):
     """Classe Rebuig"""
@@ -1077,12 +1190,25 @@ class Rebuig(object):
 
     @property
     def descripcio(self):
-        motiu = ''
+        """
+        :return: Descripció o Comentaris (R1) de rebuig""
+        """
         try:
-            motiu = self.rebuig.Texto.text
-        except AttributeError:
-            pass
-        return motiu
+            desc = self.rebuig.Texto.text
+        except AttributeError, e:
+            try:
+                # R1 rebuig
+                desc = self.rebuig.Comentarios.text
+            except AttributeError, e:
+                desc = ''
+        return desc
+
+    @property
+    def comentaris(self):
+        """
+        :return: Descripció o Comentaris (R1) de rebuig""
+        """
+        return self.descripcio
 
     @property
     def data(self):
@@ -1279,3 +1405,249 @@ class Direccio(object):
         except AttributeError:
             pass
         return aclarador
+
+
+class Contacto(object):
+    def __init__(self, data):
+        self.contacte = data
+
+    @property
+    def nom(self):
+        nom = ''
+        if self.es_persona_juridica:
+            nom = self.contacte.Nombre.RazonSocial.text
+        else:
+            nom = self.contacte.Nombre.NombreDePila.text
+        return nom
+
+    @property
+    def cognom_1(self):
+        nom = ''
+        try:
+            nom = self.contacte.Nombre.PrimerApellido.text
+        except AttributeError:
+            pass
+        return nom
+
+    @property
+    def cognom_2(self):
+        nom = ''
+        try:
+            nom = self.contacte.Nombre.SegundoApellido.text
+        except AttributeError:
+            pass
+        return nom
+
+    @property
+    def es_persona_juridica(self):
+        res = True
+        try:
+            nom = self.contacte.Nombre.NombreDePila.text
+            res = False
+        except AttributeError:
+            try:
+                nom = self.contacte.Nombre.RazonSocial.text
+                res = True
+            except AttributeError:
+                pass
+        return res
+
+    def get_nom_complet(self):
+        ''' returns full name as in ERP 'cognom1 cognom2, nom'
+        :return: full_name
+        '''
+        if not self.es_persona_juridica:
+            nom = '{0}, {1}'.format(
+                (' '.join([self.cognom_1, self.cognom_2])).strip(),
+                self.nom
+            )
+        else:
+            nom = self.nom
+        return nom
+
+    @property
+    def telf_num(self):
+        num = ''
+        try:
+            num = self.contacte.Telefono.Numero.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def telf_prefix(self):
+        prefix = ''
+        try:
+            prefix = self.contacte.Telefono.PrefijoPais.text
+        except AttributeError:
+            pass
+        return prefix
+
+    @property
+    def correu(self):
+        '''Correu electrònic'''
+        value = ''
+        try:
+            value = self.contacte.CorreoElectronico.text
+        except AttributeError:
+            pass
+        return value
+
+
+class RegistrosDocumento(object):
+    """Document Registry present on many formats"""
+    def __init__(self, data):
+        self.docs = data
+        self.documents = []
+
+    def get_documents(self):
+        if getattr(self.docs, 'RegistroDoc', None) is not None:
+            for doc in self.docs.RegistroDoc:
+                self.documents.append(RegistroDoc(doc))
+        return self.documents
+
+
+class RegistroDoc(object):
+    """Document Registry on many formats"""
+    def __init__(self, data):
+        self.doc = data
+
+    @property
+    def doc_type(self):
+        value = ''
+        try:
+            value = self.doc.TipoDocAportado.text
+        except AttributeError:
+            pass
+        return value
+
+    @property
+    def url(self):
+        value = ''
+        try:
+            value = self.doc.DireccionUrl.text
+        except AttributeError:
+            pass
+        return value
+
+
+class DocumentacioTecnica(object):
+    def __init__(self, data):
+        self.doc_tec = data
+
+    @property
+    def es_Cie_electronic(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CieElectronico.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def codi_CIE(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.CodigoCie.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def potencia_instalada_BT(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.PotenciaInstBT.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def data_emissio_CIE(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.FechaEmisionCie.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def data_fi_CIE(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.FechaCaducidadCie.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def nif_intalador(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.NifInstalador.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def codi_instalador(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.CodigoInstalador.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def nom_instalador(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.NombreInstalador.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def tensio_suministrada(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.TensionSuministroCIE.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def intensitat_diferencial(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.IntensidadDif.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def sensibilitat_diferencial(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.SensibilidadDif.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def seccio_cable(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.SeccionCable.text
+        except AttributeError:
+            pass
+        return num
+
+    @property
+    def tipus_suministre(self):
+        num = ''
+        try:
+            num = self.doc_tec.DatosCie.CIEPapel.TipoSuministro.text
+        except AttributeError:
+            pass
+        return num

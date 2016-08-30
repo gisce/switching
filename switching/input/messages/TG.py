@@ -76,7 +76,10 @@ class Values(object):
             date_value = element.get(value)
         # Ugly fix for SAGECOM which puts this timestamp when the period doesn't
         # affect the contracted tariff
-        if date_value.upper() == 'FFFFFFFFFFFFFFW':
+        if \
+                date_value.upper() == 'FFFFFFFFFFFFFFW' \
+                or \
+                date_value == '00000000000000W':
             date_value = '19000101000000W'
         return datetime.strftime(datetime.\
                         strptime(date_value[:-1],
@@ -94,6 +97,7 @@ class Values(object):
         for value in self.meter.meter.S02:
             timestamp = self.get_timestamp(value, 'Fh')
             ret_values.append({'name': meter_name,
+                               'cnc_name': self.meter.cnc_name,
                                'timestamp': timestamp, 
                                'season':value.get('Fh')[-1:],
                                'magn': magn,
@@ -266,16 +270,78 @@ class Values(object):
                     'meters': task.get('TpMet'),
                     }
                 task_data_values = []
-                for task_data in task.TpPro:
-                    task_data_value = {
-                        'request': task_data.get('TpReq'),
-                        'stg_send': self.get_boolean(task_data, 'TpSend'),
-                        'store': self.get_boolean(task_data, 'TpStore'),
-                        'attributes': task_data.get('TpAttr'),
-                        }
-                    task_data_values.append(task_data_value)
+                if getattr(task, 'TpPro', None) is not None:
+                    for task_data in task.TpPro:
+                        task_data_value = {
+                            'request': task_data.get('TpReq'),
+                            'stg_send': self.get_boolean(task_data, 'TpSend'),
+                            'store': self.get_boolean(task_data, 'TpStore'),
+                            'attributes': task_data.get('TpAttr'),
+                            }
+                        task_data_values.append(task_data_value)
                 task_values['task_data'] = task_data_values
                 tasks.append(task_values)
             vals['tasks'] = tasks
             ret_values.append(vals)
         return ret_values
+
+    def get_S09(self, type='S09'):
+        '''get function for S09 (meter events)'''
+
+        meter_name = self.meter.name
+        ret_values = []
+        for value in getattr(self.meter.meter, type):
+            timestamp = self.get_timestamp(value, 'Fh')
+            values = {'name': meter_name,
+                      'timestamp': timestamp,
+                      'season':value.get('Fh')[-1:],
+                      'cnc_name': self.meter.cnc_name,
+                      'event_group': int(value.get('Et')),
+                      'event_code': int(value.get('C')),
+                     }
+            data = ''
+            d1s = ['D1: {}'.format(d)
+                   for d in getattr(value, 'D1', [])]
+            d2s = ['D2: {}'.format(d)
+                   for d in getattr(value, 'D2', [])]
+            data = '\n'.join(d1s + d2s)
+            if data:
+                values.update({'data': data})
+            ret_values.append(values)
+
+        return ret_values
+
+    def get_S13(self):
+        '''S13 (spontaneous events) has the same format as S09'''
+
+        return self.get_S09(type='S13')
+
+    def get_S17(self, type='S17'):
+        '''get function for S17 (concentrator events)'''
+
+        cnc_name = self.meter.name
+        ret_values = []
+        for value in getattr(self.meter.concentrator, type):
+            timestamp = self.get_timestamp(value, 'Fh')
+            values = {'name': cnc_name,
+                      'timestamp': timestamp,
+                      'season':value.get('Fh')[-1:],
+                      'event_group': int(value.get('Et')),
+                      'event_code': int(value.get('C')),
+                     }
+            data = ''
+            d1s = ['D1: {}'.format(d)
+                   for d in getattr(value, 'D1', [])]
+            d2s = ['D2: {}'.format(d)
+                   for d in getattr(value, 'D2', [])]
+            data = '\n'.join(d1s + d2s)
+            if data:
+                values.update({'data': data})
+            ret_values.append(values)
+
+        return ret_values
+
+    def get_S15(self):
+        '''S15 (spontaneous events) has the same format as S17'''
+
+        return self.get_S17(type='S15')
