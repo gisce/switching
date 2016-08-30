@@ -1072,7 +1072,7 @@ SUBTYPES_R101 = [
             ({
                 'min_fields': ['nif_cliente', 'nombre_cliente', 'cups',
                                'comentarios', 'num_fact'],
-                'code': '01',
+                'code': '09',
                 'name': u'DISCONFORMIDAD CON LECTURA FACTURADA',
                 'type': '02',
             }),
