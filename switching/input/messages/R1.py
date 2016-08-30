@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from switching.helpers.funcions import get_rec_attr
 
 from message import Message
 import C1
@@ -22,7 +23,12 @@ class R1(Message):
     @property
     def sollicitud(self):
         """Retorna l'objecte Sollicitud"""
-        return DatosPasoSollicitud(self.obj.SolicitudReclamacion.DatosSolicitud)
+        tree = 'SolicitudReclamacion.DatosSolicitud'
+        sol = get_rec_attr(self.obj, tree, False)
+        if sol:
+            return DatosPasoSollicitud(sol)
+        else:
+            return False
 
     @property
     def reclamacions(self):
@@ -51,7 +57,8 @@ class R1(Message):
     @property
     def tipus_reclamant(self):
         """Retorna l'objecte Tipo Reclamante"""
-        return self.obj.SolicitudReclamacion.TipoReclamante.text
+        tree = 'SolicitudReclamacion.TipoReclamante.text'
+        return get_rec_attr(self.obj, tree, '')
 
     @property
     def reclamant(self):
