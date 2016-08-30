@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from switching.helpers.funcions import aggr_consums, aggr_ajusts
 from switching.input.messages import C1
 from switching.input.messages import F1, message, R1, W1, A3, M1, FacturaATR, Q1
 from switching.input.messages import C2
@@ -14,6 +15,24 @@ from switching.output.messages.base import Cabecera
 from . import unittest
 
 from .test_helpers import get_data
+
+
+class Switching_Helpers_Test(unittest.TestCase):
+    """test de switching"""
+    def setUp(self):
+        self.consums = {'P1': 1, 'P2': 2, 'P3': 4, 'P4': 8, 'P5': 16, 'P6': 32}
+        self.consums_aggr = {'P1': 9, 'P2': 18, 'P3': 36}
+        self.consums_3p = dict(
+            [(k, v) for k, v in self.consums.items() if k in ['P1', 'P2', 'P3']]
+        )
+
+    def test_aggr_consums(self):
+        self.assertDictEqual(aggr_consums(self.consums), self.consums_aggr)
+        self.assertDictEqual(aggr_consums(self.consums_3p), self.consums_3p)
+
+    def test_aggr_ajusts(self):
+        self.assertDictEqual(aggr_consums(self.consums), self.consums_aggr)
+        self.assertDictEqual(aggr_consums(self.consums_3p), self.consums_3p)
 
 
 class test_Message_Base(unittest.TestCase):
@@ -97,6 +116,7 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_rectificadora = open(get_data("F1_rectificadora.xml"), "r")
         self.xml_conceptoieiva = open(get_data("F1_conceptoieiva.xml"), "r")
         self.xml_conceptoieiva_iva_empty = open(get_data("F1_conceptoieiva_iva_empty.xml"), "r")
+        self.xml_ajuste = open(get_data("F1_ajuste.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -139,6 +159,14 @@ class Switching_F1_Test(unittest.TestCase):
         self.assertEqual(periode.name, 'P1')
         self.assertEqual(periode.data_inici, '2010-03-01')
         self.assertEqual(periode.data_final, '2010-04-30')
+        comptadors = f1_atr.get_comptadors()
+        assert len(comptadors) == 1
+        for comptador in comptadors:
+            lectures = comptador.get_lectures()
+            # sense ajusts
+            for lect in lectures:
+                ajust = lect.get_info_ajust()
+                assert ajust is None
 
     def test_get_info_activa_no_medidas(self):
         f1 = F1(self.xml_no_medidas)
@@ -314,6 +342,52 @@ class Switching_F1_Test(unittest.TestCase):
         assert isinstance(f1_atr, FacturaATR)
         conceptes, total = f1_atr.get_info_conceptes_iva()
         assert len(conceptes) == 0
+
+    def test_facturacio_ajustes_1(self):
+        f1 = F1(self.xml_reactiva1)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        comptadors = f1_atr.get_comptadors()
+        assert len(comptadors) == 1
+        comptador = comptadors[0]
+        lectures = comptador.get_lectures()
+        res_dict = {
+            'PM': {'P1': 215, 'P2': 614, 'P3': 467},
+            'AE': {'P1': 215, 'P2': 467, 'P3': 614},
+            'R1': {'P1': 11, 'P2': 16, 'P3': 15},
+        }
+        for lect in lectures:
+            ajust = lect.get_info_ajust()
+            assert ajust['motivo'] == '08'
+            assert ajust['ajuste'] == res_dict[lect.magnitud][lect.periode]
+        # suport methods tests
+        self.assertDictEqual(
+            f1_atr.select_ajusts_from_lectures(lectures, 'A'), res_dict['AE']
+        )
+        self.assertDictEqual(
+            f1_atr.select_ajusts_from_lectures(lectures, 'R'), res_dict['R1']
+        )
+        self.assertDictEqual(
+            f1_atr.select_ajusts_from_lectures(lectures, 'M'), res_dict['PM']
+        )
+
+    def test_facturacio_ajustes_2(self):
+        f1 = F1(self.xml_ajuste)
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        comptadors = f1_atr.get_comptadors()
+        assert len(comptadors) == 1
+        comptador = comptadors[0]
+        lectures = comptador.get_lectures()
+        res_dict = {
+            'AE': {'P1': -678, 'P2': 678},
+        }
+        for lect in lectures:
+            ajust = lect.get_info_ajust()
+            assert ajust['motivo'] == '99'
+            assert ajust['ajuste'] == res_dict[lect.magnitud][lect.periode]
 
 class supportClass(object):
     """Funcions de suport"""
@@ -585,6 +659,83 @@ class SwitchingC1Test(unittest.TestCase):
         documents = c101_xml.documents
         assert not documents
 
+    def test_accept_no_sollicitud(self):
+        text_to_elim = '    <DatosSolicitud>\n' \
+                       '      <LineaNegocioElectrica>' \
+                                '01</LineaNegocioElectrica>\n' \
+                       '      <SolicitudAdmContractual>' \
+                                'S</SolicitudAdmContractual>\n' \
+                       '      <IndActivacionLectura>' \
+                                'S</IndActivacionLectura>\n' \
+                       '      <FechaPrevistaAccion>' \
+                                '2016-06-06</FechaPrevistaAccion>\n' \
+                       '      <IndSustitutoMandatario>' \
+                                'S</IndSustitutoMandatario>\n' \
+                       '    </DatosSolicitud>\n'
+
+        c101_no_text_xml = C1(self.xml_c101.read().replace(text_to_elim, ''))
+        c101_no_text_xml.set_xsd()
+        c101_no_text_xml.parse_xml(validate=False)
+
+        assert c101_no_text_xml.sollicitud is False
+
+    def test_accept_no_contracte(self):
+        text_to_elim = '    <Contrato>\n' \
+                       '      <IdContrato>\n' \
+                       '        <CodContrato>111111111</CodContrato>\n' \
+                       '      </IdContrato>\n' \
+                       '      <Duracion>12</Duracion>\n' \
+                       '      <TipoContratoATR>01</TipoContratoATR>\n' \
+                       '      <DireccionCorrespondencia>\n' \
+                       '        <Indicador>S</Indicador>\n' \
+                       '      </DireccionCorrespondencia>\n' \
+                       '    </Contrato>\n'
+
+        c101_no_text_xml = C1(self.xml_c101.read().replace(text_to_elim, ''))
+        c101_no_text_xml.set_xsd()
+        c101_no_text_xml.parse_xml(validate=False)
+
+        assert c101_no_text_xml.contracte is False
+
+    def test_accept_no_client(self):
+        text_to_elim = '    <Cliente>\n' \
+                       '      <IdCliente>\n' \
+                       '        <TipoCIFNIF>CI</TipoCIFNIF>\n' \
+                       '        <Identificador>B36385870</Identificador>\n' \
+                       '      </IdCliente>\n' \
+                       '      <Nombre>\n' \
+                       '        <RazonSocial>' \
+                                    'ACC Y COMP DE COCINA MILLAN Y MUÑOZ' \
+                                '</RazonSocial>\n' \
+                       '      </Nombre>\n' \
+                       '      <Telefono>\n' \
+                       '        <PrefijoPais>34</PrefijoPais>\n' \
+                       '        <Numero>666777888</Numero>\n' \
+                       '      </Telefono>\n' \
+                       '    </Cliente>\n'
+
+        c101_no_text_xml = C1(self.xml_c101.read().replace(text_to_elim, ''))
+        c101_no_text_xml.set_xsd()
+        c101_no_text_xml.parse_xml(validate=False)
+
+        assert c101_no_text_xml.client is False
+
+    def test_accept_no_id_type(self):
+        text_to_elim = '        <TipoCIFNIF>CI</TipoCIFNIF>\n'
+
+        c101_no_text_xml = C1(self.xml_c101.read().replace(text_to_elim, ''))
+        c101_no_text_xml.set_xsd()
+        c101_no_text_xml.parse_xml(validate=False)
+
+        assert c101_no_text_xml.client.tipus_identificacio == ''
+
+    def test_accept_no_cond_cont(self):
+        c101_no_text_xml = C1(self.xml_c101)
+        c101_no_text_xml.set_xsd()
+        c101_no_text_xml.parse_xml(validate=False)
+
+        assert c101_no_text_xml.contracte.condicions is False
+
 
 class SwitchingC2Test(unittest.TestCase):
     """test de C2"""
@@ -784,6 +935,109 @@ class SwitchingC2Test(unittest.TestCase):
         pas01.build_tree()
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_c201_regdocs.read())
+
+    def test_accept_no_sollicitud(self):
+        text_to_elim = '        <DatosSolicitud>\n' \
+                       '            <LineaNegocioElectrica>' \
+                                        '01</LineaNegocioElectrica>\n' \
+                       '            <SolicitudAdmContractual>' \
+                                        'S</SolicitudAdmContractual>\n' \
+                       '            <IndActivacionLectura>' \
+                                        'S</IndActivacionLectura>\n' \
+                       '            <FechaPrevistaAccion>' \
+                                        '2015-05-27</FechaPrevistaAccion>\n' \
+                       '            <IndSustitutoMandatario>' \
+                                        'S</IndSustitutoMandatario>\n' \
+                       '        </DatosSolicitud>\n'
+
+        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml.set_xsd()
+        c201_no_text_xml.parse_xml(validate=False)
+
+        assert c201_no_text_xml.sollicitud is False
+
+    def test_accept_no_contracte(self):
+        text_to_elim = '        <Contrato>\n' \
+                       '            <IdContrato>\n' \
+                       '                <CodContrato>' \
+                                            '111111111</CodContrato>\n' \
+                       '            </IdContrato>\n' \
+                       '            <Duracion>12</Duracion>\n' \
+                       '            <TipoContratoATR>01</TipoContratoATR>\n' \
+                       '            <CondicionesContractuales>\n' \
+                       '                <TarifaATR>001</TarifaATR>\n' \
+                       '                <PotenciasContratadas>\n' \
+                       '                    <Potencia Periodo="1">' \
+                                                '4400</Potencia>\n' \
+                       '                </PotenciasContratadas>\n' \
+                       '            </CondicionesContractuales>\n' \
+                       '            <DireccionCorrespondencia>\n' \
+                       '                <Indicador>S</Indicador>\n' \
+                       '            </DireccionCorrespondencia>\n' \
+                       '        </Contrato>\n'
+
+        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml.set_xsd()
+        c201_no_text_xml.parse_xml(validate=False)
+
+        assert c201_no_text_xml.contracte is False
+
+    def test_accept_no_client(self):
+        text_to_elim = '        <Cliente>\n' \
+                       '            <IdCliente>\n' \
+                       '                <TipoCIFNIF>DN</TipoCIFNIF>\n' \
+                       '                <Identificador>' \
+                                            '11111111H</Identificador>\n' \
+                       '            </IdCliente>\n' \
+                       '            <Nombre>\n' \
+                       '                <NombreDePila>Perico</NombreDePila>\n' \
+                       '                <PrimerApellido>' \
+                                            'Palote</PrimerApellido>\n' \
+                       '                <SegundoApellido>' \
+                                            'Pérez</SegundoApellido>\n' \
+                       '            </Nombre>\n' \
+                       '            <Fax>\n' \
+                       '                <PrefijoPais>34</PrefijoPais>\n' \
+                       '                <Numero>555124124</Numero>\n' \
+                       '            </Fax>\n' \
+                       '            <Telefono>\n' \
+                       '                <PrefijoPais>34</PrefijoPais>\n' \
+                       '                <Numero>555123123</Numero>\n' \
+                       '            </Telefono>\n' \
+                       '            <IndicadorTipoDireccion>' \
+                                        'S</IndicadorTipoDireccion>\n' \
+                       '        </Cliente>\n'
+
+        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml.set_xsd()
+        c201_no_text_xml.parse_xml(validate=False)
+
+        assert c201_no_text_xml.client is False
+
+    def test_accept_no_id_type(self):
+        text_to_elim = '        <TipoCIFNIF>DN</TipoCIFNIF>\n'
+
+        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml.set_xsd()
+        c201_no_text_xml.parse_xml(validate=False)
+
+        assert c201_no_text_xml.client.tipus_identificacio == ''
+
+    def test_accept_no_cond_cont(self):
+        text_to_elim = '            <CondicionesContractuales>\n' \
+                       '                <TarifaATR>001</TarifaATR>\n' \
+                       '                <PotenciasContratadas>\n' \
+                       '                    <Potencia Periodo="1">' \
+                                                '4400</Potencia>\n' \
+                       '                </PotenciasContratadas>\n' \
+                       '            </CondicionesContractuales>\n'
+
+        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml.set_xsd()
+        c201_no_text_xml.parse_xml(validate=False)
+
+        assert c201_no_text_xml.contracte.condicions is False
+
 
 
 class SwitchingA3Test(unittest.TestCase):
@@ -1004,6 +1258,107 @@ class SwitchingA3Test(unittest.TestCase):
         assert contract.codi_contracte == '111111111'
         assert contract.tipus_autoconsum == '2A'
 
+    def test_accept_no_sollicitud(self):
+        text_to_elim = '        <DatosSolicitud>\n' \
+                       '            <LineaNegocioElectrica>' \
+                                        '01</LineaNegocioElectrica>\n' \
+                       '            <SolicitudAdmContractual>' \
+                                        'S</SolicitudAdmContractual>\n' \
+                       '            <IndActivacionLectura>' \
+                                        'N</IndActivacionLectura>\n' \
+                       '            <FechaPrevistaAccion>' \
+                                        '2015-05-18</FechaPrevistaAccion>\n' \
+                       '            <CNAE>9820</CNAE>\n' \
+                       '            <IndSustitutoMandatario>' \
+                                        'S</IndSustitutoMandatario>\n' \
+                       '        </DatosSolicitud>\n'
+
+        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml.set_xsd()
+        a301_no_text_xml.parse_xml(validate=False)
+
+        assert a301_no_text_xml.sollicitud is False
+
+    def test_accept_no_contracte(self):
+        text_to_elim = '        <Contrato>\n' \
+                       '            <IdContrato>\n' \
+                       '                <CodContrato>111111111</CodContrato>\n' \
+                       '            </IdContrato>\n' \
+                       '            <Duracion>12</Duracion>\n' \
+                       '            <TipoContratoATR>01</TipoContratoATR>\n' \
+                       '            <CondicionesContractuales>\n' \
+                       '                <TarifaATR>001</TarifaATR>\n' \
+                       '                <PotenciasContratadas>\n' \
+                       '                    <Potencia Periodo="1">' \
+                                                '2300</Potencia>\n' \
+                       '                </PotenciasContratadas>\n' \
+                       '            </CondicionesContractuales>\n' \
+                       '            <DireccionCorrespondencia>\n' \
+                       '                <Indicador>S</Indicador>\n' \
+                       '            </DireccionCorrespondencia>\n' \
+                       '        </Contrato>\n'
+
+        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml.set_xsd()
+        a301_no_text_xml.parse_xml(validate=False)
+
+        assert a301_no_text_xml.contracte is False
+
+    def test_accept_no_client(self):
+        text_to_elim = '        <Cliente>\n' \
+                       '            <IdCliente>\n' \
+                       '                <TipoCIFNIF>DN</TipoCIFNIF>\n' \
+                       '                <Identificador>' \
+                                            '11111111H</Identificador>\n' \
+                       '            </IdCliente>\n' \
+                       '            <Nombre>\n' \
+                       '                <NombreDePila>Perico</NombreDePila>\n' \
+                       '                <PrimerApellido>' \
+                                            'Palote</PrimerApellido>\n' \
+                       '                <SegundoApellido>' \
+                                            'Pérez</SegundoApellido>\n' \
+                       '            </Nombre>\n' \
+                       '            <Fax>\n' \
+                       '                <PrefijoPais>34</PrefijoPais>\n' \
+                       '                <Numero>555124124</Numero>\n' \
+                       '            </Fax>\n' \
+                       '            <Telefono>\n' \
+                       '                <PrefijoPais>34</PrefijoPais>\n' \
+                       '                <Numero>555123123</Numero>\n' \
+                       '            </Telefono>\n' \
+                       '            <IndicadorTipoDireccion>' \
+                                        'S</IndicadorTipoDireccion>\n' \
+                       '        </Cliente>\n'
+
+        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml.set_xsd()
+        a301_no_text_xml.parse_xml(validate=False)
+
+        assert a301_no_text_xml.client is False
+
+    def test_accept_no_id_type(self):
+        text_to_elim = '        <TipoCIFNIF>DN</TipoCIFNIF>\n'
+
+        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml.set_xsd()
+        a301_no_text_xml.parse_xml(validate=False)
+
+        assert a301_no_text_xml.client.tipus_identificacio == ''
+
+    def test_accept_no_cond_cont(self):
+        text_to_elim = '            <CondicionesContractuales>\n' \
+                       '                <TarifaATR>001</TarifaATR>\n' \
+                       '                <PotenciasContratadas>\n' \
+                       '                    <Potencia Periodo="1">2300</Potencia>\n' \
+                       '                </PotenciasContratadas>\n' \
+                       '            </CondicionesContractuales>\n'
+
+        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml.set_xsd()
+        a301_no_text_xml.parse_xml(validate=False)
+
+        assert a301_no_text_xml.contracte.condicions is False
+
 
 class SwitchingM1Test(unittest.TestCase):
     """test de M1"""
@@ -1153,8 +1508,6 @@ class SwitchingM1Test(unittest.TestCase):
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_m101_ciepapel.read())
 
-
-
     def test_read_m101_docTec(self):
         self.m101_dt_xml = M1(self.xml_m101_DT)
         self.m101_dt_xml.set_xsd()
@@ -1184,7 +1537,109 @@ class SwitchingM1Test(unittest.TestCase):
         doc_tecnica = self.m101_dt_xml.documentacio_tecnica
         assert not doc_tecnica
 
+    def test_accept_no_sollicitud(self):
+        text_to_elim = '        <DatosSolicitud>\n' \
+                       '            <LineaNegocioElectrica>' \
+                                        '01</LineaNegocioElectrica>\n' \
+                       '            <SolicitudAdmContractual>' \
+                                        'S</SolicitudAdmContractual>\n' \
+                       '            <IndActivacionLectura>' \
+                                        'N</IndActivacionLectura>\n' \
+                       '            <FechaPrevistaAccion>' \
+                                        '2015-05-18</FechaPrevistaAccion>\n' \
+                       '        </DatosSolicitud>\n'
 
+        m101_no_text_xml = M1(self.xml_m101.read().replace(text_to_elim, ''))
+        m101_no_text_xml.set_xsd()
+        m101_no_text_xml.parse_xml(validate=False)
+
+        assert m101_no_text_xml.sollicitud is False
+
+    def test_accept_no_contracte(self):
+        text_to_elim = '        <Contrato>\n' \
+                       '            <IdContrato>\n' \
+                       '                <CodContrato>' \
+                                            '111111111</CodContrato>\n' \
+                       '            </IdContrato>\n' \
+                       '            <Duracion>12</Duracion>\n' \
+                       '            <TipoContratoATR>01</TipoContratoATR>\n' \
+                       '            <CondicionesContractuales>\n' \
+                       '                <TarifaATR>001</TarifaATR>\n' \
+                       '                <PotenciasContratadas>\n' \
+                       '                    <Potencia Periodo="1">' \
+                                                '4400</Potencia>\n' \
+                       '                </PotenciasContratadas>\n' \
+                       '            </CondicionesContractuales>\n' \
+                       '            <DireccionCorrespondencia>\n' \
+                       '                <Indicador>S</Indicador>\n' \
+                       '            </DireccionCorrespondencia>\n' \
+                       '        </Contrato>\n'
+
+        m101_no_text_xml = M1(
+            self.xml_m101.read().replace(text_to_elim, ''))
+        m101_no_text_xml.set_xsd()
+        m101_no_text_xml.parse_xml(validate=False)
+
+        assert m101_no_text_xml.contracte is False
+
+    def test_accept_no_client(self):
+        text_to_elim = '        <Cliente>\n' \
+                       '            <IdCliente>\n' \
+                       '                <TipoCIFNIF>DN</TipoCIFNIF>\n' \
+                       '                <Identificador>' \
+                                            '11111111H</Identificador>\n' \
+                       '            </IdCliente>\n' \
+                       '            <Nombre>\n' \
+                       '                <NombreDePila>Perico</NombreDePila>\n' \
+                       '                <PrimerApellido>' \
+                                            'Palote</PrimerApellido>\n' \
+                       '                <SegundoApellido>' \
+                                            'Pérez</SegundoApellido>\n' \
+                       '            </Nombre>\n' \
+                       '            <Fax>\n' \
+                       '                <PrefijoPais>34</PrefijoPais>\n' \
+                       '                <Numero>555124124</Numero>\n' \
+                       '            </Fax>\n' \
+                       '            <Telefono>\n' \
+                       '                <PrefijoPais>34</PrefijoPais>\n' \
+                       '                <Numero>555123123</Numero>\n' \
+                       '            </Telefono>\n' \
+                       '            <IndicadorTipoDireccion>' \
+                                        'S</IndicadorTipoDireccion>\n' \
+                       '        </Cliente>\n'
+
+        m101_no_text_xml = M1(
+            self.xml_m101.read().replace(text_to_elim, ''))
+        m101_no_text_xml.set_xsd()
+        m101_no_text_xml.parse_xml(validate=False)
+
+        assert m101_no_text_xml.client is False
+
+    def test_accept_no_id_type(self):
+        text_to_elim = '        <TipoCIFNIF>DN</TipoCIFNIF>\n'
+
+        m101_no_text_xml = M1(
+            self.xml_m101.read().replace(text_to_elim, ''))
+        m101_no_text_xml.set_xsd()
+        m101_no_text_xml.parse_xml(validate=False)
+
+        assert m101_no_text_xml.client.tipus_identificacio == ''
+
+    def test_accept_no_cond_cont(self):
+        text_to_elim = '            <CondicionesContractuales>\n' \
+                       '                <TarifaATR>001</TarifaATR>\n' \
+                       '                <PotenciasContratadas>\n' \
+                       '                    <Potencia Periodo="1">' \
+                                                '4400</Potencia>\n' \
+                       '                </PotenciasContratadas>\n' \
+                       '            </CondicionesContractuales>\n'
+
+        m101_no_text_xml = M1(
+            self.xml_m101.read().replace(text_to_elim, ''))
+        m101_no_text_xml.set_xsd()
+        m101_no_text_xml.parse_xml(validate=False)
+
+        assert m101_no_text_xml.contracte.condicions is False
 
 
 class SwitchingR1_Test(unittest.TestCase):
@@ -2441,6 +2896,53 @@ class SwitchingR1_Test(unittest.TestCase):
         assert dades_retipificacio.tipus == '02'
         assert dades_retipificacio.subtipus == '03'
         assert dades_retipificacio.descripcio_retipificacio == 'descripcio de la retipificacio.'
+
+    def test_accept_no_sollicitud(self):
+        text_to_elim = '        <DatosSolicitud>\n' \
+                       '            <Tipo>03</Tipo>\n' \
+                       '            <Subtipo>16</Subtipo>\n' \
+                       '        </DatosSolicitud>\n'
+
+        r101_no_text_xml = R1(
+            self.xml_r101_minim.read().replace(text_to_elim, '')
+        )
+        r101_no_text_xml.set_xsd()
+        r101_no_text_xml.parse_xml(validate=False)
+
+        assert r101_no_text_xml.sollicitud is False
+
+    def test_accept_no_reclamacions(self):
+        text_to_elim = '        <VariablesDetalleReclamacion>\n' \
+                       '            <VariableDetalleReclamacion/>\n' \
+                       '        </VariablesDetalleReclamacion>\n'
+
+        r101_no_text_xml = R1(
+            self.xml_r101_minim.read().replace(text_to_elim, '')
+        )
+        r101_no_text_xml.set_xsd()
+        r101_no_text_xml.parse_xml(validate=False)
+
+        assert r101_no_text_xml.reclamacions == []
+
+    def test_accept_no_id_type(self):
+        text_to_elim = '        <TipoReclamante>06</TipoReclamante>\n'
+
+        r101_no_text_xml = R1(
+            self.xml_r101_minim.read().replace(text_to_elim, ''))
+        r101_no_text_xml.set_xsd()
+        r101_no_text_xml.parse_xml(validate=False)
+
+        assert r101_no_text_xml.tipus_reclamant == ''
+
+    def test_accept_no_cond_cont(self):
+        text_to_elim = '        <Comentarios>R1-01 minimum Test</Comentarios>\n'
+
+        r101_no_text_xml = R1(
+            self.xml_r101_minim.read().replace(text_to_elim, ''))
+        r101_no_text_xml.set_xsd()
+        r101_no_text_xml.parse_xml(validate=False)
+
+        assert r101_no_text_xml.comentaris == ''
 
 
 class SwitchingParseValidate(unittest.TestCase):

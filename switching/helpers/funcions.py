@@ -140,6 +140,18 @@ def aggr_consums(consums):
     return resultat
 
 
+def aggr_ajusts(ajusts):
+    """Agrega els ajusts segons els periodes.
+
+    És a dir P1 = P1 + P4, P2 = P2 + P5, P3 = P3 + P6
+    :param ajusts: Diccionari d'ajustos
+    :type ajusts: dict
+    :returns: Un nou diccionari amb els ajusts agrupats P1, P2 i P3
+    :rtype: dict
+    """
+    return aggr_consums(ajusts)
+
+
 def exces_reactiva(consum_activa, consum_reactiva, marge):
     """Calcula l'excés de reactiva segons un marge donat.
 

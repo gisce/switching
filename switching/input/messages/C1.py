@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from message import Message, except_f1
+from switching.helpers.funcions import get_rec_attr
 
 
 class C1(Message):
@@ -10,19 +11,32 @@ class C1(Message):
     @property
     def sollicitud(self):
         """Retorna l'objecte Sollicitud"""
-        return Sollicitud(self.obj.CambiodeComercializadoraSinCambios.\
-                          DatosSolicitud)
+        tree = 'CambiodeComercializadoraSinCambios.DatosSolicitud'
+        sol = get_rec_attr(self.obj, tree, False)
+        if sol:
+            return Sollicitud(sol)
+        else:
+            return False
 
     @property
     def contracte(self):
         """Retorna l'objecte Contracte"""
-        obj = getattr(self.obj, self._header)
-        return Contracte(obj.Contrato)
+        tree = '{0}.Contrato'.format(self._header)
+        cont = get_rec_attr(self.obj, tree, False)
+        if cont:
+            return Contracte(cont)
+        else:
+            return False
 
     @property
     def client(self):
         """Retorna l'objecte Client"""
-        return Client(self.obj.CambiodeComercializadoraSinCambios.Cliente)
+        tree = 'CambiodeComercializadoraSinCambios.Cliente'
+        cli = get_rec_attr(self.obj, tree, False)
+        if cli:
+            return Client(cli)
+        else:
+            return False
 
     @property
     def acceptacio(self):
@@ -849,7 +863,12 @@ class Contracte(object):
     @property
     def condicions(self):
         """Retorna l'objecte Condicions"""
-        return Condicions(self.contracte.CondicionesContractuales)
+        tree = 'CondicionesContractuales'
+        cond = get_rec_attr(self.contracte, tree, False)
+        if cond:
+            return Condicions(cond)
+        else:
+            return False
 
     @property
     def consum_anual(self):
@@ -891,22 +910,20 @@ class Client(object):
 
     @property
     def tipus_identificacio(self):
-        obj = getattr(self.client, self.idfield)
-        return obj.TipoCIFNIF.text
+        tree = '{}.TipoCIFNIF.text'.format(self.idfield)
+        return get_rec_attr(self.client, tree, '')
 
     @property
     def codi_identificacio(self):
-        obj = getattr(self.client, self.idfield)
-        return obj.Identificador.text
+        tree = '{}.Identificador.text'.format(self.idfield)
+        return get_rec_attr(self.client, tree, '')
 
     @property
     def nom(self):
-        nom = ''
         if self.es_persona_juridica:
-            nom = self.client.Nombre.RazonSocial.text
+            return get_rec_attr(self.client, 'Nombre.RazonSocial.text', '')
         else:
-            nom = self.client.Nombre.NombreDePila.text
-        return nom
+            return get_rec_attr(self.client, 'Nombre.NombreDePila.text', '')
 
     @property
     def cognom_1(self):
