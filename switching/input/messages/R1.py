@@ -179,7 +179,7 @@ class R1(Message):
 
     def get_type_from_subtype(self, subtype):
         for x in SUBTYPES_R101:
-            if x['code'] == 'subtype':
+            if x['code'] == subtype:
                 return x['type']
         return []
 
