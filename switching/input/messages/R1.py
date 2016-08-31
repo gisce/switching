@@ -183,6 +183,12 @@ class R1(Message):
                 return x['type']
         return []
 
+    def get_minimum_fields(self, subtype):
+        for x in SUBTYPES_R101:
+            if x['code'] == subtype:
+                return x['min_fields']
+        return []
+
 
 class DatosPasoSollicitud(object):
     """Classe que implementa la sol·licitud"""
