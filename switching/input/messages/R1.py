@@ -4,6 +4,7 @@ from switching.helpers.funcions import get_rec_attr
 from message import Message
 import C1
 import W1
+from ...defs import SUBTYPES_R101
 
 
 class R1(Message):
@@ -172,6 +173,15 @@ class R1(Message):
     #     for i in obj.PuntosDeMedida.PuntoDeMedida:
     #         data.append(C1.PuntMesura(i))
     #     return data
+
+    def get_subtypes(self, type):
+        return [x['code'] for x in SUBTYPES_R101 if x['type'] == type]
+
+    def get_type_from_subtype(self, subtype):
+        for x in SUBTYPES_R101:
+            if x['code'] == subtype:
+                return x['type']
+        return []
 
 
 class DatosPasoSollicitud(object):
