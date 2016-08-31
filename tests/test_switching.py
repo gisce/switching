@@ -2945,12 +2945,12 @@ class SwitchingR1_Test(unittest.TestCase):
         assert r101_no_text_xml.comentaris == ''
 
     def test_get_subtipus(self):
-        r1 = R1()
+        r1 = R1(self.xml_r103_minim)
         self.assertEqual(r1.get_subtypes('01'), ['01', '02', '38'])
         self.assertEqual(r1.get_subtypes('05'), ['20', '21', '23', '39'])
 
     def test_get_tipus(self):
-        r1 = R1()
+        r1 = R1(self.xml_r103_minim)
         self.assertEqual(r1.get_type_from_subtype('01'), '01')
         self.assertEqual(r1.get_type_from_subtype('38'), '01')
         self.assertEqual(r1.get_type_from_subtype('20'), '05')
