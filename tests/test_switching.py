@@ -2968,11 +2968,11 @@ class SwitchingR1_Test(unittest.TestCase):
             '</CodigoSolicitud>', '</CodigoSolicitud>{0}'.format(info)))
         r101.set_xsd()
         r101.parse_xml()
-        self.assertTrue(r101.check_minumum_fields('01'))
+        self.assertEqual(len(r101.check_minimum_fields('01')), 0)
 
         # check:
         # 'codigo_incidencia'
-        self.assertTrue(r101.check_minumum_fields('03'))
+        self.assertEqual(len(r101.check_minimum_fields('03')), 0)
 
         # check:
         # 'num_fact', 'tipo_concepto_facturado'
@@ -2982,21 +2982,21 @@ class SwitchingR1_Test(unittest.TestCase):
             '</FechaIncidente>', '</FechaIncidente>{0}'.format(info_factura)))
         r101.set_xsd()
         r101.parse_xml()
-        self.assertTrue(r101.check_minumum_fields('08'))
+        self.assertEqual(len(r101.check_minimum_fields('08')), 0)
 
         # check:
         # 'lectura', 'fecha_de_lectura'
         r101 = R1(self.xml_r101_lectures)
         r101.set_xsd()
         r101.parse_xml()
-        self.assertTrue(r101.check_minumum_fields('36'))
+        self.assertEqual(len(r101.check_minimum_fields('36')), 0)
 
         # check:
         # 'fecha_desde', 'fecha_hasta', 'ubicacion_incidente'
         r101 = R1(self.xml_r101_0539)
         r101.set_xsd()
         r101.parse_xml()
-        self.assertTrue(r101.check_minumum_fields('24'))
+        self.assertEqual(len(r101.check_minimum_fields('24')), 0)
 
         # check:
         # 'codigo_de_solicitud', 'concepto_contratacion'
@@ -3005,7 +3005,7 @@ class SwitchingR1_Test(unittest.TestCase):
             '</CodigoSolicitud>', '</CodigoSolicitud>{0}'.format(info_sol)))
         r101.set_xsd()
         r101.parse_xml()
-        self.assertTrue(r101.check_minumum_fields('34'))
+        self.assertEqual(len(r101.check_minimum_fields('34')), 0)
 
         # check:
         # 'cta_banco'
@@ -3014,7 +3014,7 @@ class SwitchingR1_Test(unittest.TestCase):
             '</CodigoSolicitud>', '</CodigoSolicitud>{0}'.format(info_sol)))
         r101.set_xsd()
         r101.parse_xml()
-        self.assertTrue(r101.check_minumum_fields('14'))
+        self.assertEqual(len(r101.check_minimum_fields('14')), 0)
 
         # check:
         # 'sol_nuevos_suministros'
@@ -3023,21 +3023,21 @@ class SwitchingR1_Test(unittest.TestCase):
             '<FechaIncidente>', '{0}<FechaIncidente>'.format(info)))
         r101.set_xsd()
         r101.parse_xml()
-        self.assertTrue(r101.check_minumum_fields('18'))
+        self.assertEqual(len(r101.check_minimum_fields('18')), 0)
 
         # check:
         # 'cod_reclam_anterior'
-        self.assertTrue(r101.check_minumum_fields('23'))
+        self.assertEqual(len(r101.check_minimum_fields('23')), 0)
 
         # check:
         # 'importe_reclamado'
-        self.assertTrue(r101.check_minumum_fields('21'))
+        self.assertEqual(len(r101.check_minimum_fields('21')), 0)
 
         # check falten camps minims
         r101 = R1(self.xml_r101_minim)
         r101.set_xsd()
         r101.parse_xml()
-        self.assertFalse(r101.check_minumum_fields('01'))
+        self.assertGreater(len(r101.check_minimum_fields('01')), 0)
 
 
 class SwitchingParseValidate(unittest.TestCase):
