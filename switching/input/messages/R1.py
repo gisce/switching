@@ -189,14 +189,15 @@ class R1(Message):
                 return x['min_fields']
         return []
 
-    def check_minumum_fields(self, subtype):
+    def check_minimum_fields(self, subtype):
         min_fields = self.get_minimum_fields(subtype)
         min_fields_checker = MinimumFieldsChecker()
+        errors = []
         for field in min_fields:
             check = getattr(min_fields_checker, 'check_{0}'.format(field), None)
             if not check(self):
-                return False
-        return True
+                errors.append(field)
+        return errors
 
 
 class DatosPasoSollicitud(object):
