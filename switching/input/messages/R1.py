@@ -174,16 +174,22 @@ class R1(Message):
     #         data.append(C1.PuntMesura(i))
     #     return data
 
-    def get_subtypes(self, type):
+    def get_subtypes(self, type=None):
+        if not type:
+            type = self.sollicitud.tipus
         return [x['code'] for x in SUBTYPES_R101 if x['type'] == type]
 
-    def get_type_from_subtype(self, subtype):
+    def get_type_from_subtype(self, subtype=None):
+        if not subtype:
+            subtype = self.sollicitud.subtipus
         for x in SUBTYPES_R101:
             if x['code'] == subtype:
                 return x['type']
         return []
 
-    def get_minimum_fields(self, subtype):
+    def get_minimum_fields(self, subtype=None):
+        if not subtype:
+            subtype = self.sollicitud.subtipus
         for x in SUBTYPES_R101:
             if x['code'] == subtype:
                 return x['min_fields']
