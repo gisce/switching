@@ -763,14 +763,14 @@ class MinimumFieldsChecker(object):
         return errors
 
     def check_nif_cliente(self):
-        return getattr(getattr(self.r1, 'client', None), 'codi_identificacio', None)
+        return get_rec_attr(self.r1, "client.codi_identificacio", False)
 
     def check_nombre_cliente(self):
-        return getattr(getattr(self.r1, 'client', None), 'nom', None)
+        return get_rec_attr(self.r1, "client.nom", False)
 
     def check_telefono_contacto(self):
         for var in self.r1.reclamacions:
-            if not getattr(getattr(var, 'contacto', None), 'telf_num', None):
+            if not get_rec_attr(var, "contacto.telf_num", False):
                 return False
         return len(self.r1.reclamacions) > 0
 
