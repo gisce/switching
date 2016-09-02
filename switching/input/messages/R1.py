@@ -195,15 +195,9 @@ class R1(Message):
                 return x['min_fields']
         return []
 
-    def check_minimum_fields(self, subtype):
-        min_fields = self.get_minimum_fields(subtype)
-        min_fields_checker = MinimumFieldsChecker()
-        errors = []
-        for field in min_fields:
-            check = getattr(min_fields_checker, 'check_{0}'.format(field), None)
-            if not check(self):
-                errors.append(field)
-        return errors
+    def check_minimum_fields(self):
+        checker = MinimumFieldsChecker(self)
+        return checker.check()
 
 
 class DatosPasoSollicitud(object):
@@ -756,122 +750,134 @@ class Intervencion(object):
 
 
 class MinimumFieldsChecker(object):
-    def check_nif_cliente(self, r1):
-        return getattr(getattr(r1, 'client', None), 'codi_identificacio', None)
 
-    def check_nombre_cliente(self, r1):
-        return getattr(getattr(r1, 'client', None), 'nom', None)
+    def __init__(self, r1):
+        self.r1 = r1
 
-    def check_telefono_contacto(self, r1):
-        for var in r1.reclamacions:
+    def check(self):
+        errors = []
+        for field in self.r1.get_minimum_fields():
+            valid = getattr(self, 'check_{0}'.format(field), None)
+            if not valid():
+                errors.append(field)
+        return errors
+
+    def check_nif_cliente(self):
+        return getattr(getattr(self.r1, 'client', None), 'codi_identificacio', None)
+
+    def check_nombre_cliente(self):
+        return getattr(getattr(self.r1, 'client', None), 'nom', None)
+
+    def check_telefono_contacto(self):
+        for var in self.r1.reclamacions:
             if not getattr(getattr(var, 'contacto', None), 'telf_num', None):
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_cups(self, r1):
-        return r1.cups
+    def check_cups(self):
+        return self.r1.cups
 
-    def check_fecha_incidente(self, r1):
-        for var in r1.reclamacions:
+    def check_fecha_incidente(self):
+        for var in self.r1.reclamacions:
             if not var.data_incident:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_comentarios(self, r1):
-        return r1.comentaris
+    def check_comentarios(self):
+        return self.r1.comentaris
 
-    def check_codigo_incidencia(self, r1):
-        for var in r1.reclamacions:
+    def check_codigo_incidencia(self):
+        for var in self.r1.reclamacions:
             if not var.codi_incidencia:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_persona_de_contacto(self, r1):
-        for var in r1.reclamacions:
+    def check_persona_de_contacto(self):
+        for var in self.r1.reclamacions:
             if not var.contacto:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_num_fact(self, r1):
-        for var in r1.reclamacions:
+    def check_num_fact(self):
+        for var in self.r1.reclamacions:
             if not var.num_factura_atr:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_tipo_concepto_facturado(self, r1):
-        for var in r1.reclamacions:
+    def check_tipo_concepto_facturado(self):
+        for var in self.r1.reclamacions:
             if not var.tipus_concepte_facturat:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_lectura(self, r1):
-        for var in r1.reclamacions:
+    def check_lectura(self):
+        for var in self.r1.reclamacions:
             if len(var.lectures) == 0:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_fecha_de_lectura(self, r1):
-        for var in r1.reclamacions:
+    def check_fecha_de_lectura(self):
+        for var in self.r1.reclamacions:
             if not var.data_lectura:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_fecha_desde(self, r1):
-        for var in r1.reclamacions:
+    def check_fecha_desde(self):
+        for var in self.r1.reclamacions:
             if not var.data_inici:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_fecha_hasta(self, r1):
-        for var in r1.reclamacions:
+    def check_fecha_hasta(self):
+        for var in self.r1.reclamacions:
             if not var.data_fins:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_ubicacion_incidencia(self, r1):
-        for var in r1.reclamacions:
+    def check_ubicacion_incidencia(self):
+        for var in self.r1.reclamacions:
             if not var.ubicacio:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_codigo_de_solicitud(self, r1):
-        for var in r1.reclamacions:
+    def check_codigo_de_solicitud(self):
+        for var in self.r1.reclamacions:
             if not var.codi_sollicitud:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_concepto_contratacion(self, r1):
-        for var in r1.reclamacions:
+    def check_concepto_contratacion(self):
+        for var in self.r1.reclamacions:
             if not var.param_contractacio:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_cta_banco(self, r1):
-        for var in r1.reclamacions:
+    def check_cta_banco(self):
+        for var in self.r1.reclamacions:
             if not var.iban:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_sol_nuevos_suministro(self, r1):
-        for var in r1.reclamacions:
+    def check_sol_nuevos_suministro(self):
+        for var in self.r1.reclamacions:
             if not var.numexpedient:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_cod_reclam_anterior(self, r1):
-        for var in r1.reclamacions:
+    def check_cod_reclam_anterior(self):
+        for var in self.r1.reclamacions:
             if not var.codi_sollicitud_reclamacio:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_importe_reclamado(self, r1):
-        for var in r1.reclamacions:
+    def check_importe_reclamado(self):
+        for var in self.r1.reclamacions:
             if not var.import_reclamat:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
 
-    def check_tipo_atencion_incorrecta(self, r1):
-        for var in r1.reclamacions:
+    def check_tipo_atencion_incorrecta(self):
+        for var in self.r1.reclamacions:
             if not var.tipus_atencio_incorrecte:
                 return False
-        return len(r1.reclamacions) > 0
+        return len(self.r1.reclamacions) > 0
