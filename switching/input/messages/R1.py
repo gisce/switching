@@ -878,3 +878,23 @@ class MinimumFieldsChecker(object):
             if not var.tipus_atencio_incorrecte:
                 return False
         return len(self.r1.reclamacions) > 0
+
+
+# Module Functions
+
+def get_minimum_fields(r1_subtype):
+    for x in SUBTYPES_R101:
+        if x['code'] == r1_subtype:
+            return x['min_fields']
+    return []
+
+
+def get_subtypes(r1_type):
+    return [x['code'] for x in SUBTYPES_R101 if x['type'] == r1_type]
+
+
+def get_type_from_subtype(r1_subtype):
+    for x in SUBTYPES_R101:
+        if x['code'] == r1_subtype:
+            return x['type']
+    return []
