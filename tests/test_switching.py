@@ -2945,16 +2945,16 @@ class SwitchingR1_Test(unittest.TestCase):
         assert r101_no_text_xml.comentaris == ''
 
     def test_get_subtipus(self):
-        r1 = R1(self.xml_r103_minim)
-        self.assertEqual(r1.get_subtypes('01'), ['01', '02', '38'])
-        self.assertEqual(r1.get_subtypes('05'), ['20', '21', '22', '23', '39'])
+        from switching.input.messages.R1 import get_subtypes
+        self.assertEqual(get_subtypes('01'), ['01', '02', '38'])
+        self.assertEqual(get_subtypes('05'), ['20', '21', '22', '23', '39'])
 
     def test_get_tipus(self):
-        r1 = R1(self.xml_r103_minim)
-        self.assertEqual(r1.get_type_from_subtype('01'), '01')
-        self.assertEqual(r1.get_type_from_subtype('38'), '01')
-        self.assertEqual(r1.get_type_from_subtype('20'), '05')
-        self.assertEqual(r1.get_type_from_subtype('21'), '05')
+        from switching.input.messages.R1 import get_type_from_subtype
+        self.assertEqual(get_type_from_subtype('01'), '01')
+        self.assertEqual(get_type_from_subtype('38'), '01')
+        self.assertEqual(get_type_from_subtype('20'), '05')
+        self.assertEqual(get_type_from_subtype('21'), '05')
 
     def test_minimum_fields(self):
         xml_r101_text = self.xml_r101_0539.read()
