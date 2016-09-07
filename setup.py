@@ -7,6 +7,9 @@ from distutils.command.clean import clean as _clean
 from distutils.core import Command
 from setuptools import setup, find_packages
 
+from __future__ import (print_function)
+
+
 from switching import __version__
 
 PACKAGES_DATA = {'switching': ['data/*.xsd']}
