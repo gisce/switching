@@ -9,7 +9,6 @@ from setuptools import setup, find_packages
 
 from __future__ import (print_function)
 
-
 from switching import __version__
 
 PACKAGES_DATA = {'switching': ['data/*.xsd']}
@@ -21,7 +20,7 @@ class Clean(_clean):
         """Comença la tasca de neteja."""
         _clean.run(self)
         if os.path.exists(self.build_base):
-            print "Cleaning %s dir" % self.build_base
+            print ("Cleaning %s dir" % self.build_base)
             shutil.rmtree(self.build_base)
 
 
