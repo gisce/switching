@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Setup per la llibreria de Switching"""
+from __future__ import (print_function)
 import os
 import shutil
 import unittest
@@ -7,7 +8,6 @@ from distutils.command.clean import clean as _clean
 from distutils.core import Command
 from setuptools import setup, find_packages
 
-from __future__ import (print_function)
 
 from switching import __version__
 
