@@ -2941,6 +2941,40 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert len(comentaris) > 10
 
+    def test_read_r104(self):
+        self.r104_var_xml = R1(self.xml_r104_variables)
+        self.r104_var_xml.set_xsd()
+        self.r104_var_xml.parse_xml()
+
+        info_rec = self.r104_var_xml.envio_informacion_reclamacion
+
+        assert info_rec.num_expedient_acometida == '0123456789ABCD'
+        assert info_rec.data_informacio == '2016-01-20'
+        assert len(info_rec.comentaris) > 10
+        assert len(info_rec.documents) == 0
+        assert len(info_rec.variables_aportacio_informacio) == 2
+
+        var1 = info_rec.variables_aportacio_informacio[0]
+        assert var1.tipus_informacio == '01'
+        assert var1.desc_peticio_informacio == 'Informacio per fer testos.'
+        assert var1.variable == '01'
+        assert var1.valor == '125'
+
+        self.r104_reg_xml = R1(self.xml_r104_reg_doc)
+        self.r104_reg_xml.set_xsd()
+        self.r104_reg_xml.parse_xml()
+
+        info_rec = self.r104_reg_xml.envio_informacion_reclamacion
+
+        assert not info_rec.num_expedient_acometida
+        assert info_rec.data_informacio == '2016-01-20'
+        assert len(info_rec.documents) == 3
+        assert len(info_rec.variables_aportacio_informacio) == 0
+
+        reg1 = info_rec.documents[0]
+        assert reg1.doc_type == '01'
+        assert reg1.url == 'http://eneracme.com/docs/CIE0100001.pdf'
+
     def test_read_r105(self):
         self.r105_xml = R1(self.xml_r105)
         self.r105_xml.set_xsd()

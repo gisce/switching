@@ -793,13 +793,13 @@ class Intervencion(object):
 class VariableAportacionInformacion(object):
 
     def __init__(self, data):
-        self.variable = data
+        self.var = data
 
     @property
     def tipus_informacio(self):
         ref = None
         try:
-            return self.variable.TipoInformacion.text
+            return self.var.TipoInformacion.text
         except AttributeError:
             pass
         return ref
@@ -808,7 +808,7 @@ class VariableAportacionInformacion(object):
     def desc_peticio_informacio(self):
         desc = None
         try:
-            return self.variable.DescPeticionInformacion.text
+            return self.var.DescPeticionInformacion.text
         except AttributeError:
             pass
         return desc
@@ -817,7 +817,7 @@ class VariableAportacionInformacion(object):
     def variable(self):
         var = None
         try:
-            return self.variable.Variable.text
+            return self.var.Variable.text
         except AttributeError:
             pass
         return var
@@ -826,7 +826,7 @@ class VariableAportacionInformacion(object):
     def valor(self):
         val = None
         try:
-            return self.variable.Valor.text
+            return self.var.Valor.text
         except AttributeError:
             pass
         return val
