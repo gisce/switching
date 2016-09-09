@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 
-from message import Message, except_f1
+from .message import Message, except_f1
 from switching.helpers.funcions import get_rec_attr
 
 
@@ -1212,11 +1212,11 @@ class Rebuig(object):
         """
         try:
             desc = self.rebuig.Texto.text
-        except AttributeError, e:
+        except AttributeError:
             try:
                 # R1 rebuig
                 desc = self.rebuig.Comentarios.text
-            except AttributeError, e:
+            except AttributeError:
                 desc = ''
         return desc
 

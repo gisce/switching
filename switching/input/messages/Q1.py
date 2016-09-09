@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import date, datetime
 
-from message import Message, except_f1
+from .message import Message, except_f1
 from switching.helpers.funcions import get_rec_attr
-from defs import *
+from .defs import *
 
 
 class Q1(Message):

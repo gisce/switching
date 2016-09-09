@@ -1,8 +1,8 @@
 
 # -*- coding: utf-8 -*-
 
-from message import Message
-import C1
+from .message import Message
+import .C1
 
 
 class D1(Message):

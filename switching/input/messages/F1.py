@@ -2,10 +2,10 @@
 
 import gettext
 
-from defs import *
-from message import Message, except_f1
+from .defs import *
+from .message import Message, except_f1
 
-from Q1 import Q1, Lectura, Comptador
+from .Q1 import Q1, Lectura, Comptador
 from switching.helpers.funcions import (
     CODIS_REG_REFACT, exces_reactiva, aggr_consums, aggr_ajusts, get_rec_attr,
     TARIFES_MAXIMETRE
@@ -371,7 +371,7 @@ class FacturaATR(Facturas):
                 if val > 0 and i in INFO_TARIFA[self.codi_tarifa]['reactiva']:
                     calc[i] = val
             return calc
-        except KeyError, e:
+        except KeyError:
             msg = _('No s\'ha trobat el periode \'%s\' en les lectures '\
                     ' d\'activa') % e[0]
             raise except_f1('Error', msg)

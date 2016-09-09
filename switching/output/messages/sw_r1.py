@@ -2,8 +2,8 @@
 
 from libcomxml.core import XmlModel, XmlField
 
-from sw_c1 import Cliente, Nombre, Telefono, Contacto
-from sw_w1 import LecturaAportada
+from .sw_c1 import Cliente, Nombre, Telefono, Contacto
+from .sw_w1 import LecturaAportada
 
 
 class CabeceraReclamacion(XmlModel):
