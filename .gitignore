@@ -3,3 +3,6 @@
 .settings
 *.swp
 *.pyc
+.eggs
+.coverage
+*egg-info*

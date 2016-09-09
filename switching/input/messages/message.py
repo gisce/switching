@@ -153,7 +153,7 @@ class Message(MessageBase):
         try:
             obj = objectify.fromstring(self.str_xml)
             return obj.Cabecera
-        except Exception, e:
+        except Exception:
             return obj.CabeceraReclamacion
 
     def set_tipus(self):
@@ -192,7 +192,7 @@ class Message(MessageBase):
             self._header = fitxer.split(".xsd")[0]
             xsd = switching.get_data(fitxer)
             self.f_xsd = open(xsd, 'r')
-        except except_f1, e:
+        except except_f1 as e:
             raise e
         except:
             msg = (_('Fitxer \'%s\' corrupte') %
@@ -239,7 +239,7 @@ class Message(MessageBase):
     def get_codi(self):
         try:
             ref = self.obj.Cabecera.Codigo.text.strip()
-        except Exception, e:
+        except Exception:
             ref = self.obj.CabeceraReclamacion.CUPS.text.strip()
         if not ref:
             raise except_f1('Error', _('Document sense codi'))

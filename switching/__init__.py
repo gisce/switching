@@ -5,6 +5,8 @@
 Aquesta llibreria proveeix de les classes i mètodes necessaris pel switching
 
 """
+from __future__ import absolute_import
+
 import os
 
 __version__ = '2.7.3'
