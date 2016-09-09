@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<MensajeEnvioInformacionReclamacion xmlns="http://localhost/elegibilidad"
+                                      AgenteSolicitante="0123">
+    <CabeceraReclamacion>
+        <CodigoREEEmpresaEmisora>0321</CodigoREEEmpresaEmisora>
+        <CodigoREEEmpresaDestino>0123</CodigoREEEmpresaDestino>
+        <CodigoDelProceso>R1</CodigoDelProceso>
+        <CodigoDePaso>04</CodigoDePaso>
+        <CodigoDeSolicitud>201650008314</CodigoDeSolicitud>
+        <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+        <FechaSolicitud>2016-01-22T10:09:41</FechaSolicitud>
+        <CUPS>ES1234000000000001JN0F</CUPS>
+    </CabeceraReclamacion>
+    <EnvioInformacionReclamacion>
+        <DatosEnvioInformacion>
+            <NumExpedienteAcometida>0123456789ABCD</NumExpedienteAcometida>
+            <FechaInformacion>2016-01-20</FechaInformacion>
+        </DatosEnvioInformacion>
+        <VariablesAportacionInformacion>
+            <VariableAportacionInformacion>
+                <TipoInformacion>01</TipoInformacion>
+                <DescPeticionInformación>Informacio per fer testos.</DescPeticionInformación>
+                <Variable>01</Variable>
+                <Valor>125</Valor>
+            </VariableAportacionInformacion>
+            <VariableAportacionInformacion>
+                <TipoInformacion>02</TipoInformacion>
+            </VariableAportacionInformacion>
+        </VariablesAportacionInformacion>
+        <Comentarios>se comunica el t ynotifica que su contador no emite sus
+            lecturas // no calcula sus consumos desea revisio y facturas
+
+            66612345
+            llamar en cualquier momento
+        </Comentarios>
+    </EnvioInformacionReclamacion>
+</MensajeEnvioInformacionReclamacion>

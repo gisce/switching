@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<MensajeEnvioInformacionReclamacion xmlns="http://localhost/elegibilidad"
+                                      AgenteSolicitante="0123">
+    <CabeceraReclamacion>
+        <CodigoREEEmpresaEmisora>0321</CodigoREEEmpresaEmisora>
+        <CodigoREEEmpresaDestino>0123</CodigoREEEmpresaDestino>
+        <CodigoDelProceso>R1</CodigoDelProceso>
+        <CodigoDePaso>04</CodigoDePaso>
+        <CodigoDeSolicitud>201650008314</CodigoDeSolicitud>
+        <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+        <FechaSolicitud>2016-01-22T10:09:41</FechaSolicitud>
+        <CUPS>ES1234000000000001JN0F</CUPS>
+    </CabeceraReclamacion>
+    <EnvioInformacionReclamacion>
+        <DatosEnvioInformacion>
+            <FechaInformacion>2016-01-20</FechaInformacion>
+        </DatosEnvioInformacion>
+        <Comentarios/>
+        <RegistrosDocumento>
+            <RegistroDoc>
+                <TipoDocAportado>01</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/CIE0100001.pdf</DireccionUrl>
+            </RegistroDoc>
+            <RegistroDoc>
+                <TipoDocAportado>06</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/INV201509161234.pdf</DireccionUrl>
+            </RegistroDoc>
+            <RegistroDoc>
+                <TipoDocAportado>08</TipoDocAportado>
+                <DireccionUrl>http://eneracme.com/docs/NIF11111111H.pdf</DireccionUrl>
+            </RegistroDoc>
+        </RegistrosDocumento>
+    </EnvioInformacionReclamacion>
+</MensajeEnvioInformacionReclamacion>
