@@ -122,6 +122,12 @@ class R1(Message):
         """Retorna l'objecte InformacionAdicional"""
         return InformacionAdicional(self.obj.InformacionAdicional)
 
+    # 04
+    @property
+    def envio_informacion_reclamacion(self):
+        """Retorna l'objecte EnvioInformacionReclamacion"""
+        return EnvioInformacionReclamacion(self.obj.EnvioInformacionReclamacion)
+
 
     # 05
     @property
@@ -620,6 +626,57 @@ class InformacionAdicional(object):
             return ''
 
 
+class EnvioInformacionReclamacion(object):
+
+    def __init__(self, data):
+        self.info = data
+
+    @property
+    def num_expedient_acometida(self):
+        ref = None
+        try:
+            ref = self.info.DatosEnvioInformacion.NumExpedienteAcometida.text
+        except AttributeError, e:
+            pass
+        return ref
+
+    @property
+    def data_informacio(self):
+        return self.info.DatosEnvioInformacion.FechaInformacion.text
+
+    @property
+    def variables_aportacio_informacio(self):
+        """Retorna una llista de Variables de aportacions de informacio"""
+        data = []
+        try:
+            for i in self.info.VariablesAportacionInformacion.VariableAportacionInformacion:
+                if len(i.getchildren()):
+                    data.append(VariableAportacionInformacion(i))
+        except AttributeError:
+            pass
+        return data
+
+    @property
+    def comentaris(self):
+        try:
+            return self.info.Comentarios.text
+        except AttributeError, e:
+            return ''
+
+    @property
+    def documents(self):
+        """Return docuemnts if availables"""
+        data = []
+        try:
+            docs = self.info.RegistrosDocumento
+            for doc in docs.RegistroDoc:
+                if len(doc.getchildren()):
+                    data.append(C1.RegistroDoc(doc))
+        except AttributeError:
+            pass
+        return data
+
+
 class DatosInformacion(object):
     def __init__(self, data):
         self.dades_info = data
@@ -732,3 +789,44 @@ class Intervencion(object):
             pass
         return ref
 
+
+class VariableAportacionInformacion(object):
+
+    def __init__(self, data):
+        self.variable = data
+
+    @property
+    def tipus_informacio(self):
+        ref = None
+        try:
+            return self.variable.TipoInformacion.text
+        except AttributeError:
+            pass
+        return ref
+
+    @property
+    def desc_peticio_informacio(self):
+        desc = None
+        try:
+            return self.variable.DescPeticionInformacion.text
+        except AttributeError:
+            pass
+        return desc
+
+    @property
+    def variable(self):
+        var = None
+        try:
+            return self.variable.Variable.text
+        except AttributeError:
+            pass
+        return var
+
+    @property
+    def valor(self):
+        val = None
+        try:
+            return self.variable.Valor.text
+        except AttributeError:
+            pass
+        return val
