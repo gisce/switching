@@ -7,9 +7,9 @@
 from libcomxml.core import XmlModel, XmlField
 
 from switching.output.messages.base import Cabecera, IdCliente
-from mesures import Aparatos, Modelos
-from sw_c1 import DatosSolicitud, Contrato, Cliente, DatosAceptacion
-from sw_c1 import DatosActivacion, PuntosDeMedida
+from .mesures import Aparatos, Modelos
+from .sw_c1 import DatosSolicitud, Contrato, Cliente, DatosAceptacion
+from .sw_c1 import DatosActivacion, PuntosDeMedida
 
 
 class CiePapel(XmlModel):
