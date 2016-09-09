@@ -11,4 +11,3 @@ from .D1 import D1
 from .M1 import M1
 from .W1 import W1
 from .R1 import R1
-import .defs
