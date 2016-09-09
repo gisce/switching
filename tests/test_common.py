@@ -453,7 +453,7 @@ class test_ICP(unittest.TestCase):
             'enters': 1,
             'decimals': 0,
         })
-        c.build_tree(xml_declaration=True)
+        c.build_tree()
         xml = c.serialize(xml_declaration=True)
         self.assertXmlEqual(xml, self.loadFile(
             'DatosAparatoICPConIntegradores.xml'
