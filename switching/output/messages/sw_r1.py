@@ -563,11 +563,12 @@ class VariablesAportacionInformacion(XmlModel):
 
 
 class VariableAportacionInformacion(XmlModel):
-    _sort_order = ('variable_aportacio_info', 'desc_peticio_info', 'variable',
-                   'valor', )
+    _sort_order = ('variable_aportacio_info', 'tipus_info', 'desc_peticio_info',
+                   'variable', 'valor', )
 
     def __init__(self):
         self.variable_aportacio_info = XmlField('VariableAportacionInformacion')
+        self.tipus_info = XmlField('TipoInformacion')
         self.desc_peticio_info = XmlField('DescPeticionInformacion')
         self.variable = XmlField('Variable')
         self.valor = XmlField('Valor')
