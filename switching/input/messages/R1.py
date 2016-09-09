@@ -2,8 +2,8 @@
 from switching.helpers.funcions import get_rec_attr
 
 from .message import Message
-import .C1
-import .W1
+from .C1 import C1
+from .W1 import W1
 from ...defs import SUBTYPES_R101
 
 
