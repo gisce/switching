@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, print_function, unicode_literals
 
 from switching.output.messages.sw_c1 import (
     Contacto, CondicionesContractuales, PotenciasContratadas
@@ -8,12 +9,11 @@ from switching.output.messages.sw_c2 import CiePapel, DatosCie, DocTecnica,\
     RegistroDoc, RegistrosDocumento
 from switching.output.messages.mesures import NoICP, ICP, DatosAparato
 
-from . import unittest
-import os
-import decimal
-import sys
 
-from .test_helpers import get_data
+import unittest
+
+from tests import TestBase
+from tests.test_helpers import get_data
 from copy import copy, deepcopy
 
 from switching.defs import *
@@ -30,10 +30,7 @@ class test_Defs(unittest.TestCase):
         assert TABLA_111[0][1] == u'Telegestión Operativa con Curva de Carga Horaria'
 
 
-class test_Contacto(unittest.TestCase):
-    def loadFile(self, filename):
-        with open(get_data(filename), "r") as f:
-            return f.read()
+class test_Contacto(TestBase):
 
     def setUp(self):
         pass
@@ -49,7 +46,7 @@ class test_Contacto(unittest.TestCase):
             prefix='',
         )
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('Contacto_simple.xml'))
 
     def test_build_tree_juridica(self):
@@ -63,7 +60,7 @@ class test_Contacto(unittest.TestCase):
             prefix='',
         )
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('Contacto_juridica.xml'))
 
     def test_build_tree_with_phone(self):
@@ -77,7 +74,7 @@ class test_Contacto(unittest.TestCase):
             prefix='',
         )
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('Contacto_withphone.xml'))
 
     def test_build_tree_with_prefix(self):
@@ -91,7 +88,7 @@ class test_Contacto(unittest.TestCase):
             prefix='01',
         )
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('Contacto_withprefix.xml'))
 
     def test_build_tree_with_email(self):
@@ -106,17 +103,13 @@ class test_Contacto(unittest.TestCase):
             correu='ppalote@acme.com'
         )
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('Contacto_withemail.xml'))
 
 
-class test_CiePapel(unittest.TestCase):
+class test_CiePapel(TestBase):
 
     basic_data = {}
-
-    def loadFile(self, filename):
-        with open(get_data(filename), "r") as f:
-            return f.read()
 
     def setUp(self):
         self.basic_data = {
@@ -132,7 +125,7 @@ class test_CiePapel(unittest.TestCase):
         c = CiePapel()
         c.feed(self.basic_data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CiePapel_simple.xml'))
 
     def test_build_tree_codigo_instalador(self):
@@ -142,7 +135,7 @@ class test_CiePapel(unittest.TestCase):
         del data['nif_instalador']
         c.feed(data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CiePapel_codinst.xml'))
 
     def test_build_tree_fecha_caducidad(self):
@@ -151,7 +144,7 @@ class test_CiePapel(unittest.TestCase):
         data.update({'fecha_caducidad': '9999-01-01'})
         c.feed(data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CiePapel_caducidad.xml'))
 
     def test_build_tree_diferencial(self):
@@ -161,7 +154,7 @@ class test_CiePapel(unittest.TestCase):
                      'sensibilidad_diferencial': 300})
         c.feed(data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CiePapel_diferencial.xml'))
 
     def test_build_tree_seccion(self):
@@ -170,17 +163,13 @@ class test_CiePapel(unittest.TestCase):
         data.update({'seccion_cable': 16})
         c.feed(data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CiePapel_seccion.xml'))
 
 
-class test_DatosCie(unittest.TestCase):
+class test_DatosCie(TestBase):
 
     basic_data = {}
-
-    def loadFile(self, filename):
-        with open(get_data(filename), "r") as f:
-            return f.read()
 
     def setUp(self):
         cie_paper = CiePapel()
@@ -200,17 +189,13 @@ class test_DatosCie(unittest.TestCase):
         c = DatosCie()
         c.feed(self.basic_data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('DatosCie_simple.xml'))
 
 
-class test_DocTecnica(unittest.TestCase):
+class test_DocTecnica(TestBase):
 
     basic_data = {}
-
-    def loadFile(self, filename):
-        with open(get_data(filename), "r") as f:
-            return f.read()
 
     def setUp(self):
         cie_paper = CiePapel()
@@ -231,7 +216,7 @@ class test_DocTecnica(unittest.TestCase):
         c = DocTecnica()
         c.feed(self.basic_data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('DocTecnica_simple.xml'))
 
 
@@ -270,13 +255,9 @@ class test_registro_documento:
         self.assertXmlEqual(xml, self.loadFile('RegistroDocumento_simple.xml'))
 
 
-class test_CondicionesContractuales(unittest.TestCase):
+class test_CondicionesContractuales(TestBase):
 
     basic_data = {}
-
-    def loadFile(self, filename):
-        with open(get_data(filename), "r") as f:
-            return f.read()
 
     def test_build_tree_simple(self):
         potencies = PotenciasContratadas()
@@ -295,7 +276,7 @@ class test_CondicionesContractuales(unittest.TestCase):
 
         c.feed(self.basic_data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile('CondContractuales.xml'))
 
 
@@ -319,16 +300,13 @@ class test_CondicionesContractuales(unittest.TestCase):
 
         c.feed(self.basic_data)
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(
             xml, self.loadFile('CondContractualesMedidaBaja.xml')
         )
 
 
-class test_NoICP(unittest.TestCase):
-    def loadFile(self, filename):
-        with open(get_data(filename), "r") as f:
-            return f.read()
+class test_NoICP(TestBase):
 
     def setUp(self):
         pass
@@ -346,7 +324,7 @@ class test_NoICP(unittest.TestCase):
             'decimals': 0,
         })
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile(
             'DatosAparatoNoICPSinIntegradores.xml'
         ))
@@ -364,7 +342,7 @@ class test_NoICP(unittest.TestCase):
             'decimals': 0,
         })
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile(
             'DatosAparatoNoICPConIntegradores.xml'
         ))
@@ -391,7 +369,7 @@ class test_DatosAparato(unittest.TestCase):
             'decimals': 0,
         })
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile(
             'DatosAparatoSinIntegradores.xml'
         ))
@@ -409,16 +387,13 @@ class test_DatosAparato(unittest.TestCase):
             'decimals': 0,
         })
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile(
             'DatosAparatoConIntegradores.xml'
         ))
 
 
-class test_ICP(unittest.TestCase):
-    def loadFile(self, filename):
-        with open(get_data(filename), "r") as f:
-            return f.read()
+class test_ICP(TestBase):
 
     def setUp(self):
         pass
@@ -436,7 +411,7 @@ class test_ICP(unittest.TestCase):
             'decimals': 0,
         })
         c.build_tree()
-        xml = c.serialize()
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile(
             'DatosAparatoICPSinIntegradores.xml'
         ))
@@ -454,7 +429,7 @@ class test_ICP(unittest.TestCase):
             'decimals': 0,
         })
         c.build_tree()
-        xml = c.serialize(xml_declaration=True)
+        xml = str(c)
         self.assertXmlEqual(xml, self.loadFile(
             'DatosAparatoICPConIntegradores.xml'
         ))
