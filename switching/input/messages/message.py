@@ -1,5 +1,8 @@
-
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, unicode_literals, print_function
+
+from io import IOBase
+import six
 
 import gettext
 from lxml import objectify, etree
@@ -89,9 +92,17 @@ class MessageBase(object):
         """Construeix un missatge base."""
         self.obj = None
         self.error = None
-        if isinstance(xml, file):
+
+        if (six.PY2 and isinstance(xml, file)) or (six.PY3 and isinstance(xml, IOBase)):
             self.check_fpos(xml)
-            xml = xml.read()
+            xml = xml.read().encode('utf-8')
+            tmp_tree = xml.etree(
+                    encoding='unicode',
+                    xml_declaration=False,
+                    pretty_print=False
+            )
+            xml = tmp_tree.tostring()
+
         self.xml_orig = xml
         # Fem desaparèixer el header amb l'encoding de l'xml
         # <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -99,6 +110,7 @@ class MessageBase(object):
             root = etree.fromstring(xml)
         except etree.XMLSyntaxError:
             raise except_f1('Error', 'Fitxer XML erroni')
+
         uxml = etree.tostring(root).decode('iso-8859-1')
         self.str_xml = uxml
         self.tipus = ''
@@ -128,7 +140,9 @@ class MessageBase(object):
 
     def check_fpos(self, f_obj):
         """Setejar la posició actual dels fixers"""
-        if (isinstance(f_obj, file) and f_obj.tell() != 0):
+
+
+        if (six.PY2 and isinstance(f_obj, file)) or (six.PY3 and isinstance(f_obj, IOBase) and f_obj.tell() != 0):
             f_obj.seek(0)
 
     def get_tipus_xml(self):
