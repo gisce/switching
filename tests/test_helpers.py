@@ -3,7 +3,7 @@
 
 import os
 
-from . import unittest
+import unittest
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -24,4 +24,3 @@ def assertXmlEqual(self, got, want):
 
 unittest.TestCase.assertXmlEqual = assertXmlEqual
 unittest.TestCase.__str__ = unittest.TestCase.id
-

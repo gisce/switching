@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from functools import reduce
 
 """Helper functions for libComXml
 """
@@ -76,7 +77,7 @@ def codi_dh(tarifa, nlectures=6):
         return '6'
     elif tarifa == '011':
         if nlectures == 6:
-            return '6' 
+            return '6'
         else:
             return '3'
     elif tarifa in ('007', '008'):
@@ -84,14 +85,14 @@ def codi_dh(tarifa, nlectures=6):
 
 def codi_refact(producte):
     """Retorna el codi ocsum de refacturació
-    
+
     :param producte: nom del producte
     """
     return CODIS_REFACT.get(producte, False)
 
 def nom_refact(producte):
     """Retorna el nom del producte
-    
+
     :param producte: codi ocsum del producte
     """
     ref = dict(((v, k) for k, v in CODIS_REFACT.items()))
