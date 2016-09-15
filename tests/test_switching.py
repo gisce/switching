@@ -2563,7 +2563,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert comentaris == 'R1-01 lectures'
 
-        assert documents is None
+        assert documents == []
 
     def test_read_r101_documents(self):
         self.r101_xml = R1(self.xml_r101_documents)
