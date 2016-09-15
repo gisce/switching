@@ -81,11 +81,8 @@ class R1(Message):
     def documents(self):
         """Return docuemnts if availables"""
         obj = getattr(self.obj, self._header)
-        if len(getattr(obj, 'RegistrosDocumento', [])):
-            doc_registry = C1.RegistrosDocumento(obj.RegistrosDocumento)
-            return doc_registry.get_documents()
-        else:
-            return None
+        doc_registry = C1.RegistrosDocumento(obj.RegistrosDocumento)
+        return doc_registry.get_documents()
 
     # 02 KO
     @property
