@@ -2945,16 +2945,123 @@ class SwitchingR1_Test(unittest.TestCase):
         assert r101_no_text_xml.comentaris == ''
 
     def test_get_subtipus(self):
-        r1 = R1(self.xml_r103_minim)
-        self.assertEqual(r1.get_subtypes('01'), ['01', '02', '38'])
-        self.assertEqual(r1.get_subtypes('05'), ['20', '21', '22', '23', '39'])
+        from switching.input.messages.R1 import get_subtypes
+        self.assertEqual(get_subtypes('01'), ['01', '02', '38'])
+        r101 = R1(self.xml_r101_minim)
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(
+            r101.get_subtypes(),
+            ['13', '14', '15', '16', '17', '34', '35', '45', '48']
+        )
 
     def test_get_tipus(self):
-        r1 = R1(self.xml_r103_minim)
-        self.assertEqual(r1.get_type_from_subtype('01'), '01')
-        self.assertEqual(r1.get_type_from_subtype('38'), '01')
-        self.assertEqual(r1.get_type_from_subtype('20'), '05')
-        self.assertEqual(r1.get_type_from_subtype('21'), '05')
+        from switching.input.messages.R1 import get_type_from_subtype
+        self.assertEqual(get_type_from_subtype('01'), '01')
+        self.assertEqual(get_type_from_subtype('38'), '01')
+        self.assertEqual(get_type_from_subtype('20'), '05')
+        r101 = R1(self.xml_r101_minim)
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(r101.get_type_from_subtype(), '03')
+
+    def test_minimum_fields(self):
+        xml_r101_text = self.xml_r101_0539.read()
+
+        # check:
+        # 'nif_cliente', 'nombre_cliente', 'telefono_contacto', 'cups',
+        # 'fecha_incidente', 'comentarios', 'persona_de_contacto',
+        # 'tipo_atencion_incorrecta'
+        xml_r101_text_aux = xml_r101_text.replace('<Subtipo>39', '<Subtipo>01')
+        info = '<TipoDeAtencionIncorrecta>01</TipoDeAtencionIncorrecta>'
+        r101 = R1(xml_r101_text_aux.replace(
+            '</CodigoSolicitud>', '</CodigoSolicitud>{0}'.format(info)))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'codigo_incidencia'
+        r101 = R1(xml_r101_text.replace('<Subtipo>39', '<Subtipo>03'))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'num_fact', 'tipo_concepto_facturado'
+        xml_r101_text_aux = xml_r101_text.replace('<Subtipo>39', '<Subtipo>08')
+        info_factura = "<NumFacturaATR>11A</NumFacturaATR>" \
+                       "<TipoConceptoFacturado>10</TipoConceptoFacturado>"
+        r101 = R1(xml_r101_text_aux.replace(
+            '</FechaIncidente>', '</FechaIncidente>{0}'.format(info_factura)))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'lectura', 'fecha_de_lectura'
+        r101 = R1(self.xml_r101_lectures)
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'fecha_desde', 'fecha_hasta', 'ubicacion_incidente'
+        r101 = R1(xml_r101_text.replace('<Subtipo>39', '<Subtipo>24'))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'codigo_de_solicitud', 'concepto_contratacion'
+        xml_r101_text_aux = xml_r101_text.replace('<Subtipo>39', '<Subtipo>34')
+        info_sol = "<ParametroContratacion>01</ParametroContratacion>"
+        r101 = R1(xml_r101_text_aux.replace(
+            '</CodigoSolicitud>', '</CodigoSolicitud>{0}'.format(info_sol)))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'cta_banco'
+        xml_r101_text_aux = xml_r101_text.replace('<Subtipo>39', '<Subtipo>14')
+        info_sol = "<IBAN>0000000000000</IBAN>"
+        r101 = R1(xml_r101_text_aux.replace(
+            '</CodigoSolicitud>', '</CodigoSolicitud>{0}'.format(info_sol)))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'sol_nuevos_suministros'
+        xml_r101_text_aux = xml_r101_text.replace('<Subtipo>39', '<Subtipo>18')
+        info = "<NumExpedienteAcometida>123A</NumExpedienteAcometida>"
+        r101 = R1(xml_r101_text_aux.replace(
+            '<FechaIncidente>', '{0}<FechaIncidente>'.format(info)))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'cod_reclam_anterior'
+        r101 = R1(xml_r101_text.replace('<Subtipo>39', '<Subtipo>23'))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check:
+        # 'importe_reclamado'
+        r101 = R1(xml_r101_text.replace('<Subtipo>39', '<Subtipo>21'))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertEqual(len(r101.check_minimum_fields()), 0)
+
+        # check falten camps minims
+        r101 = R1(self.xml_r101_minim.read().replace(
+            '<Subtipo>16', '<Subtipo>01'))
+        r101.set_xsd()
+        r101.parse_xml()
+        self.assertGreater(len(r101.check_minimum_fields()), 0)
 
 
 class SwitchingParseValidate(unittest.TestCase):
