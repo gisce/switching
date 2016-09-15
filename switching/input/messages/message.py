@@ -95,23 +95,31 @@ class MessageBase(object):
 
         if (six.PY2 and isinstance(xml, file)) or (six.PY3 and isinstance(xml, IOBase)):
             self.check_fpos(xml)
-            xml = xml.read().encode('utf-8')
-            tmp_tree = xml.etree(
-                    encoding='unicode',
-                    xml_declaration=False,
-                    pretty_print=False
-            )
-            xml = tmp_tree.tostring()
+            xml = xml.read()
+
+        if (isinstance(xml, str)):
+            xml_utf = xml.encode('utf-8')
+        else:
+            raise AssertionError("Type '{}' of xml is not correct. Expected an 'str'".format(type(xml)) )
 
         self.xml_orig = xml
         # Fem desaparèixer el header amb l'encoding de l'xml
         # <?xml version="1.0" encoding="ISO-8859-1"?>
         try:
-            root = etree.fromstring(xml)
+            root = etree.fromstring(
+                    xml_utf,
+            )
         except etree.XMLSyntaxError:
             raise except_f1('Error', 'Fitxer XML erroni')
 
-        uxml = etree.tostring(root).decode('iso-8859-1')
+        uxml = str(etree.tostring(
+                    root,
+                    xml_declaration=None,
+                    encoding='unicode',
+                    pretty_print=False
+                    )
+                )
+
         self.str_xml = uxml
         self.tipus = ''
         self._header = ''
@@ -220,12 +228,13 @@ class Message(MessageBase):
     def parse_xml(self, validate=True):
         """Importar el contingut de l'xml"""
         self.check_fpos(self.f_xsd)
+        
         schema = etree.XMLSchema(file=self.f_xsd)
         parser = objectify.makeparser(schema=schema)
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)
         except Exception as e:
-            self.error = e.message
+            #self.error = e.message
             if validate:
                 raise except_f1('Error', _(u'Document invàlid: {0}').format(e))
             else:
