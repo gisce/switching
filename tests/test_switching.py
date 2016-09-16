@@ -497,7 +497,7 @@ class Switching_W1_Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_w101.read())
+        self.assertXmlEqual(xml, self.read(self.xml_w101))
 
     def test_create_pas01_0_value(self):
         sup = supportClass()
@@ -526,7 +526,7 @@ class Switching_W1_Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_w101_0.read())
+        self.assertXmlEqual(xml, self.read(self.xml_w101_0))
 
     def test_create_pas02_accept(self):
         sup = supportClass()
@@ -540,7 +540,7 @@ class Switching_W1_Test(TestBase):
             'datos_aceptacion': dades_accept})
         pas02.build_tree()
         xml = str(pas02)
-        self.assertXmlEqual(xml, self.xml_w102_ok.read())
+        self.assertXmlEqual(xml, self.read(self.xml_w102_ok))
 
     def test_create_pas02_reject(self):
         sup = supportClass()
@@ -556,7 +556,7 @@ class Switching_W1_Test(TestBase):
             'datos_rechazo': dades_reject})
         pas02.build_tree()
         xml = str(pas02)
-        self.assertXmlEqual(xml, self.xml_w102_ko.read())
+        self.assertXmlEqual(xml, self.read(self.xml_w102_ko))
 
     def test_read_w101(self):
         self.w101_xml = W1(self.xml_w101)
@@ -674,7 +674,7 @@ class SwitchingC1Test(TestBase):
                                 'S</IndSustitutoMandatario>\n' \
                        '    </DatosSolicitud>\n'
 
-        c101_no_text_xml = C1(self.xml_c101.read().replace(text_to_elim, ''))
+        c101_no_text_xml = C1(self.read(self.xml_c101).replace(text_to_elim, ''))
         c101_no_text_xml.set_xsd()
         c101_no_text_xml.parse_xml(validate=False)
 
@@ -692,7 +692,7 @@ class SwitchingC1Test(TestBase):
                        '      </DireccionCorrespondencia>\n' \
                        '    </Contrato>\n'
 
-        c101_no_text_xml = C1(self.xml_c101.read().replace(text_to_elim, ''))
+        c101_no_text_xml = C1(self.read(self.xml_c101).replace(text_to_elim, ''))
         c101_no_text_xml.set_xsd()
         c101_no_text_xml.parse_xml(validate=False)
 
@@ -715,7 +715,7 @@ class SwitchingC1Test(TestBase):
                        '      </Telefono>\n' \
                        '    </Cliente>\n'
 
-        c101_no_text_xml = C1(self.xml_c101.read().replace(text_to_elim, ''))
+        c101_no_text_xml = C1(self.read(self.xml_c101).replace(text_to_elim, ''))
         c101_no_text_xml.set_xsd()
         c101_no_text_xml.parse_xml(validate=False)
 
@@ -724,7 +724,7 @@ class SwitchingC1Test(TestBase):
     def test_accept_no_id_type(self):
         text_to_elim = '        <TipoCIFNIF>CI</TipoCIFNIF>\n'
 
-        c101_no_text_xml = C1(self.xml_c101.read().replace(text_to_elim, ''))
+        c101_no_text_xml = C1(self.read(self.xml_c101).replace(text_to_elim, ''))
         c101_no_text_xml.set_xsd()
         c101_no_text_xml.parse_xml(validate=False)
 
@@ -833,7 +833,7 @@ class SwitchingC2Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_c201.read())
+        self.assertXmlEqual(xml, self.read(self.xml_c201))
 
     def test_create_pas01_ciepapel(self):
         sup = supportClass()
@@ -884,7 +884,7 @@ class SwitchingC2Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_c201_ciepapel.read())
+        self.assertXmlEqual(xml, self.read(self.xml_c201_ciepapel))
 
     def test_create_pas01_documents_xml(self):
         sup = supportClass()
@@ -935,7 +935,7 @@ class SwitchingC2Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_c201_regdocs.read())
+        self.assertXmlEqual(xml, self.read(self.xml_c201_regdocs))
 
     def test_accept_no_sollicitud(self):
         text_to_elim = '        <DatosSolicitud>\n' \
@@ -951,7 +951,7 @@ class SwitchingC2Test(TestBase):
                                         'S</IndSustitutoMandatario>\n' \
                        '        </DatosSolicitud>\n'
 
-        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml = C2(self.read(self.xml_c201).replace(text_to_elim, ''))
         c201_no_text_xml.set_xsd()
         c201_no_text_xml.parse_xml(validate=False)
 
@@ -977,7 +977,7 @@ class SwitchingC2Test(TestBase):
                        '            </DireccionCorrespondencia>\n' \
                        '        </Contrato>\n'
 
-        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml = C2(self.read(self.xml_c201).replace(text_to_elim, ''))
         c201_no_text_xml.set_xsd()
         c201_no_text_xml.parse_xml(validate=False)
 
@@ -1009,7 +1009,7 @@ class SwitchingC2Test(TestBase):
                                         'S</IndicadorTipoDireccion>\n' \
                        '        </Cliente>\n'
 
-        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml = C2(self.read(self.xml_c201).replace(text_to_elim, ''))
         c201_no_text_xml.set_xsd()
         c201_no_text_xml.parse_xml(validate=False)
 
@@ -1018,7 +1018,7 @@ class SwitchingC2Test(TestBase):
     def test_accept_no_id_type(self):
         text_to_elim = '        <TipoCIFNIF>DN</TipoCIFNIF>\n'
 
-        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml = C2(self.read(self.xml_c201).replace(text_to_elim, ''))
         c201_no_text_xml.set_xsd()
         c201_no_text_xml.parse_xml(validate=False)
 
@@ -1033,7 +1033,7 @@ class SwitchingC2Test(TestBase):
                        '                </PotenciasContratadas>\n' \
                        '            </CondicionesContractuales>\n'
 
-        c201_no_text_xml = C2(self.xml_c201.read().replace(text_to_elim, ''))
+        c201_no_text_xml = C2(self.read(self.xml_c201).replace(text_to_elim, ''))
         c201_no_text_xml.set_xsd()
         c201_no_text_xml.parse_xml(validate=False)
 
@@ -1146,7 +1146,7 @@ class SwitchingA3Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_a301.read())
+        self.assertXmlEqual(xml, self.read(self.xml_a301))
 
     def test_create_pas01_ciepapel(self):
         sup = supportClass()
@@ -1194,7 +1194,7 @@ class SwitchingA3Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_a301_ciepapel.read())
+        self.assertXmlEqual(xml, self.read(self.xml_a301_ciepapel))
 
     def test_create_pas01_tipoautoconsumo(self):
         sup = supportClass()
@@ -1223,7 +1223,7 @@ class SwitchingA3Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_a301_autoconsumo.read())
+        self.assertXmlEqual(xml, self.read(self.xml_a301_autoconsumo))
 
     def test_read_a301(self):
         self.a301_xml = A3(self.xml_a301)
@@ -1274,7 +1274,7 @@ class SwitchingA3Test(TestBase):
                                         'S</IndSustitutoMandatario>\n' \
                        '        </DatosSolicitud>\n'
 
-        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml = A3(self.read(self.xml_a301).replace(text_to_elim, ''))
         a301_no_text_xml.set_xsd()
         a301_no_text_xml.parse_xml(validate=False)
 
@@ -1299,7 +1299,7 @@ class SwitchingA3Test(TestBase):
                        '            </DireccionCorrespondencia>\n' \
                        '        </Contrato>\n'
 
-        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml = A3(self.read(self.xml_a301).replace(text_to_elim, ''))
         a301_no_text_xml.set_xsd()
         a301_no_text_xml.parse_xml(validate=False)
 
@@ -1331,7 +1331,7 @@ class SwitchingA3Test(TestBase):
                                         'S</IndicadorTipoDireccion>\n' \
                        '        </Cliente>\n'
 
-        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml = A3(self.read(self.xml_a301).replace(text_to_elim, ''))
         a301_no_text_xml.set_xsd()
         a301_no_text_xml.parse_xml(validate=False)
 
@@ -1340,7 +1340,7 @@ class SwitchingA3Test(TestBase):
     def test_accept_no_id_type(self):
         text_to_elim = '        <TipoCIFNIF>DN</TipoCIFNIF>\n'
 
-        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml = A3(self.read(self.xml_a301).replace(text_to_elim, ''))
         a301_no_text_xml.set_xsd()
         a301_no_text_xml.parse_xml(validate=False)
 
@@ -1354,7 +1354,7 @@ class SwitchingA3Test(TestBase):
                        '                </PotenciasContratadas>\n' \
                        '            </CondicionesContractuales>\n'
 
-        a301_no_text_xml = A3(self.xml_a301.read().replace(text_to_elim, ''))
+        a301_no_text_xml = A3(self.read(self.xml_a301).replace(text_to_elim, ''))
         a301_no_text_xml.set_xsd()
         a301_no_text_xml.parse_xml(validate=False)
 
@@ -1456,7 +1456,7 @@ class SwitchingM1Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_m101.read())
+        self.assertXmlEqual(xml, self.read(self.xml_m101))
 
     def test_create_pas01_ciepapel(self):
         sup = supportClass()
@@ -1507,7 +1507,7 @@ class SwitchingM1Test(TestBase):
         })
         pas01.build_tree()
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_m101_ciepapel.read())
+        self.assertXmlEqual(xml, self.read(self.xml_m101_ciepapel))
 
     def test_read_m101_docTec(self):
         self.m101_dt_xml = M1(self.xml_m101_DT)
@@ -1550,7 +1550,7 @@ class SwitchingM1Test(TestBase):
                                         '2015-05-18</FechaPrevistaAccion>\n' \
                        '        </DatosSolicitud>\n'
 
-        m101_no_text_xml = M1(self.xml_m101.read().replace(text_to_elim, ''))
+        m101_no_text_xml = M1(self.read(self.xml_m101).replace(text_to_elim, ''))
         m101_no_text_xml.set_xsd()
         m101_no_text_xml.parse_xml(validate=False)
 
@@ -1577,7 +1577,7 @@ class SwitchingM1Test(TestBase):
                        '        </Contrato>\n'
 
         m101_no_text_xml = M1(
-            self.xml_m101.read().replace(text_to_elim, ''))
+            self.read(self.xml_m101).replace(text_to_elim, ''))
         m101_no_text_xml.set_xsd()
         m101_no_text_xml.parse_xml(validate=False)
 
@@ -1610,7 +1610,7 @@ class SwitchingM1Test(TestBase):
                        '        </Cliente>\n'
 
         m101_no_text_xml = M1(
-            self.xml_m101.read().replace(text_to_elim, ''))
+            self.read(self.xml_m101).replace(text_to_elim, ''))
         m101_no_text_xml.set_xsd()
         m101_no_text_xml.parse_xml(validate=False)
 
@@ -1620,7 +1620,7 @@ class SwitchingM1Test(TestBase):
         text_to_elim = '        <TipoCIFNIF>DN</TipoCIFNIF>\n'
 
         m101_no_text_xml = M1(
-            self.xml_m101.read().replace(text_to_elim, ''))
+            self.read(self.xml_m101).replace(text_to_elim, ''))
         m101_no_text_xml.set_xsd()
         m101_no_text_xml.parse_xml(validate=False)
 
@@ -1636,7 +1636,7 @@ class SwitchingM1Test(TestBase):
                        '            </CondicionesContractuales>\n'
 
         m101_no_text_xml = M1(
-            self.xml_m101.read().replace(text_to_elim, ''))
+            self.read(self.xml_m101).replace(text_to_elim, ''))
         m101_no_text_xml.set_xsd()
         m101_no_text_xml.parse_xml(validate=False)
 
@@ -1786,7 +1786,7 @@ class SwitchingR1_Test(TestBase):
         pas01.build_tree()
         pas01.pretty_print = True
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_r101_minim.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r101_minim))
 
     def test_create_pas01_reclamant(self):
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
@@ -1817,7 +1817,7 @@ class SwitchingR1_Test(TestBase):
         pas01.build_tree()
         pas01.pretty_print = True
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_r101_reclamant.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r101_reclamant))
 
     def test_create_pas01_client(self):
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
@@ -1847,7 +1847,7 @@ class SwitchingR1_Test(TestBase):
         pas01.build_tree()
         pas01.pretty_print = True
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_r101_client.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r101_client))
 
     def test_create_pas01_lectures(self):
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
@@ -1930,7 +1930,7 @@ class SwitchingR1_Test(TestBase):
         pas01.build_tree()
         pas01.pretty_print = True
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_r101_lectures.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r101_lectures))
 
     def test_create_pas01_documents(self):
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
@@ -1976,7 +1976,7 @@ class SwitchingR1_Test(TestBase):
         pas01.build_tree()
         pas01.pretty_print = True
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_r101_documents.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r101_documents))
 
     def test_create_pas01_05_39(self):
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
@@ -2127,7 +2127,7 @@ class SwitchingR1_Test(TestBase):
         pas01.build_tree()
         pas01.pretty_print = True
         xml = str(pas01)
-        self.assertXmlEqual(xml, self.xml_r101_0539.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r101_0539))
 
     def test_create_pas02_ok(self):
         pas02 = r1.MensajeAceptacionReclamacion()
@@ -2152,7 +2152,7 @@ class SwitchingR1_Test(TestBase):
         pas02.build_tree()
         pas02.pretty_print = True
         xml = str(pas02)
-        self.assertXmlEqual(xml, self.xml_r102_ok.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r102_ok))
 
     def test_create_pas02_ko(self):
         pas02 = r1.MensajeRechazoReclamacion()
@@ -2214,7 +2214,7 @@ class SwitchingR1_Test(TestBase):
         pas02.build_tree()
         pas02.pretty_print = True
         xml = str(pas02)
-        self.assertXmlEqual(xml, self.xml_r102_ko.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r102_ko))
 
     def test_create_pas03_minim(self):
         pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
@@ -2235,7 +2235,7 @@ class SwitchingR1_Test(TestBase):
         pas03.build_tree()
         pas03.pretty_print = True
         xml = str(pas03)
-        self.assertXmlEqual(xml, self.xml_r103_minim.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r103_minim))
 
     def test_create_pas03_desc_inter(self):
         pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
@@ -2263,7 +2263,7 @@ class SwitchingR1_Test(TestBase):
         pas03.build_tree()
         pas03.pretty_print = True
         xml = str(pas03)
-        self.assertXmlEqual(xml, self.xml_r103_desc.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r103_desc))
 
     def test_create_pas03_intervenciones(self):
         pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
@@ -2315,7 +2315,7 @@ class SwitchingR1_Test(TestBase):
         pas03.build_tree()
         pas03.pretty_print = True
         xml = str(pas03)
-        self.assertXmlEqual(xml, self.xml_r103_inter.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r103_inter))
 
     def test_create_pas03_retipificacion(self):
         pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
@@ -2345,7 +2345,7 @@ class SwitchingR1_Test(TestBase):
         pas03.build_tree()
         pas03.pretty_print = True
         xml = str(pas03)
-        self.assertXmlEqual(xml, self.xml_r103_retip.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r103_retip))
 
     def test_create_pas03_solicitudes(self):
         pas03 = r1.MensajePeticionInformacionAdicionalReclamacion()
@@ -2385,7 +2385,7 @@ class SwitchingR1_Test(TestBase):
         pas03.build_tree()
         pas03.pretty_print = True
         xml = str(pas03)
-        self.assertXmlEqual(xml, self.xml_r103_solicitudes.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r103_solicitudes))
 
     def test_create_pas05(self):
         pas05 = r1.MensajeCierreReclamacion()
@@ -2440,7 +2440,7 @@ class SwitchingR1_Test(TestBase):
         pas05.build_tree()
         pas05.pretty_print = True
         xml = str(pas05)
-        self.assertXmlEqual(xml, self.xml_r105.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r105))
 
     def test_create_pas05_retipificacio(self):
         pas05 = r1.MensajeCierreReclamacion()
@@ -2501,7 +2501,7 @@ class SwitchingR1_Test(TestBase):
         pas05.build_tree()
         pas05.pretty_print = True
         xml = str(pas05)
-        self.assertXmlEqual(xml, self.xml_r105_retipificacio.read())
+        self.assertXmlEqual(xml, self.read(self.xml_r105_retipificacio))
 
     def test_read_r101_minim(self):
         self.r101_xml = R1(self.xml_r101_minim)
@@ -2905,7 +2905,7 @@ class SwitchingR1_Test(TestBase):
                        '        </DatosSolicitud>\n'
 
         r101_no_text_xml = R1(
-            self.xml_r101_minim.read().replace(text_to_elim, '')
+            self.read(self.xml_r101_minim).replace(text_to_elim, '')
         )
         r101_no_text_xml.set_xsd()
         r101_no_text_xml.parse_xml(validate=False)
@@ -2918,7 +2918,7 @@ class SwitchingR1_Test(TestBase):
                        '        </VariablesDetalleReclamacion>\n'
 
         r101_no_text_xml = R1(
-            self.xml_r101_minim.read().replace(text_to_elim, '')
+            self.read(self.xml_r101_minim).replace(text_to_elim, '')
         )
         r101_no_text_xml.set_xsd()
         r101_no_text_xml.parse_xml(validate=False)
@@ -2929,7 +2929,7 @@ class SwitchingR1_Test(TestBase):
         text_to_elim = '        <TipoReclamante>06</TipoReclamante>\n'
 
         r101_no_text_xml = R1(
-            self.xml_r101_minim.read().replace(text_to_elim, ''))
+            self.read(self.xml_r101_minim).replace(text_to_elim, ''))
         r101_no_text_xml.set_xsd()
         r101_no_text_xml.parse_xml(validate=False)
 
@@ -2939,7 +2939,7 @@ class SwitchingR1_Test(TestBase):
         text_to_elim = '        <Comentarios>R1-01 minimum Test</Comentarios>\n'
 
         r101_no_text_xml = R1(
-            self.xml_r101_minim.read().replace(text_to_elim, ''))
+            self.read(self.xml_r101_minim).replace(text_to_elim, ''))
         r101_no_text_xml.set_xsd()
         r101_no_text_xml.parse_xml(validate=False)
 
@@ -2962,7 +2962,7 @@ class SwitchingParseValidate(TestBase):
 
     def test_parse_with_valid_xml(self):
         valid_xml = open(get_data("a301.xml"), "r")
-        valid_xml_text = valid_xml.read()
+        valid_xml_text = self.read(valid_xml)
         valid_xml = A3(valid_xml_text)
         valid_xml.set_xsd()
         self.assertIsNone(valid_xml.valid)
@@ -2974,7 +2974,7 @@ class SwitchingParseValidate(TestBase):
     def test_parse_with_validation(self):
         tipo_cont_atr = '            <TipoContratoATR>01</TipoContratoATR>\n'
         valid_xml = open(get_data("a301.xml"), "r")
-        valid_xml_text = valid_xml.read()
+        valid_xml_text = self.read(valid_xml)
         invalid_xml = A3(valid_xml_text.replace(tipo_cont_atr, ''))
         invalid_xml.set_xsd()
 
@@ -2993,7 +2993,7 @@ class SwitchingParseValidate(TestBase):
     def test_parse_without_validation(self):
         tipo_cont_atr = '            <TipoContratoATR>01</TipoContratoATR>\n'
         valid_xml = open(get_data("a301.xml"), "r")
-        valid_xml_text = valid_xml.read()
+        valid_xml_text = self.read(valid_xml)
         invalid_xml = A3(valid_xml_text.replace(tipo_cont_atr, ''))
 
         invalid_xml.set_xsd()

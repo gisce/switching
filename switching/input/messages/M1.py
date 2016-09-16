@@ -1,10 +1,9 @@
+from __future__ import absolute_import, print_function, unicode_literals
 
-# -*- coding: utf-8 -*-
 from switching.helpers.funcions import get_rec_attr
-
 from .message import Message, except_f1
-from .C1 import C1
-from .C2 import C2
+from switching.input.messages import C1, C2
+
 
 class M1(Message):
     """Classe que implementa M1."""
