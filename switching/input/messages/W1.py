@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 
-from message import Message
+from .message import Message
 
 
 class W1(Message):

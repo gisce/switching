@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """Setup per la llibreria de Switching"""
+from __future__ import (print_function)
 import os
 import shutil
 import unittest
 from distutils.command.clean import clean as _clean
 from distutils.core import Command
 from setuptools import setup, find_packages
+
 
 from switching import __version__
 
@@ -18,7 +20,7 @@ class Clean(_clean):
         """Comença la tasca de neteja."""
         _clean.run(self)
         if os.path.exists(self.build_base):
-            print "Cleaning %s dir" % self.build_base
+            print ("Cleaning %s dir" % self.build_base)
             shutil.rmtree(self.build_base)
 
 

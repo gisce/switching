@@ -7,7 +7,7 @@
 from libcomxml.core import XmlModel, XmlField
 
 from switching.output.messages.base import Cabecera, IdCliente
-from mesures import Aparatos
+from .mesures import Aparatos
 
 
 class DatosSolicitud(XmlModel):

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from switching.helpers.funcions import get_rec_attr
 
-from message import Message
-import C1
-import W1
+from .message import Message
+from .C1 import C1
+from .W1 import W1
 from ...defs import SUBTYPES_R101
 
 
@@ -437,7 +437,7 @@ class Cierre(object):
         """Retorna l'objecte Dades de tancament"""
         try:
             return DatosCierre(self.cierre.DatosCierre)
-        except AttributeError, e:
+        except AttributeError:
             return None
 
     @property
@@ -445,21 +445,21 @@ class Cierre(object):
         """Retorna l'objecte Retificacio"""
         try:
             return Retipificacio(self.cierre.Retipificacion)
-        except AttributeError, e:
+        except AttributeError:
             return None
 
     @property
     def codi_contracte(self):
         try:
             return self.cierre.CodContrato.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def comentaris(self):
         try:
             return self.cierre.Comentarios.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
 
@@ -473,90 +473,90 @@ class DatosCierre(object):
     def num_expediente_acometida(self):
         try:
             return self.dadescierre.NumExpedienteAcometida.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def data(self):
         try:
             return self.dadescierre.Fecha.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def hora(self):
         try:
             return self.dadescierre.Hora.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def tipus(self):
         try:
             return self.dadescierre.Tipo.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def subtipus(self):
         try:
             return self.dadescierre.Subtipo.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
     @property
     def codi_reclamacio_distri(self):
         try:
             return self.dadescierre.CodigoReclamacionDistribuidora.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def resultat_reclamacio(self):
         try:
             return self.dadescierre.ResultadoReclamacion.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def detall_resultat(self):
         try:
             return self.dadescierre.DetalleResultado.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def observacions(self):
         try:
             return self.dadescierre.Observaciones.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def indemnitzacio_abonada(self):
         try:
             return float(self.dadescierre.IndemnizacionAbonada.text)
-        except AttributeError, e:
+        except AttributeError:
             return 0.0
 
     @property
     def num_expedient_anomalia_frau(self):
         try:
             return self.dadescierre.NumExpedienteAnomaliaFraude.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def data_moviment(self):
         try:
             return self.dadescierre.FechaMovimiento.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
     @property
     def codi_sollicitud(self):
         try:
             return self.dadescierre.CodigoSolicitud.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
 
@@ -578,7 +578,7 @@ class Retipificacio(object):
         ref = None
         try:
             ref = self.retipificacio.DescRetipificacion.text
-        except AttributeError, e:
+        except AttributeError:
             pass
         return ref
 
@@ -594,7 +594,7 @@ class InformacionAdicional(object):
         """Retorna l'objecte Dades de informacio"""
         try:
             return DatosInformacion(self.info.DatosInformacion)
-        except AttributeError, e:
+        except AttributeError:
             return None
 
     @property
@@ -602,7 +602,7 @@ class InformacionAdicional(object):
         """Retorna l'objecte Informacio Intermitja"""
         try:
             return InformacionIntermedia(self.info.InformacionIntermedia)
-        except AttributeError, e:
+        except AttributeError:
             return None
 
     @property
@@ -610,7 +610,7 @@ class InformacionAdicional(object):
         """Retorna l'objecte Retificacio"""
         try:
             return Retipificacio(self.info.Retipificacion)
-        except AttributeError, e:
+        except AttributeError:
             return None
 
     @property
@@ -629,7 +629,7 @@ class InformacionAdicional(object):
     def comentaris(self):
         try:
             return self.info.Comentarios.text
-        except AttributeError, e:
+        except AttributeError:
             return ''
 
 
@@ -642,7 +642,7 @@ class DatosInformacion(object):
         ref = None
         try:
             ref = self.dades_info.NumExpedienteAcometida.text
-        except AttributeError, e:
+        except AttributeError:
             pass
         return ref
 
@@ -664,7 +664,7 @@ class InformacionIntermedia(object):
         ref = None
         try:
             ref = self.info_intermitja.DescInformacionIntermedia.text
-        except AttributeError, e:
+        except AttributeError:
             pass
         return ref
 
@@ -694,7 +694,7 @@ class SolicitudInformacionAdicional(object):
         ref = None
         try:
             ref = self.solicitud_info.DescPeticionInformacion.text
-        except AttributeError, e:
+        except AttributeError:
             pass
         return ref
 
@@ -728,7 +728,7 @@ class Intervencion(object):
         ref = None
         try:
             ref = self.intervencio.NumeroVisita.text
-        except AttributeError, e:
+        except AttributeError:
             pass
         return ref
 
@@ -741,7 +741,7 @@ class Intervencion(object):
         ref = None
         try:
             ref = self.intervencio.DetalleResultado.text
-        except AttributeError, e:
+        except AttributeError:
             pass
         return ref
 

@@ -1,5 +1,8 @@
-
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, unicode_literals, print_function
+
+from io import IOBase
+import six
 
 import gettext
 from lxml import objectify, etree
@@ -89,9 +92,20 @@ class MessageBase(object):
         """Construeix un missatge base."""
         self.obj = None
         self.error = None
-        if isinstance(xml, file):
+
+        if (six.PY2 and isinstance(xml, file)) or (six.PY3 and isinstance(xml, IOBase)):
             self.check_fpos(xml)
             xml = xml.read()
+
+        if isinstance(xml, six.text_type):
+            tmp_tree = etree.fromstring(xml.encode('utf-8'))
+            xml = etree.tostring(
+                tmp_tree,
+                encoding='unicode',
+                xml_declaration=False,
+                pretty_print=False
+            )
+
         self.xml_orig = xml
         # Fem desaparèixer el header amb l'encoding de l'xml
         # <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -99,8 +113,9 @@ class MessageBase(object):
             root = etree.fromstring(xml)
         except etree.XMLSyntaxError:
             raise except_f1('Error', 'Fitxer XML erroni')
-        uxml = etree.tostring(root).decode('iso-8859-1')
-        self.str_xml = uxml
+
+        #uxml = etree.tostring(root).decode('iso-8859-1')
+        self.str_xml = xml
         self.tipus = ''
         self._header = ''
         self.pas = ''
@@ -128,7 +143,9 @@ class MessageBase(object):
 
     def check_fpos(self, f_obj):
         """Setejar la posició actual dels fixers"""
-        if (isinstance(f_obj, file) and f_obj.tell() != 0):
+
+
+        if (six.PY2 and isinstance(f_obj, file)) or (six.PY3 and isinstance(f_obj, IOBase) and f_obj.tell() != 0):
             f_obj.seek(0)
 
     def get_tipus_xml(self):
@@ -153,7 +170,7 @@ class Message(MessageBase):
         try:
             obj = objectify.fromstring(self.str_xml)
             return obj.Cabecera
-        except Exception, e:
+        except Exception:
             return obj.CabeceraReclamacion
 
     def set_tipus(self):
@@ -192,7 +209,7 @@ class Message(MessageBase):
             self._header = fitxer.split(".xsd")[0]
             xsd = switching.get_data(fitxer)
             self.f_xsd = open(xsd, 'r')
-        except except_f1, e:
+        except except_f1 as e:
             raise e
         except:
             msg = (_('Fitxer \'%s\' corrupte') %
@@ -211,7 +228,7 @@ class Message(MessageBase):
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)
         except Exception as e:
-            self.error = e.message
+            self.error = six.text_type(e)
             if validate:
                 raise except_f1('Error', _(u'Document invàlid: {0}').format(e))
             else:
@@ -239,7 +256,7 @@ class Message(MessageBase):
     def get_codi(self):
         try:
             ref = self.obj.Cabecera.Codigo.text.strip()
-        except Exception, e:
+        except Exception:
             ref = self.obj.CabeceraReclamacion.CUPS.text.strip()
         if not ref:
             raise except_f1('Error', _('Document sense codi'))

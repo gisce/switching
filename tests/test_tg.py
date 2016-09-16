@@ -1,10 +1,12 @@
-from . import unittest
-from .test_helpers import get_data
+from __future__ import absolute_import, print_function, unicode_literals
+
+from tests.test_helpers import get_data
+from tests import TestBase
 
 from switching.input.messages import message, TG
 
 
-class TestS04Sagecom(unittest.TestCase):
+class TestS04Sagecom(TestBase):
     """
     Test for S04 reports of Sagecom meters
     """
@@ -46,7 +48,7 @@ class TestS04Sagecom(unittest.TestCase):
                             )
 
 
-class TestS04Circutor(unittest.TestCase):
+class TestS04Circutor(TestBase):
     """
     Test for S04 reports of Circutor meters
     """
@@ -88,7 +90,7 @@ class TestS04Circutor(unittest.TestCase):
                             )
 
 
-class TestS05(unittest.TestCase):
+class TestS05(TestBase):
 
     def setUp(self):
         self.xml = open(get_data('S05_2Ctr.xml'), "r")
@@ -115,7 +117,7 @@ class TestS05(unittest.TestCase):
         assert ctrs['2'] == 14
 
 
-class TestS12(unittest.TestCase):
+class TestS12(TestBase):
 
     def setUp(self):
         self.xml = open(get_data('S12'),'r')

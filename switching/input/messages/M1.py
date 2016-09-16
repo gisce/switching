@@ -1,9 +1,8 @@
+from __future__ import absolute_import, print_function, unicode_literals
 
-# -*- coding: utf-8 -*-
 from switching.helpers.funcions import get_rec_attr
-
-from message import Message, except_f1
-import C1, C2
+from .message import Message, except_f1
+from switching.input.messages import C1, C2
 
 
 class M1(Message):

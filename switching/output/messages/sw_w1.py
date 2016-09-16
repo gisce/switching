@@ -1,13 +1,15 @@
-# -*- coding: utf-8 -*-
+from __future__ import absolute_import, print_function, unicode_literals
 
 from libcomxml.core import XmlModel, XmlField
 
 from switching.output.messages.base import Cabecera
 
+import six
+
 
 def w1_format_measure(valor):
     return (
-        valor if isinstance(valor, basestring)
+        valor if isinstance(valor, six.string_types)
         else "%.2f" % float(valor) or '0.00'
     )
 
