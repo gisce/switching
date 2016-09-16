@@ -95,8 +95,10 @@ class MessageBase(object):
 
         if (six.PY2 and isinstance(xml, file)) or (six.PY3 and isinstance(xml, IOBase)):
             self.check_fpos(xml)
-            xml = xml.read().encode('utf-8')
-            tmp_tree = etree.fromstring(xml)
+            xml = xml.read()
+
+        if isinstance(xml, six.text_type):
+            tmp_tree = etree.fromstring(xml.encode('utf-8'))
             xml = etree.tostring(
                 tmp_tree,
                 encoding='unicode',
@@ -112,8 +114,8 @@ class MessageBase(object):
         except etree.XMLSyntaxError:
             raise except_f1('Error', 'Fitxer XML erroni')
 
-        uxml = etree.tostring(root).decode('iso-8859-1')
-        self.str_xml = uxml
+        #uxml = etree.tostring(root).decode('iso-8859-1')
+        self.str_xml = xml
         self.tipus = ''
         self._header = ''
         self.pas = ''
@@ -226,7 +228,7 @@ class Message(MessageBase):
         try:
             self.obj = objectify.fromstring(self.str_xml, parser)
         except Exception as e:
-            self.error = e.message
+            self.error = six.text_type(e)
             if validate:
                 raise except_f1('Error', _(u'Document invàlid: {0}').format(e))
             else:
