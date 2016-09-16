@@ -96,12 +96,13 @@ class MessageBase(object):
         if (six.PY2 and isinstance(xml, file)) or (six.PY3 and isinstance(xml, IOBase)):
             self.check_fpos(xml)
             xml = xml.read().encode('utf-8')
-            tmp_tree = xml.etree(
-                    encoding='unicode',
-                    xml_declaration=False,
-                    pretty_print=False
+            tmp_tree = etree.fromstring(xml)
+            xml = etree.tostring(
+                tmp_tree,
+                encoding='unicode',
+                xml_declaration=False,
+                pretty_print=False
             )
-            xml = tmp_tree.tostring()
 
         self.xml_orig = xml
         # Fem desaparèixer el header amb l'encoding de l'xml
