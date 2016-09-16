@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, print_function, unicode_literals
+import unittest
 
 from switching.helpers.funcions import aggr_consums, aggr_ajusts
 from switching.input.messages import C1
@@ -12,12 +14,11 @@ from switching.output.messages import sw_m1 as m1
 from switching.output.messages import sw_a3 as a3
 from switching.output.messages import sw_r1 as r1
 from switching.output.messages.base import Cabecera
-from . import unittest
+from tests import TestBase
+from tests.test_helpers import get_data
 
-from .test_helpers import get_data
 
-
-class Switching_Helpers_Test(unittest.TestCase):
+class Switching_Helpers_Test(TestBase):
     """test de switching"""
     def setUp(self):
         self.consums = {'P1': 1, 'P2': 2, 'P3': 4, 'P4': 8, 'P5': 16, 'P6': 32}
@@ -35,7 +36,7 @@ class Switching_Helpers_Test(unittest.TestCase):
         self.assertDictEqual(aggr_consums(self.consums_3p), self.consums_3p)
 
 
-class test_Message_Base(unittest.TestCase):
+class test_Message_Base(TestBase):
 
     def setUp(self):
         self.xml_a301_cabecera = open(get_data("a301.xml"), "r")
@@ -102,7 +103,7 @@ class test_Message_Base(unittest.TestCase):
 
 
 #@unittest.skip('uncommited data')
-class Switching_F1_Test(unittest.TestCase):
+class Switching_F1_Test(TestBase):
     """test de switching"""
     def setUp(self):
         self.xml = open(get_data("F1_exemple.xml"), "r")
@@ -459,7 +460,7 @@ class supportClass(object):
         return client
 
 
-class Switching_W1_Test(unittest.TestCase):
+class Switching_W1_Test(TestBase):
     """test de W1"""
 
     def setUp(self):
@@ -595,7 +596,7 @@ class Switching_W1_Test(unittest.TestCase):
         assert reason == '01'
 
 
-class SwitchingC1Test(unittest.TestCase):
+class SwitchingC1Test(TestBase):
     """test de C1"""
 
     def setUp(self):
@@ -737,7 +738,7 @@ class SwitchingC1Test(unittest.TestCase):
         assert c101_no_text_xml.contracte.condicions is False
 
 
-class SwitchingC2Test(unittest.TestCase):
+class SwitchingC2Test(TestBase):
     """test de C2"""
 
     def setUp(self):
@@ -1040,7 +1041,7 @@ class SwitchingC2Test(unittest.TestCase):
 
 
 
-class SwitchingA3Test(unittest.TestCase):
+class SwitchingA3Test(TestBase):
     """test de A3"""
 
     def setUp(self):
@@ -1360,7 +1361,7 @@ class SwitchingA3Test(unittest.TestCase):
         assert a301_no_text_xml.contracte.condicions is False
 
 
-class SwitchingM1Test(unittest.TestCase):
+class SwitchingM1Test(TestBase):
     """test de M1"""
 
     def setUp(self):
@@ -1642,7 +1643,7 @@ class SwitchingM1Test(unittest.TestCase):
         assert m101_no_text_xml.contracte.condicions is False
 
 
-class SwitchingR1_Test(unittest.TestCase):
+class SwitchingR1_Test(TestBase):
     """test de R1"""
 
     def setUp(self):
@@ -2957,7 +2958,7 @@ class SwitchingR1_Test(unittest.TestCase):
         self.assertEqual(r1.get_type_from_subtype('21'), '05')
 
 
-class SwitchingParseValidate(unittest.TestCase):
+class SwitchingParseValidate(TestBase):
 
     def test_parse_with_valid_xml(self):
         valid_xml = open(get_data("a301.xml"), "r")
