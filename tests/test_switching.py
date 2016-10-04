@@ -1094,6 +1094,7 @@ class SwitchingA3Test(unittest.TestCase):
         self.xml_a301 = open(get_data("a301.xml"), "r")
         self.xml_a301_ciepapel = open(get_data("a301_CiePapel.xml"), "r")
         self.xml_a301_autoconsumo = open(get_data("a301_Autoconsumo.xml"), "r")
+        self.xml_a301_regsdoc = open(get_data("a301_regsdoc.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
