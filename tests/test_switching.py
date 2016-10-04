@@ -1305,6 +1305,20 @@ class SwitchingA3Test(unittest.TestCase):
         assert contract.codi_contracte == '111111111'
         assert contract.tipus_autoconsum == '2A'
 
+    def test_read_c201_regdoc(self):
+        a301_xml = A3(self.xml_a301_regsdoc)
+        a301_xml.set_xsd()
+        a301_xml.parse_xml()
+        documents = a301_xml.documents
+        assert len(documents) > 0
+        assert documents[0].doc_type == '08'
+        assert documents[0].url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        a301_xml = A3(self.xml_a301)
+        a301_xml.set_xsd()
+        a301_xml.parse_xml()
+        documents = a301_xml.documents
+        assert documents == []
+
     def test_accept_no_sollicitud(self):
         text_to_elim = '        <DatosSolicitud>\n' \
                        '            <LineaNegocioElectrica>' \
