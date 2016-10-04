@@ -666,7 +666,7 @@ class SwitchingC1Test(unittest.TestCase):
         assert contracte.direccio_correspondencia == 'S'
         assert client.tipus_identificacio == 'CI'
         assert client.codi_identificacio == 'B36385870'
-        assert client.nom == 'ACC Y COMP DE COCINA MILLAN Y MUÑOZ'
+        assert client.nom == u'ACC Y COMP DE COCINA MILLAN Y MUÑOZ'
         assert client.telf_prefix == '34'
         assert client.telf_num == '666777888'
         assert documents == []
