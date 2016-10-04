@@ -1599,6 +1599,21 @@ class SwitchingM1Test(unittest.TestCase):
         doc_tecnica = self.m101_dt_xml.documentacio_tecnica
         assert not doc_tecnica
 
+    def test_read_m101_regdoc(self):
+        m101_xml = M1(self.xml_m101_regsdoc)
+        m101_xml.set_xsd()
+        m101_xml.parse_xml()
+        documents = m101_xml.documents
+        assert len(documents) > 0
+        doc = documents[0]
+        assert doc.doc_type == '08'
+        assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        m101_xml = M1(self.xml_m101)
+        m101_xml.set_xsd()
+        m101_xml.parse_xml()
+        documents = m101_xml.documents
+        assert documents == []
+
     def test_accept_no_sollicitud(self):
         text_to_elim = '        <DatosSolicitud>\n' \
                        '            <LineaNegocioElectrica>' \
