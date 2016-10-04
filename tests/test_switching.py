@@ -964,7 +964,7 @@ class SwitchingC2Test(unittest.TestCase):
         self.assertXmlEqual(xml, self.xml_c201_regdocs.read())
 
     def test_read_c201_regdoc(self):
-        c201_xml = C1(self.xml_c201_regdocs)
+        c201_xml = C2(self.xml_c201_regdocs)
         c201_xml.set_xsd()
         c201_xml.parse_xml()
         documents = c201_xml.documents
