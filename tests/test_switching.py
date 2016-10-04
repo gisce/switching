@@ -963,6 +963,25 @@ class SwitchingC2Test(unittest.TestCase):
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_c201_regdocs.read())
 
+    def test_read_c201_regdoc(self):
+        c201_xml = C1(self.xml_c201_regdocs)
+        c201_xml.set_xsd()
+        c201_xml.parse_xml()
+        documents = c201_xml.documents
+        assert len(documents) > 0
+        assert documents[0].doc_type == '01'
+        assert documents[0].url == 'http://eneracme.com/docs/CIE0100001.pdf'
+        assert documents[1].doc_type == '06'
+        assert documents[1].url == 'http://eneracme.com/docs/' \
+                                   'INV201509161234.pdf'
+        assert documents[2].doc_type == '08'
+        assert documents[2].url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        c201_xml = C1(self.xml_c201)
+        c201_xml.set_xsd()
+        c201_xml.parse_xml()
+        documents = c201_xml.documents
+        assert documents == []
+
     def test_accept_no_sollicitud(self):
         text_to_elim = '        <DatosSolicitud>\n' \
                        '            <LineaNegocioElectrica>' \
