@@ -645,6 +645,32 @@ class SwitchingC1Test(unittest.TestCase):
         assert t31a_lb_info['marca_mesura_bt_perdues']
         assert t31a_lb_info['kvas_trafo'] == 33.3
 
+    def test_read_c101_min(self):
+        c101_xml = C1(self.xml_c101)
+        c101_xml.set_xsd()
+        c101_xml.parse_xml()
+
+        solicitud = c101_xml.sollicitud
+        contracte = c101_xml.contracte
+        client = c101_xml.client
+        documents = c101_xml.documents
+
+        assert solicitud.linia_negoci == '01'
+        assert solicitud.sollicitudadm == 'S'
+        assert solicitud.cicle_activacio == 'S'
+        assert solicitud.data_prevista_accio == '2016-06-06'
+        assert solicitud.representant == 'S'
+        assert contracte.codi_contracte == '111111111'
+        assert contracte.durada == 12
+        assert contracte.tipus_contracte == '01'
+        assert contracte.direccio_correspondencia == 'S'
+        assert client.tipus_identificacio == 'CI'
+        assert client.codi_identificacio == 'B36385870'
+        assert client.nom == 'ACC Y COMP DE COCINA MILLAN Y MUÑOZ'
+        assert client.telf_prefix == '34'
+        assert client.telf_num == '666777888'
+        assert documents == []
+
     def test_read_c101_regdoc(self):
         c101_xml = C1(self.xml_c101_regdoc)
         c101_xml.set_xsd()
@@ -658,7 +684,7 @@ class SwitchingC1Test(unittest.TestCase):
         c101_xml.set_xsd()
         c101_xml.parse_xml()
         documents = c101_xml.documents
-        assert not documents
+        assert documents == []
 
     def test_accept_no_sollicitud(self):
         text_to_elim = '    <DatosSolicitud>\n' \
