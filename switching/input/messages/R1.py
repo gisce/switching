@@ -172,14 +172,27 @@ class R1(Message):
     #         data.append(C1.PuntMesura(i))
     #     return data
 
-    def get_subtypes(self, type):
-        return [x['code'] for x in SUBTYPES_R101 if x['type'] == type]
+    def get_subtypes(self):
+        r1_type = self.sollicitud.tipus
+        return [x['code'] for x in SUBTYPES_R101 if x['type'] == r1_type]
 
-    def get_type_from_subtype(self, subtype):
+    def get_type_from_subtype(self):
+        r1_subtype = self.sollicitud.subtipus
         for x in SUBTYPES_R101:
-            if x['code'] == subtype:
+            if x['code'] == r1_subtype:
                 return x['type']
         return []
+
+    def get_minimum_fields(self):
+        subtype = self.sollicitud.subtipus
+        for x in SUBTYPES_R101:
+            if x['code'] == subtype:
+                return x['min_fields']
+        return []
+
+    def check_minimum_fields(self):
+        checker = MinimumFieldsChecker(self)
+        return checker.check()
 
 
 class DatosPasoSollicitud(object):
@@ -730,3 +743,156 @@ class Intervencion(object):
             pass
         return ref
 
+
+class MinimumFieldsChecker(object):
+
+    def __init__(self, r1):
+        self.r1 = r1
+
+    def check(self):
+        errors = []
+        for field in self.r1.get_minimum_fields():
+            valid = getattr(self, 'check_{0}'.format(field), None)
+            if not valid():
+                errors.append(field)
+        return errors
+
+    def check_nif_cliente(self):
+        return get_rec_attr(self.r1, "client.codi_identificacio", False)
+
+    def check_nombre_cliente(self):
+        return get_rec_attr(self.r1, "client.nom", False)
+
+    def check_telefono_contacto(self):
+        for var in self.r1.reclamacions:
+            if not get_rec_attr(var, "contacto.telf_num", False):
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_cups(self):
+        return self.r1.cups
+
+    def check_fecha_incidente(self):
+        for var in self.r1.reclamacions:
+            if not var.data_incident:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_comentarios(self):
+        return self.r1.comentaris
+
+    def check_codigo_incidencia(self):
+        for var in self.r1.reclamacions:
+            if not var.codi_incidencia:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_persona_de_contacto(self):
+        for var in self.r1.reclamacions:
+            if not var.contacto:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_num_fact(self):
+        for var in self.r1.reclamacions:
+            if not var.num_factura_atr:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_tipo_concepto_facturado(self):
+        for var in self.r1.reclamacions:
+            if not var.tipus_concepte_facturat:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_lectura(self):
+        for var in self.r1.reclamacions:
+            if len(var.lectures) == 0:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_fecha_de_lectura(self):
+        for var in self.r1.reclamacions:
+            if not var.data_lectura:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_fecha_desde(self):
+        for var in self.r1.reclamacions:
+            if not var.data_inici:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_fecha_hasta(self):
+        for var in self.r1.reclamacions:
+            if not var.data_fins:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_ubicacion_incidencia(self):
+        for var in self.r1.reclamacions:
+            if not var.ubicacio:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_codigo_de_solicitud(self):
+        for var in self.r1.reclamacions:
+            if not var.codi_sollicitud:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_concepto_contratacion(self):
+        for var in self.r1.reclamacions:
+            if not var.param_contractacio:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_cta_banco(self):
+        for var in self.r1.reclamacions:
+            if not var.iban:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_sol_nuevos_suministro(self):
+        for var in self.r1.reclamacions:
+            if not var.numexpedient:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_cod_reclam_anterior(self):
+        for var in self.r1.reclamacions:
+            if not var.codi_sollicitud_reclamacio:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_importe_reclamado(self):
+        for var in self.r1.reclamacions:
+            if not var.import_reclamat:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+    def check_tipo_atencion_incorrecta(self):
+        for var in self.r1.reclamacions:
+            if not var.tipus_atencio_incorrecte:
+                return False
+        return len(self.r1.reclamacions) > 0
+
+
+# Module Functions
+
+def get_minimum_fields(r1_subtype):
+    for x in SUBTYPES_R101:
+        if x['code'] == r1_subtype:
+            return x['min_fields']
+    return []
+
+
+def get_subtypes(r1_type):
+    return [x['code'] for x in SUBTYPES_R101 if x['type'] == r1_type]
+
+
+def get_type_from_subtype(r1_subtype):
+    for x in SUBTYPES_R101:
+        if x['code'] == r1_subtype:
+            return x['type']
+    return []
