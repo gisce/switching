@@ -1427,6 +1427,7 @@ class SwitchingM1Test(unittest.TestCase):
     def setUp(self):
         sup = supportClass()
         self.xml_m101 = open(get_data("m101.xml"), "r")
+        self.xml_m101_regsdoc = open(get_data("m101_RegsDoc.xml"), "r")
         self.xml_m101_ciepapel = open(get_data("m101_CiePapel.xml"), "r")
         self.xml_m101_DT = open(get_data("m101_DocTecnica.xml"), "r")
         self.xml_m101_DT2 = open(get_data("m101_DocTecnica2.xml"), "r")
