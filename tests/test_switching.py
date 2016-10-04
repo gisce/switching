@@ -650,6 +650,7 @@ class SwitchingC1Test(unittest.TestCase):
         c101_xml.set_xsd()
         c101_xml.parse_xml()
         documents = c101_xml.documents
+        assert len(documents) > 0
         doc = documents[0]
         assert doc.doc_type == '08'
         assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
@@ -2512,6 +2513,7 @@ class SwitchingR1_Test(unittest.TestCase):
         reclamacions = self.r101_xml.reclamacions
         client = self.r101_xml.client
         comentaris = self.r101_xml.comentaris
+        documents = self.r101_xml.documents
 
         assert sollicitud.tipus == '03'
         assert sollicitud.subtipus == '16'
@@ -2520,6 +2522,7 @@ class SwitchingR1_Test(unittest.TestCase):
         assert client is None
         assert reclamant is None
         assert comentaris == 'R1-01 minimum Test'
+        assert documents == []
 
     def test_read_lectures(self):
         self.r101_xml = R1(self.xml_r101_lectures)
