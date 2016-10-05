@@ -645,11 +645,38 @@ class SwitchingC1Test(unittest.TestCase):
         assert t31a_lb_info['marca_mesura_bt_perdues']
         assert t31a_lb_info['kvas_trafo'] == 33.3
 
+    def test_read_c101_min(self):
+        c101_xml = C1(self.xml_c101)
+        c101_xml.set_xsd()
+        c101_xml.parse_xml()
+
+        solicitud = c101_xml.sollicitud
+        contracte = c101_xml.contracte
+        client = c101_xml.client
+        documents = c101_xml.documents
+
+        assert solicitud.linia_negoci == '01'
+        assert solicitud.sollicitudadm == 'S'
+        assert solicitud.cicle_activacio == 'S'
+        assert solicitud.data_prevista_accio == '2016-06-06'
+        assert solicitud.representant == 'S'
+        assert contracte.codi_contracte == '111111111'
+        assert contracte.durada == 12
+        assert contracte.tipus_contracte == '01'
+        assert contracte.direccio_correspondencia == 'S'
+        assert client.tipus_identificacio == 'CI'
+        assert client.codi_identificacio == 'B36385870'
+        assert client.nom == u'ACC Y COMP DE COCINA MILLAN Y MUÑOZ'
+        assert client.telf_prefix == '34'
+        assert client.telf_num == '666777888'
+        assert documents == []
+
     def test_read_c101_regdoc(self):
         c101_xml = C1(self.xml_c101_regdoc)
         c101_xml.set_xsd()
         c101_xml.parse_xml()
         documents = c101_xml.documents
+        assert len(documents) > 0
         doc = documents[0]
         assert doc.doc_type == '08'
         assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
@@ -657,7 +684,7 @@ class SwitchingC1Test(unittest.TestCase):
         c101_xml.set_xsd()
         c101_xml.parse_xml()
         documents = c101_xml.documents
-        assert not documents
+        assert documents == []
 
     def test_accept_no_sollicitud(self):
         text_to_elim = '    <DatosSolicitud>\n' \
@@ -936,6 +963,25 @@ class SwitchingC2Test(unittest.TestCase):
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_c201_regdocs.read())
 
+    def test_read_c201_regdoc(self):
+        c201_xml = C2(self.xml_c201_regdocs)
+        c201_xml.set_xsd()
+        c201_xml.parse_xml()
+        documents = c201_xml.documents
+        assert len(documents) > 0
+        assert documents[0].doc_type == '01'
+        assert documents[0].url == 'http://eneracme.com/docs/CIE0100001.pdf'
+        assert documents[1].doc_type == '06'
+        assert documents[1].url == 'http://eneracme.com/docs/' \
+                                   'INV201509161234.pdf'
+        assert documents[2].doc_type == '08'
+        assert documents[2].url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        c201_xml = C1(self.xml_c201)
+        c201_xml.set_xsd()
+        c201_xml.parse_xml()
+        documents = c201_xml.documents
+        assert documents == []
+
     def test_accept_no_sollicitud(self):
         text_to_elim = '        <DatosSolicitud>\n' \
                        '            <LineaNegocioElectrica>' \
@@ -1048,6 +1094,7 @@ class SwitchingA3Test(unittest.TestCase):
         self.xml_a301 = open(get_data("a301.xml"), "r")
         self.xml_a301_ciepapel = open(get_data("a301_CiePapel.xml"), "r")
         self.xml_a301_autoconsumo = open(get_data("a301_Autoconsumo.xml"), "r")
+        self.xml_a301_regsdoc = open(get_data("a301_regsdoc.xml"), "r")
 
         #sol·licitud
         self.sollicitud = c1.DatosSolicitud()
@@ -1258,6 +1305,20 @@ class SwitchingA3Test(unittest.TestCase):
         assert contract.codi_contracte == '111111111'
         assert contract.tipus_autoconsum == '2A'
 
+    def test_read_c201_regdoc(self):
+        a301_xml = A3(self.xml_a301_regsdoc)
+        a301_xml.set_xsd()
+        a301_xml.parse_xml()
+        documents = a301_xml.documents
+        assert len(documents) > 0
+        assert documents[0].doc_type == '08'
+        assert documents[0].url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        a301_xml = A3(self.xml_a301)
+        a301_xml.set_xsd()
+        a301_xml.parse_xml()
+        documents = a301_xml.documents
+        assert documents == []
+
     def test_accept_no_sollicitud(self):
         text_to_elim = '        <DatosSolicitud>\n' \
                        '            <LineaNegocioElectrica>' \
@@ -1360,12 +1421,37 @@ class SwitchingA3Test(unittest.TestCase):
         assert a301_no_text_xml.contracte.condicions is False
 
 
+class SwitchingB1Test(unittest.TestCase):
+    """test de B1"""
+
+    def setUp(self):
+        sup = supportClass
+        self.xml_b101 = open(get_data("b101.xml"), "r")
+        self.xml_b101_regdoc = open(get_data("b101_RegistroDoc.xml"), "r")
+
+    def test_read_b101_regdoc(self):
+        b101_xml = M1(self.xml_b101_regdoc)
+        b101_xml.set_xsd()
+        b101_xml.parse_xml()
+        documents = b101_xml.documents
+        assert len(documents) > 0
+        doc = documents[0]
+        assert doc.doc_type == '08'
+        assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        b101_xml = M1(self.xml_b101)
+        b101_xml.set_xsd()
+        b101_xml.parse_xml()
+        documents = b101_xml.documents
+        assert documents == []
+
+
 class SwitchingM1Test(unittest.TestCase):
     """test de M1"""
 
     def setUp(self):
         sup = supportClass()
         self.xml_m101 = open(get_data("m101.xml"), "r")
+        self.xml_m101_regsdoc = open(get_data("m101_RegsDoc.xml"), "r")
         self.xml_m101_ciepapel = open(get_data("m101_CiePapel.xml"), "r")
         self.xml_m101_DT = open(get_data("m101_DocTecnica.xml"), "r")
         self.xml_m101_DT2 = open(get_data("m101_DocTecnica2.xml"), "r")
@@ -1536,6 +1622,21 @@ class SwitchingM1Test(unittest.TestCase):
         self.m101_dt_xml.parse_xml()
         doc_tecnica = self.m101_dt_xml.documentacio_tecnica
         assert not doc_tecnica
+
+    def test_read_m101_regdoc(self):
+        m101_xml = M1(self.xml_m101_regsdoc)
+        m101_xml.set_xsd()
+        m101_xml.parse_xml()
+        documents = m101_xml.documents
+        assert len(documents) > 0
+        doc = documents[0]
+        assert doc.doc_type == '08'
+        assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        m101_xml = M1(self.xml_m101)
+        m101_xml.set_xsd()
+        m101_xml.parse_xml()
+        documents = m101_xml.documents
+        assert documents == []
 
     def test_accept_no_sollicitud(self):
         text_to_elim = '        <DatosSolicitud>\n' \
@@ -2608,6 +2709,7 @@ class SwitchingR1_Test(unittest.TestCase):
         reclamacions = self.r101_xml.reclamacions
         client = self.r101_xml.client
         comentaris = self.r101_xml.comentaris
+        documents = self.r101_xml.documents
 
         assert sollicitud.tipus == '03'
         assert sollicitud.subtipus == '16'
@@ -2616,6 +2718,7 @@ class SwitchingR1_Test(unittest.TestCase):
         assert client is None
         assert reclamant is None
         assert comentaris == 'R1-01 minimum Test'
+        assert documents == []
 
     def test_read_lectures(self):
         self.r101_xml = R1(self.xml_r101_lectures)
@@ -2659,7 +2762,7 @@ class SwitchingR1_Test(unittest.TestCase):
 
         assert comentaris == 'R1-01 lectures'
 
-        assert documents is None
+        assert documents == []
 
     def test_read_r101_documents(self):
         self.r101_xml = R1(self.xml_r101_documents)
