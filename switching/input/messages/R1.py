@@ -5,6 +5,7 @@ from message import Message
 import C1
 import W1
 from ...defs import SUBTYPES_R101
+from defs import *
 
 
 class R1(Message):
@@ -91,7 +92,9 @@ class R1(Message):
         """ Data Rebuig """
         data = None
         try:
-            return self.obj.Fecha.text
+            data = self.obj.Fecha.text
+            if data in INVALID_DATES:
+                data = None
         except AttributeError:
             pass
         return data
@@ -241,7 +244,9 @@ class VariableDetalleReclamacion(object):
         """ Data incident """
         data = None
         try:
-            return self.variable.FechaIncidente.text
+            data = self.variable.FechaIncidente.text
+            if data in INVALID_DATES:
+                data = None
         except AttributeError:
             pass
         return data
@@ -271,7 +276,9 @@ class VariableDetalleReclamacion(object):
         """ Data lectura """
         data = None
         try:
-            return self.variable.FechaLectura.text
+            data = self.variable.FechaLectura.text
+            if data in INVALID_DATES:
+                data = None
         except AttributeError:
             pass
         return data
@@ -388,7 +395,9 @@ class VariableDetalleReclamacion(object):
         """ Data inici """
         data = None
         try:
-            return self.variable.FechaDesde.text
+            data = self.variable.FechaDesde.text
+            if data in INVALID_DATES:
+                data = None
         except AttributeError:
             pass
         return data
@@ -398,7 +407,9 @@ class VariableDetalleReclamacion(object):
         """ Data fi """
         data = None
         try:
-            return self.variable.FechaHasta.text
+            data = self.variable.FechaHasta.text
+            if data in INVALID_DATES:
+                data = None
         except AttributeError:
             pass
         return data
@@ -476,10 +487,14 @@ class DatosCierre(object):
 
     @property
     def data(self):
+        data = None
         try:
-            return self.dadescierre.Fecha.text
+            data = self.dadescierre.Fecha.text
+            if data in INVALID_DATES:
+                data = None
         except AttributeError, e:
-            return ''
+            pass
+        return data
 
     @property
     def hora(self):
@@ -545,10 +560,14 @@ class DatosCierre(object):
 
     @property
     def data_moviment(self):
+        data = None
         try:
-            return self.dadescierre.FechaMovimiento.text
+            data = self.dadescierre.FechaMovimiento.text
+            if data in INVALID_DATES:
+                data = None
         except AttributeError, e:
-            return ''
+            pass
+        return data
 
     @property
     def codi_sollicitud(self):
@@ -698,7 +717,10 @@ class SolicitudInformacionAdicional(object):
 
     @property
     def data_limit(self):
-        return self.solicitud_info.FechaLimiteEnvio.text
+        data = self.solicitud_info.FechaLimiteEnvio.text
+        if data in INVALID_DATES:
+            data = None
+        return data
 
 
 class Intervencion(object):
@@ -711,7 +733,10 @@ class Intervencion(object):
 
     @property
     def data(self):
-        return self.intervencio.Fecha.text
+        data = self.intervencio.Fecha.text
+        if data in INVALID_DATES:
+            data = None
+        return data
 
     @property
     def hora_desde(self):
