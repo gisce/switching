@@ -3,7 +3,7 @@
 
 from message import Message, except_f1
 from switching.helpers.funcions import get_rec_attr
-
+from defs import *
 
 class C1(Message):
     """Classe que implementa C1."""
@@ -213,6 +213,8 @@ class PuntMesura(object):
             val = self.pm.FechaVigor.text
         except AttributeError:
             pass
+        if val in INVALID_DATES:
+            val = None
         return val
 
     @property
@@ -223,6 +225,8 @@ class PuntMesura(object):
             val = self.pm.FechaAlta.text
         except AttributeError:
             pass
+        if val in INVALID_DATES:
+            val = None
         return val
 
     @property
@@ -233,6 +237,8 @@ class PuntMesura(object):
             val = self.pm.FechaBaja.text
         except AttributeError:
             pass
+        if val in INVALID_DATES:
+            val = None
         return val
 
     @property
@@ -622,6 +628,8 @@ class Notificacio(object):
             data = self.notificacio.DatosNotificacion.FechaActivacion.text
         except AttributeError:
             pass
+        if data in INVALID_DATES:
+            data = None
         return data
 
     @property
@@ -650,6 +658,8 @@ class Activacio(object):
                 data = self.activacio.DatosActivacionYBaja.Fecha.text
             except AttributeError:
                 pass
+        if data in INVALID_DATES:
+            data = None
         return data
 
     @property
@@ -727,6 +737,8 @@ class Sollicitud(object):
             data = self.sollicitud.FechaPrevistaAccion.text
         except AttributeError:
             pass
+        if data in INVALID_DATES:
+            data = None
         return data
 
     @property
@@ -825,6 +837,8 @@ class Contracte(object):
             data = self.contracte.FechaFinalizacion.text
         except AttributeError as e:
             pass
+        if data in INVALID_DATES:
+            data = None
         return data
 
     @property
@@ -898,6 +912,8 @@ class Contracte(object):
             data = self.contracte.FechaActivacionPrevista.text
         except AttributeError:
             pass
+        if data in INVALID_DATES:
+            data = None
         return data
 
 
@@ -1046,6 +1062,8 @@ class Acceptacio(object):
             data = self.acc.FechaAceptacion.text
         except AttributeError:
             pass
+        if data in INVALID_DATES:
+            data = None
         return data
 
     @property
@@ -1073,6 +1091,8 @@ class Acceptacio(object):
             data = self.acc.FechaUltimaLectura.text
         except AttributeError:
             pass
+        if data in INVALID_DATES:
+            data = None
         return data
 
     # R1-02
@@ -1234,6 +1254,8 @@ class Rebuig(object):
             data = self.rebuig.Fecha.text
         except AttributeError:
             pass
+        if data in INVALID_DATES:
+            data = None
         return data
 
     @property
@@ -1586,6 +1608,8 @@ class DocumentacioTecnica(object):
             num = self.doc_tec.DatosCie.CIEPapel.FechaEmisionCie.text
         except AttributeError:
             pass
+        if num in INVALID_DATES:
+            num = None
         return num
 
     @property
@@ -1595,6 +1619,8 @@ class DocumentacioTecnica(object):
             num = self.doc_tec.DatosCie.CIEPapel.FechaCaducidadCie.text
         except AttributeError:
             pass
+        if num in INVALID_DATES:
+            num = None
         return num
 
     @property
