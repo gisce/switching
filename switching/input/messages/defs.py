@@ -60,3 +60,6 @@ MAGNITUDS_OCSUM = {'AE': 'A',
 
 # Totalitzadors a ignorar
 SKIP_TOTALITZADORS = ('00', '60')
+
+# Dates no valides que es tractaran com si no hui hagues data
+INVALID_DATES = ['0000-00-00']
