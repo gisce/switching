@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from message import Message
-
+from defs import *
 
 class W1(Message):
     """Classe que implementa W1."""
@@ -20,6 +20,8 @@ class W1(Message):
         fecha_lectura = ''
         try:
             fecha_lectura = self.obj.FechaLectura.text
+            if fecha_lectura in INVALID_DATES:
+                fecha_lectura = None
         except AttributeError:
             pass
         return fecha_lectura
@@ -102,6 +104,8 @@ class Aceptacion(object):
         fecha_aceptacion = ''
         try:
             fecha_aceptacion = self.aceptacion.FechaAceptacion.text
+            if fecha_aceptacion in INVALID_DATES:
+                fecha_aceptacion = None
         except AttributeError:
             pass
         return fecha_aceptacion
@@ -118,6 +122,8 @@ class Rechazo(object):
         fecha_rechazo = ''
         try:
             fecha_rechazo = self.rechazo.FechaRechazo.text
+            if fecha_rechazo in INVALID_DATES:
+                fecha_rechazo = None
         except AttributeError:
             pass
         return fecha_rechazo
