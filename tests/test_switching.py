@@ -1429,7 +1429,7 @@ class SwitchingB1Test(unittest.TestCase):
         self.xml_b101 = open(get_data("b101.xml"), "r")
         self.xml_b101_regdoc = open(get_data("b101_RegistroDoc.xml"), "r")
 
-    def test_read_m101_regdoc(self):
+    def test_read_b101_regdoc(self):
         b101_xml = M1(self.xml_b101_regdoc)
         b101_xml.set_xsd()
         b101_xml.parse_xml()
