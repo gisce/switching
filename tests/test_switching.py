@@ -1421,6 +1421,30 @@ class SwitchingA3Test(unittest.TestCase):
         assert a301_no_text_xml.contracte.condicions is False
 
 
+class SwitchingB1Test(unittest.TestCase):
+    """test de B1"""
+
+    def setUp(self):
+        sup = supportClass
+        self.xml_b101 = open(get_data("b101.xml"), "r")
+        self.xml_b101_regdoc = open(get_data("b101_RegistroDoc.xml"), "r")
+
+    def test_read_m101_regdoc(self):
+        b101_xml = M1(self.xml_b101_regdoc)
+        b101_xml.set_xsd()
+        b101_xml.parse_xml()
+        documents = b101_xml.documents
+        assert len(documents) > 0
+        doc = documents[0]
+        assert doc.doc_type == '08'
+        assert doc.url == 'http://eneracme.com/docs/NIF11111111H.pdf'
+        b101_xml = M1(self.xml_b101)
+        b101_xml.set_xsd()
+        b101_xml.parse_xml()
+        documents = b101_xml.documents
+        assert documents == []
+
+
 class SwitchingM1Test(unittest.TestCase):
     """test de M1"""
 
