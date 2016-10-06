@@ -188,10 +188,9 @@ class Comentari(object):
         value = ''
         try:
             value = self.comentari.Fecha.text
+            return check_date(value)
         except AttributeError:
             pass
-        if value in INVALID_DATES:
-            value = None
         return value
 
     @property

@@ -70,9 +70,7 @@ class Facturas(object):
     def data_factura(self):
         """Retornar el tipus de factura"""
         data = self._dades_generals.DatosGeneralesFactura.FechaFactura.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     @property
     def CIF_emisora(self):
@@ -210,9 +208,7 @@ class FacturaATR(Facturas):
         """
         data = self.factura.DatosGeneralesFacturaATR.\
             DatosFacturaATR.FechaBOE.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     @property
     def codi_tarifa(self):
@@ -244,18 +240,15 @@ class FacturaATR(Facturas):
         """Retornar la data d'inici"""
         data = self.factura.DatosGeneralesFacturaATR.\
             DatosFacturaATR.Periodo.FechaDesdeFactura.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     @property
     def data_final(self):
         """Retornar la data final"""
         data = self.factura.DatosGeneralesFacturaATR.\
             DatosFacturaATR.Periodo.FechaHastaFactura.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+
+
 
     @property
     def nombre_mesos(self):
@@ -617,16 +610,12 @@ class FacturaATR(Facturas):
     @property
     def pot_data_inici(self):
         data = self.factura.Potencia.TerminoPotencia.FechaDesde.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     @property
     def pot_data_fi(self):
         data = self.factura.Potencia.TerminoPotencia.FechaHasta.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     def get_comptadors(self):
         """Retorna totes les lectures en una llista de comptadors"""
@@ -874,16 +863,12 @@ class Refacturacio(object):
     @property
     def data_inici(self):
         data = self.ref.RFechaDesde.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     @property
     def data_final(self):
         data = self.ref.RFechaHasta.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     @property
     def consum_total(self):
@@ -1025,9 +1010,7 @@ class F1(Message):
     @property
     def data_limit_pagament(self):
         data = self.obj.Facturas.RegistroFin.FechaLimitePago.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     @property
     def id_remesa(self):
@@ -1044,9 +1027,7 @@ class F1(Message):
     @property
     def fecha_valor_remesa(self):
         data = self.obj.Facturas.RegistroFin.FechaValor.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     def get_remesa(self):
         vals = {

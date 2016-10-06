@@ -211,10 +211,9 @@ class PuntMesura(object):
         val = ''
         try:
             val = self.pm.FechaVigor.text
+            return check_date(val)
         except AttributeError:
             pass
-        if val in INVALID_DATES:
-            val = None
         return val
 
     @property
@@ -223,10 +222,9 @@ class PuntMesura(object):
         val = False
         try:
             val = self.pm.FechaAlta.text
+            return check_date(val)
         except AttributeError:
             pass
-        if val in INVALID_DATES:
-            val = None
         return val
 
     @property
@@ -235,10 +233,9 @@ class PuntMesura(object):
         val = False
         try:
             val = self.pm.FechaBaja.text
+            return check_date(val)
         except AttributeError:
             pass
-        if val in INVALID_DATES:
-            val = None
         return val
 
     @property
@@ -626,10 +623,9 @@ class Notificacio(object):
         data = ''
         try:
             data = self.notificacio.DatosNotificacion.FechaActivacion.text
+            return check_date(data)
         except AttributeError:
             pass
-        if data in INVALID_DATES:
-            data = None
         return data
 
     @property
@@ -653,13 +649,13 @@ class Activacio(object):
         data = ''
         try:
             data = self.activacio.DatosActivacion.Fecha.text
+            return check_date(data)
         except AttributeError:
             try:
                 data = self.activacio.DatosActivacionYBaja.Fecha.text
+                return check_date(data)
             except AttributeError:
                 pass
-        if data in INVALID_DATES:
-            data = None
         return data
 
     @property
@@ -735,10 +731,9 @@ class Sollicitud(object):
         data = ''
         try:
             data = self.sollicitud.FechaPrevistaAccion.text
+            return check_date(data)
         except AttributeError:
             pass
-        if data in INVALID_DATES:
-            data = None
         return data
 
     @property
@@ -835,10 +830,9 @@ class Contracte(object):
         data = ''
         try:
             data = self.contracte.FechaFinalizacion.text
+            return check_date(data)
         except AttributeError as e:
             pass
-        if data in INVALID_DATES:
-            data = None
         return data
 
     @property
@@ -910,10 +904,9 @@ class Contracte(object):
         data = ''
         try:
             data = self.contracte.FechaActivacionPrevista.text
+            return check_date(data)
         except AttributeError:
             pass
-        if data in INVALID_DATES:
-            data = None
         return data
 
 
@@ -1060,10 +1053,9 @@ class Acceptacio(object):
         data = ''
         try:
             data = self.acc.FechaAceptacion.text
+            return check_date(data)
         except AttributeError:
             pass
-        if data in INVALID_DATES:
-            data = None
         return data
 
     @property
@@ -1089,10 +1081,9 @@ class Acceptacio(object):
         data = ''
         try:
             data = self.acc.FechaUltimaLectura.text
+            return check_date(data)
         except AttributeError:
             pass
-        if data in INVALID_DATES:
-            data = None
         return data
 
     # R1-02
@@ -1252,10 +1243,9 @@ class Rebuig(object):
         data = ''
         try:
             data = self.rebuig.Fecha.text
+            return check_date(data)
         except AttributeError:
             pass
-        if data in INVALID_DATES:
-            data = None
         return data
 
     @property
@@ -1606,10 +1596,9 @@ class DocumentacioTecnica(object):
         num = ''
         try:
             num = self.doc_tec.DatosCie.CIEPapel.FechaEmisionCie.text
+            return check_date(num)
         except AttributeError:
             pass
-        if num in INVALID_DATES:
-            num = None
         return num
 
     @property
@@ -1617,10 +1606,9 @@ class DocumentacioTecnica(object):
         num = ''
         try:
             num = self.doc_tec.DatosCie.CIEPapel.FechaCaducidadCie.text
+            return check_date(num)
         except AttributeError:
             pass
-        if num in INVALID_DATES:
-            num = None
         return num
 
     @property

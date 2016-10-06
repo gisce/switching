@@ -93,8 +93,7 @@ class R1(Message):
         data = None
         try:
             data = self.obj.Fecha.text
-            if data in INVALID_DATES:
-                data = None
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -245,8 +244,7 @@ class VariableDetalleReclamacion(object):
         data = None
         try:
             data = self.variable.FechaIncidente.text
-            if data in INVALID_DATES:
-                data = None
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -277,8 +275,7 @@ class VariableDetalleReclamacion(object):
         data = None
         try:
             data = self.variable.FechaLectura.text
-            if data in INVALID_DATES:
-                data = None
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -396,8 +393,7 @@ class VariableDetalleReclamacion(object):
         data = None
         try:
             data = self.variable.FechaDesde.text
-            if data in INVALID_DATES:
-                data = None
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -408,8 +404,7 @@ class VariableDetalleReclamacion(object):
         data = None
         try:
             data = self.variable.FechaHasta.text
-            if data in INVALID_DATES:
-                data = None
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -490,8 +485,7 @@ class DatosCierre(object):
         data = None
         try:
             data = self.dadescierre.Fecha.text
-            if data in INVALID_DATES:
-                data = None
+            return check_date(data)
         except AttributeError, e:
             pass
         return data
@@ -563,8 +557,7 @@ class DatosCierre(object):
         data = None
         try:
             data = self.dadescierre.FechaMovimiento.text
-            if data in INVALID_DATES:
-                data = None
+            return check_date(data)
         except AttributeError, e:
             pass
         return data
@@ -718,9 +711,7 @@ class SolicitudInformacionAdicional(object):
     @property
     def data_limit(self):
         data = self.solicitud_info.FechaLimiteEnvio.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
 
 class Intervencion(object):
@@ -734,9 +725,7 @@ class Intervencion(object):
     @property
     def data(self):
         data = self.intervencio.Fecha.text
-        if data in INVALID_DATES:
-            data = None
-        return data
+        return check_date(data)
 
     @property
     def hora_desde(self):

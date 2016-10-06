@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 # Definició de variables de llibreria
 # Taula 107 del document d'OCSUM:
 # OCSUM - E - Tablas de códigos 2012.05.23.doc
@@ -61,5 +63,11 @@ MAGNITUDS_OCSUM = {'AE': 'A',
 # Totalitzadors a ignorar
 SKIP_TOTALITZADORS = ('00', '60')
 
-# Dates no valides que es tractaran com si no hui hagues data
-INVALID_DATES = ['0000-00-00']
+
+# Metode utilitzat per validar dates
+def check_date(date_text):
+    try:
+        datetime.datetime.strptime(date_text, '%Y-%m-%d')
+        return date_text
+    except ValueError:
+        return None
