@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-
 # Definició de variables de llibreria
 # Taula 107 del document d'OCSUM:
 # OCSUM - E - Tablas de códigos 2012.05.23.doc
@@ -67,6 +65,7 @@ SKIP_TOTALITZADORS = ('00', '60')
 # Metode utilitzat per validar dates
 def check_date(date_text):
     try:
+        import datetime
         datetime.datetime.strptime(date_text, '%Y-%m-%d')
         return date_text
     except ValueError:
