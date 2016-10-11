@@ -1766,6 +1766,9 @@ class SwitchingR1_Test(unittest.TestCase):
         self.xml_r103_inter = open(get_data("r103_intervenciones.xml"), "r")
         self.xml_r103_retip = open(get_data("r103_retipificacion.xml"), "r")
         self.xml_r103_solicitudes = open(get_data("r103_solicitudes.xml"), "r")
+        # r1-04
+        self.xml_r104_variables = open(get_data("r104_variables.xml"), "r")
+        self.xml_r104_reg_doc = open(get_data("r104_reg_doc.xml"), "r")
         # r1-05
         self.xml_r105 = open(get_data("r105.xml"), "r")
         self.xml_r105_retipificacio = open(get_data("r105_retipificacio.xml"), "r")
@@ -1791,6 +1794,9 @@ class SwitchingR1_Test(unittest.TestCase):
         self.xml_r103_inter.close()
         self.xml_r103_retip.close()
         self.xml_r103_solicitudes.close()
+        # r1-04
+        self.xml_r104_variables.close()
+        self.xml_r104_reg_doc.close()
         # r1-05
         self.xml_r105.close()
         self.xml_r105_retipificacio.close()
@@ -2487,6 +2493,96 @@ class SwitchingR1_Test(unittest.TestCase):
         xml = str(pas03)
         self.assertXmlEqual(xml, self.xml_r103_solicitudes.read())
 
+    def test_create_pas04_variables(self):
+        pas04 = r1.MensajeEnvioInformacionReclamacion()
+        header = self.getHeader('R1', '04', '201650008314')
+        header.feed({'fecha': '2016-01-22T10:09:41'})
+        pas04.set_agente('0123')
+
+        dades = r1.DatosEnvioInformacion()
+        dades.feed({
+            'num_expedient': '0123456789ABCD',
+            'data_informacio': '2016-01-20',
+        })
+
+        variables = r1.VariablesAportacionInformacion()
+        var1 = r1.VariableAportacionInformacion()
+        var1.feed({
+            'tipus_info': '01',
+            'desc_peticio_info': 'Informacio per fer testos.',
+            'variable': '01',
+            'valor': '125',
+        })
+        var2 = r1.VariableAportacionInformacion()
+        var2.feed({
+            'tipus_info': '02',
+        })
+        variables.feed({
+            'detalls': [var1, var2],
+        })
+
+        enviament_info_reclamacio = r1.EnvioInformacionReclamacion()
+        enviament_info_reclamacio.feed({
+            'dades_enviament_info': dades,
+            'variables_aportacio_info': variables,
+            'comentaris': u'R104 test with VariablesAportacionInformacion.',
+        })
+        pas04.feed({
+            'capcalera': header,
+            'enviament_info_reclamacio': enviament_info_reclamacio
+        })
+        pas04.build_tree()
+        pas04.pretty_print = True
+        xml = str(pas04)
+        self.assertXmlEqual(xml, self.xml_r104_variables.read())
+
+    def test_create_pas04_reg_doc(self):
+        pas04 = r1.MensajeEnvioInformacionReclamacion()
+        header = self.getHeader('R1', '04', '201650008314')
+        header.feed({'fecha': '2016-01-22T10:09:41'})
+        pas04.set_agente('0123')
+
+        dades = r1.DatosEnvioInformacion()
+        dades.feed({
+            'data_informacio': '2016-01-20',
+        })
+
+        docs = r1.RegistrosDocumento()
+        doc1 = r1.RegistroDoc()
+        doc1.feed({
+            'tipus_doc': '01',
+            'url': 'http://eneracme.com/docs/CIE0100001.pdf',
+        })
+        doc2 = r1.RegistroDoc()
+        doc2.feed({
+            'tipus_doc': '06',
+            'url': 'http://eneracme.com/docs/INV201509161234.pdf',
+        })
+        doc3 = r1.RegistroDoc()
+        doc3.feed({
+            'tipus_doc': '08',
+            'url': 'http://eneracme.com/docs/NIF11111111H.pdf',
+        })
+
+        docs.feed({
+            'documents': [doc1, doc2, doc3],
+        })
+
+        enviament_info_reclamacio = r1.EnvioInformacionReclamacion()
+        enviament_info_reclamacio.feed({
+            'dades_enviament_info': dades,
+            'comentaris': ' ',
+            'reg_doc': docs,
+        })
+        pas04.feed({
+            'capcalera': header,
+            'enviament_info_reclamacio': enviament_info_reclamacio
+        })
+        pas04.build_tree()
+        pas04.pretty_print = True
+        xml = str(pas04)
+        self.assertXmlEqual(xml, self.xml_r104_reg_doc.read())
+
     def test_create_pas05(self):
         pas05 = r1.MensajeCierreReclamacion()
         header = self.getHeader('R1', '05', '201604111738')
@@ -2947,6 +3043,40 @@ class SwitchingR1_Test(unittest.TestCase):
             assert solicitud2.data_limit == '2016-07-10'
 
         assert len(comentaris) > 10
+
+    def test_read_r104(self):
+        self.r104_var_xml = R1(self.xml_r104_variables)
+        self.r104_var_xml.set_xsd()
+        self.r104_var_xml.parse_xml()
+
+        info_rec = self.r104_var_xml.envio_informacion_reclamacion
+
+        assert info_rec.num_expedient_acometida == '0123456789ABCD'
+        assert info_rec.data_informacio == '2016-01-20'
+        assert len(info_rec.comentaris) > 10
+        assert len(info_rec.documents) == 0
+        assert len(info_rec.variables_aportacio_informacio) == 2
+
+        var1 = info_rec.variables_aportacio_informacio[0]
+        assert var1.tipus_informacio == '01'
+        assert var1.desc_peticio_informacio == 'Informacio per fer testos.'
+        assert var1.variable == '01'
+        assert var1.valor == '125'
+
+        self.r104_reg_xml = R1(self.xml_r104_reg_doc)
+        self.r104_reg_xml.set_xsd()
+        self.r104_reg_xml.parse_xml()
+
+        info_rec = self.r104_reg_xml.envio_informacion_reclamacion
+
+        assert not info_rec.num_expedient_acometida
+        assert info_rec.data_informacio == '2016-01-20'
+        assert len(info_rec.documents) == 3
+        assert len(info_rec.variables_aportacio_informacio) == 0
+
+        reg1 = info_rec.documents[0]
+        assert reg1.doc_type == '01'
+        assert reg1.url == 'http://eneracme.com/docs/CIE0100001.pdf'
 
     def test_read_r105(self):
         self.r105_xml = R1(self.xml_r105)

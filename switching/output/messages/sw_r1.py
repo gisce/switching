@@ -499,3 +499,79 @@ class SolicitudesInformacionAdicional(XmlModel):
         self.detalls = []
         super(SolicitudesInformacionAdicional, self).__init__(
             'SolicitudesInformacionAdicional', 'sollicituds_info')
+
+
+# 04
+class MensajeEnvioInformacionReclamacion(XmlModel):
+    _sort_order = (
+        'mensaje',
+        'capcalera',
+        'enviament_info_reclamacio',
+    )
+
+    def __init__(self):
+        self.doc_root = None
+        self.mensaje = XmlField(
+            'MensajeEnvioInformacionReclamacion',
+            attributes={
+                'xmlns': 'http://localhost/elegibilidad',
+            }
+        )
+        self.capcalera = CabeceraReclamacion()
+        self.enviament_info_reclamacio = EnvioInformacionReclamacion()
+        super(MensajeEnvioInformacionReclamacion, self).__init__(
+            'MensajeEnvioInformacionReclamacion', 'mensaje')
+
+    def set_agente(self, agente):
+        self.mensaje.attributes.update({'AgenteSolicitante': agente})
+        self.doc_root = self.root.element()
+
+
+class EnvioInformacionReclamacion(XmlModel):
+    _sort_order = ('enviament_info_reclamacio', 'dades_enviament_info',
+                   'variables_aportacio_info', 'comentaris', 'reg_doc',)
+
+    def __init__(self):
+        self.enviament_info_reclamacio = XmlField('EnvioInformacionReclamacion')
+        self.dades_enviament_info = DatosEnvioInformacion()
+        self.variables_aportacio_info = VariablesAportacionInformacion()
+        self.comentaris = XmlField('Comentarios')
+        self.reg_doc = RegistrosDocumento()
+        super(EnvioInformacionReclamacion, self).__init__(
+            'EnvioInformacionReclamacion', 'enviament_info_reclamacio')
+
+
+class DatosEnvioInformacion(XmlModel):
+    _sort_order = ('dades_enviament_info', 'num_expedient', 'data_informacio')
+
+    def __init__(self):
+        self.dades_enviament_info = XmlField('DatosEnvioInformacion')
+        self.num_expedient = XmlField('NumExpedienteAcometida')
+        self.data_informacio = XmlField('FechaInformacion')
+        super(DatosEnvioInformacion, self).__init__(
+                'DatosEnvioInformacion', 'dades_enviament_info')
+
+
+class VariablesAportacionInformacion(XmlModel):
+    _sort_order = ('variables_aportacio_info', 'detalls')
+
+    def __init__(self):
+        self.variables_aportacio_info = XmlField('VariablesAportacionInformacion')
+        self.detalls = []
+        super(VariablesAportacionInformacion, self).__init__(
+            'VariablesAportacionInformacion', 'variables_aportacio_info')
+
+
+class VariableAportacionInformacion(XmlModel):
+    _sort_order = ('variable_aportacio_info', 'tipus_info', 'desc_peticio_info',
+                   'variable', 'valor', )
+
+    def __init__(self):
+        self.variable_aportacio_info = XmlField('VariableAportacionInformacion')
+        self.tipus_info = XmlField('TipoInformacion')
+        self.desc_peticio_info = XmlField('DescPeticionInformacion')
+        self.variable = XmlField('Variable')
+        self.valor = XmlField('Valor')
+
+        super(VariableAportacionInformacion, self).__init__(
+            'VariableAportacionInformacion', 'variable_aportacio_info')
