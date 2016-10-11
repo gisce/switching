@@ -107,12 +107,12 @@ class test_Message_Base(unittest.TestCase):
 
         xml_r101_text = xml_r101_text.replace(
             '<FechaLectura>2016-01-20</FechaLectura>',
-            '<FechaLectura>2016-01-32</FechaLectura>'
+            '<FechaLectura>0000-00-00</FechaLectura>'
         )
 
         r101 = R1(xml_r101_text)
         r101.set_xsd()
-        r101.parse_xml()
+        r101.parse_xml(validate=False)
         r101.set_tipus()
         self.assertIsNone(r101.reclamacions[0].data_lectura)
 
