@@ -69,7 +69,7 @@ class test_Message_Base(unittest.TestCase):
         self.assertEqual(c.versio, '02')
 
     def test_cabecerareclamacion_model(self):
-        c = R1(self.xml__reclamacion)
+        c = R1(self.xml_r101_reclamacion)
         c.set_xsd()
         c.parse_xml()
         c.set_tipus()
