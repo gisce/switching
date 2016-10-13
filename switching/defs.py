@@ -1366,34 +1366,43 @@ TABLA_82 = [(x['code'], x['name']) for x in SUBTYPES_R101]
 # Estructura: 'pas a enviar': ['dies de termini', 'tipus de dies']
 # Tipus de dies: DA -> dies habils, DN -> dies naturals
 TERMINIS_C1 = ({
-    '02': '5',  # desde la recepcio de la sol.loicitud (01)
-    '05': '1',  # desde la activacio
-    '06': '1',  # desde la activacio, simultani a 05
-    '09': '5',  # desde la recepcio de la sol.loicitud d'anul.lacio (08)
-    '10': '5',  # simultani a 09
-    '11': '5',  # simultani a 02
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '05': ['1', 'DA'],  # desde la activacio
+    '06': ['1', 'DA'],  # desde la activacio, simultani a 05
+    '09': ['5', 'DA'],  # desde la recepcio de la sol.loicitud d'anul.lacio (08)
+    '10': ['5', 'DA'],  # simultani a 09
+    '11': ['5', 'DA'],  # simultani a 02
 })
 
 TERMINIS_C2 = ({
-    '02': '5',
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '04_no_incidencia': ['15', 'DN'],  # desde acceptacio de la sol.licitud (02)
+    '04_incidencia': ['30', 'DN'],  # desde acceptacio de la sol.licitud (02)
+    '05': ['1', 'DA'],  # desde la activacio
+    '06': ['1', 'DA'],  # desde la activacio, simultani a 05
+    '09': ['5', 'DA'],  # desde la recepcio de la sol.loicitud d'anul.lacio (08)
+    '10': ['5', 'DA'],  # simultani a 09
+    '11': ['5', 'DA'],  # simultani a 02
+    '12_no_incidencia': ['15', 'DN'],  # simultani a 04_no_incidencia
+    '12_incidencia': ['30', 'DN'],  # simultani a 04_incidencia
 })
 
 TERMINIS_M1 = ({
-    '02': '5',
+    '02': ['5', 'DA'],
 })
 
 TERMINIS_A3 = ({
-    '02': '5',
+    '02': ['5', 'DA'],
 })
 
 TERMINIS_B1 = ({
-    '02': '5',
+    '02': ['5', 'DA'],
 })
 
 TERMINIS_W1 = ({
-    '02': '5',
+    '02': ['5', 'DA'],
 })
 
 TERMINIS_R1 = ({
-    '02': '5',
+    '02': ['5', 'DA'],
 })
