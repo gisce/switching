@@ -1396,7 +1396,11 @@ TERMINIS_M1 = ({
 })
 
 TERMINIS_A3 = ({
-    '02': ['5', 'DA'],
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '04_no_incidencia': ['15', 'DN'],  # desde acceptacio de la sol.licitud (02)
+    '04_incidencia': ['30', 'DN'],  # desde acceptacio de la sol.licitud (02)
+    '05': ['1', 'DA'],  # desde la activacio
+    '07': ['5', 'DA'],  # desde la recepcio de la sol.loicitud d'anul.lacio (06)
 })
 
 TERMINIS_B1 = ({
