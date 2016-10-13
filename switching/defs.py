@@ -1361,3 +1361,35 @@ SUBTYPES_R101 = [
         ]
 
 TABLA_82 = [(x['code'], x['name']) for x in SUBTYPES_R101]
+
+# Terminis dels processos de switching
+# Estructura: 'pas a enviar': ['dies de termini', 'tipus de dies']
+# Tipus de dies: DA -> dies habils, DN -> dies naturals
+
+TERMINIS_C1 = ({
+    '02': ['5', 'DA'],
+})
+
+TERMINIS_C2 = ({
+    '02': ['5', 'DA'],
+})
+
+TERMINIS_M1 = ({
+    '02': ['5', 'DA'],
+})
+
+TERMINIS_A3 = ({
+    '02': ['5', 'DA'],
+})
+
+TERMINIS_B1 = ({
+    '02': ['5', 'DA'],
+})
+
+TERMINIS_W1 = ({
+    '02': ['5', 'DA'],
+})
+
+TERMINIS_R1 = ({
+    '02': ['5', 'DA'],
+})
