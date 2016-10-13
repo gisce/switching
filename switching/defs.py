@@ -1408,9 +1408,10 @@ TERMINIS_B1 = ({
 })
 
 TERMINIS_W1 = ({
-    '02': ['5', 'DA'],
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
 })
 
 TERMINIS_R1 = ({
-    '02': ['5', 'DA'],
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '04_info_adicional': ['20', 'DN'],  # desde la recepcio de la sol.licitud 03
 })
