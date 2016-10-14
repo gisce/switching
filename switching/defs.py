@@ -1403,10 +1403,6 @@ TERMINIS_A3 = ({
     '07': ['5', 'DA'],  # desde la recepcio de la sol.loicitud d'anul.lacio (06)
 })
 
-TERMINIS_B1 = ({
-    '02': ['5', 'DA'],
-})
-
 TERMINIS_W1 = ({
     '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
 })
@@ -1414,4 +1410,35 @@ TERMINIS_W1 = ({
 TERMINIS_R1 = ({
     '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
     '04_info_adicional': ['20', 'DN'],  # desde la recepcio de la sol.licitud 03
+})
+
+# Terminis per el proces B1 amb motiu 01
+TERMINIS_B1_01 = ({
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '04': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (03)
+    '05': ['1', 'DA'],  # desde la activacio
+    '06': ['4', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
+})
+
+# Terminis per el proces B1 amb motiu 02
+TERMINIS_B1_02 = ({
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '04': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (03)
+    '05': ['1', 'DA'],  # desde la activacio
+    '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
+})
+
+# Terminis per el proces B1 amb motiu 03
+TERMINIS_B1_03 = ({
+    '05': ['1', 'DA'],  # desde la activacio
+    '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
+})
+
+# Terminis per el proces B1 amb motiu 04
+TERMINIS_B1_04 = ({
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '04': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (03)
+    '05': ['1', 'DA'],  # desde la activacio
+    '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
 })
