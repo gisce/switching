@@ -5,7 +5,7 @@ from message import Message
 import C1
 import W1
 from ...defs import SUBTYPES_R101
-
+from ...defs import TERMINIS_R1
 
 class R1(Message):
     """Classe que implementa R1."""
@@ -995,3 +995,7 @@ def get_type_from_subtype(r1_subtype):
         if x['code'] == r1_subtype:
             return x['type']
     return []
+
+
+def get_termini(pas):
+    return TERMINIS_R1[pas]

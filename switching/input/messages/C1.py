@@ -3,7 +3,7 @@
 
 from message import Message, except_f1
 from switching.helpers.funcions import get_rec_attr
-
+from ...defs import TERMINIS_C1
 
 class C1(Message):
     """Classe que implementa C1."""
@@ -1668,3 +1668,7 @@ class DocumentacioTecnica(object):
         except AttributeError:
             pass
         return num
+
+
+def get_termini(pas):
+    return TERMINIS_C1[pas]

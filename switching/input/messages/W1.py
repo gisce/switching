@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from message import Message
-
+from...defs import TERMINIS_W1
 
 class W1(Message):
     """Classe que implementa W1."""
@@ -130,3 +130,7 @@ class Rechazo(object):
         except AttributeError:
             pass
         return motivo_rechazo
+
+
+def get_termini(pas):
+    return TERMINIS_W1[pas]

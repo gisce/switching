@@ -5,6 +5,7 @@ from switching.helpers.funcions import get_rec_attr
 from message import Message, except_f1
 import C1
 
+from ...defs import TERMINIS_C2
 
 class C2(Message):
     """Classe que implementa C2."""
@@ -250,3 +251,6 @@ class Mesura(object):
             pass
         return value
 
+
+def get_termini(pas):
+    return TERMINIS_C2[pas]

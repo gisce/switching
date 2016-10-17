@@ -2,6 +2,8 @@
 
 from message import Message, except_f1
 import C1, C2
+from ...defs import TERMINIS_B1_01, TERMINIS_B1_02, TERMINIS_B1_03, TERMINIS_B1_04
+
 
 class B1(Message):
     """Classe que implementa B1."""
@@ -129,4 +131,15 @@ class DireccioAmbIndicador(object):
         except AttributeError:
             pass
         return value
-    
+
+
+def get_termini(pas, motiu):
+    if motiu == "01":
+        return TERMINIS_B1_01[pas]
+    elif motiu == "02":
+        return TERMINIS_B1_02[pas]
+    elif motiu == "03":
+        return TERMINIS_B1_03[pas]
+    elif motiu == "04":
+        return TERMINIS_B1_04[pas]
+    return None

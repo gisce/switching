@@ -4,6 +4,7 @@ from switching.helpers.funcions import get_rec_attr
 
 from message import Message, except_f1
 import C1, C2
+from ...defs import TERMINIS_A3
 
 
 class A3(Message):
@@ -134,3 +135,7 @@ class A3(Message):
             return C1.DocumentacioTecnica(obj.DocTecnica)
         else:
             return None
+
+
+def get_termini(pas):
+    return TERMINIS_A3[pas]
