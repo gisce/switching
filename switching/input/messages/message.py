@@ -337,6 +337,7 @@ class MessageTG(MessageBase):
 
 
 class except_f1(Exception):
-    def __init__(self, name, value):
+    def __init__(self, name, value, values_dict=None):
         self.name = name
         self.value = value
+        self.values_dict = values_dict or {}
