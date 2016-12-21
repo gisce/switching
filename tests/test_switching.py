@@ -389,6 +389,24 @@ class Switching_F1_Test(unittest.TestCase):
             assert ajust['motivo'] == '99'
             assert ajust['ajuste'] == res_dict[lect.magnitud][lect.periode]
 
+    def test_get_create_invoice_params(self):
+        expected = {
+            'tipo_rectificadora': 'N',
+            'tipo_factura': '01',
+            'date_invoice': '2016-01-08',
+            'check_total': 55.48,
+            'origin': '1234567890',
+            'reference': '1234567890'
+        }
+
+        f1 = F1(self.xml_ajuste)
+        f1.parse_xml()
+        aux = f1.get_factures()['FacturaATR'][0].get_create_invoice_params()
+        self.assertDictEqual(
+            aux,
+            expected
+        )
+
 class supportClass(object):
     """Funcions de suport"""
     def getHeader(self, process='C1', step='01'):
