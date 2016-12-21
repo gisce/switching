@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<MensajeEnvioInformacionReclamacion xmlns="http://localhost/elegibilidad" AgenteSolicitante="0123">
+    <CabeceraReclamacion>
+        <CodigoREEEmpresaEmisora>1234</CodigoREEEmpresaEmisora>
+        <CodigoREEEmpresaDestino>4321</CodigoREEEmpresaDestino>
+        <CodigoDelProceso>R1</CodigoDelProceso>
+        <CodigoDePaso>04</CodigoDePaso>
+        <CodigoDeSolicitud>201650008314</CodigoDeSolicitud>
+        <SecuencialDeSolicitud>01</SecuencialDeSolicitud>
+        <FechaSolicitud>2016-01-22T10:09:41</FechaSolicitud>
+        <CUPS>ES1234000000000001JN0F</CUPS>
+    </CabeceraReclamacion>
+    <EnvioInformacionReclamacion>
+        <DatosEnvioInformacion>
+            <NumExpedienteAcometida>0123456789ABCD</NumExpedienteAcometida>
+            <FechaInformacion>2016-01-20</FechaInformacion>
+        </DatosEnvioInformacion>
+        <VariablesAportacionInformacion>
+            <VariableAportacionInformacion>
+                <TipoInformacion>01</TipoInformacion>
+                <DescPeticionInformacion>Informacio per fer testos.</DescPeticionInformacion>
+                <Variable>01</Variable>
+                <Valor>125</Valor>
+            </VariableAportacionInformacion>
+            <VariableAportacionInformacion>
+                <TipoInformacion>02</TipoInformacion>
+            </VariableAportacionInformacion>
+        </VariablesAportacionInformacion>
+        <Comentarios>R104 test with VariablesAportacionInformacion.
+        </Comentarios>
+    </EnvioInformacionReclamacion>
+</MensajeEnvioInformacionReclamacion>
