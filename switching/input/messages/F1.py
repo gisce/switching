@@ -109,13 +109,22 @@ class Facturas(object):
         return float(self._dades_generals\
                        .DatosGeneralesFactura.SaldoCobro.text)
 
+    def get_create_invoice_params(self):
+        return {
+            'tipo_rectificadora': self.tipus_rectificadora,
+            'tipo_factura': self.tipus_factura,
+            'date_invoice': self.data_factura,
+            'check_total': abs(self.import_total_factura),
+            'origin': self.numero_factura,
+            'reference': self.numero_factura,
+        }
+
     def get_linies_factura(self):
         """Retorna una llista de llistes de LiniesFactura"""
         contingut = []
         noms_funcio = self.mapa_linies_factura
         for key in noms_funcio:
             try:
-                test = list(getattr(self.factura, key))
                 if key == 'Alquileres':
                     data = noms_funcio[key][0]()
                     pobj = LiniesFactura(data, noms_funcio[key][1])
