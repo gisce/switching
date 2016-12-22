@@ -138,7 +138,3 @@ class M1(Message):
             return C1.DocumentacioTecnica(obj.DocTecnica)
         else:
             return None
-
-
-def get_termini(pas):
-    return TERMINIS_M1[pas]

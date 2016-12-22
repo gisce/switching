@@ -1668,7 +1668,3 @@ class DocumentacioTecnica(object):
         except AttributeError:
             pass
         return num
-
-
-def get_termini(pas):
-    return TERMINIS_C1[pas]

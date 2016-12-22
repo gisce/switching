@@ -995,7 +995,3 @@ def get_type_from_subtype(r1_subtype):
         if x['code'] == r1_subtype:
             return x['type']
     return []
-
-
-def get_termini(pas):
-    return TERMINIS_R1[pas]

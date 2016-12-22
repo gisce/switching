@@ -135,7 +135,3 @@ class A3(Message):
             return C1.DocumentacioTecnica(obj.DocTecnica)
         else:
             return None
-
-
-def get_termini(pas):
-    return TERMINIS_A3[pas]

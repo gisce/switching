@@ -130,7 +130,3 @@ class Rechazo(object):
         except AttributeError:
             pass
         return motivo_rechazo
-
-
-def get_termini(pas):
-    return TERMINIS_W1[pas]

@@ -250,7 +250,3 @@ class Mesura(object):
         except AttributeError:
             pass
         return value
-
-
-def get_termini(pas):
-    return TERMINIS_C2[pas]

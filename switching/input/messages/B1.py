@@ -131,15 +131,3 @@ class DireccioAmbIndicador(object):
         except AttributeError:
             pass
         return value
-
-
-def get_termini(pas, motiu):
-    if motiu == "01":
-        return TERMINIS_B1_01[pas]
-    elif motiu == "02":
-        return TERMINIS_B1_02[pas]
-    elif motiu == "03":
-        return TERMINIS_B1_03[pas]
-    elif motiu == "04":
-        return TERMINIS_B1_04[pas]
-    return None
