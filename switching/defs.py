@@ -1363,68 +1363,70 @@ SUBTYPES_R101 = [
 TABLA_82 = [(x['code'], x['name']) for x in SUBTYPES_R101]
 
 # Terminis dels processos de switching.
-# Estructura: 'pas a enviar': ['dies de termini', 'tipus de dies']
-# Tipus de dies: DA -> dies habils, DN -> dies naturals
+# Estructura: 'pas actual':
+#   ['dies de termini per enviar/rebre', 'tipus de dies', 'pas següent']
+# Tipus de dies:
+#   DA -> dies habils
+#   DN -> dies naturals
 TERMINIS_C1 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
-    '05': ['1', 'DA'],  # desde la activacio
-    '06': ['1', 'DA'],  # desde la activacio, simultani a 05
-    '09': ['5', 'DA'],  # desde la recepcio de la sol.loicitud d'anul.lacio (08)
-    '10': ['5', 'DA'],  # simultani a 09
-    '11': ['5', 'DA'],  # simultani a 02
+    '01': [5, 'DA', '02'],  # Tenim 5 dies per acceptar o rebutjar (enviar pas 02)
+    '02': [1, 'DA', '05'],  # Tenim 1 dia per enviar comunicacio de activació des que s'activen canvis. Mentres no s'activen tenim 2 mesos per fer-ho.
+    '08': [5, 'DA', '09'],  # Tenim 5 dies per acceptar o rebutjar anulacio (enviar pas 09)
 })
 
+TERMINIS_R1 = ({
+    '01': [5, 'DA', '02'],  # Tenim 5 dies per acceptar o rebutjar (enviar pas 02)
+    '03': [20, 'DN', '04'],  # Tenim 20 dies per enviar la informacio sol.licitada (enviar pas 04)
+})
+
+TERMINIS_W1 = ({
+    '01': [5, 'DA', '02'],  # Tenim 5 dies per acceptar o rebutjar (enviar pas 02)
+})
+
+TERMINIS_M1 = ({
+    '01': [5, 'DA', '02'],  # Tenim 5 dies per acceptar o rebutjar (enviar pas 02)
+    '02': [1, 'DA', '05'],  # Tenim 1 dia per enviar comunicacio de activació des que s'activen canvis. Mentres no s'activen tenim 2 mesos per fer-ho.
+    '03': [30, 'DN', '05'],  # En 30 dies s'ha d'haver sol.lucionat la incidencia (enviar 05), altrament es rebutja (enviar 04)
+    '06': [5, 'DA', '07'],  # Tenim 5 dies per acceptar o rebutjar anulacio (enviar pas 07)
+})
+
+# Terminis dels processos de switching OLD.
+# Estructura: 'pas a enviar': ['dies de termini', 'tipus de dies']
+# Tipus de dies: DA -> dies habils, DN -> dies naturals
 TERMINIS_C2 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
     '04_no_incidencia': ['15', 'DN'],  # desde acceptacio de la sol.licitud (02)
     '04_incidencia': ['30', 'DN'],  # desde acceptacio de la sol.licitud (02)
     '05': ['1', 'DA'],  # desde la activacio
     '06': ['1', 'DA'],  # desde la activacio, simultani a 05
-    '09': ['5', 'DA'],  # desde la recepcio de la sol.loicitud d'anul.lacio (08)
+    '09': ['5', 'DA'],  # desde la recepcio de la sol.licitud d'anul.lacio (08)
     '10': ['5', 'DA'],  # simultani a 09
     '11': ['5', 'DA'],  # simultani a 02
     '12_no_incidencia': ['15', 'DN'],  # simultani a 04_no_incidencia
     '12_incidencia': ['30', 'DN'],  # simultani a 04_incidencia
 })
 
-TERMINIS_M1 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
-    '04_no_incidencia': ['15', 'DN'],  # desde acceptacio de la sol.licitud (02)
-    '04_incidencia': ['30', 'DN'],  # desde acceptacio de la sol.licitud (02)
-    '05': ['1', 'DA'],  # desde la activacio
-    '07': ['5', 'DA'],  # desde la recepcio de la sol.loicitud d'anul.lacio (06)
-})
-
 TERMINIS_A3 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
     '04_no_incidencia': ['15', 'DN'],  # desde acceptacio de la sol.licitud (02)
     '04_incidencia': ['30', 'DN'],  # desde acceptacio de la sol.licitud (02)
     '05': ['1', 'DA'],  # desde la activacio
-    '07': ['5', 'DA'],  # desde la recepcio de la sol.loicitud d'anul.lacio (06)
-})
-
-TERMINIS_W1 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
-})
-
-TERMINIS_R1 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
-    '04_info_adicional': ['20', 'DN'],  # desde la recepcio de la sol.licitud 03
+    '07': ['5', 'DA'],  # desde la recepcio de la sol.licitud d'anul.lacio (06)
 })
 
 # Terminis per el proces B1 amb motiu 01
 TERMINIS_B1_01 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
-    '04': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (03)
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
+    '04': ['5', 'DA'],  # desde la recepcio de la sol.licitud (03)
     '05': ['1', 'DA'],  # desde la activacio
-    '06': ['4', 'DA'],  # desde la recepcio de la sol.loicitud (01)
+    '06': ['4', 'DA'],  # desde la recepcio de la sol.licitud (01)
     '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
 })
 
 # Terminis per el proces B1 amb motiu 02
 TERMINIS_B1_02 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
-    '04': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (03)
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
+    '04': ['5', 'DA'],  # desde la recepcio de la sol.licitud (03)
     '05': ['1', 'DA'],  # desde la activacio
     '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
 })
@@ -1437,8 +1439,8 @@ TERMINIS_B1_03 = ({
 
 # Terminis per el proces B1 amb motiu 04
 TERMINIS_B1_04 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (01)
-    '04': ['5', 'DA'],  # desde la recepcio de la sol.loicitud (03)
+    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
+    '04': ['5', 'DA'],  # desde la recepcio de la sol.licitud (03)
     '05': ['1', 'DA'],  # desde la activacio
     '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
 })
