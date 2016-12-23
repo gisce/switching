@@ -1390,6 +1390,13 @@ TERMINIS_M1 = ({
     '06': [5, 'DA', '07'],  # Tenim 5 dies per acceptar o rebutjar anulacio (enviar pas 07)
 })
 
+TERMINIS_A3 = ({
+    '01': [5, 'DA', '02'],  # Tenim 5 dies per acceptar o rebutjar (enviar pas 02)
+    '02': [1, 'DA', '05'],  # Tenim 1 dia per enviar comunicacio de activació des que s'activen canvis. Mentres no s'activen tenim 2 mesos per fer-ho.
+    '03': [30, 'DN', '05'],  # En 30 dies s'ha d'haver sol.lucionat la incidencia (enviar 05), altrament es rebutja (enviar 04)
+    '06': [5, 'DA', '07'],  # Tenim 5 dies per acceptar o rebutjar anulacio (enviar pas 07)
+})
+
 # Terminis dels processos de switching OLD.
 # Estructura: 'pas a enviar': ['dies de termini', 'tipus de dies']
 # Tipus de dies: DA -> dies habils, DN -> dies naturals
@@ -1404,14 +1411,6 @@ TERMINIS_C2 = ({
     '11': ['5', 'DA'],  # simultani a 02
     '12_no_incidencia': ['15', 'DN'],  # simultani a 04_no_incidencia
     '12_incidencia': ['30', 'DN'],  # simultani a 04_incidencia
-})
-
-TERMINIS_A3 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
-    '04_no_incidencia': ['15', 'DN'],  # desde acceptacio de la sol.licitud (02)
-    '04_incidencia': ['30', 'DN'],  # desde acceptacio de la sol.licitud (02)
-    '05': ['1', 'DA'],  # desde la activacio
-    '07': ['5', 'DA'],  # desde la recepcio de la sol.licitud d'anul.lacio (06)
 })
 
 # Terminis per el proces B1 amb motiu 01
