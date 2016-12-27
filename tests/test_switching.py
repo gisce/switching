@@ -764,6 +764,11 @@ class SwitchingC1Test(unittest.TestCase):
 
         assert c101_no_text_xml.contracte.condicions is False
 
+    def test_deadline_C1(self):
+        c1 = C1(self.xml_c101)
+        c1_dl = c1.get_deadline('01')
+        self.assertEqual(c1_dl, DeadLine('01', Workdays(5), '02'))
+
 
 class SwitchingC2Test(unittest.TestCase):
     """test de C2"""
