@@ -13,6 +13,7 @@ from switching.output.messages import sw_a3 as a3
 from switching.output.messages import sw_r1 as r1
 from switching.output.messages.base import Cabecera
 from . import unittest
+from switching.input.messages.Deadlines import DeadLine, Workdays, Naturaldays
 
 from .test_helpers import get_data
 
@@ -1419,6 +1420,11 @@ class SwitchingA3Test(unittest.TestCase):
         a301_no_text_xml.parse_xml(validate=False)
 
         assert a301_no_text_xml.contracte.condicions is False
+
+    def test_deadline_A3(self):
+        a3 = A3(self.xml_a301)
+        a3_dl = a3.get_deadline('01')
+        self.assertEqual(a3_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingB1Test(unittest.TestCase):
