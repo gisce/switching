@@ -595,6 +595,11 @@ class Switching_W1_Test(unittest.TestCase):
         assert date == '2015-07-02'
         assert reason == '01'
 
+    def test_deadline_W1(self):
+        w1 = W1(self.xml_w101)
+        w1_dl = w1.get_deadline('01')
+        self.assertEqual(w1_dl, DeadLine('01', Workdays(5), '02'))
+
 
 class SwitchingC1Test(unittest.TestCase):
     """test de C1"""

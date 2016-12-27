@@ -2,10 +2,15 @@
 # -*- coding: utf-8 -*-
 
 from message import Message
-from...defs import TERMINIS_W1
+from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 
-class W1(Message):
+
+class W1(Message, ProcessDeadline):
     """Classe que implementa W1."""
+
+    steps = [
+        DeadLine('01', Workdays(5), '02'),
+    ]
 
     @property
     def lecturas(self):
