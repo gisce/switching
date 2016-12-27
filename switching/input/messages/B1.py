@@ -2,11 +2,30 @@
 
 from message import Message, except_f1
 import C1, C2
-from ...defs import TERMINIS_B1_01, TERMINIS_B1_02, TERMINIS_B1_03, TERMINIS_B1_04
+from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 
 
-class B1(Message):
+class B1(Message, ProcessDeadline):
     """Classe que implementa B1."""
+
+    steps = [
+        DeadLine('01', Workdays(5), '02'),
+        DeadLine('02', Workdays(1), '05'),
+        DeadLine('03', Workdays(5), '04'),
+    ]
+
+    steps_3 = [
+        DeadLine('02', Workdays(1), '05'),
+    ]
+
+    @classmethod
+    def get_deadline(cls, step, motiu='1'):
+        steps = cls.steps
+        if motiu == '3':
+            steps = cls.steps_3
+        for s in steps:
+            if s.step == step:
+                return s
 
     @property
     def sollicitud(self):

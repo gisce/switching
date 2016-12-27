@@ -4,7 +4,7 @@
 from switching.helpers.funcions import aggr_consums, aggr_ajusts
 from switching.input.messages import C1
 from switching.input.messages import F1, message, R1, W1, A3, M1, FacturaATR, Q1
-from switching.input.messages import C2
+from switching.input.messages import C2, B1
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
@@ -1449,6 +1449,13 @@ class SwitchingB1Test(unittest.TestCase):
         b101_xml.parse_xml()
         documents = b101_xml.documents
         assert documents == []
+
+    def test_deadline_B1(self):
+        b1 = B1(self.xml_b101)
+        b1_dl = b1.get_deadline('01')
+        self.assertEqual(b1_dl, DeadLine('01', Workdays(5), '02'))
+        b1_dl = b1.get_deadline('02', '3')
+        self.assertEqual(b1_dl, DeadLine('02', Workdays(1), '05'))
 
 
 class SwitchingM1Test(unittest.TestCase):
