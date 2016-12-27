@@ -1090,6 +1090,10 @@ class SwitchingC2Test(unittest.TestCase):
 
         assert c201_no_text_xml.contracte.condicions is False
 
+    def test_deadline_C2(self):
+        c2 = C1(self.xml_c201)
+        c2_dl = c2.get_deadline('01')
+        self.assertEqual(c2_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingA3Test(unittest.TestCase):
