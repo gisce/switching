@@ -5,10 +5,16 @@ from message import Message
 import C1
 import W1
 from ...defs import SUBTYPES_R101
-from ...defs import TERMINIS_R1
+from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 
-class R1(Message):
+
+class R1(Message, ProcessDeadline):
     """Classe que implementa R1."""
+
+    steps = [
+        DeadLine('01', Workdays(5), '02'),
+        DeadLine('03', Naturaldays(20), '04'),
+    ]
 
     def set_xsd(self):
         super(R1, self).set_xsd()

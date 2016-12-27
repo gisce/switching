@@ -3323,6 +3323,11 @@ class SwitchingR1_Test(unittest.TestCase):
         r101.parse_xml()
         self.assertGreater(len(r101.check_minimum_fields()), 0)
 
+    def test_deadline_R1(self):
+        r1 = R1(self.xml_r105)
+        r1_dl = r1.get_deadline('01')
+        self.assertEqual(r1_dl, DeadLine('01', Workdays(5), '02'))
+
 
 class SwitchingParseValidate(unittest.TestCase):
 
