@@ -8,21 +8,32 @@ from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 class B1(Message, ProcessDeadline):
     """Classe que implementa B1."""
 
-    steps = [
+    steps_1 = [
         DeadLine('01', Workdays(5), '02'),
         DeadLine('02', Workdays(1), '05'),
+        DeadLine('02_no_activation',  Workdays(6), '05'),
+        DeadLine('03', Workdays(5), '04'),
+    ]
+
+    steps_2 = [
+        DeadLine('01', Workdays(5), '02'),
+        DeadLine('02', Workdays(1), '05'),
+        DeadLine('02_no_activation', Naturaldays(60), '05'),
         DeadLine('03', Workdays(5), '04'),
     ]
 
     steps_3 = [
         DeadLine('02', Workdays(1), '05'),
+        DeadLine('02_no_activation', Naturaldays(60), '05'),
     ]
 
+    steps_4 = steps_1
+
     @classmethod
-    def get_deadline(cls, step, motiu='1'):
-        steps = cls.steps
-        if motiu == '3':
-            steps = cls.steps_3
+    def get_deadline(cls, step, activation=True, motiu='1'):
+        steps = getattr(cls, 'steps_{0}'.format(motiu))
+        if not activation:
+            step = '{0}_no_activation'.format(step)
         for s in steps:
             if s.step == step:
                 return s

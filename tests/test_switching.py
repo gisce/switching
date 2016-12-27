@@ -1468,7 +1468,7 @@ class SwitchingB1Test(unittest.TestCase):
         b1 = B1(self.xml_b101)
         b1_dl = b1.get_deadline('01')
         self.assertEqual(b1_dl, DeadLine('01', Workdays(5), '02'))
-        b1_dl = b1.get_deadline('02', '3')
+        b1_dl = b1.get_deadline('02', motiu='3')
         self.assertEqual(b1_dl, DeadLine('02', Workdays(1), '05'))
 
 

@@ -13,6 +13,7 @@ class C2(Message, ProcessDeadline):
     steps = [
         DeadLine('01', Workdays(5), '02'),
         DeadLine('02', Workdays(1), '05'),
+        DeadLine('02_no_activation', Naturaldays(60), '05'),
         DeadLine('03', Naturaldays(30), '05'),
         DeadLine('08', Workdays(5), '09')
     ]

@@ -23,7 +23,9 @@ class Naturaldays(int):
 
 class ProcessDeadline(object):
     @classmethod
-    def get_deadline(cls, step):
+    def get_deadline(cls, step, activation=True):
+        if not activation:
+            step = '{0}_no_activation'.format(step)
         for s in cls.steps:
             if s.step == step:
                 return s
