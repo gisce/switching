@@ -4,12 +4,18 @@ from switching.helpers.funcions import get_rec_attr
 
 from message import Message, except_f1
 import C1, C2
+from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 
-from ...defs import TERMINIS_M1
 
-
-class M1(Message):
+class M1(Message, ProcessDeadline):
     """Classe que implementa M1."""
+
+    steps = [
+        DeadLine('01', Workdays(5), '02'),
+        DeadLine('02', Workdays(1), '05'),
+        DeadLine('03', Naturaldays(30), '05'),
+        DeadLine('06', Workdays(5), '07'),
+    ]
 
     @property
     def sollicitud(self):
