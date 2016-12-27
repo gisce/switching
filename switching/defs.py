@@ -1364,7 +1364,7 @@ TABLA_82 = [(x['code'], x['name']) for x in SUBTYPES_R101]
 
 # Terminis dels processos de switching.
 # Estructura: 'pas actual':
-#   ['dies de termini per enviar/rebre', 'tipus de dies', 'pas següent']
+#   ['dies de termini per enviar/rebre següent', 'tipus de dies', 'pas següent']
 # Tipus de dies:
 #   DA -> dies habils
 #   DN -> dies naturals
@@ -1404,38 +1404,16 @@ TERMINIS_C2 = ({
     '08': [5, 'DA', '09'],  # Tenim 5 dies per acceptar o rebutjar anulacio (enviar pas 09)
 })
 
-
-# Terminis dels processos de switching OLD.
-# Estructura: 'pas a enviar': ['dies de termini', 'tipus de dies']
-# Tipus de dies: DA -> dies habils, DN -> dies naturals
-
-# Terminis per el proces B1 amb motiu 01
 TERMINIS_B1_01 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
-    '04': ['5', 'DA'],  # desde la recepcio de la sol.licitud (03)
-    '05': ['1', 'DA'],  # desde la activacio
-    '06': ['4', 'DA'],  # desde la recepcio de la sol.licitud (01)
-    '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
+    '01': [5, 'DA', '02'],  # Tenim 5 dies per acceptar o rebutjar (enviar pas 02)
+    '02': [1, 'DA', '05'],  # Tenim 1 dia per enviar comunicacio des que s'activen canvis. Mentres no s'activen tenim fins a la data baixa +1 o 6 dies per aplicar canvis i enviar 05
+    '03': [5, 'DA', '04'],  # Tenim 5 dies per acceptar o rebutjar anulacio (enviar pas 04)
 })
 
-# Terminis per el proces B1 amb motiu 02
-TERMINIS_B1_02 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
-    '04': ['5', 'DA'],  # desde la recepcio de la sol.licitud (03)
-    '05': ['1', 'DA'],  # desde la activacio
-    '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
-})
+TERMINIS_B1_02 = TERMINIS_B1_01
 
-# Terminis per el proces B1 amb motiu 03
 TERMINIS_B1_03 = ({
-    '05': ['1', 'DA'],  # desde la activacio
-    '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
+    '02': [1, 'DA', '05'],  # Tenim 1 dia per enviar comunicacio de activació des que s'activen canvis. Mentres no s'activen tenim 2 mesos per fer-ho.
 })
 
-# Terminis per el proces B1 amb motiu 04
-TERMINIS_B1_04 = ({
-    '02': ['5', 'DA'],  # desde la recepcio de la sol.licitud (01)
-    '04': ['5', 'DA'],  # desde la recepcio de la sol.licitud (03)
-    '05': ['1', 'DA'],  # desde la activacio
-    '07': ['1', 'DA'],  # desde la data de baixa sol.licitada
-})
+TERMINIS_B1_04 = TERMINIS_B1_01
