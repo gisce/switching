@@ -596,8 +596,7 @@ class Switching_W1_Test(unittest.TestCase):
         assert reason == '01'
 
     def test_deadline_W1(self):
-        w1 = W1(self.xml_w101)
-        w1_dl = w1.get_deadline('01')
+        w1_dl = W1.get_deadline('01')
         self.assertEqual(w1_dl, DeadLine('01', Workdays(5), '02'))
 
 
@@ -770,8 +769,7 @@ class SwitchingC1Test(unittest.TestCase):
         assert c101_no_text_xml.contracte.condicions is False
 
     def test_deadline_C1(self):
-        c1 = C1(self.xml_c101)
-        c1_dl = c1.get_deadline('01')
+        c1_dl = C1.get_deadline('01')
         self.assertEqual(c1_dl, DeadLine('01', Workdays(5), '02'))
 
 
@@ -1096,8 +1094,7 @@ class SwitchingC2Test(unittest.TestCase):
         assert c201_no_text_xml.contracte.condicions is False
 
     def test_deadline_C2(self):
-        c2 = C1(self.xml_c201)
-        c2_dl = c2.get_deadline('01')
+        c2_dl = C2.get_deadline('01')
         self.assertEqual(c2_dl, DeadLine('01', Workdays(5), '02'))
 
 
@@ -1436,8 +1433,7 @@ class SwitchingA3Test(unittest.TestCase):
         assert a301_no_text_xml.contracte.condicions is False
 
     def test_deadline_A3(self):
-        a3 = A3(self.xml_a301)
-        a3_dl = a3.get_deadline('01')
+        a3_dl = A3.get_deadline('01')
         self.assertEqual(a3_dl, DeadLine('01', Workdays(5), '02'))
 
 
@@ -1465,10 +1461,9 @@ class SwitchingB1Test(unittest.TestCase):
         assert documents == []
 
     def test_deadline_B1(self):
-        b1 = B1(self.xml_b101)
-        b1_dl = b1.get_deadline('01')
+        b1_dl = B1.get_deadline('01')
         self.assertEqual(b1_dl, DeadLine('01', Workdays(5), '02'))
-        b1_dl = b1.get_deadline('02', motiu='3')
+        b1_dl = B1.get_deadline('02', motiu='3')
         self.assertEqual(b1_dl, DeadLine('02', Workdays(1), '05'))
 
 
@@ -1770,8 +1765,7 @@ class SwitchingM1Test(unittest.TestCase):
         assert m101_no_text_xml.contracte.condicions is False
 
     def test_deadline_M1(self):
-        m1 = M1(self.xml_m101)
-        m1_dl = m1.get_deadline('01')
+        m1_dl = M1.get_deadline('01')
         self.assertEqual(m1_dl, DeadLine('01', Workdays(5), '02'))
 
 
@@ -3329,8 +3323,7 @@ class SwitchingR1_Test(unittest.TestCase):
         self.assertGreater(len(r101.check_minimum_fields()), 0)
 
     def test_deadline_R1(self):
-        r1 = R1(self.xml_r105)
-        r1_dl = r1.get_deadline('01')
+        r1_dl = R1.get_deadline('01')
         self.assertEqual(r1_dl, DeadLine('01', Workdays(5), '02'))
 
 

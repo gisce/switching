@@ -1,10 +1,10 @@
 from collections import namedtuple
-from datetime import timedelta
+from datetime import datetime, timedelta
 from workdays import workday
 
 
 class DeadLine(namedtuple('Deadline', "step, days, next_step")):
-    def limit(self, date):
+    def limit(self, date=datetime.today()):
         if isinstance(self.days, Naturaldays):
             return date + timedelta(self.days)
         else:
@@ -23,8 +23,8 @@ class Naturaldays(int):
 
 class ProcessDeadline(object):
     @classmethod
-    def get_deadline(cls, step, activation=True):
-        if not activation:
+    def get_deadline(cls, step, activation=False):
+        if not activation and step == '02':
             step = '{0}_no_activation'.format(step)
         for s in cls.steps:
             if s.step == step:
