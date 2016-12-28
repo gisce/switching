@@ -32,7 +32,7 @@ class B1(Message, ProcessDeadline):
     @classmethod
     def get_deadline(cls, step, activation=True, motiu='01'):
         steps = getattr(cls, 'steps_{0}'.format(motiu))
-        if not activation:
+        if not activation and step == '02':
             step = '{0}_no_activation'.format(step)
         for s in steps:
             if s.step == step:
