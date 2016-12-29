@@ -4,7 +4,9 @@ from workdays import workday
 
 
 class DeadLine(namedtuple('Deadline', "step, days, next_step")):
-    def limit(self, date=datetime.today()):
+    def limit(self, date=None):
+        if not date:
+            date = datetime.today()
         if isinstance(self.days, Naturaldays):
             return date + timedelta(self.days)
         else:
@@ -24,8 +26,8 @@ class Naturaldays(int):
 class ProcessDeadline(object):
     @classmethod
     def get_deadline(cls, step, activation=False):
-        if not activation and step == '02':
-            step = '{0}_no_activation'.format(step)
+        if activation:
+            step = '{0}_activation'.format(step)
         for s in cls.steps:
             if s.step == step:
                 return s

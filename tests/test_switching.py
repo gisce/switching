@@ -1481,8 +1481,8 @@ class SwitchingB1Test(unittest.TestCase):
     def test_deadline_B1(self):
         b1_dl = B1.get_deadline('01')
         self.assertEqual(b1_dl, DeadLine('01', Workdays(5), '02'))
-        b1_dl = B1.get_deadline('02', motiu='3')
-        self.assertEqual(b1_dl, DeadLine('02', Workdays(1), '05'))
+        b1_dl = B1.get_deadline('02', motiu='03', activation=True)
+        self.assertEqual(b1_dl, DeadLine('02_activation', Workdays(1), '05'))
 
 
 class SwitchingM1Test(unittest.TestCase):
