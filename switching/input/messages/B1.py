@@ -2,9 +2,44 @@
 
 from message import Message, except_f1
 import C1, C2
+from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 
-class B1(Message):
+
+class B1(Message, ProcessDeadline):
     """Classe que implementa B1."""
+
+    steps_01 = [
+        DeadLine('01', Workdays(5), '02'),
+        DeadLine('02_activation', Workdays(1), '05'),
+        DeadLine('02',  Workdays(6), '05'),
+        DeadLine('03', Workdays(5), '04'),
+        DeadLine('05_activation', Workdays(1), '05'),
+    ]
+
+    steps_02 = [
+        DeadLine('01', Workdays(5), '02'),
+        DeadLine('02_activation', Workdays(1), '05'),
+        DeadLine('02', Naturaldays(60), '05'),
+        DeadLine('03', Workdays(5), '04'),
+        DeadLine('05_activation', Workdays(1), '05'),
+    ]
+
+    steps_03 = [
+        DeadLine('02_activation', Workdays(1), '05'),
+        DeadLine('02', Naturaldays(60), '05'),
+        DeadLine('05_activation', Workdays(1), '05'),
+    ]
+
+    steps_04 = steps_01
+
+    @classmethod
+    def get_deadline(cls, step, activation=False, motiu='01'):
+        steps = getattr(cls, 'steps_{0}'.format(motiu))
+        if activation:
+            step = '{0}_activation'.format(step)
+        for s in steps:
+            if s.step == step:
+                return s
 
     @property
     def sollicitud(self):
@@ -129,4 +164,3 @@ class DireccioAmbIndicador(object):
         except AttributeError:
             pass
         return value
-    

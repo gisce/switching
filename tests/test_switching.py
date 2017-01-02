@@ -4,7 +4,7 @@
 from switching.helpers.funcions import aggr_consums, aggr_ajusts
 from switching.input.messages import C1
 from switching.input.messages import F1, message, R1, W1, A3, M1, FacturaATR, Q1
-from switching.input.messages import C2
+from switching.input.messages import C2, B1
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
@@ -13,6 +13,7 @@ from switching.output.messages import sw_a3 as a3
 from switching.output.messages import sw_r1 as r1
 from switching.output.messages.base import Cabecera
 from . import unittest
+from switching.input.messages.Deadlines import DeadLine, Workdays, Naturaldays
 
 from .test_helpers import get_data
 
@@ -612,6 +613,10 @@ class Switching_W1_Test(unittest.TestCase):
         assert date == '2015-07-02'
         assert reason == '01'
 
+    def test_deadline_W1(self):
+        w1_dl = W1.get_deadline('01')
+        self.assertEqual(w1_dl, DeadLine('01', Workdays(5), '02'))
+
 
 class SwitchingC1Test(unittest.TestCase):
     """test de C1"""
@@ -780,6 +785,10 @@ class SwitchingC1Test(unittest.TestCase):
         c101_no_text_xml.parse_xml(validate=False)
 
         assert c101_no_text_xml.contracte.condicions is False
+
+    def test_deadline_C1(self):
+        c1_dl = C1.get_deadline('01')
+        self.assertEqual(c1_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingC2Test(unittest.TestCase):
@@ -1102,6 +1111,9 @@ class SwitchingC2Test(unittest.TestCase):
 
         assert c201_no_text_xml.contracte.condicions is False
 
+    def test_deadline_C2(self):
+        c2_dl = C2.get_deadline('01')
+        self.assertEqual(c2_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingA3Test(unittest.TestCase):
@@ -1438,6 +1450,10 @@ class SwitchingA3Test(unittest.TestCase):
 
         assert a301_no_text_xml.contracte.condicions is False
 
+    def test_deadline_A3(self):
+        a3_dl = A3.get_deadline('01')
+        self.assertEqual(a3_dl, DeadLine('01', Workdays(5), '02'))
+
 
 class SwitchingB1Test(unittest.TestCase):
     """test de B1"""
@@ -1461,6 +1477,12 @@ class SwitchingB1Test(unittest.TestCase):
         b101_xml.parse_xml()
         documents = b101_xml.documents
         assert documents == []
+
+    def test_deadline_B1(self):
+        b1_dl = B1.get_deadline('01')
+        self.assertEqual(b1_dl, DeadLine('01', Workdays(5), '02'))
+        b1_dl = B1.get_deadline('02', motiu='03', activation=True)
+        self.assertEqual(b1_dl, DeadLine('02_activation', Workdays(1), '05'))
 
 
 class SwitchingM1Test(unittest.TestCase):
@@ -1759,6 +1781,10 @@ class SwitchingM1Test(unittest.TestCase):
         m101_no_text_xml.parse_xml(validate=False)
 
         assert m101_no_text_xml.contracte.condicions is False
+
+    def test_deadline_M1(self):
+        m1_dl = M1.get_deadline('01')
+        self.assertEqual(m1_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingR1_Test(unittest.TestCase):
@@ -3313,6 +3339,10 @@ class SwitchingR1_Test(unittest.TestCase):
         r101.set_xsd()
         r101.parse_xml()
         self.assertGreater(len(r101.check_minimum_fields()), 0)
+
+    def test_deadline_R1(self):
+        r1_dl = R1.get_deadline('01')
+        self.assertEqual(r1_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingParseValidate(unittest.TestCase):
