@@ -87,6 +87,35 @@ class TestS04Circutor(unittest.TestCase):
                                 '1900-01-01 00:00:00'
                             )
 
+class TestS04(unittest.TestCase):
+        """
+        Test reading for S04 reports
+        """
+
+        def setUp(self):
+            """
+            Read S04 report
+
+            :return: None
+            """
+            self.xml = open(get_data('CIR4621247027_0_0_201612162344.xml'),
+                            "r")
+            self.tg_xml = message.MessageTG(self.xml)
+            self.tg_xml.parse_xml()
+
+        def test_full_reading(self):
+            """
+
+            :return:
+            """
+            res = []
+            for cnc in self.tg_xml.obj.Cnc:
+                concentrator = TG.Concentrator(cnc)
+                for meter in concentrator.get_meters():
+                    values = TG.Values(meter, 'S04', self.tg_xml.version)
+                    res = values.get()
+            assert len(res) == 14
+
 
 class TestS05(unittest.TestCase):
 
