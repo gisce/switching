@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import sys
 from datetime import datetime
 
 class Concentrator(object):
@@ -145,35 +145,38 @@ class Values(object):
         meter_name = self.meter.name
         ret_values = []
         for S04_header in self.meter.meter.S04:
-            date_begin = self.get_timestamp(S04_header, 'Fhi')
-            date_end = self.get_timestamp(S04_header, 'Fhf')
-            date_max = self.get_timestamp(S04_header, 'Fx')
-            common_vals = {'name': meter_name,
-                        'type': 'month',
-                        'date_begin': date_begin,
-                        'date_end': date_end,
-                        'contract': int(S04_header.get('Ctr')),
-                        'period': int(S04_header.get('Pt')),
-                        'max': int(S04_header.get('Mx')),
-                        'date_max': date_max,
-                        'cnc_name': self.meter.cnc_name,
-                        }
-            for S04_values in S04_header.Value:
-                tmp_vals = common_vals.copy()
-                if S04_values.get('AIa'):
-                    value_value = 'a'
-                else:
-                    value_value = 'i'
-                tmp_vals.update({'ai': int(S04_values.get('AI%s' % value_value)),
-                                 'ae': int(S04_values.get('AE%s' % value_value)),
-                                 'r1': int(S04_values.get('R1%s' % value_value)),
-                                 'r2': int(S04_values.get('R2%s' % value_value)),
-                                 'r3': int(S04_values.get('R3%s' % value_value)),
-                                 'r4': int(S04_values.get('R4%s' % value_value)),
-                                 'value': value_value,
-                                 })
-                ret_values.append(tmp_vals)
-
+            try:
+                date_begin = self.get_timestamp(S04_header, 'Fhi')
+                date_end = self.get_timestamp(S04_header, 'Fhf')
+                date_max = self.get_timestamp(S04_header, 'Fx')
+                common_vals = {'name': meter_name,
+                            'type': 'month',
+                            'date_begin': date_begin,
+                            'date_end': date_end,
+                            'contract': int(S04_header.get('Ctr')),
+                            'period': int(S04_header.get('Pt')),
+                            'max': int(S04_header.get('Mx')),
+                            'date_max': date_max,
+                            'cnc_name': self.meter.cnc_name,
+                            }
+                for S04_values in S04_header.Value:
+                    tmp_vals = common_vals.copy()
+                    if S04_values.get('AIa'):
+                        value_value = 'a'
+                    else:
+                        value_value = 'i'
+                    tmp_vals.update({'ai': int(S04_values.get('AI%s' % value_value)),
+                                     'ae': int(S04_values.get('AE%s' % value_value)),
+                                     'r1': int(S04_values.get('R1%s' % value_value)),
+                                     'r2': int(S04_values.get('R2%s' % value_value)),
+                                     'r3': int(S04_values.get('R3%s' % value_value)),
+                                     'r4': int(S04_values.get('R4%s' % value_value)),
+                                     'value': value_value,
+                                     })
+                    ret_values.append(tmp_vals)
+            except Exception:
+                print "Unexpected error reading S04. Error:{}. On line {}" \
+                      "".format(sys.exc_info()[1], sys.exc_info()[2].tb_lineno)
         return ret_values
 
     def get_S12(self):
