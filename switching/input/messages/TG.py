@@ -174,11 +174,12 @@ class Values(object):
                                      'value': value_value,
                                      })
                     ret_values.append(tmp_vals)
-            except ValueError as v:
-                print "Unexpected error reading S04. Error:{}. On line {}" \
-                    "".format(sys.exc_info()[1], sys.exc_info()[2].tb_lineno)
             except Exception:
-                print "Unexpected error reading S04"
+                error_string = "Unexpected ValueError reading S04. Error:{}. " \
+                               "On line {}".format(sys.exc_info()[1],
+                                                   sys.exc_info()[2].tb_lineno)
+                print error_string
+
         return ret_values
 
     def get_S12(self):
