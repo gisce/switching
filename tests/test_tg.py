@@ -114,7 +114,7 @@ class TestS04(unittest.TestCase):
                 for meter in concentrator.get_meters():
                     values = TG.Values(meter, 'S04', self.tg_xml.version)
                     res = values.get()
-            assert len(res) == 14
+            self.assertEqual(len(res), 14)
 
 
 class TestS05(unittest.TestCase):
