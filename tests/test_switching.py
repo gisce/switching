@@ -134,6 +134,38 @@ class Switching_F1_Test(unittest.TestCase):
         for f1_atr in f1_atrs:
             self.assertEqual(f1_atr.numero_factura, '10005604')
 
+    def test_specific_get_lectures_returns_correct_readings(self):
+        f1 = F1(self.xml_rectificadora)
+        f1.set_xsd()
+        f1.parse_xml()
+
+        invoice = f1.get_factures()['FacturaATR'][0]
+        meter = invoice.get_comptadors()[0]
+        readings = meter.get_lectures()
+        expected_lectures_activa = {
+            read.lectura for read in readings if read.tipus == 'A'
+        }
+        expected_lectures_reactiva = {
+            read.lectura for read in readings if read.tipus == 'R'
+        }
+        expected_lectures_max = {
+            read.lectura for read in readings if read.tipus == 'M'
+        }
+
+        lectures_activa = {
+            read.lectura for read in meter.get_lectures_activa()
+        }
+        lectures_reactiva = {
+            read.lectura for read in meter.get_lectures_reactiva()
+        }
+        lectures_max = {
+            read.lectura for read in meter.get_lectures_maximetre()
+        }
+
+        self.assertEqual(expected_lectures_activa, lectures_activa)
+        self.assertEqual(expected_lectures_reactiva, lectures_reactiva)
+        self.assertEqual(expected_lectures_max, lectures_max)
+
     def test_rectificadora(self):
         f1 = F1(self.xml_rectificadora)
         f1.set_xsd()
