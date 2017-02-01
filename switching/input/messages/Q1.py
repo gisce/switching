@@ -188,6 +188,39 @@ class Comptador(object):
             pass
         return lectures
 
+    def get_lectures_activa(self):
+        lectures_activa = []
+        try:
+            for lect in self.obj.Integrador:
+                lectura = Lectura(lect)
+                if lectura.tipus == 'A':
+                    lectures_activa.append(lectura)
+        except AttributeError:
+            pass
+        return lectures_activa
+
+    def get_lectures_reactiva(self):
+        lectures_reactiva = []
+        try:
+            for lect in self.obj.Integrador:
+                lectura = Lectura(lect)
+                if lectura.tipus == 'R':
+                    lectures_reactiva.append(lectura)
+        except AttributeError:
+            pass
+        return lectures_reactiva
+
+    def get_lectures_maximetre(self):
+        lectures_maximetre = []
+        try:
+            for lect in self.obj.Integrador:
+                lectura = Lectura(lect)
+                if lectura.tipus == 'M':
+                    lectures_maximetre.append(lectura)
+        except AttributeError:
+            pass
+        return lectures_maximetre
+
     @property
     def codiDH(self):
         """Retorna el codi de Discriminació Horaria"""
