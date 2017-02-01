@@ -151,6 +151,9 @@ class Switching_F1_Test(unittest.TestCase):
         expected_lectures_max = {
             read.lectura for read in readings if read.tipus == 'M'
         }
+        expected_lectures_energia = {
+            read.lectura for read in readings if read.tipus in ('A', 'R')
+        }
 
         lectures_activa = {
             read.lectura for read in meter.get_lectures_activa()
@@ -161,10 +164,14 @@ class Switching_F1_Test(unittest.TestCase):
         lectures_max = {
             read.lectura for read in meter.get_lectures_maximetre()
         }
+        lectures_energia = {
+            read.lectura for read in meter.get_lectures_energia()
+        }
 
         self.assertEqual(expected_lectures_activa, lectures_activa)
         self.assertEqual(expected_lectures_reactiva, lectures_reactiva)
         self.assertEqual(expected_lectures_max, lectures_max)
+        self.assertEqual(expected_lectures_energia, lectures_energia)
 
     def test_rectificadora(self):
         f1 = F1(self.xml_rectificadora)

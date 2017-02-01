@@ -210,6 +210,17 @@ class Comptador(object):
             pass
         return lectures_reactiva
 
+    def get_lectures_energia(self):
+        lectures_energia = []
+        try:
+            for lect in self.obj.Integrador:
+                lectura = Lectura(lect)
+                if lectura.tipus in ('A', 'R'):
+                    lectures_energia.append(lectura)
+        except AttributeError:
+            pass
+        return lectures_energia
+
     def get_lectures_maximetre(self):
         lectures_maximetre = []
         try:
