@@ -34,11 +34,24 @@ class Meter(object):
         self.cnc_name = cnc_name
         self.errors = {}
         self.get_errors()
+        self._warnings = []
 
     def get_errors(self):
         if self.meter.get('ErrCat'):
             self.errors = {'errcat': self.meter.get('ErrCat'),
                            'errcode': self.meter.get('ErrCode')}
+
+    @property
+    def warnings(self):
+        return self._warnings
+
+    @warnings.setter
+    def warnings(self, value):
+        self._warnings = value
+
+    @warnings.deleter
+    def warnings(self):
+        del self._warnings
 
     @property
     def name(self):
