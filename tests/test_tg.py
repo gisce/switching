@@ -118,6 +118,7 @@ class TestS04Exception(unittest.TestCase):
                 for meter in concentrator.get_meters():
                     values = TG.Values(meter, 'S04', self.tg_xml.version)
                     res = values.get()
+                    self.assertEqual(len(meter.warnings), 7)
             self.assertEqual(len(res), 14)
 
 
