@@ -209,7 +209,7 @@ class Values(object):
                                      'value': value_value,
                                      })
                     ret_values.append(tmp_vals)
-            except Exception:
+            except ValueError:
                 error_string = "Unexpected ValueError reading S04. " \
                                "Meter: {}. Error:{}. " \
                                "On line {}".format(self.meter.name,
