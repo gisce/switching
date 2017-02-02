@@ -225,14 +225,7 @@ class Values(object):
                                      })
                     ret_values.append(tmp_vals)
             except ValueError:
-                error_string = "Unexpected ValueError reading S04. " \
-                               "Meter: {}. Error:{}. " \
-                               "On line {}".format(self.meter.name,
-                                                   sys.exc_info()[1],
-                                                   sys.exc_info()[2].tb_lineno)
-                _new_warn = self.meter.warnings
-                _new_warn.append(error_string)
-                self.meter.warnings = _new_warn
+                self.keep_meter_warnings()
 
         return ret_values
 
