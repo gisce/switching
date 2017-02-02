@@ -115,27 +115,40 @@ class Values(object):
     def get_boolean(self, element, value):
         return element.get(value) == 'Y' and True or False
 
+    def keep_meter_warnings(self):
+        error_string = "Unexpected ValueError reading {}. " \
+                       "Meter: {}. Error:{}. " \
+                       "On line {}".format(self.report_type,
+                                           self.meter.name,
+                                           sys.exc_info()[1],
+                                           sys.exc_info()[2].tb_lineno)
+        _new_warn = self.meter.warnings
+        _new_warn.append(error_string)
+        self.meter.warnings = _new_warn
+
     def get_S02(self):
         '''get function for S02 type values'''
         meter_name = self.meter.name
         magn = int(self.meter.multiplier)
         ret_values = []
         for value in self.meter.meter.S02:
-            timestamp = self.get_timestamp(value, 'Fh')
-            ret_values.append({'name': meter_name,
-                               'cnc_name': self.meter.cnc_name,
-                               'timestamp': timestamp, 
-                               'season':value.get('Fh')[-1:],
-                               'magn': magn,
-                               'ai': float(value.get('AI')),
-                               'ae': float(value.get('AE')),
-                               'r1': float(value.get('R1')),
-                               'r2': float(value.get('R2')),
-                               'r3': float(value.get('R3')),
-                               'r4': float(value.get('R4')),
-                               'bc': value.get('Bc')
-                               })
-
+            try:
+                timestamp = self.get_timestamp(value, 'Fh')
+                ret_values.append({'name': meter_name,
+                                   'cnc_name': self.meter.cnc_name,
+                                   'timestamp': timestamp,
+                                   'season': value.get('Fh')[-1:],
+                                   'magn': magn,
+                                   'ai': float(value.get('AI')),
+                                   'ae': float(value.get('AE')),
+                                   'r1': float(value.get('R1')),
+                                   'r2': float(value.get('R2')),
+                                   'r3': float(value.get('R3')),
+                                   'r4': float(value.get('R4')),
+                                   'bc': value.get('Bc')
+                                   })
+            except ValueError:
+                self.keep_meter_warnings()
         return ret_values
 
     def get_S05(self):
