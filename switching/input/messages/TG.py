@@ -2,6 +2,7 @@
 import sys
 from datetime import datetime
 
+
 class Concentrator(object):
     """Implements concentrator"""
 
@@ -14,20 +15,27 @@ class Concentrator(object):
 
     @property
     def has_meters(self):
-        '''return True if concentrator has meter child tags'''
+        """
+        :return: True if concentrator has meter child tags
+        """
         if hasattr(self.concentrator, 'Cnt'):
             return True
         else:
             return False
 
     def get_meters(self):
-        '''Return all Meters in the concentrator'''
+        """
+        :return: all Meters in the concentrator
+        """
         if len(self.concentrator.getchildren()):
             return [Meter(x, self.name) for x in self.concentrator.Cnt]
         return []
 
+
 class Meter(object):
-    '''Implements meter'''
+    """
+    Implements meter
+    """
 
     def __init__(self, meter, cnc_name):
         self.meter = meter
@@ -63,7 +71,9 @@ class Meter(object):
 
 
 class Values(object):
-    '''return values'''
+    """
+    return values
+    """
 
     def __init__(self, meter, report_type, version):
         self.report_type = report_type
@@ -71,7 +81,10 @@ class Values(object):
         self.meter = meter
 
     def get(self):
-        '''generic get function'''
+        """
+        generic get function
+        :return:
+        """
         #if meter is a concentrator instance
         if isinstance(self.meter, Concentrator):
             if not len(self.meter.concentrator.getchildren()):
@@ -154,7 +167,10 @@ class Values(object):
         return ret_values
 
     def get_S04(self):
-        '''get function for S04 type values'''
+        """
+        get function for S04 type values
+        :return:
+        """
         meter_name = self.meter.name
         ret_values = []
         for S04_header in self.meter.meter.S04:
@@ -163,27 +179,33 @@ class Values(object):
                 date_end = self.get_timestamp(S04_header, 'Fhf')
                 date_max = self.get_timestamp(S04_header, 'Fx')
                 common_vals = {'name': meter_name,
-                            'type': 'month',
-                            'date_begin': date_begin,
-                            'date_end': date_end,
-                            'contract': int(S04_header.get('Ctr')),
-                            'period': int(S04_header.get('Pt')),
-                            'max': int(S04_header.get('Mx')),
-                            'date_max': date_max,
-                            'cnc_name': self.meter.cnc_name,
-                            }
+                               'type': 'month',
+                               'date_begin': date_begin,
+                               'date_end': date_end,
+                               'contract': int(S04_header.get('Ctr')),
+                               'period': int(S04_header.get('Pt')),
+                               'max': int(S04_header.get('Mx')),
+                               'date_max': date_max,
+                               'cnc_name': self.meter.cnc_name,
+                               }
                 for S04_values in S04_header.Value:
                     tmp_vals = common_vals.copy()
                     if S04_values.get('AIa'):
                         value_value = 'a'
                     else:
                         value_value = 'i'
-                    tmp_vals.update({'ai': int(S04_values.get('AI%s' % value_value)),
-                                     'ae': int(S04_values.get('AE%s' % value_value)),
-                                     'r1': int(S04_values.get('R1%s' % value_value)),
-                                     'r2': int(S04_values.get('R2%s' % value_value)),
-                                     'r3': int(S04_values.get('R3%s' % value_value)),
-                                     'r4': int(S04_values.get('R4%s' % value_value)),
+                    tmp_vals.update({'ai': int(S04_values.get('AI%s' %
+                                                              value_value)),
+                                     'ae': int(S04_values.get('AE%s' %
+                                                              value_value)),
+                                     'r1': int(S04_values.get('R1%s' %
+                                                              value_value)),
+                                     'r2': int(S04_values.get('R2%s' %
+                                                              value_value)),
+                                     'r3': int(S04_values.get('R3%s' %
+                                                              value_value)),
+                                     'r4': int(S04_values.get('R4%s' %
+                                                              value_value)),
                                      'value': value_value,
                                      })
                     ret_values.append(tmp_vals)
@@ -335,7 +357,10 @@ class Values(object):
         return ret_values
 
     def get_S13(self):
-        '''S13 (spontaneous events) has the same format as S09'''
+        """
+        S13 (spontaneous events) has the same format as S09
+        :return:
+        """
 
         return self.get_S09(type='S13')
 
@@ -365,6 +390,9 @@ class Values(object):
         return ret_values
 
     def get_S15(self):
-        '''S15 (spontaneous events) has the same format as S17'''
+        """
+        S15 (spontaneous events) has the same format as S17
+        :return:
+        """
 
         return self.get_S17(type='S15')
