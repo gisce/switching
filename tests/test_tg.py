@@ -155,6 +155,39 @@ class TestS02(unittest.TestCase):
         self.assertEqual(len(res), 24)
 
 
+class TestS02Exception(unittest.TestCase):
+    """
+    Test reading for S02 reports
+    """
+
+    def setUp(self):
+        """
+        Read S02 report
+
+        :return: None
+        """
+        self.xml = open(get_data('S02_exception.xml'), "r")
+        self.tg_xml = message.MessageTG(self.xml)
+        self.tg_xml.parse_xml()
+
+    def tearDown(self):
+        self.xml.close()
+
+    def test_full_reading(self):
+        """
+
+        :return:
+        """
+        res = []
+        for cnc in self.tg_xml.obj.Cnc:
+            concentrator = TG.Concentrator(cnc)
+            for meter in concentrator.get_meters():
+                values = TG.Values(meter, 'S02', self.tg_xml.version)
+                res = values.get()
+                self.assertEqual(len(meter.warnings), 4)
+        self.assertEqual(len(res), 20)
+
+
 class TestS05(unittest.TestCase):
 
     def setUp(self):
