@@ -156,27 +156,29 @@ class Values(object):
         meter_name = self.meter.name
         ret_values = []
         for S05_header in self.meter.meter.S05:
-            timestamp = self.get_timestamp(S05_header, 'Fh')
-            value = 'a'
-            tmp_vals = {'name': meter_name,
-                        'type': 'day',
-                        'value': value,
-                        'date_begin': timestamp,
-                        'date_end': timestamp,
-                        'contract': int(S05_header.get('Ctr')),
-                        'period': int(S05_header.get('Pt')),
-                        'cnc_name': self.meter.cnc_name,
-                        }
-            for S05_values in S05_header.Value:
-                tmp_vals.update({'ai': int(S05_values.get('AI%s' % value)),
-                                 'ae': int(S05_values.get('AE%s' % value)),
-                                 'r1': int(S05_values.get('R1%s' % value)),
-                                 'r2': int(S05_values.get('R2%s' % value)),
-                                 'r3': int(S05_values.get('R3%s' % value)),
-                                 'r4': int(S05_values.get('R4%s' % value)),
-                                 })
-                ret_values.append(tmp_vals)
-
+            try:
+                timestamp = self.get_timestamp(S05_header, 'Fh')
+                value = 'a'
+                tmp_vals = {'name': meter_name,
+                            'type': 'day',
+                            'value': value,
+                            'date_begin': timestamp,
+                            'date_end': timestamp,
+                            'contract': int(S05_header.get('Ctr')),
+                            'period': int(S05_header.get('Pt')),
+                            'cnc_name': self.meter.cnc_name,
+                            }
+                for S05_values in S05_header.Value:
+                    tmp_vals.update({'ai': int(S05_values.get('AI%s' % value)),
+                                     'ae': int(S05_values.get('AE%s' % value)),
+                                     'r1': int(S05_values.get('R1%s' % value)),
+                                     'r2': int(S05_values.get('R2%s' % value)),
+                                     'r3': int(S05_values.get('R3%s' % value)),
+                                     'r4': int(S05_values.get('R4%s' % value)),
+                                     })
+                    ret_values.append(tmp_vals)
+            except ValueError:
+                self.keep_meter_warnings()
         return ret_values
 
     def get_S04(self):
