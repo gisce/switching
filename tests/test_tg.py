@@ -99,8 +99,7 @@ class TestS04Exception(unittest.TestCase):
 
             :return: None
             """
-            self.xml = open(get_data('CIR4621247027_0_0_201612162344.xml'),
-                            "r")
+            self.xml = open(get_data('CIR4621247027_0_0_201612162344.xml'), "r")
             self.tg_xml = message.MessageTG(self.xml)
             self.tg_xml.parse_xml()
 
@@ -119,6 +118,11 @@ class TestS04Exception(unittest.TestCase):
                     values = TG.Values(meter, 'S04', self.tg_xml.version)
                     res = values.get()
                     self.assertEqual(len(meter.warnings), 7)
+                    for error_line in meter.warnings:
+                        self.assertEqual('Unexpected ValueError reading S04. '
+                                         'Meter: ZIV0040428241. Error:year is'
+                                         ' out of range. On line 194'
+                                         , error_line)
             self.assertEqual(len(res), 14)
 
 
@@ -185,6 +189,11 @@ class TestS02Exception(unittest.TestCase):
                 values = TG.Values(meter, 'S02', self.tg_xml.version)
                 res = values.get()
                 self.assertEqual(len(meter.warnings), 4)
+                for error_line in meter.warnings:
+                    self.assertEqual('Unexpected ValueError reading S02. Meter:'
+                                     ' ZIV0040318130. Error:year is out of '
+                                     'range. On line 137'
+                                     , error_line)
         self.assertEqual(len(res), 20)
 
 
@@ -237,6 +246,11 @@ class TestS05Exception(unittest.TestCase):
                 values = TG.Values(meter, 'S05', self.tg_xml.version)
                 res = values.get()
                 self.assertEqual(len(meter.warnings), 7) #7 wrong
+                for error_line in meter.warnings:
+                    self.assertEqual('Unexpected ValueError reading S05.'
+                                     ' Meter: ZIV0034847133. Error:year is'
+                                     ' out of range. On line 161'
+                                     , error_line)
         self.assertEqual(len(res), 7) #7 right
 
 
