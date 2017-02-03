@@ -118,11 +118,15 @@ class TestS04Exception(unittest.TestCase):
                     values = TG.Values(meter, 'S04', self.tg_xml.version)
                     res = values.get()
                     self.assertEqual(len(meter.warnings), 7)
+                    step = 4
+                    line_no = 4
                     for error_line in meter.warnings:
+
                         self.assertEqual('Unexpected ValueError reading S04. '
                                          'Meter: ZIV0040428241. Error:year is'
-                                         ' out of range. On line 191'
+                                         ' out of range. On line {}'.format(line_no)
                                          , error_line)
+                        line_no += step
             self.assertEqual(len(res), 14)
 
 
@@ -189,11 +193,14 @@ class TestS02Exception(unittest.TestCase):
                 values = TG.Values(meter, 'S02', self.tg_xml.version)
                 res = values.get()
                 self.assertEqual(len(meter.warnings), 4)
+                step = 1
+                line_no = 4
                 for error_line in meter.warnings:
                     self.assertEqual('Unexpected ValueError reading S02. Meter:'
                                      ' ZIV0040318130. Error:year is out of '
-                                     'range. On line 134'
+                                     'range. On line {}'.format(line_no)
                                      , error_line)
+                    line_no += step
         self.assertEqual(len(res), 20)
 
 
@@ -246,11 +253,14 @@ class TestS05Exception(unittest.TestCase):
                 values = TG.Values(meter, 'S05', self.tg_xml.version)
                 res = values.get()
                 self.assertEqual(len(meter.warnings), 7) #7 wrong
+                step = 3
+                line_no = 4
                 for error_line in meter.warnings:
-                    self.assertEqual('Unexpected ValueError reading S05.'
-                                     ' Meter: ZIV0034847133. Error:year is'
-                                     ' out of range. On line 158'
+                    self.assertEqual('Unexpected ValueError reading S05. '
+                                     'Meter: ZIV0034847133. Error:year is'
+                                     ' out of range. On line {}'.format(line_no)
                                      , error_line)
+                    line_no += step
         self.assertEqual(len(res), 7) #7 right
 
 

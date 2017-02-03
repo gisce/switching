@@ -115,13 +115,13 @@ class Values(object):
     def get_boolean(self, element, value):
         return element.get(value) == 'Y' and True or False
 
-    def keep_meter_warnings(self):
+    def keep_meter_warnings(self, value):
         error_string = "Unexpected ValueError reading {}. " \
                        "Meter: {}. Error:{}. " \
                        "On line {}".format(self.report_type,
                                            self.meter.name,
                                            sys.exc_info()[1],
-                                           sys.exc_info()[2].tb_lineno)
+                                           value.sourceline)
         self.meter.warnings.append(error_string)
 
     def get_S02(self):
@@ -146,7 +146,7 @@ class Values(object):
                                    'bc': value.get('Bc')
                                    })
             except ValueError:
-                self.keep_meter_warnings()
+                self.keep_meter_warnings(value)
         return ret_values
 
     def get_S05(self):
@@ -176,7 +176,7 @@ class Values(object):
                                      })
                     ret_values.append(tmp_vals)
             except ValueError:
-                self.keep_meter_warnings()
+                self.keep_meter_warnings(S05_header)
         return ret_values
 
     def get_S04(self):
@@ -223,7 +223,7 @@ class Values(object):
                                      })
                     ret_values.append(tmp_vals)
             except ValueError:
-                self.keep_meter_warnings()
+                self.keep_meter_warnings(S04_header)
 
         return ret_values
 
