@@ -121,7 +121,7 @@ class TestS04Exception(unittest.TestCase):
                     for error_line in meter.warnings:
                         self.assertEqual('Unexpected ValueError reading S04. '
                                          'Meter: ZIV0040428241. Error:year is'
-                                         ' out of range. On line 194'
+                                         ' out of range. On line 191'
                                          , error_line)
             self.assertEqual(len(res), 14)
 
@@ -192,7 +192,7 @@ class TestS02Exception(unittest.TestCase):
                 for error_line in meter.warnings:
                     self.assertEqual('Unexpected ValueError reading S02. Meter:'
                                      ' ZIV0040318130. Error:year is out of '
-                                     'range. On line 137'
+                                     'range. On line 134'
                                      , error_line)
         self.assertEqual(len(res), 20)
 
@@ -249,7 +249,7 @@ class TestS05Exception(unittest.TestCase):
                 for error_line in meter.warnings:
                     self.assertEqual('Unexpected ValueError reading S05.'
                                      ' Meter: ZIV0034847133. Error:year is'
-                                     ' out of range. On line 161'
+                                     ' out of range. On line 158'
                                      , error_line)
         self.assertEqual(len(res), 7) #7 right
 
