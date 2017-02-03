@@ -122,9 +122,7 @@ class Values(object):
                                            self.meter.name,
                                            sys.exc_info()[1],
                                            sys.exc_info()[2].tb_lineno)
-        _new_warn = self.meter.warnings
-        _new_warn.append(error_string)
-        self.meter.warnings = _new_warn
+        self.meter.warnings.append(error_string)
 
     def get_S02(self):
         '''get function for S02 type values'''
