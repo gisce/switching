@@ -88,6 +88,122 @@ class TestS04Circutor(unittest.TestCase):
                             )
 
 
+class TestS04Exception(unittest.TestCase):
+        """
+        Test reading for S04 reports
+        """
+
+        def setUp(self):
+            """
+            Read S04 report
+
+            :return: None
+            """
+            self.xml = open(get_data('CIR4621247027_0_0_201612162344.xml'), "r")
+            self.tg_xml = message.MessageTG(self.xml)
+            self.tg_xml.parse_xml()
+
+        def tearDown(self):
+            self.xml.close()
+
+        def test_full_reading(self):
+            """
+
+            :return:
+            """
+            res = []
+            for cnc in self.tg_xml.obj.Cnc:
+                concentrator = TG.Concentrator(cnc)
+                for meter in concentrator.get_meters():
+                    values = TG.Values(meter, 'S04', self.tg_xml.version)
+                    res = values.get()
+                    self.assertEqual(len(meter.warnings), 7)
+                    step = 4
+                    line_no = 4
+                    for error_line in meter.warnings:
+
+                        self.assertEqual('Unexpected ValueError reading S04. '
+                                         'Meter: ZIV0040428241. Error:year is'
+                                         ' out of range. On line {}'.format(line_no)
+                                         , error_line)
+                        line_no += step
+            self.assertEqual(len(res), 14)
+
+
+class TestS02(unittest.TestCase):
+    """
+    Test reading for S02 reports
+    """
+
+    def setUp(self):
+        """
+        Read S02 report
+
+        :return: None
+        """
+        self.xml = open(get_data('S02.xml'), "r")
+        self.tg_xml = message.MessageTG(self.xml)
+        self.tg_xml.parse_xml()
+
+    def tearDown(self):
+        self.xml.close()
+
+    def test_full_reading(self):
+        """
+
+        :return:
+        """
+        res = []
+        for cnc in self.tg_xml.obj.Cnc:
+            concentrator = TG.Concentrator(cnc)
+            for meter in concentrator.get_meters():
+                values = TG.Values(meter, 'S02', self.tg_xml.version)
+                res = values.get()
+                self.assertEqual(len(meter.warnings), 0)
+        self.assertEqual(len(res), 24)
+
+
+class TestS02Exception(unittest.TestCase):
+    """
+    Test reading for S02 reports
+    """
+
+    def setUp(self):
+        """
+        Read S02 report
+
+        :return: None
+        """
+        self.xml = open(get_data('S02_exception.xml'), "r")
+        self.tg_xml = message.MessageTG(self.xml)
+        self.tg_xml.parse_xml()
+
+    def tearDown(self):
+        self.xml.close()
+
+    def test_full_reading(self):
+        """
+
+        :return:
+        """
+        res = []
+        for cnc in self.tg_xml.obj.Cnc:
+            concentrator = TG.Concentrator(cnc)
+            for meter in concentrator.get_meters():
+                values = TG.Values(meter, 'S02', self.tg_xml.version)
+                res = values.get()
+                self.assertEqual(len(meter.warnings), 4)
+                step = 1
+                line_no = 4
+                for error_line in meter.warnings:
+                    self.assertEqual('Unexpected ValueError reading S02. Meter:'
+                                     ' ZIV0040318130. Error:year is out of '
+                                     'range. On line {}'.format(line_no)
+                                     , error_line)
+                    line_no += step
+        self.assertEqual(len(res), 20)
+
+
 class TestS05(unittest.TestCase):
 
     def setUp(self):
@@ -113,6 +229,39 @@ class TestS05(unittest.TestCase):
         assert len(ctrs.keys()) == 2
         assert ctrs['1'] == 14
         assert ctrs['2'] == 14
+
+
+class TestS05Exception(unittest.TestCase):
+
+    def setUp(self):
+        self.xml = open(get_data('S05_exception.xml'), "r")
+        self.tg_xml = message.MessageTG(self.xml)
+        self.tg_xml.parse_xml()
+
+    def tearDown(self):
+        self.xml.close()
+
+    def test_full_reading(self):
+        """
+
+        :return:
+        """
+        res = []
+        for cnc in self.tg_xml.obj.Cnc:
+            concentrator = TG.Concentrator(cnc)
+            for meter in concentrator.get_meters():
+                values = TG.Values(meter, 'S05', self.tg_xml.version)
+                res = values.get()
+                self.assertEqual(len(meter.warnings), 7) #7 wrong
+                step = 3
+                line_no = 4
+                for error_line in meter.warnings:
+                    self.assertEqual('Unexpected ValueError reading S05. '
+                                     'Meter: ZIV0034847133. Error:year is'
+                                     ' out of range. On line {}'.format(line_no)
+                                     , error_line)
+                    line_no += step
+        self.assertEqual(len(res), 7) #7 right
 
 
 class TestS12(unittest.TestCase):
