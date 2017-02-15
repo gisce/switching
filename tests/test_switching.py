@@ -116,7 +116,12 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_reactiva2 = open(get_data("F1_reactiva_2.xml"), "r")
         self.xml_rectificadora = open(get_data("F1_rectificadora.xml"), "r")
         self.xml_conceptoieiva = open(get_data("F1_conceptoieiva.xml"), "r")
-        self.xml_conceptoieiva_iva_empty = open(get_data("F1_conceptoieiva_iva_empty.xml"), "r")
+        self.xml_conceptoieiva_iva_empty = open(
+            get_data("F1_conceptoieiva_iva_empty.xml"), "r"
+        )
+        self.xml_no_conceptoieiva_iva = open(
+            get_data("F1_no_conceptoieiva_iva.xml"), "r"
+        )
         self.xml_ajuste = open(get_data("F1_ajuste.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
@@ -376,6 +381,24 @@ class Switching_F1_Test(unittest.TestCase):
 
     def test_facturacio_conceptoiva_empty(self):
         f1 = F1(self.xml_conceptoieiva_iva_empty)
+        f1.set_xsd()
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        conceptes, total = f1_atr.get_info_conceptes_iva()
+        assert len(conceptes) == 0
+
+    def test_facturacio_no_conceptoieiva(self):
+        f1 = F1(self.xml_no_conceptoieiva_iva)
+        f1.set_xsd()
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        conceptes, total = f1_atr.get_info_conceptes_ieiva()
+        assert len(conceptes) == 0
+
+    def test_facturacio_no_conceptoiva(self):
+        f1 = F1(self.xml_no_conceptoieiva_iva)
         f1.set_xsd()
         f1.parse_xml()
         f1_atr = f1.get_factures()['FacturaATR'][0]
