@@ -498,7 +498,7 @@ class Switching_F1_Test(unittest.TestCase):
         for fact_xml in f1_with_price.get_factures()['OtrasFacturas']:
             conceptes, total = fact_xml.get_info_conceptes()
             for concept_xml in conceptes:
-                self.assertTrue(concept_xml.has_price)
+                self.assertTrue(concept_xml.has_quantity)
         xml_no_quantity = xml.replace(
             '<UnidadesConcepto>1</UnidadesConcepto>', ''
         )
@@ -507,7 +507,7 @@ class Switching_F1_Test(unittest.TestCase):
         for fact_xml in f1_without_quantity.get_factures()['OtrasFacturas']:
             conceptes, total = fact_xml.get_info_conceptes()
             for concept_xml in conceptes:
-                self.assertFalse(concept_xml.has_price)
+                self.assertFalse(concept_xml.has_quantity)
 
 
 class supportClass(object):
