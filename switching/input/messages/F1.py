@@ -970,8 +970,20 @@ class Concepte(object):
         return get_rec_attr(self.concepte, 'TipoConcepto.text')
 
     @property
+    def has_quantity(self):
+        # If the quantity is 0 we will assume it's incorrect
+        return bool(get_rec_attr(self.concepte, 'UnidadesConcepto.text', 0))
+
+    @property
     def quantitat(self):
         return float(get_rec_attr(self.concepte, 'UnidadesConcepto.text', 1))
+
+    @property
+    def has_price(self):
+        # If the quantity is 0 we will assume it's incorrect
+        return bool(
+            get_rec_attr(self.concepte, 'ImporteUnidadConcepto.text', 0)
+        )
 
     @property
     def preu(self):
