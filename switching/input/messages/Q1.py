@@ -178,15 +178,31 @@ class Comptador(object):
     def __init__(self, data):
         self.obj = data
 
-    def get_lectures(self):
+    def get_lectures(self, tipus=None):
         """Retorna totes les lectures en una llista de Lectura"""
         lectures = []
         try:
             for lect in self.obj.Integrador:
-                lectures.append(Lectura(lect))
+                lectura = Lectura(lect)
+                # If we don't have any type requirements or the current
+                # reading is in them
+                if not tipus or lectura.tipus in tipus:
+                    lectures.append(lectura)
         except AttributeError:
             pass
         return lectures
+
+    def get_lectures_activa(self):
+        return self.get_lectures(['A'])
+
+    def get_lectures_reactiva(self):
+        return self.get_lectures(['R'])
+
+    def get_lectures_energia(self):
+        return self.get_lectures(['A', 'R'])
+
+    def get_lectures_maximetre(self):
+        return self.get_lectures(['M'])
 
     @property
     def codiDH(self):

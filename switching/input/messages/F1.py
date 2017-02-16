@@ -139,30 +139,38 @@ class Facturas(object):
     def get_info_conceptes_iva(self):
         conceptes = []
         total = 0
-        for concepte in list(self.factura.ConceptoIVA):
-            c = ConcepteIVA(concepte)
-            # Si és una regularització refacturació 40, 41 i 42 el valor
-            # només pot ser negatiu.
-            # Es comprova ja que hi ha empreses que envien la refacturació
-            # i també el ConceptoIVA i s'importaria dues vegades.
-            if c.codi is None:
-                continue
-            if c.codi in CODIS_REG_REFACT.values() and c.total >= 0:
-                continue
-            elif c.total:
-                total += c.total
-                conceptes.append(c)
+        try:
+            for concepte in list(self.factura.ConceptoIVA):
+                c = ConcepteIVA(concepte)
+                # Si és una regularització refacturació 40, 41 i 42 el valor
+                # només pot ser negatiu.
+                # Es comprova ja que hi ha empreses que envien la refacturació
+                # i també el ConceptoIVA i s'importaria dues vegades.
+                if c.codi is None:
+                    continue
+                if c.codi in CODIS_REG_REFACT.values() and c.total >= 0:
+                    continue
+                elif c.total:
+                    total += c.total
+                    conceptes.append(c)
+        except AttributeError:
+            # We might not have any "ConceptoIVA"
+            pass
         return conceptes, total
 
     def get_info_conceptes_ieiva(self):
         conceptes = []
         total = 0
-        for concepte in list(self.factura.ConceptoIEIVA):
-            c = ConcepteIEIVA(concepte)
-            if c.codi is None:
-                continue
-            total += c.total
-            conceptes.append(c)
+        try:
+            for concepte in list(self.factura.ConceptoIEIVA):
+                c = ConcepteIEIVA(concepte)
+                if c.codi is None:
+                    continue
+                total += c.total
+                conceptes.append(c)
+        except AttributeError:
+            # We might not have any "ConceptoIEIVA"
+            pass
         return conceptes, total
 
 
@@ -962,8 +970,20 @@ class Concepte(object):
         return get_rec_attr(self.concepte, 'TipoConcepto.text')
 
     @property
+    def has_quantity(self):
+        # If the quantity is 0 we will assume it's incorrect
+        return bool(get_rec_attr(self.concepte, 'UnidadesConcepto.text', 0))
+
+    @property
     def quantitat(self):
         return float(get_rec_attr(self.concepte, 'UnidadesConcepto.text', 1))
+
+    @property
+    def has_price(self):
+        # If the price is 0 we will assume it's incorrect
+        return bool(
+            get_rec_attr(self.concepte, 'ImporteUnidadConcepto.text', 0)
+        )
 
     @property
     def preu(self):

@@ -116,8 +116,14 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_reactiva2 = open(get_data("F1_reactiva_2.xml"), "r")
         self.xml_rectificadora = open(get_data("F1_rectificadora.xml"), "r")
         self.xml_conceptoieiva = open(get_data("F1_conceptoieiva.xml"), "r")
-        self.xml_conceptoieiva_iva_empty = open(get_data("F1_conceptoieiva_iva_empty.xml"), "r")
+        self.xml_conceptoieiva_iva_empty = open(
+            get_data("F1_conceptoieiva_iva_empty.xml"), "r"
+        )
+        self.xml_no_conceptoieiva_iva = open(
+            get_data("F1_no_conceptoieiva_iva.xml"), "r"
+        )
         self.xml_ajuste = open(get_data("F1_ajuste.xml"), "r")
+        self.xml_concepts = open(get_data("F1_concepts.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -133,6 +139,45 @@ class Switching_F1_Test(unittest.TestCase):
         f1_atrs = f1.get_factures()['FacturaATR']
         for f1_atr in f1_atrs:
             self.assertEqual(f1_atr.numero_factura, '10005604')
+
+    def test_specific_get_lectures_returns_correct_readings(self):
+        f1 = F1(self.xml_rectificadora)
+        f1.set_xsd()
+        f1.parse_xml()
+
+        invoice = f1.get_factures()['FacturaATR'][0]
+        meter = invoice.get_comptadors()[0]
+        readings = meter.get_lectures()
+        expected_lectures_activa = {
+            read.lectura for read in readings if read.tipus == 'A'
+        }
+        expected_lectures_reactiva = {
+            read.lectura for read in readings if read.tipus == 'R'
+        }
+        expected_lectures_max = {
+            read.lectura for read in readings if read.tipus == 'M'
+        }
+        expected_lectures_energia = {
+            read.lectura for read in readings if read.tipus in ('A', 'R')
+        }
+
+        lectures_activa = {
+            read.lectura for read in meter.get_lectures_activa()
+        }
+        lectures_reactiva = {
+            read.lectura for read in meter.get_lectures_reactiva()
+        }
+        lectures_max = {
+            read.lectura for read in meter.get_lectures_maximetre()
+        }
+        lectures_energia = {
+            read.lectura for read in meter.get_lectures_energia()
+        }
+
+        self.assertEqual(expected_lectures_activa, lectures_activa)
+        self.assertEqual(expected_lectures_reactiva, lectures_reactiva)
+        self.assertEqual(expected_lectures_max, lectures_max)
+        self.assertEqual(expected_lectures_energia, lectures_energia)
 
     def test_rectificadora(self):
         f1 = F1(self.xml_rectificadora)
@@ -344,6 +389,24 @@ class Switching_F1_Test(unittest.TestCase):
         conceptes, total = f1_atr.get_info_conceptes_iva()
         assert len(conceptes) == 0
 
+    def test_facturacio_no_conceptoieiva(self):
+        f1 = F1(self.xml_no_conceptoieiva_iva)
+        f1.set_xsd()
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        conceptes, total = f1_atr.get_info_conceptes_ieiva()
+        assert len(conceptes) == 0
+
+    def test_facturacio_no_conceptoiva(self):
+        f1 = F1(self.xml_no_conceptoieiva_iva)
+        f1.set_xsd()
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        conceptes, total = f1_atr.get_info_conceptes_iva()
+        assert len(conceptes) == 0
+
     def test_facturacio_ajustes_1(self):
         f1 = F1(self.xml_reactiva1)
         f1.parse_xml()
@@ -407,6 +470,45 @@ class Switching_F1_Test(unittest.TestCase):
             aux,
             expected
         )
+
+    def test_has_price_works(self):
+        xml = self.xml_concepts.read()
+
+        f1_with_price = F1(xml)
+        f1_with_price.parse_xml()
+        for fact_xml in f1_with_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertTrue(concept_xml.has_price)
+        xml_no_price = xml.replace(
+            '<ImporteUnidadConcepto>9.04</ImporteUnidadConcepto>', ''
+        )
+        f1_without_price = F1(xml_no_price)
+        f1_without_price.parse_xml()
+        for fact_xml in f1_without_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertFalse(concept_xml.has_price)
+
+    def test_has_quantity_works(self):
+        xml = self.xml_concepts.read()
+
+        f1_with_price = F1(xml)
+        f1_with_price.parse_xml()
+        for fact_xml in f1_with_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertTrue(concept_xml.has_quantity)
+        xml_no_quantity = xml.replace(
+            '<UnidadesConcepto>1</UnidadesConcepto>', ''
+        )
+        f1_without_quantity = F1(xml_no_quantity)
+        f1_without_quantity.parse_xml()
+        for fact_xml in f1_without_quantity.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertFalse(concept_xml.has_quantity)
+
 
 class supportClass(object):
     """Funcions de suport"""
