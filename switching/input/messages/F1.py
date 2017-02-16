@@ -980,7 +980,7 @@ class Concepte(object):
 
     @property
     def has_price(self):
-        # If the quantity is 0 we will assume it's incorrect
+        # If the price is 0 we will assume it's incorrect
         return bool(
             get_rec_attr(self.concepte, 'ImporteUnidadConcepto.text', 0)
         )

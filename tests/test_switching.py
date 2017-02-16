@@ -123,6 +123,7 @@ class Switching_F1_Test(unittest.TestCase):
             get_data("F1_no_conceptoieiva_iva.xml"), "r"
         )
         self.xml_ajuste = open(get_data("F1_ajuste.xml"), "r")
+        self.xml_concepts = open(get_data("F1_concepts.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -469,6 +470,45 @@ class Switching_F1_Test(unittest.TestCase):
             aux,
             expected
         )
+
+    def test_has_price_works(self):
+        xml = self.xml_concepts.read()
+
+        f1_with_price = F1(xml)
+        f1_with_price.parse_xml()
+        for fact_xml in f1_with_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertTrue(concept_xml.has_price)
+        xml_no_price = xml.replace(
+            '<ImporteUnidadConcepto>9.04</ImporteUnidadConcepto>', ''
+        )
+        f1_without_price = F1(xml_no_price)
+        f1_without_price.parse_xml()
+        for fact_xml in f1_without_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertFalse(concept_xml.has_price)
+
+    def test_has_quantity_works(self):
+        xml = self.xml_concepts.read()
+
+        f1_with_price = F1(xml)
+        f1_with_price.parse_xml()
+        for fact_xml in f1_with_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertTrue(concept_xml.has_price)
+        xml_no_quantity = xml.replace(
+            '<UnidadesConcepto>1</UnidadesConcepto>', ''
+        )
+        f1_without_quantity = F1(xml_no_quantity)
+        f1_without_quantity.parse_xml()
+        for fact_xml in f1_without_quantity.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertFalse(concept_xml.has_price)
+
 
 class supportClass(object):
     """Funcions de suport"""
