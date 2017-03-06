@@ -173,6 +173,19 @@ class Facturas(object):
             pass
         return conceptes, total
 
+    def get_info_iva(self):
+        ivas = []
+        total = 0
+        try:
+            for iva in list(self.factura.IVA):
+                i = IVA(iva)
+                total += i.importe
+                ivas.append(i)
+        except AttributeError:
+            # In case we don't have any "IVA"
+            pass
+        return ivas, total
+
 
 class OtrasFacturas(Facturas):
 
@@ -1026,6 +1039,29 @@ class Concepte(object):
     def total(self):
         return float(
             get_rec_attr(self.concepte, 'ImporteTotalConcepto.text', 0)
+        )
+
+
+class IVA(object):
+    def __init__(self, iva):
+        self.iva = iva
+
+    @property
+    def base(self):
+        return float(
+            get_rec_attr(self.iva, 'BaseImponible.text', 0)
+        )
+
+    @property
+    def percentage(self):
+        return float(
+            get_rec_attr(self.iva, 'Porcentaje.text', 0)
+        )
+
+    @property
+    def importe(self):
+        return float(
+            get_rec_attr(self.iva, 'Importe.text', 0)
         )
 
 
