@@ -543,7 +543,7 @@ class FacturaATR(Facturas):
                     nom_periodes_uniq = nom_periodes.keys()
         nom_periodes_uniq.sort()
         if not nom_periodes_uniq:
-            return None, None
+            return [], 0
         try:
             # Primer busquem per exces de reactiva
             periodes += self.find_terme_periode_reactiva(nom_periodes, done, 1)
