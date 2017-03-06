@@ -558,6 +558,17 @@ class Switching_F1_Test(unittest.TestCase):
         self.assertEqual(power_consumes, expected_power_consumes)
         self.assertEqual(all_consumes, expected_all_consumes)
 
+    def test_get_info_iva_works(self):
+        f1 = F1(self.xml)
+        f1.parse_xml()
+        inv = f1.get_factures()['FacturaATR'][0]
+        ivas, total = inv.get_info_iva()
+
+        self.assertEqual(len(ivas), 1)
+        self.assertEqual(ivas[0].base, 101.75)
+        self.assertEqual(ivas[0].percentage, 0.16)
+        self.assertEqual(ivas[0].importe, 16.28)
+
 
 class supportClass(object):
     """Funcions de suport"""
