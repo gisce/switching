@@ -509,6 +509,55 @@ class Switching_F1_Test(unittest.TestCase):
             for concept_xml in conceptes:
                 self.assertFalse(concept_xml.has_quantity)
 
+    def test_contracted_powers_works(self):
+        f1 = F1(self.xml_reactiva1)
+        f1.parse_xml()
+        contracted_powers = f1.get_factures()['FacturaATR'][0].contracted_powers
+        expected_powers = [52000, 52000, 88689, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(contracted_powers, expected_powers)
+
+    def test_get_contracted_powers_by_period_works(self):
+        f1 = F1(self.xml_reactiva1)
+        f1.parse_xml()
+        invoice = f1.get_factures()['FacturaATR'][0]
+        contracted_powers = invoice.get_contracted_powers_by_period()
+        expected_powers = {'P1': 52000, 'P2':  52000, 'P3': 88689}
+        self.assertEqual(contracted_powers, expected_powers)
+
+    def test_get_consumes_work(self):
+        f1 = F1(self.xml_reactiva1)
+        f1.parse_xml()
+        meter = f1.get_factures()['FacturaATR'][0].get_comptadors()[0]
+        energy_consumes = meter.get_energy_consumes()
+        power_consumes = meter.get_power_consumes()
+        all_consumes = meter.get_consumes()
+
+        expected_energy_consumes = {
+            'A': {  # (end_value - start_value) + adjust
+                'P1': (39091 - 38284) + 215,
+                'P2': (109790 - 108288) + 467,
+                'P3': (54496 - 52868) + 614
+            },
+            'R': {
+                'P1': (19524 - 19243) + 11,
+                'P2': (55611 - 55192) + 16,
+                'P3': (26541 - 26151) + 15
+            }
+        }
+        expected_power_consumes = {
+            'M': {
+                'P1': (24000 - 0) + 215,
+                'P2': (24000 - 0) + 614,
+                'P3': (16000 - 0) + 467
+            }
+        }
+        expected_all_consumes = expected_energy_consumes.copy()
+        expected_all_consumes.update(expected_power_consumes)
+
+        self.assertEqual(energy_consumes, expected_energy_consumes)
+        self.assertEqual(power_consumes, expected_power_consumes)
+        self.assertEqual(all_consumes, expected_all_consumes)
+
 
 class supportClass(object):
     """Funcions de suport"""
