@@ -276,6 +276,37 @@ class FacturaATR(Facturas):
         else:
             return 'N'
 
+    @property
+    def contracted_powers(self):
+        """Returns the contracted powers"""
+        try:
+            termino_potencia = get_rec_attr(
+                self.factura.Potencia, 'TerminoPotencia'
+            )
+            return [
+                int(aux.PotenciaContratada) for aux in termino_potencia.Periodo
+            ]
+        except AttributeError:
+            return []
+
+    def get_contracted_powers_by_period(self):
+        """
+        Returns the contracted powers by period, assuming that they come
+        correctly ordered. We will only return up to 6 periods and only the
+        ones where the power is not 0
+        """
+        cont_powers = {}
+        count = 1
+        for cont_pow in self.contracted_powers:
+            if count > 6 or not cont_pow:
+                # If we have already found 6 periods or the power is 0
+                break
+
+            cont_powers['P{}'.format(count)] = cont_pow
+            count += 1
+        return cont_powers
+
+
     def info_facturacio_potencia(self):
         """
         Retorna el mode de control de potència en funció de la tarifa,
