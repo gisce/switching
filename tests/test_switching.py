@@ -1956,6 +1956,9 @@ class SwitchingR1_Test(unittest.TestCase):
         sup = supportClass()
         # r1-01
         self.xml_r101_minim = open(get_data("r101_minim.xml"), "r")
+        self.xml_r101_minim_cups20 = open(
+            get_data("r101_minim_cups20.xml"), "r"
+        )
         self.xml_r101_reclamant = open(get_data("r101_reclamante.xml"), "r")
         self.xml_r101_client = open(get_data("r101_cliente.xml"), "r")
         self.xml_r101_documents = open(get_data("r101_documentos.xml"), "r")
@@ -1985,6 +1988,7 @@ class SwitchingR1_Test(unittest.TestCase):
     def tearDown(self):
         # r1-01
         self.xml_r101_minim.close()
+        self.xml_r101_minim_cups20.close()
         self.xml_r101_reclamant.close()
         self.xml_r101_client.close()
         self.xml_r101_documents.close()
@@ -2049,6 +2053,21 @@ class SwitchingR1_Test(unittest.TestCase):
         header.feed(vals)
         return header
 
+    def getHeader_cups20(self, process='R1', step='01'):
+        header = r1.CabeceraReclamacion()
+        vals = {
+            'proceso': process,
+            'paso': step,
+            'solicitud': '20141211100908',
+            'secuencia': '01',
+            'cups': 'ES1234000000000001JN',
+            'ree_emisora': '1234',
+            'ree_destino': '4321',
+            'fecha': '2014-04-16T22:13:37',
+        }
+        header.feed(vals)
+        return header
+
     def getDatosSolicitud(self, tipo, subtipo, ref=None):
         dades = r1.DatosSolicitud()
         vals = {
@@ -2099,6 +2118,33 @@ class SwitchingR1_Test(unittest.TestCase):
         pas01.pretty_print = True
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_r101_minim.read())
+
+    def test_create_pas01_minim_cups20(self):
+        pas01 = r1.MensajeReclamacionIncidenciaPeticion()
+        header = self.getHeader_cups20('R1', '01')
+        pas01.set_agente('1234')
+        dades = self.getDatosSolicitud('03', '16')
+
+        variables = r1.VariablesDetalleReclamacion()
+        variable = r1.VariableDetalleReclamacion()
+
+        variables.feed({'detalls': [variable]})
+
+        solicitud = r1.SolicitudReclamacion()
+        solicitud.feed({
+            'dades': dades,
+            'variables': variables,
+            'tipus_reclamant': '06',
+            'comentaris': u'R1-01 minimum Test',
+        })
+        pas01.feed({
+            'capcalera': header,
+            'solicitud': solicitud
+        })
+        pas01.build_tree()
+        pas01.pretty_print = True
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_r101_minim_cups20.read())
 
     def test_create_pas01_reclamant(self):
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
