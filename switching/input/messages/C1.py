@@ -3,7 +3,8 @@
 
 from message import Message, except_f1
 from switching.helpers.funcions import get_rec_attr
-from defs import *
+from ...helpers.funcions import check_date
+
 
 class C1(Message):
     """Classe que implementa C1."""

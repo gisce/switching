@@ -60,13 +60,3 @@ MAGNITUDS_OCSUM = {'AE': 'A',
 
 # Totalitzadors a ignorar
 SKIP_TOTALITZADORS = ('00', '60')
-
-
-# Metode utilitzat per validar dates
-def check_date(date_text):
-    try:
-        import datetime
-        datetime.datetime.strptime(date_text, '%Y-%m-%d')
-        return date_text
-    except ValueError:
-        return None

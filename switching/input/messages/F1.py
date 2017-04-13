@@ -2,6 +2,7 @@
 
 import gettext
 
+from ...helpers.funcions import check_date
 from defs import *
 from message import Message, except_f1
 

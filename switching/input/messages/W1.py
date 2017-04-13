@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from message import Message
-from defs import *
+from ...helpers.funcions import check_date
+
 
 class W1(Message):
     """Classe que implementa W1."""
