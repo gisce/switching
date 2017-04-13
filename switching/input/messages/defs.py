@@ -21,7 +21,7 @@ INFO_TARIFA = {
                      'reactiva': ['P1', 'P2']},
              '011': {'name': '3.1A', 'marge': 0.33, 'agrupat': True,
                      'reactiva': ['P1', 'P2']},
-             '012': {'name': '6.1', 'marge': 0.33, 'agrupat': False,
+             '012': {'name': '6.1A', 'marge': 0.33, 'agrupat': False,
                      'reactiva': ['P1', 'P2', 'P3', 'P4', 'P5']},
              '013': {'name': '6.2', 'marge': 0.33, 'agrupat': False,
                      'reactiva': ['P1', 'P2', 'P3', 'P4', 'P5']},
@@ -30,6 +30,8 @@ INFO_TARIFA = {
              '015': {'name': '6.4', 'marge': 0.33, 'agrupat': False,
                      'reactiva': ['P1', 'P2', 'P3', 'P4', 'P5']},
              '016': {'name': '6.5', 'marge': 0.33, 'agrupat': False,
+                     'reactiva': ['P1', 'P2', 'P3', 'P4', 'P5']},
+             '017': {'name': '6.1B', 'marge': 0.33, 'agrupat': False,
                      'reactiva': ['P1', 'P2', 'P3', 'P4', 'P5']},
           }
 
@@ -42,12 +44,12 @@ PERIODE_OCSUM = {'01': 'P1',  # Punta + Llano
                  '31': 'P1',  # P1 Tarifa 011
                  '32': 'P2',  # P2 Tarifa 011
                  '33': 'P3',  # P3 Tarifa 011
-                 '61': 'P1',  # Periodo 1 Tarifes: 003, 011, 012 - 016
-                 '62': 'P2',  # Periodo 2 Tarifes: 003, 011, 012 - 016
-                 '63': 'P3',  # Periodo 3 Tarifes: 003, 011, 012 - 016
-                 '64': 'P4',  # Periodo 4 Tarifes: 003, 011, 012 - 016
-                 '65': 'P5',  # Periodo 5 Tarifes: 003, 011, 012 - 016
-                 '66': 'P6',  # Periodo 6 Tarifes: 003, 011, 012 - 016
+                 '61': 'P1',  # Periodo 1 Tarifes: 003, 011, 012 - 017
+                 '62': 'P2',  # Periodo 2 Tarifes: 003, 011, 012 - 017
+                 '63': 'P3',  # Periodo 3 Tarifes: 003, 011, 012 - 017
+                 '64': 'P4',  # Periodo 4 Tarifes: 003, 011, 012 - 017
+                 '65': 'P5',  # Periodo 5 Tarifes: 003, 011, 012 - 017
+                 '66': 'P6',  # Periodo 6 Tarifes: 003, 011, 012 - 017
                  '81': 'P1',  # P1 Tarifa 007
                  '82': 'P2',  # P2 Tarifa 007
                  '83': 'P3'}  # P3 Tarifa 007

@@ -7,7 +7,7 @@ Aquesta llibreria proveeix de les classes i mètodes necessaris pel switching
 """
 import os
 
-__version__ = '2.8.1'
+__version__ = '2.10.1'
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 

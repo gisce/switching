@@ -5,11 +5,17 @@ from message import Message
 import C1
 import W1
 from ...defs import SUBTYPES_R101
+from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 from ...helpers.funcions import check_date
 
 
-class R1(Message):
+class R1(Message, ProcessDeadline):
     """Classe que implementa R1."""
+
+    steps = [
+        DeadLine('01', Workdays(5), '02'),
+        DeadLine('03', Naturaldays(20), '04'),
+    ]
 
     def set_xsd(self):
         super(R1, self).set_xsd()
@@ -92,8 +98,7 @@ class R1(Message):
         """ Data Rebuig """
         data = None
         try:
-            data = self.obj.Fecha.text
-            return check_date(data)
+            return self.obj.Fecha.text
         except AttributeError:
             pass
         return data
@@ -249,8 +254,7 @@ class VariableDetalleReclamacion(object):
         """ Data incident """
         data = None
         try:
-            data = self.variable.FechaIncidente.text
-            return check_date(data)
+            return self.variable.FechaIncidente.text
         except AttributeError:
             pass
         return data
@@ -280,8 +284,7 @@ class VariableDetalleReclamacion(object):
         """ Data lectura """
         data = None
         try:
-            data = self.variable.FechaLectura.text
-            return check_date(data)
+            return self.variable.FechaLectura.text
         except AttributeError:
             pass
         return data
@@ -398,8 +401,7 @@ class VariableDetalleReclamacion(object):
         """ Data inici """
         data = None
         try:
-            data = self.variable.FechaDesde.text
-            return check_date(data)
+            return self.variable.FechaDesde.text
         except AttributeError:
             pass
         return data
@@ -409,8 +411,7 @@ class VariableDetalleReclamacion(object):
         """ Data fi """
         data = None
         try:
-            data = self.variable.FechaHasta.text
-            return check_date(data)
+            return self.variable.FechaHasta.text
         except AttributeError:
             pass
         return data
@@ -488,13 +489,10 @@ class DatosCierre(object):
 
     @property
     def data(self):
-        data = None
         try:
-            data = self.dadescierre.Fecha.text
-            return check_date(data)
+            return self.dadescierre.Fecha.text
         except AttributeError, e:
-            pass
-        return data
+            return ''
 
     @property
     def hora(self):
@@ -560,13 +558,10 @@ class DatosCierre(object):
 
     @property
     def data_moviment(self):
-        data = None
         try:
-            data = self.dadescierre.FechaMovimiento.text
-            return check_date(data)
+            return self.dadescierre.FechaMovimiento.text
         except AttributeError, e:
-            pass
-        return data
+            return ''
 
     @property
     def codi_sollicitud(self):
@@ -767,8 +762,7 @@ class SolicitudInformacionAdicional(object):
 
     @property
     def data_limit(self):
-        data = self.solicitud_info.FechaLimiteEnvio.text
-        return check_date(data)
+        return self.solicitud_info.FechaLimiteEnvio.text
 
 
 class Intervencion(object):
@@ -781,8 +775,7 @@ class Intervencion(object):
 
     @property
     def data(self):
-        data = self.intervencio.Fecha.text
-        return check_date(data)
+        return self.intervencio.Fecha.text
 
     @property
     def hora_desde(self):

@@ -4,7 +4,7 @@
 from switching.helpers.funcions import aggr_consums, aggr_ajusts
 from switching.input.messages import C1
 from switching.input.messages import F1, message, R1, W1, A3, M1, FacturaATR, Q1
-from switching.input.messages import C2
+from switching.input.messages import C2, B1
 from switching.output.messages import sw_w1 as w1
 from switching.output.messages import sw_c1 as c1
 from switching.output.messages import sw_c2 as c2
@@ -13,6 +13,7 @@ from switching.output.messages import sw_a3 as a3
 from switching.output.messages import sw_r1 as r1
 from switching.output.messages.base import Cabecera
 from . import unittest
+from switching.input.messages.Deadlines import DeadLine, Workdays, Naturaldays
 
 from .test_helpers import get_data
 
@@ -131,8 +132,14 @@ class Switching_F1_Test(unittest.TestCase):
         self.xml_reactiva2 = open(get_data("F1_reactiva_2.xml"), "r")
         self.xml_rectificadora = open(get_data("F1_rectificadora.xml"), "r")
         self.xml_conceptoieiva = open(get_data("F1_conceptoieiva.xml"), "r")
-        self.xml_conceptoieiva_iva_empty = open(get_data("F1_conceptoieiva_iva_empty.xml"), "r")
+        self.xml_conceptoieiva_iva_empty = open(
+            get_data("F1_conceptoieiva_iva_empty.xml"), "r"
+        )
+        self.xml_no_conceptoieiva_iva = open(
+            get_data("F1_no_conceptoieiva_iva.xml"), "r"
+        )
         self.xml_ajuste = open(get_data("F1_ajuste.xml"), "r")
+        self.xml_concepts = open(get_data("F1_concepts.xml"), "r")
         #self.xml_con = open(get_data("F1_concepte_exemple.xml"), "r")
 
     @unittest.skip("Not implemented yet")
@@ -148,6 +155,45 @@ class Switching_F1_Test(unittest.TestCase):
         f1_atrs = f1.get_factures()['FacturaATR']
         for f1_atr in f1_atrs:
             self.assertEqual(f1_atr.numero_factura, '10005604')
+
+    def test_specific_get_lectures_returns_correct_readings(self):
+        f1 = F1(self.xml_rectificadora)
+        f1.set_xsd()
+        f1.parse_xml()
+
+        invoice = f1.get_factures()['FacturaATR'][0]
+        meter = invoice.get_comptadors()[0]
+        readings = meter.get_lectures()
+        expected_lectures_activa = {
+            read.lectura for read in readings if read.tipus == 'A'
+        }
+        expected_lectures_reactiva = {
+            read.lectura for read in readings if read.tipus == 'R'
+        }
+        expected_lectures_max = {
+            read.lectura for read in readings if read.tipus == 'M'
+        }
+        expected_lectures_energia = {
+            read.lectura for read in readings if read.tipus in ('A', 'R')
+        }
+
+        lectures_activa = {
+            read.lectura for read in meter.get_lectures_activa()
+        }
+        lectures_reactiva = {
+            read.lectura for read in meter.get_lectures_reactiva()
+        }
+        lectures_max = {
+            read.lectura for read in meter.get_lectures_maximetre()
+        }
+        lectures_energia = {
+            read.lectura for read in meter.get_lectures_energia()
+        }
+
+        self.assertEqual(expected_lectures_activa, lectures_activa)
+        self.assertEqual(expected_lectures_reactiva, lectures_reactiva)
+        self.assertEqual(expected_lectures_max, lectures_max)
+        self.assertEqual(expected_lectures_energia, lectures_energia)
 
     def test_rectificadora(self):
         f1 = F1(self.xml_rectificadora)
@@ -359,6 +405,24 @@ class Switching_F1_Test(unittest.TestCase):
         conceptes, total = f1_atr.get_info_conceptes_iva()
         assert len(conceptes) == 0
 
+    def test_facturacio_no_conceptoieiva(self):
+        f1 = F1(self.xml_no_conceptoieiva_iva)
+        f1.set_xsd()
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        conceptes, total = f1_atr.get_info_conceptes_ieiva()
+        assert len(conceptes) == 0
+
+    def test_facturacio_no_conceptoiva(self):
+        f1 = F1(self.xml_no_conceptoieiva_iva)
+        f1.set_xsd()
+        f1.parse_xml()
+        f1_atr = f1.get_factures()['FacturaATR'][0]
+        assert isinstance(f1_atr, FacturaATR)
+        conceptes, total = f1_atr.get_info_conceptes_iva()
+        assert len(conceptes) == 0
+
     def test_facturacio_ajustes_1(self):
         f1 = F1(self.xml_reactiva1)
         f1.parse_xml()
@@ -422,6 +486,45 @@ class Switching_F1_Test(unittest.TestCase):
             aux,
             expected
         )
+
+    def test_has_price_works(self):
+        xml = self.xml_concepts.read()
+
+        f1_with_price = F1(xml)
+        f1_with_price.parse_xml()
+        for fact_xml in f1_with_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertTrue(concept_xml.has_price)
+        xml_no_price = xml.replace(
+            '<ImporteUnidadConcepto>9.04</ImporteUnidadConcepto>', ''
+        )
+        f1_without_price = F1(xml_no_price)
+        f1_without_price.parse_xml()
+        for fact_xml in f1_without_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertFalse(concept_xml.has_price)
+
+    def test_has_quantity_works(self):
+        xml = self.xml_concepts.read()
+
+        f1_with_price = F1(xml)
+        f1_with_price.parse_xml()
+        for fact_xml in f1_with_price.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertTrue(concept_xml.has_quantity)
+        xml_no_quantity = xml.replace(
+            '<UnidadesConcepto>1</UnidadesConcepto>', ''
+        )
+        f1_without_quantity = F1(xml_no_quantity)
+        f1_without_quantity.parse_xml()
+        for fact_xml in f1_without_quantity.get_factures()['OtrasFacturas']:
+            conceptes, total = fact_xml.get_info_conceptes()
+            for concept_xml in conceptes:
+                self.assertFalse(concept_xml.has_quantity)
+
 
 class supportClass(object):
     """Funcions de suport"""
@@ -628,6 +731,10 @@ class Switching_W1_Test(unittest.TestCase):
         assert date == '2015-07-02'
         assert reason == '01'
 
+    def test_deadline_W1(self):
+        w1_dl = W1.get_deadline('01')
+        self.assertEqual(w1_dl, DeadLine('01', Workdays(5), '02'))
+
 
 class SwitchingC1Test(unittest.TestCase):
     """test de C1"""
@@ -796,6 +903,10 @@ class SwitchingC1Test(unittest.TestCase):
         c101_no_text_xml.parse_xml(validate=False)
 
         assert c101_no_text_xml.contracte.condicions is False
+
+    def test_deadline_C1(self):
+        c1_dl = C1.get_deadline('01')
+        self.assertEqual(c1_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingC2Test(unittest.TestCase):
@@ -1118,6 +1229,9 @@ class SwitchingC2Test(unittest.TestCase):
 
         assert c201_no_text_xml.contracte.condicions is False
 
+    def test_deadline_C2(self):
+        c2_dl = C2.get_deadline('01')
+        self.assertEqual(c2_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingA3Test(unittest.TestCase):
@@ -1454,6 +1568,10 @@ class SwitchingA3Test(unittest.TestCase):
 
         assert a301_no_text_xml.contracte.condicions is False
 
+    def test_deadline_A3(self):
+        a3_dl = A3.get_deadline('01')
+        self.assertEqual(a3_dl, DeadLine('01', Workdays(5), '02'))
+
 
 class SwitchingB1Test(unittest.TestCase):
     """test de B1"""
@@ -1477,6 +1595,12 @@ class SwitchingB1Test(unittest.TestCase):
         b101_xml.parse_xml()
         documents = b101_xml.documents
         assert documents == []
+
+    def test_deadline_B1(self):
+        b1_dl = B1.get_deadline('01')
+        self.assertEqual(b1_dl, DeadLine('01', Workdays(5), '02'))
+        b1_dl = B1.get_deadline('02', motiu='03', activation=True)
+        self.assertEqual(b1_dl, DeadLine('02_activation', Workdays(1), '05'))
 
 
 class SwitchingM1Test(unittest.TestCase):
@@ -1776,6 +1900,10 @@ class SwitchingM1Test(unittest.TestCase):
 
         assert m101_no_text_xml.contracte.condicions is False
 
+    def test_deadline_M1(self):
+        m1_dl = M1.get_deadline('01')
+        self.assertEqual(m1_dl, DeadLine('01', Workdays(5), '02'))
+
 
 class SwitchingR1_Test(unittest.TestCase):
     """test de R1"""
@@ -1784,6 +1912,9 @@ class SwitchingR1_Test(unittest.TestCase):
         sup = supportClass()
         # r1-01
         self.xml_r101_minim = open(get_data("r101_minim.xml"), "r")
+        self.xml_r101_minim_cups20 = open(
+            get_data("r101_minim_cups20.xml"), "r"
+        )
         self.xml_r101_reclamant = open(get_data("r101_reclamante.xml"), "r")
         self.xml_r101_client = open(get_data("r101_cliente.xml"), "r")
         self.xml_r101_documents = open(get_data("r101_documentos.xml"), "r")
@@ -1813,6 +1944,7 @@ class SwitchingR1_Test(unittest.TestCase):
     def tearDown(self):
         # r1-01
         self.xml_r101_minim.close()
+        self.xml_r101_minim_cups20.close()
         self.xml_r101_reclamant.close()
         self.xml_r101_client.close()
         self.xml_r101_documents.close()
@@ -1877,6 +2009,21 @@ class SwitchingR1_Test(unittest.TestCase):
         header.feed(vals)
         return header
 
+    def getHeader_cups20(self, process='R1', step='01'):
+        header = r1.CabeceraReclamacion()
+        vals = {
+            'proceso': process,
+            'paso': step,
+            'solicitud': '20141211100908',
+            'secuencia': '01',
+            'cups': 'ES1234000000000001JN',
+            'ree_emisora': '1234',
+            'ree_destino': '4321',
+            'fecha': '2014-04-16T22:13:37',
+        }
+        header.feed(vals)
+        return header
+
     def getDatosSolicitud(self, tipo, subtipo, ref=None):
         dades = r1.DatosSolicitud()
         vals = {
@@ -1927,6 +2074,33 @@ class SwitchingR1_Test(unittest.TestCase):
         pas01.pretty_print = True
         xml = str(pas01)
         self.assertXmlEqual(xml, self.xml_r101_minim.read())
+
+    def test_create_pas01_minim_cups20(self):
+        pas01 = r1.MensajeReclamacionIncidenciaPeticion()
+        header = self.getHeader_cups20('R1', '01')
+        pas01.set_agente('1234')
+        dades = self.getDatosSolicitud('03', '16')
+
+        variables = r1.VariablesDetalleReclamacion()
+        variable = r1.VariableDetalleReclamacion()
+
+        variables.feed({'detalls': [variable]})
+
+        solicitud = r1.SolicitudReclamacion()
+        solicitud.feed({
+            'dades': dades,
+            'variables': variables,
+            'tipus_reclamant': '06',
+            'comentaris': u'R1-01 minimum Test',
+        })
+        pas01.feed({
+            'capcalera': header,
+            'solicitud': solicitud
+        })
+        pas01.build_tree()
+        pas01.pretty_print = True
+        xml = str(pas01)
+        self.assertXmlEqual(xml, self.xml_r101_minim_cups20.read())
 
     def test_create_pas01_reclamant(self):
         pas01 = r1.MensajeReclamacionIncidenciaPeticion()
@@ -3329,6 +3503,10 @@ class SwitchingR1_Test(unittest.TestCase):
         r101.set_xsd()
         r101.parse_xml()
         self.assertGreater(len(r101.check_minimum_fields()), 0)
+
+    def test_deadline_R1(self):
+        r1_dl = R1.get_deadline('01')
+        self.assertEqual(r1_dl, DeadLine('01', Workdays(5), '02'))
 
 
 class SwitchingParseValidate(unittest.TestCase):

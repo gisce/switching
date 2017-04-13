@@ -4,11 +4,22 @@ from switching.helpers.funcions import get_rec_attr
 
 from message import Message, except_f1
 import C1
+from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 from ...helpers.funcions import check_date
 
 
-class C2(Message):
+class C2(Message, ProcessDeadline):
     """Classe que implementa C2."""
+
+    steps = [
+        DeadLine('01', Workdays(5), '02'),
+        DeadLine('02_activation', Workdays(1), '05'),
+        DeadLine('02', Naturaldays(60), '05'),
+        DeadLine('03', Naturaldays(30), '05'),
+        DeadLine('05_activation', Workdays(1), '05'),
+        DeadLine('07_activation', Workdays(1), '05'),
+        DeadLine('08', Workdays(5), '09')
+    ]
 
     @property
     def sollicitud(self):
@@ -188,7 +199,6 @@ class Comentari(object):
         value = ''
         try:
             value = self.comentari.Fecha.text
-            return check_date(value)
         except AttributeError:
             pass
         return value

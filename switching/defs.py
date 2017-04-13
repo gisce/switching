@@ -485,6 +485,7 @@ ANOMALIA_MESURA = TABLA_45
 
 
 CONTROL_POTENCIA = [
+    ('', ''),
     ('1', 'ICP'),
     ('2', 'Maxímetro'),
 ]

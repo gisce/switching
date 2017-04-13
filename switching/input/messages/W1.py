@@ -3,10 +3,15 @@
 
 from message import Message
 from ...helpers.funcions import check_date
+from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
 
 
-class W1(Message):
+class W1(Message, ProcessDeadline):
     """Classe que implementa W1."""
+
+    steps = [
+        DeadLine('01', Workdays(5), '02'),
+    ]
 
     @property
     def lecturas(self):
@@ -104,7 +109,6 @@ class Aceptacion(object):
         fecha_aceptacion = ''
         try:
             fecha_aceptacion = self.aceptacion.FechaAceptacion.text
-            return check_date(fecha_aceptacion)
         except AttributeError:
             pass
         return fecha_aceptacion
@@ -121,7 +125,6 @@ class Rechazo(object):
         fecha_rechazo = ''
         try:
             fecha_rechazo = self.rechazo.FechaRechazo.text
-            return check_date(fecha_rechazo)
         except AttributeError:
             pass
         return fecha_rechazo

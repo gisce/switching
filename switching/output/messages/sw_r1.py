@@ -29,7 +29,7 @@ class CabeceraReclamacion(XmlModel):
         self.solicitud = XmlField('CodigoDeSolicitud', rep=self.rep_solicitud)
         self.secuencia = XmlField('SecuencialDeSolicitud')
         self.fecha = XmlField('FechaSolicitud', rep=self.rep_fecha)
-        self.cups = XmlField('CUPS')
+        self.cups = XmlField('CUPS', rep=lambda x: x.ljust(22, '0'))
         super(CabeceraReclamacion, self).__init__('CabeceraReclamacion',
                                                   'cabecera')
 
