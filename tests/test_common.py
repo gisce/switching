@@ -17,7 +17,7 @@ from .test_helpers import get_data
 from copy import copy, deepcopy
 
 from switching.defs import *
-
+from switching.helpers.funcions import codi_dh
 
 class test_Defs(unittest.TestCase):
 
@@ -29,6 +29,23 @@ class test_Defs(unittest.TestCase):
         assert TABLA_111[0][0] == '01'
         assert TABLA_111[0][1] == u'Telegestión Operativa con Curva de Carga Horaria'
 
+    def test_codi_dh(self):
+        assert codi_dh('001') == '1'
+        assert codi_dh('003') == '6'
+        assert codi_dh('004') == '2'
+        assert codi_dh('005') == '1'
+        assert codi_dh('006') == '2'
+        assert codi_dh('007') == '8'
+        assert codi_dh('008') == '8'
+        assert codi_dh('011') == '6'
+        assert codi_dh('011', '3') == '3'
+        assert codi_dh('011', '4') == '3'
+        assert codi_dh('012') == '6'
+        assert codi_dh('013') == '6'
+        assert codi_dh('014') == '6'
+        assert codi_dh('015') == '6'
+        assert codi_dh('016') == '6'
+        assert codi_dh('017') == '6'
 
 class test_Contacto(unittest.TestCase):
     def loadFile(self, filename):
