@@ -3,6 +3,8 @@
 """Helper functions for libComXml
 """
 
+from switching.defs import TARIFES_SEMPRE_MAX
+
 __all__ = ['codi_periode', 'codi_dh', 'extreu_periode', 'rodes',
            'codi_refact', 'nom_refact', 'codi_reg_refact', 'nom_reg_refact',
            'parse_totals_refact']
@@ -18,7 +20,7 @@ CODIS_REG_REFACT = {'RGT42011': '40',
 PERIODES_AGRUPATS = [('P1', 'P4'), ('P2', 'P5'), ('P3', 'P6')]
 
 # Tarifes que SEMPRE es facturen amb maxímetre
-TARIFES_MAXIMETRE = ['003', '011', '012', '013', '014', '015', '016', '018']
+TARIFES_MAXIMETRE = TARIFES_SEMPRE_MAX
 
 
 def get_rec_attr(obj, attr, default=None):
@@ -72,7 +74,7 @@ def codi_dh(tarifa, nlectures=6):
         return '1'
     elif tarifa in ('004', '006'):
         return '2'
-    elif tarifa in ('003', '012', '013', '014', '015', '016'):
+    elif tarifa in ('003', '012', '013', '014', '015', '016', '017'):
         return '6'
     elif tarifa == '011':
         if nlectures == 6:
