@@ -109,6 +109,7 @@ class Aceptacion(object):
         fecha_aceptacion = ''
         try:
             fecha_aceptacion = self.aceptacion.FechaAceptacion.text
+            return check_date(fecha_aceptacion)
         except AttributeError:
             pass
         return fecha_aceptacion
@@ -125,6 +126,7 @@ class Rechazo(object):
         fecha_rechazo = ''
         try:
             fecha_rechazo = self.rechazo.FechaRechazo.text
+            return check_date(fecha_rechazo)
         except AttributeError:
             pass
         return fecha_rechazo

@@ -199,6 +199,7 @@ class Comentari(object):
         value = ''
         try:
             value = self.comentari.Fecha.text
+            return check_date(value)
         except AttributeError:
             pass
         return value
@@ -211,6 +212,7 @@ class Comentari(object):
         except AttributeError:
             pass
         return value
+
 
 class Mesura(object):
 

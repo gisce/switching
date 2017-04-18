@@ -221,6 +221,7 @@ class PuntMesura(object):
         val = ''
         try:
             val = self.pm.FechaVigor.text
+            return check_date(val)
         except AttributeError:
             pass
         return val
@@ -231,6 +232,7 @@ class PuntMesura(object):
         val = False
         try:
             val = self.pm.FechaAlta.text
+            return check_date(val)
         except AttributeError:
             pass
         return val
@@ -241,6 +243,7 @@ class PuntMesura(object):
         val = False
         try:
             val = self.pm.FechaBaja.text
+            return check_date(val)
         except AttributeError:
             pass
         return val
@@ -630,6 +633,7 @@ class Notificacio(object):
         data = ''
         try:
             data = self.notificacio.DatosNotificacion.FechaActivacion.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -655,9 +659,11 @@ class Activacio(object):
         data = ''
         try:
             data = self.activacio.DatosActivacion.Fecha.text
+            return check_date(data)
         except AttributeError:
             try:
                 data = self.activacio.DatosActivacionYBaja.Fecha.text
+                return check_date(data)
             except AttributeError:
                 pass
         return data
@@ -735,6 +741,7 @@ class Sollicitud(object):
         data = ''
         try:
             data = self.sollicitud.FechaPrevistaAccion.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -833,6 +840,7 @@ class Contracte(object):
         data = ''
         try:
             data = self.contracte.FechaFinalizacion.text
+            return check_date(data)
         except AttributeError as e:
             pass
         return data
@@ -906,6 +914,7 @@ class Contracte(object):
         data = ''
         try:
             data = self.contracte.FechaActivacionPrevista.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -1054,6 +1063,7 @@ class Acceptacio(object):
         data = ''
         try:
             data = self.acc.FechaAceptacion.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -1081,6 +1091,7 @@ class Acceptacio(object):
         data = ''
         try:
             data = self.acc.FechaUltimaLectura.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -1242,6 +1253,7 @@ class Rebuig(object):
         data = ''
         try:
             data = self.rebuig.Fecha.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -1594,6 +1606,7 @@ class DocumentacioTecnica(object):
         num = ''
         try:
             num = self.doc_tec.DatosCie.CIEPapel.FechaEmisionCie.text
+            return check_date(num)
         except AttributeError:
             pass
         return num
@@ -1603,6 +1616,7 @@ class DocumentacioTecnica(object):
         num = ''
         try:
             num = self.doc_tec.DatosCie.CIEPapel.FechaCaducidadCie.text
+            return check_date(num)
         except AttributeError:
             pass
         return num
