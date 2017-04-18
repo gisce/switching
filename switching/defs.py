@@ -27,6 +27,22 @@ SEL_CONFIG_MODCON_WIZ_TYPE = [
     ('both', u'Ambdós')
 ]
 
+# Distribuidoras Baja Opcion B
+DISTRIS_BAJA_OPCION_B = [
+    '0030',  # Easa
+    '0031',  # ENDESA DISTRIBUCIÓN ELÉCTRICA S. L.
+    '0024',  # ATR ENDESA FECSA Catalunya
+    '0120',  # ATR ENDESA Aragonesa Actividades
+    '0023',  # ATR ENDESA Cia. Sevillana
+    '0288',  # ATR ENDESA Gas y electricitat (Balears)
+    '0396',  # ATR ENDESA hidroelèctrica de l'Empordà
+    '0363',  # ATR ENDESA Unión Eléctrica Canarias SUP
+    '0029',  # ATR ENDESA FECSA Aragó
+    '0259',  # DISTRIBUIDORA DE ENERGIA ELECTRICA DEL BAGES, S.A.
+    '0407',  # HIDROFLAMICELL, S.L.
+    '0418',  # HIDROELÈCTICA DE CATALUNYA
+]
+
 # Pas 03
 # Legacy table, now implemented in giscedata_switching_data.xml
 REBUIG = [('1', u'No existe Punto de Suministro asociado al CUPS'),
