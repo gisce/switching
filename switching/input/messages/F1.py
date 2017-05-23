@@ -173,6 +173,19 @@ class Facturas(object):
             pass
         return conceptes, total
 
+    def get_info_iva(self):
+        ivas = []
+        total = 0
+        try:
+            for iva in list(self.factura.IVA):
+                i = IVA(iva)
+                total += i.importe
+                ivas.append(i)
+        except AttributeError:
+            # In case we don't have any "IVA"
+            pass
+        return ivas, total
+
 
 class OtrasFacturas(Facturas):
 
@@ -275,6 +288,37 @@ class FacturaATR(Facturas):
             return self.factura.Potencia.PenalizacionNoICP.text
         else:
             return 'N'
+
+    @property
+    def contracted_powers(self):
+        """Returns the contracted powers"""
+        try:
+            termino_potencia = get_rec_attr(
+                self.factura.Potencia, 'TerminoPotencia'
+            )
+            return [
+                int(aux.PotenciaContratada) for aux in termino_potencia.Periodo
+            ]
+        except AttributeError:
+            return []
+
+    def get_contracted_powers_by_period(self):
+        """
+        Returns the contracted powers by period, assuming that they come
+        correctly ordered. We will only return up to 6 periods and only the
+        ones where the power is not 0
+        """
+        cont_powers = {}
+        count = 1
+        for cont_pow in self.contracted_powers:
+            if count > 6 or not cont_pow:
+                # If we have already found 6 periods or the power is 0
+                break
+
+            cont_powers['P{}'.format(count)] = cont_pow
+            count += 1
+        return cont_powers
+
 
     def info_facturacio_potencia(self):
         """
@@ -499,7 +543,7 @@ class FacturaATR(Facturas):
                     nom_periodes_uniq = nom_periodes.keys()
         nom_periodes_uniq.sort()
         if not nom_periodes_uniq:
-            return None, None
+            return [], 0
         try:
             # Primer busquem per exces de reactiva
             periodes += self.find_terme_periode_reactiva(nom_periodes, done, 1)
@@ -995,6 +1039,29 @@ class Concepte(object):
     def total(self):
         return float(
             get_rec_attr(self.concepte, 'ImporteTotalConcepto.text', 0)
+        )
+
+
+class IVA(object):
+    def __init__(self, iva):
+        self.iva = iva
+
+    @property
+    def base(self):
+        return float(
+            get_rec_attr(self.iva, 'BaseImponible.text', 0)
+        )
+
+    @property
+    def percentage(self):
+        return float(
+            get_rec_attr(self.iva, 'Porcentaje.text', 0)
+        )
+
+    @property
+    def importe(self):
+        return float(
+            get_rec_attr(self.iva, 'Importe.text', 0)
         )
 
 

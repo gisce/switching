@@ -171,6 +171,12 @@ class Lectura(object):
             }
         return res
 
+    def calculate_consume(self):
+        res = self.valor_lectura_final - self.valor_lectura_inicial
+        if self.te_ajust:
+            res += self.ajust
+        return res
+
 
 class Comptador(object):
     """Classe que implementa el Comptador"""
@@ -203,6 +209,24 @@ class Comptador(object):
 
     def get_lectures_maximetre(self):
         return self.get_lectures(['M'])
+
+    def get_consumes(self, tipus=None):
+        consumes = {}
+        for lect in self.get_lectures(tipus):
+            valor_final = lect.valor_lectura_final
+            valor_inicial = lect.valor_lectura_inicial
+            ajust = lect.ajust or 0
+            ret_type = lect.tipus
+            consumes.setdefault(
+                ret_type, {}
+            )[lect.periode] = valor_final - valor_inicial + ajust
+        return consumes
+
+    def get_energy_consumes(self):
+        return self.get_consumes(['A', 'R'])
+
+    def get_power_consumes(self):
+        return self.get_consumes(['M'])
 
     @property
     def codiDH(self):
