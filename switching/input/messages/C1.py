@@ -1565,7 +1565,7 @@ class DocumentacioTecnica(object):
     def es_Cie_electronic(self):
         num = ''
         try:
-            num = self.doc_tec.DatosCie.CieElectronico.text
+            num = self.doc_tec.DatosCie.CIEElectronico.text
         except AttributeError:
             pass
         return num
