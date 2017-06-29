@@ -2,6 +2,7 @@
 
 import gettext
 
+from ...helpers.funcions import check_date
 from defs import *
 from message import Message, except_f1
 
@@ -69,7 +70,8 @@ class Facturas(object):
     @property
     def data_factura(self):
         """Retornar el tipus de factura"""
-        return self._dades_generals.DatosGeneralesFactura.FechaFactura.text
+        data = self._dades_generals.DatosGeneralesFactura.FechaFactura.text
+        return check_date(data)
 
     @property
     def CIF_emisora(self):
@@ -235,8 +237,9 @@ class FacturaATR(Facturas):
         """Retornar la data del BOE
            També serveix per saber quines tarifes de preus aplicar
         """
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.FechaBOE.text
+        data = self.factura.DatosGeneralesFacturaATR.\
+            DatosFacturaATR.FechaBOE.text
+        return check_date(data)
 
     @property
     def codi_tarifa(self):
@@ -266,14 +269,17 @@ class FacturaATR(Facturas):
     @property
     def data_inici(self):
         """Retornar la data d'inici"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.Periodo.FechaDesdeFactura.text
+        data = self.factura.DatosGeneralesFacturaATR.\
+            DatosFacturaATR.Periodo.FechaDesdeFactura.text
+        return check_date(data)
 
     @property
     def data_final(self):
         """Retornar la data final"""
-        return self.factura.DatosGeneralesFacturaATR.\
-               DatosFacturaATR.Periodo.FechaHastaFactura.text
+        data = self.factura.DatosGeneralesFacturaATR.\
+            DatosFacturaATR.Periodo.FechaHastaFactura.text
+
+
 
     @property
     def nombre_mesos(self):
@@ -665,13 +671,13 @@ class FacturaATR(Facturas):
 
     @property
     def pot_data_inici(self):
-        return self.factura.Potencia.TerminoPotencia.\
-               FechaDesde.text
+        data = self.factura.Potencia.TerminoPotencia.FechaDesde.text
+        return check_date(data)
 
     @property
     def pot_data_fi(self):
-        return self.factura.Potencia.TerminoPotencia.\
-               FechaHasta.text
+        data = self.factura.Potencia.TerminoPotencia.FechaHasta.text
+        return check_date(data)
 
     def get_comptadors(self):
         """Retorna totes les lectures en una llista de comptadors"""
@@ -918,11 +924,13 @@ class Refacturacio(object):
 
     @property
     def data_inici(self):
-        return self.ref.RFechaDesde.text
+        data = self.ref.RFechaDesde.text
+        return check_date(data)
 
     @property
     def data_final(self):
-        return self.ref.RFechaHasta.text
+        data = self.ref.RFechaHasta.text
+        return check_date(data)
 
     @property
     def consum_total(self):
@@ -1098,7 +1106,8 @@ class F1(Message):
 
     @property
     def data_limit_pagament(self):
-        return self.obj.Facturas.RegistroFin.FechaLimitePago.text
+        data = self.obj.Facturas.RegistroFin.FechaLimitePago.text
+        return check_date(data)
 
     @property
     def id_remesa(self):
@@ -1114,7 +1123,8 @@ class F1(Message):
 
     @property
     def fecha_valor_remesa(self):
-        return self.obj.Facturas.RegistroFin.FechaValor.text
+        data = self.obj.Facturas.RegistroFin.FechaValor.text
+        return check_date(data)
 
     def get_remesa(self):
         vals = {

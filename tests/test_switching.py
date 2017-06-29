@@ -41,6 +41,7 @@ class test_Message_Base(unittest.TestCase):
     def setUp(self):
         self.xml_a301_cabecera = open(get_data("a301.xml"), "r")
         self.xml_r101_reclamacion = open(get_data("r101_minim.xml"), "r")
+        self.xml_r101_data = open(get_data("r101_lectures.xml"), "r")
         self.xml_c201_date_timezone = open(
             get_data("c201_date_timezone.xml"), "r"
         )
@@ -48,6 +49,7 @@ class test_Message_Base(unittest.TestCase):
     def tearDown(self):
         self.xml_a301_cabecera.close()
         self.xml_r101_reclamacion.close()
+        self.xml_r101_data.close()
         self.xml_c201_date_timezone.close()
 
     def test_cabecera_model(self):
@@ -100,6 +102,20 @@ class test_Message_Base(unittest.TestCase):
         self.assertEqual(c.codi_sollicitud, '201604180065')
         self.assertEqual(c.seq_sollicitud, '01')
         self.assertEqual(c.data_sollicitud, '2016-04-18 00:00:00+01:00')
+
+    def test_invalid_date(self):
+        xml_r101_text = self.xml_r101_data.read()
+
+        xml_r101_text = xml_r101_text.replace(
+            '<FechaLectura>2016-01-20</FechaLectura>',
+            '<FechaLectura>0000-00-00</FechaLectura>'
+        )
+
+        r101 = R1(xml_r101_text)
+        r101.set_xsd()
+        r101.parse_xml(validate=False)
+        r101.set_tipus()
+        self.assertIsNone(r101.reclamacions[0].data_lectura)
 
 
 #@unittest.skip('uncommited data')

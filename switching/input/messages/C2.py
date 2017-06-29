@@ -5,6 +5,7 @@ from switching.helpers.funcions import get_rec_attr
 from message import Message, except_f1
 import C1
 from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
+from ...helpers.funcions import check_date
 
 
 class C2(Message, ProcessDeadline):
@@ -198,6 +199,7 @@ class Comentari(object):
         value = ''
         try:
             value = self.comentari.Fecha.text
+            return check_date(value)
         except AttributeError:
             pass
         return value
@@ -210,6 +212,7 @@ class Comentari(object):
         except AttributeError:
             pass
         return value
+
 
 class Mesura(object):
 
@@ -260,3 +263,4 @@ class Mesura(object):
         except AttributeError:
             pass
         return value
+

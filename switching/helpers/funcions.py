@@ -165,3 +165,13 @@ def exces_reactiva(consum_activa, consum_reactiva, marge):
     :type marge: float
     """
     return consum_reactiva - (consum_activa * marge)
+
+
+# Metode utilitzat per validar dates
+def check_date(date_text):
+    try:
+        import datetime
+        datetime.datetime.strptime(date_text, '%Y-%m-%d')
+        return date_text
+    except ValueError:
+        return None

@@ -6,6 +6,7 @@ import C1
 import W1
 from ...defs import SUBTYPES_R101
 from Deadlines import ProcessDeadline, DeadLine, Workdays, Naturaldays
+from ...helpers.funcions import check_date
 
 
 class R1(Message, ProcessDeadline):
@@ -97,7 +98,8 @@ class R1(Message, ProcessDeadline):
         """ Data Rebuig """
         data = None
         try:
-            return self.obj.Fecha.text
+            data = self.obj.Fecha.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -253,7 +255,8 @@ class VariableDetalleReclamacion(object):
         """ Data incident """
         data = None
         try:
-            return self.variable.FechaIncidente.text
+            data = self.variable.FechaIncidente.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -283,7 +286,8 @@ class VariableDetalleReclamacion(object):
         """ Data lectura """
         data = None
         try:
-            return self.variable.FechaLectura.text
+            data = self.variable.FechaLectura.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -400,7 +404,8 @@ class VariableDetalleReclamacion(object):
         """ Data inici """
         data = None
         try:
-            return self.variable.FechaDesde.text
+            data = self.variable.FechaDesde.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -410,7 +415,8 @@ class VariableDetalleReclamacion(object):
         """ Data fi """
         data = None
         try:
-            return self.variable.FechaHasta.text
+            data = self.variable.FechaHasta.text
+            return check_date(data)
         except AttributeError:
             pass
         return data
@@ -489,7 +495,8 @@ class DatosCierre(object):
     @property
     def data(self):
         try:
-            return self.dadescierre.Fecha.text
+            data = self.dadescierre.Fecha.text
+            return check_date(data)
         except AttributeError, e:
             return ''
 
@@ -558,7 +565,8 @@ class DatosCierre(object):
     @property
     def data_moviment(self):
         try:
-            return self.dadescierre.FechaMovimiento.text
+            data = self.dadescierre.FechaMovimiento.text
+            return check_date(data)
         except AttributeError, e:
             return ''
 
@@ -659,7 +667,8 @@ class EnvioInformacionReclamacion(object):
 
     @property
     def data_informacio(self):
-        return self.info.DatosEnvioInformacion.FechaInformacion.text
+        data = self.info.DatosEnvioInformacion.FechaInformacion.text
+        return check_date(data)
 
     @property
     def variables_aportacio_informacio(self):
@@ -761,7 +770,8 @@ class SolicitudInformacionAdicional(object):
 
     @property
     def data_limit(self):
-        return self.solicitud_info.FechaLimiteEnvio.text
+        data = self.solicitud_info.FechaLimiteEnvio.text
+        return check_date(data)
 
 
 class Intervencion(object):
@@ -774,7 +784,8 @@ class Intervencion(object):
 
     @property
     def data(self):
-        return self.intervencio.Fecha.text
+        data = self.intervencio.Fecha.text
+        return check_date(data)
 
     @property
     def hora_desde(self):
