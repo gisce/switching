@@ -460,6 +460,7 @@ class Switching_F1_Test(unittest.TestCase):
             'date_invoice': '2016-01-08',
             'check_total': 55.48,
             'origin': '1234567890',
+            'origin_date_invoice': '2016-01-08',
             'reference': '1234567890'
         }
 
