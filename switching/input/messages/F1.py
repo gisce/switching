@@ -116,6 +116,7 @@ class Facturas(object):
             'date_invoice': self.data_factura,
             'check_total': abs(self.import_total_factura),
             'origin': self.numero_factura,
+            'origin_date_invoice': self.data_factura,
             'reference': self.numero_factura,
         }
 
