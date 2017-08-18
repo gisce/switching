@@ -1,3 +1,10 @@
+==============================
+:warning: Deprecated :warning:
+==============================
+
+Go to `Gestion ATR library <https://github.com/gisce/gestionatr>`_
+
+
 =========
 switching
 =========
